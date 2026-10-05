@@ -1,0 +1,19 @@
+$schema: https://api.gitbook.com/gitbook-docs.yaml
+site:
+  title: Fomoxa for Unity
+  structure:
+    - type: space
+      key: space-fomoxa-unity
+      title: EN
+      path: docs
+      default: true
+      content:
+        directory: ./
+        language: en
+    - type: space
+      key: space-fomoxa-unity-vi
+      title: VI
+      path: vi
+      content:
+        directory: ./vi
+        language: vi

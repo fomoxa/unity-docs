@@ -1,0 +1,84 @@
+# ServerManager reference
+
+`public sealed class ServerManager` in `Fomoxa.Unity` has no public constructor; you reach it through `NetworkManager.ServerManager`. The [server](../core/server.md) guide explains how to use it.
+
+## Connection
+
+| Member | Description |
+|---|---|
+| `void StartConnection(ushort port)` | Opens the transport's listener and the in-process listener, then spawns the scene objects of the loaded scenes. Port 0 picks a free port. Throws `InvalidOperationException` when already running, `PlatformNotSupportedException` in a browser. |
+| `void StopConnection()` | Disconnects every peer, despawns every object, unloads the network scenes |
+| `ServerState State` | `Stopped`, `Starting`, `Started` or `Stopping` |
+| `ushort Port` | The bound port; 0 while stopped |
+| `int PeerCount` | Connected peers, including those in the handshake |
+| `ConnectionState PeerState(ulong peerId)` | A peer's state; `Stopped` when unknown |
+| `void Disconnect(ulong peerId)` | Closes a peer's connection with `StopReason.LocalStop` |
+| `bool HasRtt(ulong peerId)`, `TimeSpan RttOf(ulong peerId)` | Round-trip time reported by the peer's clock pings; `TimeSpan.Zero` when none |
+| `int DroppedInputsOf(ulong peerId)` | Inputs from the peer that were dropped |
+| `int FrameBudgetOf(ulong peerId)` | Frame budget of the peer's transport; 0 when unknown |
+
+## Objects
+
+| Member | Description |
+|---|---|
+| `void Spawn(NetworkObject networkObject, ulong ownerId = 0)` | Spawns an instance. Throws `ArgumentNullException`, `InvalidOperationException` when the server is not started, `ArgumentException` for a prefab asset, an object already spawned, an unregistered prefab id, an invalid scene object or an owner that is not a started peer. |
+| `bool Despawn(NetworkObject networkObject)` | Despawns and destroys an instance, or deactivates a scene object. False when not spawned by this server. |
+| `bool ChangeOwner(NetworkObject networkObject, ulong ownerId)` | Changes the owner; 0 for the server. False when not spawned by this server or the owner is not a started peer. |
+| `IReadOnlyDictionary<uint, NetworkObject> Spawned` | Spawned objects by object id |
+
+## Observers
+
+| Member | Description |
+|---|---|
+| `ObserverRule ObserverRule` | The rule for objects with `Visibility.Rule`. Get and set. |
+| `int ObserverInterval` | Ticks over which every object is recalculated once. At least 1. |
+| `bool IsObserver(NetworkObject networkObject, ulong peerId)` | Whether the peer observes the object |
+| `bool RebuildObservers(NetworkObject networkObject)` | Recalculates one object for every peer |
+| `void RebuildObserversOfPeer(ulong peerId)` | Recalculates every object for one peer |
+| `void RebuildObservers()` | Recalculates every object for every peer |
+
+Calling a spawn, despawn, owner or rebuild method from inside `ObserverRule.Observes` throws.
+
+## Scenes
+
+The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Unity` with these members:
+
+| Member | Description |
+|---|---|
+| `void LoadGlobal(IReadOnlyList<uint> sceneIds, bool replace = false)` | Loads scenes for every peer; `replace` unloads the current global scenes first. Throws for an unregistered id. |
+| `void UnloadGlobal(IReadOnlyList<uint> sceneIds)` | Unloads global scenes. Throws for an id that is not global. |
+| `int LoadForPeers(uint sceneId, IReadOnlyList<ulong> peerIds)` | Loads a scene for some peers; returns how many were added. Throws for a global scene or an unregistered id. |
+| `int UnloadForPeers(uint sceneId, IReadOnlyList<ulong> peerIds)` | Removes a per-peer scene from some peers; returns how many were removed |
+| `void Unload(uint sceneId)` | Removes a per-peer scene from every peer |
+| `IReadOnlyList<uint> Global` | Global scene ids |
+| `bool Contains(uint sceneId)`, `bool IsGlobal(uint sceneId)` | Whether the scene is in use, and whether it is global |
+| `bool HasLoaded(ulong peerId, uint sceneId)` | Whether the peer reported the scene as loaded |
+| `IReadOnlyCollection<ulong> PeersOf(uint sceneId)` | Peers that have the scene |
+| `bool TryGetScene(uint sceneId, out Scene scene)` | The `Scene` the server loaded |
+| `event Action<uint> OnLoaded` | The server finished loading a scene |
+| `event Action<uint, Exception> OnLoadFailed` | The server failed to load a scene |
+
+The scene methods throw `InvalidOperationException` while the server is stopped.
+
+## Messages
+
+| Member | Description |
+|---|---|
+| `SendResult Send(ulong peerId, uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for one peer |
+| `SendResult SendToObject(ulong peerId, uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Queues an object message for one peer |
+| `int Broadcast(uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for every started peer; returns the count |
+| `MessageDispatcher Dispatcher` | Handlers for incoming messages |
+
+## Events
+
+| Event | Argument |
+|---|---|
+| `OnServerConnectionState` | `ServerConnectionStateArgs` |
+| `OnRemoteConnectionState` | `ConnectionStateArgs` |
+| `OnSendDropped` | `SendDroppedArgs` |
+| `OnReceiveDropped` | `ReceiveDroppedArgs` |
+| `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes |
+
+[Events and callbacks](callbacks.md) describes the event arguments.
+
+The related types are [NetworkManager](network-manager.md), [ClientManager](client-manager.md) and [NetworkObject](network-object.md).
