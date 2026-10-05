@@ -112,4 +112,4 @@ Mỗi prefab id chỉ đăng ký được một lần, nên factory cho một pr
 
 `NetworkObject` lồng nhau không được hỗ trợ, và mỗi `NetworkManager` có prefab registry riêng. Client không thể spawn object; nó yêu cầu server spawn bằng một RPC.
 
-Về object được spawn, xem [NetworkObject](network-object.md), [ownership](ownership.md) và [observer](observers.md). [Tham chiếu ServerManager](../reference/server-manager.md) liệt kê các member liên quan tới spawn, và [tích hợp Editor](../unity/editor-integration.md) mô tả cách Editor gán id.
+Về object được spawn, xem [NetworkObject](network-object.md), [ownership](ownership.md) và [observer](observers.md). [Tham chiếu ServerManager](../tham-chieu/server-manager.md) liệt kê các member liên quan tới spawn, và [tích hợp Editor](../unity/editor-integration.md) mô tả cách Editor gán id.

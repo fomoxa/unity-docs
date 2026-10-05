@@ -44,7 +44,7 @@ private static bool Matches(BodyMotion server, BodyMotion predicted) =>
 
 Mỗi tick, sau khi step physics, client của owner lưu state của mỗi physics world chứa một object nó dự đoán và ghi lại state của mỗi behaviour được dự đoán. Lịch sử giữ Prediction History tick (mặc định 64).
 
-```text
+```
 T0 → T1 → T2 → T3 → T4                  client has predicted up to T4
              ↑
         server state for T2 does not match
@@ -60,7 +60,7 @@ Với mỗi tick của lần replay, từ T3 tới T4, `apply` chạy cho mọi 
 
 Một lần replay bao một rollback group, tức tập các physics world mà các object client dự đoán nằm trong đó.
 
-```text
+```
 Rollback group
  ├── 3D world of scene A
  ├── 3D world of scene B        scenes A and B share one physics scene, so they are one world
@@ -91,4 +91,4 @@ Dữ liệu contact của physics engine không được lưu, nên một lần 
 
 Server không lưu hay load physics mà chỉ step mỗi world một lần mỗi tick. Host không dự đoán object của chính nó nên không bao giờ rollback.
 
-Rollback mở rộng [reconciliation](reconciliation.md) sang physics. [Tổng quan physics](../physics/overview.md) và [PhysicsBody](../physics/physics-body.md) mô tả các body liên quan, và [mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao rollback physics của Unity chỉ gần đúng.
+Rollback mở rộng [reconciliation](reconciliation.md) sang physics. [Tổng quan physics](../physics/overview.md) và [PhysicsBody](../physics/physics-body.md) mô tả các body liên quan, và [mô phỏng tất định](../khai-niem/deterministic-simulation.md) giải thích vì sao rollback physics của Unity chỉ gần đúng.

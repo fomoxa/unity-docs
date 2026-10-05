@@ -18,28 +18,28 @@
 
 ## Field <a href="#fields" id="fields"></a>
 
-| Field | Mặc định | Ý nghĩa |
-|---|---|---|
-| Prefab Id | được gán | Id mà server và client dùng cho prefab này. Editor điền nó từ asset GUID của prefab. |
-| Explicit Prefab Id | tắt | Giữ Prefab Id viết tay thay vì id suy ra từ GUID |
-| Scene Object Id | được gán | Id của object đặt trong scene. Editor điền nó khi scene được lưu. Asset prefab có giá trị 0. |
-| Despawn With Owner | bật | Server despawn object khi owner ngắt kết nối. Khi tắt, object được giữ lại và chuyển sang do server sở hữu. |
-| Visibility | Rule | `Rule`: Observer Rule của `NetworkManager` quyết định. `Everyone`: mọi client observe nó. `OwnerOnly`: chỉ owner observe. Xem [observer](observers.md). |
+| Field              | Mặc định | Ý nghĩa                                                                                                                                                 |
+| ------------------ | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prefab Id          | được gán | Id mà server và client dùng cho prefab này. Editor điền nó từ asset GUID của prefab.                                                                    |
+| Explicit Prefab Id | tắt      | Giữ Prefab Id viết tay thay vì id suy ra từ GUID                                                                                                        |
+| Scene Object Id    | được gán | Id của object đặt trong scene. Editor điền nó khi scene được lưu. Asset prefab có giá trị 0.                                                            |
+| Despawn With Owner | bật      | Server despawn object khi owner ngắt kết nối. Khi tắt, object được giữ lại và chuyển sang do server sở hữu.                                             |
+| Visibility         | Rule     | `Rule`: Observer Rule của `NetworkManager` quyết định. `Everyone`: mọi client observe nó. `OwnerOnly`: chỉ owner observe. Xem [observer](observers.md). |
 
 `DespawnWithOwner` và `Visibility` cũng có thể đặt từ code, và server đọc giá trị hiện tại của chúng vào lúc cần.
 
 ## Property <a href="#properties" id="properties"></a>
 
-| Property | Ý nghĩa |
-|---|---|
-| `ObjectId` | Id server đã gán; 0 khi chưa spawn |
-| `PrefabId` | Prefab id |
-| `SceneObjectId` | Scene object id; 0 với instance prefab |
-| `OwnerId` | Peer id của owner; 0 khi server sở hữu hoặc khi chưa spawn |
-| `IsOwner` | True trên client sở hữu object, kể cả client của host |
-| `IsSpawned` | True khi đang spawn trên server hoặc trên một client của tiến trình này |
-| `Behaviours` | Các component `NetworkBehaviour` của object, theo thứ tự behaviour index |
-| `Body`, `Body2D` | Physics body của object, xem [PhysicsBody](../physics/physics-body.md) |
+| Property         | Ý nghĩa                                                                  |
+| ---------------- | ------------------------------------------------------------------------ |
+| `ObjectId`       | Id server đã gán; 0 khi chưa spawn                                       |
+| `PrefabId`       | Prefab id                                                                |
+| `SceneObjectId`  | Scene object id; 0 với instance prefab                                   |
+| `OwnerId`        | Peer id của owner; 0 khi server sở hữu hoặc khi chưa spawn               |
+| `IsOwner`        | True trên client sở hữu object, kể cả client của host                    |
+| `IsSpawned`      | True khi đang spawn trên server hoặc trên một client của tiến trình này  |
+| `Behaviours`     | Các component `NetworkBehaviour` của object, theo thứ tự behaviour index |
+| `Body`, `Body2D` | Physics body của object, xem [PhysicsBody](../physics/physics-body.md)   |
 
 `IsOwner` chỉ có thể true trên client. Trên dedicated server nó luôn false, kể cả với object do server sở hữu.
 
@@ -55,4 +55,4 @@ Với prefab, `NetworkObject` phải nằm ở gốc. Scene object có thể n�
 
 Hủy `GameObject` trên server sẽ despawn object. Hủy nó trên client mà không có lệnh despawn từ server thì chỉ gỡ nó khỏi danh sách object của client, kèm một cảnh báo.
 
-Các script thuộc object được mô tả trong [NetworkBehaviour](network-behaviour.md). [Spawn](spawning.md), [ownership](ownership.md) và [observer](observers.md) nói về những gì server làm với object, và [tham chiếu NetworkObject](../reference/network-object.md) liệt kê mọi member.
+Các script thuộc object được mô tả trong [NetworkBehaviour](network-behaviour.md). [Spawn](spawning.md), [ownership](ownership.md) và [observer](observers.md) nói về những gì server làm với object, và [tham chiếu NetworkObject](../tham-chieu/network-object.md) liệt kê mọi member.

@@ -2,12 +2,12 @@
 
 Unity phát `OnCollisionEnter`, `OnTriggerEnter` và các event exit tương ứng từ bên trong mỗi bước physics. Khi client replay các tick trong lúc reconciliation, các bước đó chạy lại, và Unity sẽ phát cùng event lần thứ hai. Các component contact của package tránh điều đó bằng cách phát event enter và exit một lần mỗi tick, và sau một lần replay thì chỉ cho những gì đã thay đổi.
 
-| Component | Collider trên GameObject của nó | Báo |
-|---|---|---|
-| `NetworkCollision` | 3D, không phải trigger | Collider đang chạm vào chúng |
-| `NetworkTrigger` | 3D, trigger | Collider đang ở bên trong chúng |
-| `NetworkCollision2D` | 2D, không phải trigger | Collider đang chạm vào chúng |
-| `NetworkTrigger2D` | 2D, trigger | Collider đang ở bên trong chúng |
+| Component            | Collider trên GameObject của nó | Báo                             |
+| -------------------- | ------------------------------- | ------------------------------- |
+| `NetworkCollision`   | 3D, không phải trigger          | Collider đang chạm vào chúng    |
+| `NetworkTrigger`     | 3D, trigger                     | Collider đang ở bên trong chúng |
+| `NetworkCollision2D` | 2D, không phải trigger          | Collider đang chạm vào chúng    |
+| `NetworkTrigger2D`   | 2D, trigger                     | Collider đang ở bên trong chúng |
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
@@ -37,10 +37,10 @@ public sealed class Pickup : MonoBehaviour
 }
 ```
 
-| Member | Ý nghĩa |
-|---|---|
-| `OnEnter` | Một collider bắt đầu chạm, hoặc đi vào trigger |
-| `OnExit` | Một collider thôi chạm, hoặc rời trigger |
+| Member     | Ý nghĩa                                                   |
+| ---------- | --------------------------------------------------------- |
+| `OnEnter`  | Một collider bắt đầu chạm, hoặc đi vào trigger            |
+| `OnExit`   | Một collider thôi chạm, hoặc rời trigger                  |
 | `Touching` | Các collider đang chạm, tính tới tick đã công bố gần nhất |
 
 Trong một tick, exit được phát trước enter. Exception trong một handler được log và không ngăn các handler khác chạy.
@@ -57,10 +57,10 @@ Khi không có `NetworkManager` nào step world, ví dụ khi Simulate Physics t
 
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 
-| Field | Trên | Mặc định | Ý nghĩa |
-|---|---|---|---|
+| Field           | Trên               | Mặc định                           | Ý nghĩa                                                                            |
+| --------------- | ------------------ | ---------------------------------- | ---------------------------------------------------------------------------------- |
 | Additional Size | `NetworkCollision` | `Physics.defaultContactOffset` × 2 | Khoảng nới rộng hình dạng truy vấn, để contact đang nằm yên được tính là đang chạm |
-| Additional Size | `NetworkTrigger` | 0 | Khoảng nới rộng hình dạng truy vấn |
+| Additional Size | `NetworkTrigger`   | 0                                  | Khoảng nới rộng hình dạng truy vấn                                                 |
 
 ## Event được phát ở đâu <a href="#where-events-fire" id="where-events-fire"></a>
 
@@ -70,4 +70,4 @@ Các component phát event ở mọi phía chạy chúng, dù là server, client
 
 Truy vấn 3D xử lý chính xác collider box, sphere và capsule, và dùng bounding box cho các loại collider khác. Các component chỉ thấy collider trên chính GameObject của chúng, được thu thập khi component được bật.
 
-Component contact phụ thuộc vào việc step mô tả trong [tổng quan physics](overview.md) và vào replay mô tả trong [rollback với physics](../prediction/rollback.md). [Tham chiếu component](../reference/components.md#contact-components) liệt kê các member của chúng.
+Component contact phụ thuộc vào việc step mô tả trong [tổng quan physics](overview.md) và vào replay mô tả trong [rollback với physics](../prediction/rollback.md). [Tham chiếu component](../tham-chieu/components.md#contact-components) liệt kê các member của chúng.

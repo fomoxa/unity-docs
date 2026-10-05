@@ -20,14 +20,14 @@ Kết nối được mở bất đồng bộ, và nếu socket không mở đư�
 
 ## Những gì không hoạt động <a href="#what-does-not-work" id="what-does-not-work"></a>
 
-| Hành động | Kết quả |
-|---|---|
-| `ServerManager.StartConnection` | Ném `PlatformNotSupportedException`: `a server cannot listen in a browser; WebGL builds are clients only` |
-| Host mode | Không thể, vì nó khởi động server |
+| Hành động                                                           | Kết quả                                                                                                                                                                                   |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ServerManager.StartConnection`                                     | Ném `PlatformNotSupportedException`: `a server cannot listen in a browser; WebGL builds are clients only`                                                                                 |
+| Host mode                                                           | Không thể, vì nó khởi động server                                                                                                                                                         |
 | Dùng `UdpNetworkTransport` hoặc `TcpNetworkTransport` làm transport | `NetworkManager` ném exception khi khởi động: `<Transport> cannot run in a browser; assign a WebSocketNetworkTransport or a MultiNetworkTransport to the NetworkManager for WebGL builds` |
 
 ## Hosting <a href="#hosting" id="hosting"></a>
 
 Trình duyệt từ chối kết nối `ws://` từ trang HTTPS, nên hãy phục vụ trang qua HTTPS và game server qua `wss://` thông qua một proxy kết thúc TLS. Đặt cả Allowed Origins trên `WebSocketNetworkTransport` của server. [Triển khai](../server/deployment.md) nói về phía server của thiết lập này.
 
-Trang [WebSocket](../transports/websocket.md) mô tả các thiết lập của transport, và [nhiều transport](../transports/multi-transport.md) cho thấy cách một server phục vụ cùng lúc client WebGL và client desktop.
+Trang [WebSocket](../transport/websocket.md) mô tả các thiết lập của transport, và [nhiều transport](../transport/multi-transport.md) cho thấy cách một server phục vụ cùng lúc client WebGL và client desktop.

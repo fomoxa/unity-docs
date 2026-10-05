@@ -47,11 +47,11 @@ Vì vị trí liên tục thay đổi, server tính lại observer liên tục. 
 
 Khi một điều kiện mà rule dựa vào thay đổi, bạn có thể tính lại ngay thay vì chờ:
 
-| Method | Tính lại |
-|---|---|
+| Method                                          | Tính lại                                                                    |
+| ----------------------------------------------- | --------------------------------------------------------------------------- |
 | `ServerManager.RebuildObservers(networkObject)` | Một object cho mọi peer. Trả về false khi server này không spawn object đó. |
-| `ServerManager.RebuildObserversOfPeer(peerId)` | Mọi object cho một peer |
-| `ServerManager.RebuildObservers()` | Mọi object cho mọi peer |
+| `ServerManager.RebuildObserversOfPeer(peerId)`  | Mọi object cho một peer                                                     |
+| `ServerManager.RebuildObservers()`              | Mọi object cho mọi peer                                                     |
 
 `ServerManager.IsObserver(networkObject, peerId)` cho biết một peer hiện có observe một object hay không.
 
@@ -59,4 +59,4 @@ Khi một điều kiện mà rule dựa vào thay đổi, bạn có thể tính 
 
 Client của host là một peer như mọi peer khác và chỉ observe những gì rule cho phép. Object mà nó không observe vẫn tồn tại trong tiến trình của host vì server cần chúng, nhưng package ẩn renderer của chúng, như mô tả trong [host mode](host-mode.md).
 
-Field Visibility được đặt trên [NetworkObject](network-object.md), [network scene](scenes.md) giải thích bước scene trong việc quyết định, và [tham chiếu ServerManager](../reference/server-manager.md) liệt kê các member về observer.
+Field Visibility được đặt trên [NetworkObject](network-object.md), [network scene](scenes.md) giải thích bước scene trong việc quyết định, và [tham chiếu ServerManager](../tham-chieu/server-manager.md) liệt kê các member về observer.

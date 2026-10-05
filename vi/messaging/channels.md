@@ -2,10 +2,10 @@
 
 Mỗi message id đi trên một trong hai channel:
 
-| Channel | Giao nhận | Thứ tự | Dùng cho |
-|---|---|---|---|
-| `Channel.Unreliable` (mặc định) | Có thể mất | Không đảm bảo | Dữ liệu sắp được thay thế: vị trí, hiệu ứng, cập nhật thường xuyên |
-| `Channel.ReliableOrdered` | Tới đúng một lần | Theo thứ tự gửi, giữa mọi message reliable của kết nối | Sự kiện không được mất: state, spawn, chat, giao dịch mua |
+| Channel                         | Giao nhận        | Thứ tự                                                 | Dùng cho                                                           |
+| ------------------------------- | ---------------- | ------------------------------------------------------ | ------------------------------------------------------------------ |
+| `Channel.Unreliable` (mặc định) | Có thể mất       | Không đảm bảo                                          | Dữ liệu sắp được thay thế: vị trí, hiệu ứng, cập nhật thường xuyên |
+| `Channel.ReliableOrdered`       | Tới đúng một lần | Theo thứ tự gửi, giữa mọi message reliable của kết nối | Sự kiện không được mất: state, spawn, chat, giao dịch mua          |
 
 Package tự hiện thực độ tin cậy, trên bất kỳ transport nào. Kể cả qua TCP và WebSocket, vốn đã reliable, message reliable vẫn mang sequence number và acknowledgement của nó.
 
@@ -29,13 +29,13 @@ Model không có `[NetworkChannel]` là unreliable. Mỗi `[NetworkChannel]` ph�
 
 Phần đăng ký sinh ra ghi các channel vào `FomoxaRegistry.Channels`, nên bạn không bao giờ chọn channel khi gửi. Channel được áp dụng thế nào phụ thuộc vào việc model dùng để làm gì:
 
-| Dùng làm | Channel |
-|---|---|
-| State model | Phải là `ReliableOrdered`; nếu không, đăng ký sẽ ném exception |
-| RPC có model | Channel của model |
-| RPC không tham số | Mặc định `ReliableOrdered`, đặt bằng property `Channel` của attribute |
+| Dùng làm                       | Channel                                                                     |
+| ------------------------------ | --------------------------------------------------------------------------- |
+| State model                    | Phải là `ReliableOrdered`; nếu không, đăng ký sẽ ném exception              |
+| RPC có model                   | Channel của model                                                           |
+| RPC không tham số              | Mặc định `ReliableOrdered`, đặt bằng property `Channel` của attribute       |
 | Input model và reconcile model | Bị bỏ qua; package mang chúng bên trong các message unreliable của riêng nó |
-| Raw message | Channel của model |
+| Raw message                    | Channel của model                                                           |
 
 ## Độ tin cậy hoạt động thế nào <a href="#how-reliability-works" id="how-reliability-works"></a>
 
@@ -51,4 +51,4 @@ Khi flush, message được đóng vào các bundle vừa với frame budget c�
 
 Giới hạn đầu tiên một message lớn gặp là queue: lệnh gửi lớn hơn Byte Capacity (mặc định 1 MiB) trả về `SendResult.TooLargeForQueue` và không được đưa vào queue. Sau đó tới transport. Với UDP, một bundle phải vừa một datagram tối đa 65507 byte, tính cả header của frame, còn với TCP và WebSocket giao thức cho phép message tới 16 MiB. Message mà transport hoàn toàn không gửi được sẽ bị bỏ, và package phát `OnSendDropped` với `SendStatus.TooLarge` và log `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
 
-Channel được khai báo trên [model](models.md). [Mô hình networking](../concepts/networking-model.md) cho thấy channel nằm ở đâu trên đường gửi, và [hiệu năng](../advanced/performance.md) nói về chi phí của message reliable.
+Channel được khai báo trên [model](models.md). [Mô hình networking](../khai-niem/networking-model.md) cho thấy channel nằm ở đâu trên đường gửi, và [hiệu năng](../nang-cao/performance.md) nói về chi phí của message reliable.

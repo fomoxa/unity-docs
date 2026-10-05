@@ -62,4 +62,4 @@ Renderer, âm thanh và UI không có tác dụng gì trên dedicated server, nh
 
 Khi ứng dụng thoát bình thường, `NetworkManager` dừng các kết nối của nó, còn tiến trình bị kill thì không có cơ hội làm vậy. Trong cả hai trường hợp, client thấy kết nối dừng, với `PeerClosed` nếu thông báo đóng của server tới được chúng hoặc với `Timeout` sau heartbeat timeout, rồi thử kết nối lại theo thiết lập của chúng.
 
-Trang [server](../core/server.md) nói về bản thân `ServerManager`, và [triển khai](deployment.md) nói về những gì máy chủ và mạng của nó cần. [Server đầu tiên](../getting-started/first-server.md) build một dedicated server trong phần hướng dẫn.
+Trang [server](../core/server.md) nói về bản thân `ServerManager`, và [triển khai](deployment.md) nói về những gì máy chủ và mạng của nó cần. [Server đầu tiên](../bat-dau/first-server.md) build một dedicated server trong phần hướng dẫn.

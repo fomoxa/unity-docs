@@ -1,6 +1,6 @@
 # Ownership
 
-Mọi object đã spawn đều có một owner, là peer id của một client hoặc 0 khi server sở hữu object. Owner là client mà object thuộc về, thường là người chơi điều khiển nhân vật đó. Ownership không chuyển authority sang client đó, như [authority](../concepts/authority.md) giải thích.
+Mọi object đã spawn đều có một owner, là peer id của một client hoặc 0 khi server sở hữu object. Owner là client mà object thuộc về, thường là người chơi điều khiển nhân vật đó. Ownership không chuyển authority sang client đó, như [authority](../khai-niem/authority.md) giải thích.
 
 ## Owner được gì <a href="#what-the-owner-gets" id="what-the-owner-gets"></a>
 
@@ -30,10 +30,10 @@ Sau khi đổi, server gọi `OnOwnerChangedServer(previousOwnerId)` và mọi c
 
 ## Đọc owner <a href="#reading-the-owner" id="reading-the-owner"></a>
 
-| Member | Ở đâu | Ý nghĩa |
-|---|---|---|
-| `NetworkObject.OwnerId` | Server và client | Peer id của owner, 0 với server |
-| `NetworkObject.IsOwner` | Client | True trên client của owner, kể cả client của host |
+| Member                  | Ở đâu            | Ý nghĩa                                           |
+| ----------------------- | ---------------- | ------------------------------------------------- |
+| `NetworkObject.OwnerId` | Server và client | Peer id của owner, 0 với server                   |
+| `NetworkObject.IsOwner` | Client           | True trên client của owner, kể cả client của host |
 
 ## Khi owner ngắt kết nối <a href="#when-the-owner-disconnects" id="when-the-owner-disconnects"></a>
 

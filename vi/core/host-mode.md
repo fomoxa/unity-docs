@@ -11,7 +11,7 @@ manager.ServerManager.StartConnection(7777);
 manager.ClientManager.StartConnection("localhost", manager.ServerManager.Port);
 ```
 
-Vì server của manager đang chạy, client kết nối qua một kết nối [loopback](../transports/loopback.md) trong tiến trình, bỏ qua địa chỉ, port và không đi qua transport. Các client khác kết nối tới host qua transport, giống như với một dedicated server.
+Vì server của manager đang chạy, client kết nối qua một kết nối [loopback](../transport/loopback.md) trong tiến trình, bỏ qua địa chỉ, port và không đi qua transport. Các client khác kết nối tới host qua transport, giống như với một dedicated server.
 
 Client của host nhận peer id như mọi client khác, và server spawn object cho nó trong `OnRemoteConnectionState` như thường lệ.
 
@@ -46,4 +46,4 @@ Dừng client của host vẫn để server chạy cho các client khác, còn d
 
 Host không chạy được trong bản build WebGL, vì trình duyệt không nhận kết nối tới. Prediction không chạy cho object của chính host, nên host không bao giờ reconcile, nhưng các client ở xa của host vẫn dự đoán object của chúng bình thường.
 
-Host mode kết hợp [server](server.md) và [client](client.md) qua một kết nối [loopback](../transports/loopback.md), còn [observer](observers.md) giải thích cách server quyết định client của host nên thấy gì.
+Host mode kết hợp [server](server.md) và [client](client.md) qua một kết nối [loopback](../transport/loopback.md), còn [observer](observers.md) giải thích cách server quyết định client của host nên thấy gì.

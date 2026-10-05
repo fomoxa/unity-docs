@@ -6,21 +6,21 @@ Assembly Editor của package sinh code, gán prefab id, scene id và scene obje
 
 Mỗi project có một asset `FomoxaSettings`, tạo bằng Assets > Create > Fomoxa > Settings:
 
-| Field | Mặc định | Ý nghĩa |
-|---|---|---|
-| Models Folder | `Assets/Models` | Nơi chứa các class model của bạn |
-| Generated Folder | `Assets/Generated` | Nơi ghi code và asset được sinh |
+| Field            | Mặc định           | Ý nghĩa                          |
+| ---------------- | ------------------ | -------------------------------- |
+| Models Folder    | `Assets/Models`    | Nơi chứa các class model của bạn |
+| Generated Folder | `Assets/Generated` | Nơi ghi code và asset được sinh  |
 
 Namespace được sinh mang tên thư mục cuối của Generated Folder.
 
 ## Menu <a href="#menu" id="menu"></a>
 
-| Mục menu | Chạy |
-|---|---|
-| Tools > Fomoxa > Generate | Sinh code |
-| Tools > Fomoxa > Assign Prefab Ids | Bước prefab |
-| Tools > Fomoxa > Collect Network Scenes | Bước scene |
-| Assets > Create > Fomoxa > Settings | Tạo settings asset |
+| Mục menu                                 | Chạy                                                          |
+| ---------------------------------------- | ------------------------------------------------------------- |
+| Tools > Fomoxa > Generate                | Sinh code                                                     |
+| Tools > Fomoxa > Assign Prefab Ids       | Bước prefab                                                   |
+| Tools > Fomoxa > Collect Network Scenes  | Bước scene                                                    |
+| Assets > Create > Fomoxa > Settings      | Tạo settings asset                                            |
 | Assets > Create > Fomoxa > Distance Rule | Tạo asset [`DistanceRule`](../core/observers.md#distancerule) |
 
 ## Sinh code <a href="#code-generation" id="code-generation"></a>
@@ -38,7 +38,7 @@ Việc sinh code chạy sau mỗi lần biên dịch script, khi Editor load, v�
 
 Mọi file package ghi đều bắt đầu bằng một comment đánh dấu. Package từ chối ghi đè file không có dấu này, và xóa các file có dấu mà không còn cần.
 
-Lỗi và cảnh báo xuất hiện trong Console với tiền tố `[Fomoxa]`, và [xử lý sự cố](../getting-started/troubleshooting.md#code-generation-fails) giải thích từng thông báo.
+Lỗi và cảnh báo xuất hiện trong Console với tiền tố `[Fomoxa]`, và [xử lý sự cố](../bat-dau/troubleshooting.md#code-generation-fails) giải thích từng thông báo.
 
 ## Source generator cho RPC <a href="#rpc-source-generator" id="rpc-source-generator"></a>
 
@@ -74,13 +74,13 @@ Sau đó nó gán danh sách prefab và danh sách scene đã sinh cho mọi `Ne
 
 ## File cần commit <a href="#files-to-commit" id="files-to-commit"></a>
 
-| Đường dẫn | Commit |
-|---|---|
-| Asset `FomoxaSettings` | Có |
-| `fomoxa.toml` | Có |
-| `FomoxaSystemModels/` | Có |
-| `.fomoxa/` | Có |
-| Generated Folder, kèm `RpcModels/` và `UnityCodecs/` | Có |
+| Đường dẫn                                            | Commit |
+| ---------------------------------------------------- | ------ |
+| Asset `FomoxaSettings`                               | Có     |
+| `fomoxa.toml`                                        | Có     |
+| `FomoxaSystemModels/`                                | Có     |
+| `.fomoxa/`                                           | Có     |
+| Generated Folder, kèm `RpcModels/` và `UnityCodecs/` | Có     |
 
 Commit các file này giúp một bản clone mới hoặc máy build biên dịch được mà không cần chạy bộ sinh code trước.
 
@@ -88,4 +88,4 @@ Commit các file này giúp một bản clone mới hoặc máy build biên dị
 
 Binary `fomoxac` đi kèm cho Editor Windows x64 và Linux x64. Trên Editor của nền tảng khác, việc sinh code thất bại, nhưng project đã commit các file sinh ra vẫn biên dịch và build được.
 
-[Cài đặt](../getting-started/installation.md) hướng dẫn lần sinh code đầu tiên, [model và codec](../messaging/models.md) mô tả những gì được sinh từ model của bạn, và [spawn](../core/spawning.md) cùng [network scene](../core/scenes.md) giải thích các id được dùng lúc chạy ra sao.
+[Cài đặt](../bat-dau/installation.md) hướng dẫn lần sinh code đầu tiên, [model và codec](../messaging/models.md) mô tả những gì được sinh từ model của bạn, và [spawn](../core/spawning.md) cùng [network scene](../core/scenes.md) giải thích các id được dùng lúc chạy ra sao.

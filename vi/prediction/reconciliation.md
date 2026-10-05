@@ -16,11 +16,11 @@ protected override void OnRegisterInput(NetworkInput input)
 
 `NetworkInput.Reconcile<TState>(codec, capture, restore, matches = null)` nhận ba callback:
 
-| Callback | Chạy khi | Làm gì |
-|---|---|---|
-| `capture(TState state)` | Sau mỗi input được áp dụng trên server; sau mỗi tick được dự đoán hoặc replay trên client | Copy state của behaviour vào model |
-| `restore(TState state)` | Trên client, khi bắt đầu một lần sửa | Copy state của server ngược vào behaviour |
-| `matches(TState server, TState predicted)` | Trên client, cho mỗi state tới | Trả về dự đoán có đủ gần hay không |
+| Callback                                   | Chạy khi                                                                                  | Làm gì                                    |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------- | ----------------------------------------- |
+| `capture(TState state)`                    | Sau mỗi input được áp dụng trên server; sau mỗi tick được dự đoán hoặc replay trên client | Copy state của behaviour vào model        |
+| `restore(TState state)`                    | Trên client, khi bắt đầu một lần sửa                                                      | Copy state của server ngược vào behaviour |
+| `matches(TState server, TState predicted)` | Trên client, cho mỗi state tới                                                            | Trả về dự đoán có đủ gần hay không        |
 
 `Reconcile` ném `HandlerRegistrationException` khi được gọi trước `Use` hoặc bị gọi hai lần.
 
@@ -39,7 +39,7 @@ private static bool Matches(MoveState server, MoveState predicted) =>
 
 ## Sửa và replay <a href="#correction-and-replay" id="correction-and-replay"></a>
 
-```text
+```
 predicted   T10  T11  T12  T13  T14       client is at T14
                   ↑
             server state for T11 arrives, does not match
@@ -66,19 +66,19 @@ Server gửi state sau mỗi Reconcile Interval tick (mặc định 1), cho các
 
 ## Hiển thị lần sửa mượt mà <a href="#showing-corrections-smoothly" id="showing-corrections-smoothly"></a>
 
-Một lần sửa di chuyển object ngay lập tức. Để che điều đó, hãy gán một object con chứa các phần hiển thị vào field Visual của `NetworkTransform` trên object. Package khi đó giữ object con ở chỗ nó đang hiện trên màn hình rồi đưa nó về dần trong Smoothing Time, như mô tả trong [NetworkTransform](../synchronization/transform.md#prediction).
+Một lần sửa di chuyển object ngay lập tức. Để che điều đó, hãy gán một object con chứa các phần hiển thị vào field Visual của `NetworkTransform` trên object. Package khi đó giữ object con ở chỗ nó đang hiện trên màn hình rồi đưa nó về dần trong Smoothing Time, như mô tả trong [NetworkTransform](../dong-bo/transform.md#prediction).
 
 ## Chẩn đoán việc sửa thường xuyên <a href="#diagnosing-frequent-corrections" id="diagnosing-frequent-corrections"></a>
 
 `ReconcileCount` nên giữ ở mức thấp chừng nào không có gì bất thường xảy ra. Khi nó cứ tăng, nguyên nhân thường gặp là:
 
-- `apply` dùng `Time.deltaTime` thay vì `TimeManager.TickDelta`.
-- `apply` đọc dữ liệu khác nhau giữa server và client, như object khác hoặc số ngẫu nhiên không có seed.
-- Reconcile model thiếu state được mang qua các tick.
-- `matches` bị thiếu hoặc quá chặt.
-- Input tới server muộn và bị lặp lại, điều mà `ServerManager.DroppedInputsOf` cho thấy.
+* `apply` dùng `Time.deltaTime` thay vì `TimeManager.TickDelta`.
+* `apply` đọc dữ liệu khác nhau giữa server và client, như object khác hoặc số ngẫu nhiên không có seed.
+* Reconcile model thiếu state được mang qua các tick.
+* `matches` bị thiếu hoặc quá chặt.
+* Input tới server muộn và bị lặp lại, điều mà `ServerManager.DroppedInputsOf` cho thấy.
 
-[Mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao mỗi nguyên nhân trên làm hai bên khác nhau.
+[Mô phỏng tất định](../khai-niem/deterministic-simulation.md) giải thích vì sao mỗi nguyên nhân trên làm hai bên khác nhau.
 
 ## Với physics <a href="#with-physics" id="with-physics"></a>
 

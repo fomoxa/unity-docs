@@ -40,16 +40,16 @@ Object mà server spawn vào một network scene, bằng cách chuyển nó vào
 
 ## Event và truy vấn trên server <a href="#server-events-and-queries" id="server-events-and-queries"></a>
 
-| Member | Ý nghĩa |
-|---|---|
-| `OnLoaded(uint sceneId)` | Server đã load xong một network scene |
+| Member                                            | Ý nghĩa                                               |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| `OnLoaded(uint sceneId)`                          | Server đã load xong một network scene                 |
 | `OnLoadFailed(uint sceneId, Exception exception)` | Server không load được scene; exception cũng được log |
-| `Global` | Các global scene id |
-| `Contains(sceneId)` | Scene là global hoặc đã load cho một peer nào đó |
-| `IsGlobal(sceneId)` | Scene là global |
-| `HasLoaded(peerId, sceneId)` | Client của peer đã báo load xong scene |
-| `PeersOf(sceneId)` | Các peer có scene |
-| `TryGetScene(sceneId, out Scene scene)` | `Scene` của Unity mà server đã load |
+| `Global`                                          | Các global scene id                                   |
+| `Contains(sceneId)`                               | Scene là global hoặc đã load cho một peer nào đó      |
+| `IsGlobal(sceneId)`                               | Scene là global                                       |
+| `HasLoaded(peerId, sceneId)`                      | Client của peer đã báo load xong scene                |
+| `PeersOf(sceneId)`                                | Các peer có scene                                     |
+| `TryGetScene(sceneId, out Scene scene)`           | `Scene` của Unity mà server đã load                   |
 
 Mọi member này nằm trên `ServerManager.Scenes`.
 
@@ -94,4 +94,4 @@ Loader gọi `loaded` với scene đã load hoặc `failed` với một exceptio
 
 Mỗi phía load một scene asset nhiều nhất một lần tại một thời điểm. Mọi lần load scene đều là additive, và package không đổi active scene cũng không unload scene khởi động.
 
-Network scene tham gia vào việc quyết định [observer](observers.md) và vào việc [spawn](spawning.md), còn [tham chiếu ServerManager](../reference/server-manager.md) liệt kê các member về scene.
+Network scene tham gia vào việc quyết định [observer](observers.md) và vào việc [spawn](spawning.md), còn [tham chiếu ServerManager](../tham-chieu/server-manager.md) liệt kê các member về scene.

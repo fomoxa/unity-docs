@@ -17,31 +17,31 @@ Cả hai là struct nhỏ, nên hãy lấy mới mỗi khi cần thay vì giữ 
 
 ## PhysicsBody (3D) <a href="#physicsbody-3d" id="physicsbody-3d"></a>
 
-| Member | Type | Ý nghĩa |
-|---|---|---|
-| `Position` | `Vector3` | Vị trí world |
-| `Rotation` | `Quaternion` | Góc xoay world |
-| `Velocity` | `Vector3` | Vận tốc thẳng |
-| `AngularVelocity` | `Vector3` | Vận tốc góc, radian mỗi giây |
-| `Mass` | `float` | Khối lượng |
-| `IsKinematic` | `bool` | Body là kinematic |
-| `State` | `BodyState` | Vị trí, góc xoay, vận tốc và vận tốc góc cùng lúc |
-| `AddForce(Vector3 force)` | | Một lực, tác dụng trong bước tiếp theo |
-| `AddImpulse(Vector3 impulse)` | | Thay đổi vận tốc tức thời bằng `impulse / Mass`; bị bỏ qua với body kinematic |
+| Member                        | Type         | Ý nghĩa                                                                       |
+| ----------------------------- | ------------ | ----------------------------------------------------------------------------- |
+| `Position`                    | `Vector3`    | Vị trí world                                                                  |
+| `Rotation`                    | `Quaternion` | Góc xoay world                                                                |
+| `Velocity`                    | `Vector3`    | Vận tốc thẳng                                                                 |
+| `AngularVelocity`             | `Vector3`    | Vận tốc góc, radian mỗi giây                                                  |
+| `Mass`                        | `float`      | Khối lượng                                                                    |
+| `IsKinematic`                 | `bool`       | Body là kinematic                                                             |
+| `State`                       | `BodyState`  | Vị trí, góc xoay, vận tốc và vận tốc góc cùng lúc                             |
+| `AddForce(Vector3 force)`     |              | Một lực, tác dụng trong bước tiếp theo                                        |
+| `AddImpulse(Vector3 impulse)` |              | Thay đổi vận tốc tức thời bằng `impulse / Mass`; bị bỏ qua với body kinematic |
 
 ## PhysicsBody2D <a href="#physicsbody2d" id="physicsbody2d"></a>
 
-| Member | Type | Ý nghĩa |
-|---|---|---|
-| `Position` | `Vector2` | Vị trí world |
-| `Rotation` | `float` | Góc xoay tính bằng radian |
-| `Velocity` | `Vector2` | Vận tốc thẳng |
-| `AngularVelocity` | `float` | Vận tốc góc, radian mỗi giây |
-| `Mass` | `float` | Khối lượng |
-| `IsKinematic` | `bool` | Body là kinematic |
-| `State` | `BodyState2D` | Vị trí, góc xoay, vận tốc và vận tốc góc cùng lúc |
-| `AddForce(Vector2 force)` | | Một lực, tác dụng trong bước tiếp theo |
-| `AddImpulse(Vector2 impulse)` | | Thay đổi vận tốc tức thời bằng `impulse / Mass`; bị bỏ qua với body không phải dynamic |
+| Member                        | Type          | Ý nghĩa                                                                                |
+| ----------------------------- | ------------- | -------------------------------------------------------------------------------------- |
+| `Position`                    | `Vector2`     | Vị trí world                                                                           |
+| `Rotation`                    | `float`       | Góc xoay tính bằng radian                                                              |
+| `Velocity`                    | `Vector2`     | Vận tốc thẳng                                                                          |
+| `AngularVelocity`             | `float`       | Vận tốc góc, radian mỗi giây                                                           |
+| `Mass`                        | `float`       | Khối lượng                                                                             |
+| `IsKinematic`                 | `bool`        | Body là kinematic                                                                      |
+| `State`                       | `BodyState2D` | Vị trí, góc xoay, vận tốc và vận tốc góc cùng lúc                                      |
+| `AddForce(Vector2 force)`     |               | Một lực, tác dụng trong bước tiếp theo                                                 |
+| `AddImpulse(Vector2 impulse)` |               | Thay đổi vận tốc tức thời bằng `impulse / Mass`; bị bỏ qua với body không phải dynamic |
 
 `Vector2`, `Vector3` và `Quaternion` ở đây là các type `System.Numerics`.
 
@@ -88,6 +88,6 @@ body.State = state;
 GetComponent<NetworkTransform>().Teleport();
 ```
 
-Ở đây `respawnPoint` là một `System.Numerics.Vector3`. [NetworkTransform](../synchronization/transform.md#teleporting) mô tả `Teleport()` làm gì trên client.
+Ở đây `respawnPoint` là một `System.Numerics.Vector3`. [NetworkTransform](../dong-bo/transform.md#teleporting) mô tả `Teleport()` làm gì trên client.
 
-[Tổng quan physics](overview.md) giải thích khi nào body được step, [tham chiếu physics API](../reference/physics.md) liệt kê mọi member, và [rollback với physics](../prediction/rollback.md) cho thấy body trong một object được dự đoán.
+[Tổng quan physics](overview.md) giải thích khi nào body được step, [tham chiếu physics API](../tham-chieu/physics.md) liệt kê mọi member, và [rollback với physics](../prediction/rollback.md) cho thấy body trong một object được dự đoán.

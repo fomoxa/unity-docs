@@ -48,23 +48,23 @@ private void Gather(MoveInput input)
 
 `apply` chạy trong bốn tình huống:
 
-| Ở đâu | Khi nào | `context.Replaying` |
-|---|---|---|
-| Server | Mỗi tick, với object có owner, bằng input của tick đó | false |
-| Client của owner, khi đang dự đoán | Ngay sau `gather` | false |
-| Client của owner, trong lúc reconciliation | Lại một lần cho mỗi tick sau tick được sửa | true |
-| Host | Mỗi tick, với input vừa thu thập của host | false |
+| Ở đâu                                      | Khi nào                                               | `context.Replaying` |
+| ------------------------------------------ | ----------------------------------------------------- | ------------------- |
+| Server                                     | Mỗi tick, với object có owner, bằng input của tick đó | false               |
+| Client của owner, khi đang dự đoán         | Ngay sau `gather`                                     | false               |
+| Client của owner, trong lúc reconciliation | Lại một lần cho mỗi tick sau tick được sửa            | true                |
+| Host                                       | Mỗi tick, với input vừa thu thập của host             | false               |
 
 Server không gọi `apply` cho object do chính nó sở hữu, cũng không gọi trước khi input đầu tiên từ owner tới.
 
 `InputContext` cho `apply` biết thêm về input nó nhận:
 
-| Property | Ý nghĩa |
-|---|---|
-| `Tick` | Tick mà input này dành cho |
-| `Repeated` | Server hoặc lần replay không có input cho tick này và dùng lại input cuối |
-| `RepeatedTicks` | Khi `Repeated`, số tick đã qua kể từ tick của input đang được dùng lại |
-| `Replaying` | Lời gọi là một phần của lần replay trên client của owner |
+| Property        | Ý nghĩa                                                                   |
+| --------------- | ------------------------------------------------------------------------- |
+| `Tick`          | Tick mà input này dành cho                                                |
+| `Repeated`      | Server hoặc lần replay không có input cho tick này và dùng lại input cuối |
+| `RepeatedTicks` | Khi `Repeated`, số tick đã qua kể từ tick của input đang được dùng lại    |
+| `Replaying`     | Lời gọi là một phần của lần replay trên client của owner                  |
 
 `Replaying` cho phép bỏ qua các hiệu ứng đã hiển thị, như âm thanh và particle, còn `Repeated` cho phép tránh lặp lại các hành động một lần:
 
@@ -91,10 +91,10 @@ Server giữ các input nhận được theo object và behaviour, sắp theo ti
 
 Ở mỗi tick, server áp dụng input của tick đó, và nếu không có input nào tới kịp, nó áp dụng lại input cuối với `Repeated` được đặt. Input từ peer không sở hữu object bị bỏ, và server log `Fomoxa dropped input to object <id> from peer <id>, which does not own the object`. Khi owner thay đổi hoặc object bị despawn, input đã đệm bị xóa.
 
-Client cố gắng để mỗi input tới sớm Input Buffer tick (mặc định 2) trước khi server cần nó, như mô tả ở mục [đồng bộ đồng hồ](../concepts/tick.md#clock-synchronization).
+Client cố gắng để mỗi input tới sớm Input Buffer tick (mặc định 2) trước khi server cần nó, như mô tả ở mục [đồng bộ đồng hồ](../khai-niem/tick.md#clock-synchronization).
 
 ## Kiểm tra input <a href="#validating-input" id="validating-input"></a>
 
 Server áp dụng bất cứ gì owner gửi lên, nên hãy kẹp hoặc từ chối giá trị trong `apply`, ví dụ bằng `Vector3.ClampMagnitude` trên một hướng, để một client bị sửa đổi không thể di chuyển nhanh hơn mức cho phép. Vì cùng `apply` chạy trên client của owner, một client trung thực sẽ dự đoán ra đúng kết quả đã kẹp.
 
-Input làm việc cùng [reconciliation](reconciliation.md) và đồng hồ tick mô tả trong [tick và thời gian](../concepts/tick.md). [NetworkBehaviour](../core/network-behaviour.md) liệt kê các hook đăng ký.
+Input làm việc cùng [reconciliation](reconciliation.md) và đồng hồ tick mô tả trong [tick và thời gian](../khai-niem/tick.md). [NetworkBehaviour](../core/network-behaviour.md) liệt kê các hook đăng ký.
