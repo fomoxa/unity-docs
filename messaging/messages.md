@@ -14,7 +14,7 @@ Start with the model:
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace MyGame.Network.Models
 {
@@ -34,8 +34,9 @@ The following component relays chat through the server:
 
 ```csharp
 using System;
+using Fomoxa.Networking;
+using Fomoxa.Networking.Sessions;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Sessions;
 using Generated;
 using MyGame.Network.Models;
 using UnityEngine;

@@ -14,7 +14,7 @@ Bắt đầu với model:
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace MyGame.Network.Models
 {
@@ -34,8 +34,9 @@ Component sau chuyển tiếp chat qua server:
 
 ```csharp
 using System;
+using Fomoxa.Networking;
+using Fomoxa.Networking.Sessions;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Sessions;
 using Generated;
 using MyGame.Network.Models;
 using UnityEngine;

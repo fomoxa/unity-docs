@@ -100,8 +100,9 @@ Bạn đặt các field này trong Inspector. Manager đọc chúng một lần,
 
 | Field | Mặc định | Ý nghĩa |
 |---|---|---|
-| Physics Backend | Rigidbody | Physics backend. Server và client phải dùng cùng một backend. `Rapier` chưa được hiện thực. |
-| Simulate Physics | tắt | Manager step physics của Unity mỗi tick một lần và bật rollback physics. Xem [physics](../physics/overview.md). |
+| Physics | không có | Component physics, `RigidbodyPhysics`. Khi trống, manager tự thêm một `RigidbodyPhysics` với Simulate Physics tắt. Server và client phải dùng cùng một physics backend. Xem [physics](../physics/overview.md#turning-it-on). |
+
+`RigidbodyPhysics` có một field, Simulate Physics (mặc định tắt). Khi bật, manager step physics của Unity mỗi tick một lần và bật rollback physics.
 
 ## Nhiều manager <a href="#several-managers" id="several-managers"></a>
 
@@ -111,6 +112,6 @@ Mỗi physics scene chỉ do một manager step; xem [physics](../physics/overvi
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Không thể đặt các field từ code; `Registry` là property duy nhất có thể gán. Do đó manager thêm bằng `AddComponent` dùng giá trị mặc định, và nó tự thêm `UdpNetworkTransport` trừ khi có component transport được gán qua Inspector. Manager chỉ chạy tick khi đang bật và nằm trong một scene đã load.
+Không thể đặt các field từ code; `Registry` là property duy nhất có thể gán. Do đó manager thêm bằng `AddComponent` dùng giá trị mặc định, và nó tự thêm `UdpNetworkTransport` và `RigidbodyPhysics` trừ khi các component đó được gán qua Inspector. Manager chỉ chạy tick khi đang bật và nằm trong một scene đã load.
 
 [Tham chiếu NetworkManager](../reference/network-manager.md) và [cấu hình](../reference/configuration.md) liệt kê mọi member và field. Các trang [server](server.md), [client](client.md) và [host mode](host-mode.md) mô tả những gì manager chạy.

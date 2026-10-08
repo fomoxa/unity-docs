@@ -20,6 +20,6 @@ Kết nối loopback vẫn chạy handshake Fomoxa, bundle, độ tin cậy và 
 
 ## Dùng trực tiếp <a href="#using-it-directly" id="using-it-directly"></a>
 
-`LoopbackListener` và `LoopbackTransport`, trong `Fomoxa.Unity.Transports`, là public, nên hữu ích cho test và cho một [transport tùy chỉnh](custom-transport.md) chạy trong bộ nhớ. `new LoopbackListener(maxQueuedPackets)` tạo một listener. `Connect()` của nó trả về đầu client của một cặp mới, và `Accept()` của nó trả về đầu server. `LoopbackTransport.CreatePair` tạo một cặp đã kết nối mà không cần listener.
+`LoopbackListener` và `LoopbackTransport`, trong `Fomoxa.Networking.Transports`, là public, nên hữu ích cho test và cho một [transport tùy chỉnh](custom-transport.md) chạy trong bộ nhớ. `new LoopbackListener(maxQueuedPackets)` tạo một listener. `Connect()` của nó trả về đầu client của một cặp mới, và `Accept()` của nó trả về đầu server. `LoopbackTransport.CreatePair` tạo một cặp đã kết nối mà không cần listener.
 
 [Tổng quan transport](overview.md) liệt kê các transport mạng mà kết nối loopback thay thế.

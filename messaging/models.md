@@ -46,7 +46,7 @@ SendServerRpc(ShotNetAdapter.Instance, new Shot { Weapon = 2, Direction = transf
 | `[Codec("name")]` | Property or field | The member belongs to this codec. `[Codec("net", "compact")]` names several at once. |
 | `[NetworkChannel("codec", Channel.ReliableOrdered)]` | Class | The channel of one codec of the model; see [channels](channels.md) |
 
-`[Network]` and `[Codec]` come from `Fomoxa.Attributes.dll`, in the namespace `Fomoxa`, while `[NetworkChannel]` and `Channel` are in the namespace `Fomoxa.Unity`.
+`[Network]` and `[Codec]` come from `Fomoxa.Attributes.dll`, in the namespace `Fomoxa`, while `[NetworkChannel]` and `Channel` are in the namespace `Fomoxa.Networking`.
 
 A codec carries a property only when the property has both `[Network("type")]` and a `[Codec("name")]` with that codec's name. The codec ignores every other property, so a model can hold local data next to its network fields.
 

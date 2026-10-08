@@ -14,7 +14,7 @@
 | Host | A process that runs a server and a client in the same `NetworkManager`. See [host mode](../core/host-mode.md). |
 | Input model | The model a behaviour registers with `NetworkInput.Use`, sent each tick by the owner. |
 | Interpolation | Showing a remote object between received transforms, a few ticks in the past. |
-| Layer 1 | `Fomoxa.Unity.Core`, the part of the package that does not reference Unity. |
+| Layer 1 | `Fomoxa.Networking`, the Core: the part of the package that does not reference Unity. |
 | Layer 2 | `Fomoxa.Unity`, the Unity integration. |
 | Message id | The 32-bit id of one model and codec in the schema. |
 | Model | A C# class marked with `[Network]` that describes a message. |

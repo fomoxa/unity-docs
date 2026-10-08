@@ -32,7 +32,7 @@ Các bước kiểm tra chung nằm ở [state không cập nhật](../../gettin
 Các bước kiểm tra chung nằm ở [object từ xa bị giật, trễ hoặc không di chuyển](../../getting-started/troubleshooting.md#remote-objects-jitter-lag-or-do-not-move), với nền tảng trong [NetworkTransform](../../synchronization/transform.md) và [authority](../../concepts/authority.md).
 
 - `RedRunner.prefab` có `NetworkTransform` với Sync Scale bật; nếu không, nhân vật không quay đầu.
-- Simulate Physics đang bật. Khi bật, body mà client không dự đoán là kinematic và đi theo `NetworkTransform` của nó, còn khi tắt, physics của client tự di chuyển body.
+- Simulate Physics đang bật trên `RigidbodyPhysics` của `Network Manager`, và component đó nằm trong field Physics của nó. Khi bật, body mà client không dự đoán là kinematic và đi theo `NetworkTransform` của nó, còn khi tắt, physics của client tự di chuyển body.
 - Nhân vật di chuyển nhưng phát animation đứng yên cần nhánh kinematic trong `RedCharacter.LateUpdate`, nhánh tính tốc độ từ quãng đường đã đi, như trong [bước 05](offline-to-online/step-05-prediction-and-reconciliation.md#animate-characters-you-do-not-control).
 
 ## Nhân vật của bạn có cảm giác sai <a href="#your-own-character-feels-wrong" id="your-own-character-feels-wrong"></a>

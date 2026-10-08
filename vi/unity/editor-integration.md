@@ -1,6 +1,6 @@
 # Tích hợp Editor
 
-Assembly Editor của package sinh code, gán prefab id, scene id và scene object id, và kiểm tra project trước khi build. Trang này liệt kê cái gì chạy khi nào và mỗi bước ghi những file nào.
+Assembly Editor của package sinh code, gán prefab id, scene id và scene object id, ghi một scene file cho mỗi network scene, và kiểm tra project trước khi build. Trang này liệt kê cái gì chạy khi nào và mỗi bước ghi những file nào.
 
 ## Settings <a href="#settings" id="settings"></a>
 
@@ -20,6 +20,7 @@ Namespace được sinh mang tên thư mục cuối của Generated Folder.
 | Tools > Fomoxa > Generate | Sinh code |
 | Tools > Fomoxa > Assign Prefab Ids | Bước prefab |
 | Tools > Fomoxa > Collect Network Scenes | Bước scene |
+| Tools > Fomoxa > Export Network Scene Files | Bước scene file cho mọi network scene |
 | Assets > Create > Fomoxa > Settings | Tạo settings asset |
 | Assets > Create > Fomoxa > Distance Rule | Tạo asset [`DistanceRule`](../core/observers.md#distancerule) |
 
@@ -42,7 +43,7 @@ Lỗi và cảnh báo xuất hiện trong Console với tiền tố `[Fomoxa]`, 
 
 ## Source generator cho RPC <a href="#rpc-source-generator" id="rpc-source-generator"></a>
 
-`Runtime/Unity/Generators/Fomoxa.Unity.Generators.dll` là một Roslyn source generator mà Unity chạy cho mọi assembly tham chiếu `Fomoxa.Unity`. Nó viết phần đăng ký các method `[ServerRpc]` và `[ClientRpc]` vào mỗi behaviour `partial` và báo các lỗi `FOMOXA001` tới `FOMOXA010`, liệt kê trong [RPC](../messaging/rpc.md#compile-errors).
+`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` là một Roslyn source generator mà Unity chạy cho mọi assembly tham chiếu `Fomoxa.Networking`. Nó viết phần đăng ký các method `[ServerRpc]` và `[ClientRpc]` vào mỗi behaviour `partial` và báo các lỗi `FOMOXA001` tới `FOMOXA010`, liệt kê trong [RPC](../messaging/rpc.md#compile-errors).
 
 ## Bước prefab <a href="#prefab-step" id="prefab-step"></a>
 
@@ -56,9 +57,17 @@ Bước này ghi `<Generated Folder>/FomoxaPrefabList.asset` và `<Generated Fol
 
 Bước scene chạy khi một scene asset được import, khi Scene List của Build Profiles thay đổi, từ menu, và trước mỗi lần build player.
 
-Nó tính scene id của mọi scene dưới `Assets` từ GUID và kiểm tra không id nào bằng 0 hay bị trùng. Sau đó nó ghi `<Generated Folder>/FomoxaSceneList.asset` với các scene trong danh sách build, và `<Generated Folder>/FomoxaScenes.cs` với một hằng số cho mỗi scene.
+Nó tính scene id của mọi scene dưới `Assets` từ GUID và kiểm tra không id nào bằng 0 hay bị trùng. Sau đó nó ghi `<Generated Folder>/FomoxaSceneList.asset` với các scene trong danh sách build và scene file của chúng, và `<Generated Folder>/FomoxaScenes.cs` với một hằng số cho mỗi scene.
 
 Để sửa scene id bằng 0 hoặc bị trùng, hãy tạo lại một trong các scene asset, việc này cho nó một GUID mới.
+
+## Scene file <a href="#scene-files" id="scene-files"></a>
+
+Một scene file, `<Generated Folder>/<scene id>.fomoxascene`, mô tả một network scene ở dạng không cần Unity: các scene object với tư thế, behaviour và body của chúng, các collider tĩnh của scene, và ma trận va chạm layer 3D và 2D. File được mã hóa bằng codec của system model `SceneFile` của package, nên chỉ đọc được cùng với schema đã sinh ra nó.
+
+Bước scene file ghi file của một network scene khi bạn lưu scene đó, và ghi cho mọi network scene khi chạy từ menu. Trước khi build player, nó ghi các file còn thiếu, cũ hơn scene của chúng hoặc không còn đọc được, và xóa file của những scene không còn là network scene. Unity import mỗi file thành một `TextAsset`, và danh sách scene tham chiếu tới nó, nên bản build có kèm file. `RigidbodyPhysics` không đọc scene file.
+
+Scene có object hoặc collider không mô tả được, ví dụ vì một scene object chưa có scene object id, sẽ log lỗi và giữ file cũ.
 
 ## Scene object id <a href="#scene-object-ids" id="scene-object-ids"></a>
 
@@ -68,7 +77,7 @@ Trong Play Mode, scene object không có id hợp lệ sẽ nhận id tạm, và
 
 ## Kiểm tra khi build <a href="#build-checks" id="build-checks"></a>
 
-Trước khi build player, package chạy bước prefab và bước scene và làm build thất bại nếu chúng có lỗi. Nó kiểm tra model sinh ra của mọi RPC không tham số có mặt và đúng phiên bản và được `FomoxaAdapters.cs` đăng ký, nếu không thì thất bại với `run Tools > Fomoxa > Generate and commit the generated files`.
+Trước khi build player, package chạy bước prefab, bước scene và bước scene file, và làm build thất bại nếu chúng có lỗi. Nó kiểm tra model sinh ra của mọi RPC không tham số có mặt và đúng phiên bản và được `FomoxaAdapters.cs` đăng ký, nếu không thì thất bại với `run Tools > Fomoxa > Generate and commit the generated files`.
 
 Sau đó nó gán danh sách prefab và danh sách scene đã sinh cho mọi `NetworkManager` trong các scene được build, danh sách prefab chỉ ở những manager bật Collect Prefabs, và kiểm tra scene object id của mọi scene được build.
 
@@ -80,7 +89,7 @@ Sau đó nó gán danh sách prefab và danh sách scene đã sinh cho mọi `Ne
 | `fomoxa.toml` | Có |
 | `FomoxaSystemModels/` | Có |
 | `.fomoxa/` | Có |
-| Generated Folder, kèm `RpcModels/` và `UnityCodecs/` | Có |
+| Generated Folder, kèm `RpcModels/`, `UnityCodecs/` và các scene file | Có |
 
 Commit các file này giúp một bản clone mới hoặc máy build biên dịch được mà không cần chạy bộ sinh code trước.
 

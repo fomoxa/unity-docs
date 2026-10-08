@@ -15,17 +15,17 @@ The package also depends on the built-in Physics, Physics 2D and Animation modul
 In Unity, open Window > Package Manager, click the + button, choose Install package from git URL and enter:
 
 ```
-https://github.com/fomoxa/com.fomoxa.unity.git
+https://github.com/fomoxa/com.fomoxa.networking.git
 ```
 
-To pin a version, add a branch, tag or commit after `#`, for example `https://github.com/fomoxa/com.fomoxa.unity.git#<tag>`.
+To pin a version, add a branch, tag or commit after `#`, for example `https://github.com/fomoxa/com.fomoxa.networking.git#<tag>`.
 
 ### From a local folder
 
 To work against a local copy, choose Install package from disk in the same menu and select the package's `package.json`, and Package Manager adds a `file:` entry to `Packages/manifest.json`. You can also write that entry yourself. A path relative to the project's `Packages` folder works on every machine that has the same folder layout:
 
 ```json
-"com.fomoxa.unity": "file:../../com.fomoxa.unity"
+"com.fomoxa.networking": "file:../../com.fomoxa.networking"
 ```
 
 ## Create the settings asset
@@ -49,7 +49,7 @@ The package generates code after every script compilation, and you can also run 
 | `fomoxa.toml` | The `fomoxac` configuration, written from the settings asset. Edit the asset, not this file. |
 | `FomoxaSystemModels/` | The package's own models, copied out of the package so that `fomoxac` can read them. The folder is outside `Assets`, so Unity does not compile it. |
 | `.fomoxa/` | The schema files that `fomoxac` writes. |
-| Generated Folder | A codec and an adapter for every model, `NetSchema.cs`, `FomoxaAdapters.cs`, `FomoxaUnityRegistration.cs`, the prefab list and constants, the scene list and constants, and the `RpcModels` and `UnityCodecs` subfolders. |
+| Generated Folder | A codec and an adapter for every model, `NetSchema.cs`, `FomoxaAdapters.cs`, `FomoxaUnityRegistration.cs`, the prefab list and constants, the scene list and constants, a scene file for each network scene, and the `RpcModels` and `UnityCodecs` subfolders. |
 
 Commit all of them so that a fresh clone compiles before the generator has run.
 

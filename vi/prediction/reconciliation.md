@@ -82,6 +82,6 @@ Một lần sửa di chuyển object ngay lập tức. Để che điều đó, h
 
 ## Với physics <a href="#with-physics" id="with-physics"></a>
 
-Khi object di chuyển bằng `Rigidbody` hoặc `Rigidbody2D` và Simulate Physics đang bật, một lần sửa còn rollback cả các physics world, như mô tả trong [rollback với physics](rollback.md).
+Khi object di chuyển bằng `Rigidbody` hoặc `Rigidbody2D` và mô phỏng physics đang bật, một lần sửa còn rollback cả các physics world, như mô tả trong [rollback với physics](rollback.md).
 
 Reconciliation xây trên [input](input.md), và [tổng quan prediction](overview.md) cho thấy cả hai trong một nhân vật hoàn chỉnh. [NetworkBehaviour](../core/network-behaviour.md) liệt kê `OnReconciled` và các callback khác.

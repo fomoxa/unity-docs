@@ -13,8 +13,8 @@ Generation errors appear in the Console with the prefix `[Fomoxa]`.
 | `more than one FomoxaSettings asset exists; keep exactly one` | Delete the extra asset. |
 | `the FomoxaSettings asset needs both a models folder and a generated folder` | Fill both fields of the settings asset. |
 | `fomoxac generate exited with ...` | `fomoxac` rejected a model or a path. The rest of the message is `fomoxac`'s own output. A missing models folder is a common cause; create the folder. |
-| `... was not written by com.fomoxa.unity; remove it ...` | A file the package manages, such as `fomoxa.toml` or a file in `FomoxaSystemModels`, was written by someone else. Remove it and generate again. |
-| `the field type ... is neither a model nor a Unity type com.fomoxa.unity knows` | A model field uses a type that has no codec. See [custom codecs](../advanced/custom-codecs.md). |
+| `... was not written by com.fomoxa.networking; remove it ...` | A file the package manages, such as `fomoxa.toml` or a file in `FomoxaSystemModels`, was written by someone else. Remove it and generate again. |
+| `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | A model field uses a type that has no codec. See [custom codecs](../advanced/custom-codecs.md). |
 
 ## NetworkManager throws when the scene starts
 
@@ -39,7 +39,7 @@ The client's `OnClientConnectionState` reports `Stopped` with a `Reason`, and `W
    - `Timeout` means the handshake did not finish within Handshake Timeout Seconds. Over UDP an unreachable server can also show up this way, because UDP has no connection step before the handshake.
 7. A `Reason` of `TransportError` means the transport itself failed, for example on a refused TCP connection or a host name that does not resolve. The logs say which.
 
-The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, or a `HandshakeFailed` other than `Timeout`. A `PhysicsBackendMismatch` means the Physics Backend field differs between the server's and the client's `NetworkManager`.
+The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, or a `HandshakeFailed` other than `Timeout`. A `PhysicsBackendMismatch` means the server's and the client's `NetworkManager` use different physics backends in their Physics field.
 
 ## Client connects, then stops with PrefabMismatch or ObjectMismatch
 
@@ -90,7 +90,7 @@ If the server spawns the object but a client does not show it, continue on the c
 1. The prefab needs a `NetworkTransform`.
 2. Movements below the position, rotation or scale threshold are not sent until the object stops.
 3. Clients show remote objects Interpolation Ticks behind the newest position. Lower the value for less delay, or raise it for smoother movement over a lossy network.
-4. A dynamic `Rigidbody` or `Rigidbody2D` on a client keeps simulating unless Simulate Physics is on. With it on, the client turns the bodies it does not predict into kinematic bodies that follow `NetworkTransform`; see [physics](../physics/overview.md).
+4. A dynamic `Rigidbody` or `Rigidbody2D` on a client keeps simulating unless Simulate Physics is on in the `RigidbodyPhysics` of the `NetworkManager`. With it on, the client turns the bodies it does not predict into kinematic bodies that follow `NetworkTransform`; see [physics](../physics/overview.md).
 
 ## Prediction keeps correcting
 
@@ -99,7 +99,7 @@ Each time the client corrects a prediction, it calls `OnReconciled` and incremen
 1. `apply` must move by `TimeManager.TickDelta`, never by `Time.deltaTime`.
 2. Per-frame input, such as a button press, must be stored in `Update` and read in `gather`, so that a short press is not lost.
 3. `apply` must read only the input, the behaviour's own state and the tick length. Reading other objects, frame time or unseeded random numbers makes the two sides differ.
-4. With physics, Simulate Physics must be on so that the package steps and rolls back physics per tick. Even then, rollback of Unity physics is approximate; see [rollback](../prediction/rollback.md).
+4. With physics, Simulate Physics must be on in the `RigidbodyPhysics` of the `NetworkManager` so that the package steps and rolls back physics per tick. Even then, rollback of Unity physics is approximate; see [rollback](../prediction/rollback.md).
 5. The reconcile model must contain everything `apply` depends on. A value that carries over between ticks, such as a damping velocity, belongs in it.
 6. Without a `matches` function, the package compares the encoded bytes exactly, so float noise counts as a mismatch. Pass a `matches` function with tolerances.
 

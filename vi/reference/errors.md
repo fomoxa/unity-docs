@@ -2,7 +2,7 @@
 
 ## StopReason <a href="#stopreason" id="stopreason"></a>
 
-`Fomoxa.Unity.Sessions.StopReason` xuất hiện trong `ConnectionStateArgs.Reason` khi một kết nối dừng.
+`Fomoxa.Networking.Sessions.StopReason` xuất hiện trong `ConnectionStateArgs.Reason` khi một kết nối dừng.
 
 | Giá trị | Ý nghĩa | Client thử lại |
 |---|---|---|
@@ -30,7 +30,7 @@
 
 ## ObjectMismatchKind <a href="#objectmismatchkind" id="objectmismatchkind"></a>
 
-`Fomoxa.Unity.Objects.ObjectMismatchKind` xuất hiện trong `ObjectMismatchArgs.Kind`. Bốn loại đầu và `UnknownScene` dừng client với `PrefabMismatch`, các loại còn lại với `ObjectMismatch`.
+`Fomoxa.Networking.Objects.ObjectMismatchKind` xuất hiện trong `ObjectMismatchArgs.Kind`. Bốn loại đầu và `UnknownScene` dừng client với `PrefabMismatch`, các loại còn lại với `ObjectMismatch`.
 
 | Giá trị | Ý nghĩa |
 |---|---|
@@ -46,7 +46,7 @@
 
 ## SendResult <a href="#sendresult" id="sendresult"></a>
 
-`Fomoxa.Unity.Sessions.SendResult` được các method gửi trả về.
+`Fomoxa.Networking.Sessions.SendResult` được các method gửi trả về.
 
 | Giá trị | Ý nghĩa |
 |---|---|

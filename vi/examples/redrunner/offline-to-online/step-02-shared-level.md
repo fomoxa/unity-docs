@@ -122,7 +122,7 @@ Trong `Assets/Generation Settings.asset`, đặt Middle Blocks Count thành 20 v
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace RedRunner.Networking.Models
 {

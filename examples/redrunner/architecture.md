@@ -1,6 +1,6 @@
 # Red Runner online architecture
 
-This page describes the finished port on the `master` branch of [fomoxa/RedRunner](https://github.com/fomoxa/RedRunner), with its game code as of commit [`c239d2a`](https://github.com/fomoxa/RedRunner/commit/c239d2a0988dcf2af5821b41f1ba7cc2f6372baf). The [migration](offline-to-online/README.md) explains how each part got there.
+This page describes the online game at the end of the [migration](offline-to-online/README.md), on Unity physics and a Unity server, with its game code as of commit [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164d5624f171b64c8bfc6f029b12be2cfe41e27) of [fomoxa/RedRunner](https://github.com/fomoxa/RedRunner). [Rapier and a console server](rapier-and-console/README.md) describes the later commits, which move the game to the Rapier backend and add a server without Unity.
 
 ```
                          Red Runner (one player build)
@@ -38,13 +38,13 @@ This page describes the finished port on the `master` branch of [fomoxa/RedRunne
 
 | Object | Components | Role |
 |---|---|---|
-| Network Manager | `NetworkManager`, `UdpNetworkTransport`, `NetworkGame` | Connections and ticks; the game's start, spawn and local player logic |
+| Network Manager | `NetworkManager`, `UdpNetworkTransport`, `RigidbodyPhysics`, `NetworkGame` | Connections and ticks; the game's start, spawn and local player logic |
 | Network Level | `NetworkObject`, `NetworkLevel` | Scene object with the level seed; moves path followers |
 | Terrain Generator | `TerrainGenerator` | Builds the level from a seed; background around the local player |
 | Canvas/Start Screen | `StartScreen`, Address Field | Joins the address |
 | Canvas/Pause Screen | `PauseScreen` | Leaves the server |
 
-The `NetworkManager` uses Tick Rate 50, Timing Mode Tick, Simulate Physics on and Max Reconnect Retries 3, with Collected Prefabs and Collected Scenes set to the generated lists. Everything else is at its default.
+The `NetworkManager` uses Tick Rate 50, Timing Mode Tick, a `RigidbodyPhysics` with Simulate Physics on and Max Reconnect Retries 3, with Collected Prefabs and Collected Scenes set to the generated lists. Everything else is at its default.
 
 `Assets/Prefabs/RedRunner.prefab` is the network player. It has `RedCharacter`, `Rigidbody2D`, `NetworkObject`, `NetworkTransform` (with Sync Rotation off and Sync Scale on) and `NetworkPlayer`.
 

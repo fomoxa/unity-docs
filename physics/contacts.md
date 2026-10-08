@@ -53,7 +53,7 @@ At the end of the tick the result is compared with the previously published set,
 
 On the owner's client the components also record the touching set of every tick. A replay restores the set of the corrected tick, updates it as the worlds step again and publishes once after the replay. An event that already fired for the original run does not fire again, and a contact that the replay removed fires an exit.
 
-When no `NetworkManager` steps the world, for example with Simulate Physics off, the components simply pass Unity's own callbacks through as `OnEnter` and `OnExit`.
+When no `NetworkManager` steps the world, for example with Simulate Physics off, the components pass Unity's own callbacks through as `OnEnter` and `OnExit`.
 
 ## Configuration
 

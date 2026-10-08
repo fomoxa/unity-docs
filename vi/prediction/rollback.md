@@ -1,10 +1,10 @@
 # Rollback với physics
 
-Khi một object được dự đoán di chuyển bằng `Rigidbody` hoặc `Rigidbody2D`, kết quả của nó phụ thuộc vào cả physics world, gồm các body khác, contact và trọng lực. Vì vậy sửa nó nghĩa là rollback physics world về tick được sửa rồi step tiếp từ đó, việc package làm khi Simulate Physics đang bật.
+Khi một object được dự đoán di chuyển bằng `Rigidbody` hoặc `Rigidbody2D`, kết quả của nó phụ thuộc vào cả physics world, gồm các body khác, contact và trọng lực. Vì vậy sửa nó nghĩa là rollback physics world về tick được sửa rồi step tiếp từ đó, việc package làm khi mô phỏng physics đang bật.
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
-Simulate Physics phải bật, cả trên server lẫn client, để `NetworkManager` step physics mỗi tick một lần (xem [physics](../physics/overview.md)). Object được dự đoán phải có `Rigidbody` hoặc `Rigidbody2D` trên cùng GameObject với `NetworkObject` của nó. `apply` di chuyển body bằng lực, xung lực hoặc vận tốc, còn `capture` và `restore` đọc và ghi body qua `NetworkObject.Body` hoặc `Body2D`:
+Component `RigidbodyPhysics` của `NetworkManager` phải bật Simulate Physics, cả trên server lẫn client, để manager step physics mỗi tick một lần (xem [physics](../physics/overview.md#turning-it-on)). Object được dự đoán phải có `Rigidbody` hoặc `Rigidbody2D` trên cùng GameObject với `NetworkObject` của nó. `apply` di chuyển body bằng lực, xung lực hoặc vận tốc, còn `capture` và `restore` đọc và ghi body qua `NetworkObject.Body` hoặc `Body2D`:
 
 ```csharp
 private void Apply(MoveInput input, InputContext context)
@@ -13,7 +13,7 @@ private void Apply(MoveInput input, InputContext context)
     NetworkObject.Body.AddImpulse(push);
 }
 
-private void Capture(BodyMotion state)
+private void Capture(PushState state)
 {
     BodyState body = NetworkObject.Body.State;
     state.X = body.Position.X;
@@ -22,7 +22,7 @@ private void Capture(BodyMotion state)
     state.VelocityZ = body.Velocity.Z;
 }
 
-private void Restore(BodyMotion state)
+private void Restore(PushState state)
 {
     PhysicsBody body = NetworkObject.Body;
     BodyState current = body.State;
@@ -31,14 +31,14 @@ private void Restore(BodyMotion state)
     body.State = current;
 }
 
-private static bool Matches(BodyMotion server, BodyMotion predicted) =>
+private static bool Matches(PushState server, PushState predicted) =>
     Math.Abs(server.X - predicted.X) <= 0.01f
     && Math.Abs(server.Z - predicted.Z) <= 0.01f
     && Math.Abs(server.VelocityX - predicted.VelocityX) <= 0.05f
     && Math.Abs(server.VelocityZ - predicted.VelocityZ) <= 0.05f;
 ```
 
-`BodyMotion` là một model có bốn property `f32`, `X`, `Z`, `VelocityX` và `VelocityZ`. `BodyState` và `PhysicsBody` nằm trong `Fomoxa.Unity.Simulation`, và `Math` là `System.Math`. Ví dụ di chuyển trên mặt phẳng nền và để trục dọc cho trọng lực.
+`PushState` là một model có bốn property `f32`, `X`, `Z`, `VelocityX` và `VelocityZ`. `BodyState` và `PhysicsBody` nằm trong `Fomoxa.Networking.Simulation`, và `Math` là `System.Math`. Ví dụ di chuyển trên mặt phẳng nền và để trục dọc cho trọng lực.
 
 ## Dòng thời gian <a href="#timeline" id="timeline"></a>
 

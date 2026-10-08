@@ -1,6 +1,6 @@
 # Tổng quan physics
 
-Package có thể chạy physics 3D và 2D của Unity theo tick của network. Khi bật Simulate Physics, `NetworkManager` step physics mỗi tick một lần, client giữ các body nó không dự đoán ở vị trí được replicate, và prediction có thể rollback physics. Code game truy cập body của một network object qua các type riêng của package, `PhysicsBody` và `PhysicsBody2D`.
+Package có thể chạy physics 3D và 2D của Unity theo tick của network. Khi bật mô phỏng physics, `NetworkManager` step physics mỗi tick một lần, client giữ các body nó không dự đoán ở vị trí được replicate, và prediction có thể rollback physics. Code game truy cập body của một network object qua các type riêng của package, `PhysicsBody` và `PhysicsBody2D`.
 
 ```text
 Game code: apply, capture, restore, OnTick
@@ -9,14 +9,20 @@ NetworkObject.Body / Body2D        PhysicsBody, PhysicsBody2D
     ↓
 IPhysicsWorld / IPhysicsWorld2D    one per Unity physics scene, both extend IPhysicsSimulation
     ↓
-Backend                            Rigidbody: Unity PhysicsScene and PhysicsScene2D
+RigidbodyPhysics                   Unity PhysicsScene and PhysicsScene2D
 ```
 
-Backend là chi tiết hiện thực, và code dùng `PhysicsBody` không phụ thuộc vào API `Rigidbody` của Unity.
+Code dùng `PhysicsBody` không phụ thuộc vào API `Rigidbody` của Unity.
 
 ## Bật tính năng <a href="#turning-it-on" id="turning-it-on"></a>
 
-Bật Simulate Physics trên `NetworkManager` của server và của mọi client. Khi có ít nhất một manager bật nó, package đặt `Physics.simulationMode` và `Physics2D.simulationMode` thành `Script`, để Unity không còn step physics sau `FixedUpdate`, và khôi phục mode ban đầu khi manager cuối cùng như vậy bị hủy.
+Field Physics của `NetworkManager` giữ component chạy physics cho nó, tức `RigidbodyPhysics`. Manager có field Physics trống sẽ tự thêm một `RigidbodyPhysics` vào GameObject của nó khi khởi động, với mô phỏng physics tắt.
+
+1. Thêm `RigidbodyPhysics` vào GameObject của `NetworkManager`.
+2. Tick field Simulate Physics của nó.
+3. Kéo nó vào field Physics của `NetworkManager`.
+
+Làm như vậy cho server và cho mọi client. Khi có ít nhất một manager mô phỏng physics, package đặt `Physics.simulationMode` và `Physics2D.simulationMode` thành `Script`, để Unity không còn step physics sau `FixedUpdate`, và khôi phục mode ban đầu khi manager cuối cùng như vậy bị hủy.
 
 Từ đó, manager làm bốn việc mỗi tick:
 
@@ -50,13 +56,17 @@ Proxy cho phép body được dự đoán va chạm với object của người 
 
 `NetworkObject.Body` trả về một `PhysicsBody` cho `Rigidbody` của object, và `NetworkObject.Body2D` trả về một `PhysicsBody2D` cho `Rigidbody2D` của nó. Component body phải nằm trên cùng GameObject với `NetworkObject`. [PhysicsBody](physics-body.md) mô tả cả hai type.
 
-## Backend <a href="#backend" id="backend"></a>
+## Geometry và body thêm lúc chạy <a href="#geometry-and-bodies-added-at-runtime" id="geometry-and-bodies-added-at-runtime"></a>
 
-Field Physics Backend chọn backend. `Rigidbody`, giá trị mặc định, dùng physics 3D và 2D có sẵn của Unity và là backend duy nhất đã được hiện thực. `Rapier` có khai báo nhưng chưa hiện thực, và khi chọn nó, `Body` và `Body2D` trả về body không hợp lệ.
+Một level dựng lúc chạy có thể giao geometry của nó cho component physics. `NetworkPhysics.AddStatic(Scene, IReadOnlyList<ColliderDesc>)` và `AddStatic2D` thêm một nhóm collider tĩnh vào một scene, `AddStatic(GameObject)` và `AddStatic2D(GameObject)` thêm các collider dưới một GameObject, còn `RemoveStatic` gỡ một nhóm ra. `AddBody` và `AddBody2D` thêm một body không thuộc network object nào, như một bục mà mọi peer di chuyển giống nhau theo số tick, và `RemoveBody`, `RemoveBody2D` gỡ nó. `BodyDescriptions.TryDescribe` và `TryDescribe2D` dựng một `BodyDesc` hoặc `BodyDesc2D` từ các collider và `Rigidbody` hoặc `Rigidbody2D` của một GameObject.
 
-Server báo cho mỗi client backend nó dùng, và client dùng backend khác sẽ dừng với `StopReason.PhysicsBackendMismatch` và không kết nối lại.
+Với `RigidbodyPhysics`, một nhóm tĩnh là một GameObject ẩn trong scene, mỗi collider là một con. `AddStatic(GameObject)` trả về nhóm rỗng, vì physics của Unity đã có các collider của GameObject đó. Body dynamic thêm bằng `AddBody` được lưu và khôi phục cùng world của nó, còn body kinematic thì không.
 
-## Khi không bật Simulate Physics <a href="#without-simulate-physics" id="without-simulate-physics"></a>
+## Physics backend <a href="#physics-backend" id="physics-backend"></a>
+
+Server báo cho mỗi client physics backend nó dùng, và client dùng backend khác sẽ dừng với `StopReason.PhysicsBackendMismatch` và không kết nối lại. Hãy cho server và client cùng một component physics.
+
+## Khi không bật mô phỏng physics <a href="#without-physics-simulation" id="without-physics-simulation"></a>
 
 Khi Simulate Physics tắt, Unity step physics theo fixed timestep của nó, độc lập với tick. Body trên server vẫn di chuyển và `NetworkTransform` vẫn replicate chúng, nhưng bản copy của các body dynamic trên client tự mô phỏng giữa các bản cập nhật. Không có proxy, và prediction không thể rollback physics.
 

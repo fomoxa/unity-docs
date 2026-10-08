@@ -82,6 +82,6 @@ A correction moves the object at once. To hide that, assign a child holding the 
 
 ## With physics
 
-When the object moves with a `Rigidbody` or `Rigidbody2D` and Simulate Physics is on, a correction also rolls the physics worlds back, as described in [rollback with physics](rollback.md).
+When the object moves with a `Rigidbody` or `Rigidbody2D` and physics simulation is on, a correction also rolls the physics worlds back, as described in [rollback with physics](rollback.md).
 
 Reconciliation builds on [input](input.md), and the [prediction overview](overview.md) shows both in a complete character. [NetworkBehaviour](../core/network-behaviour.md) lists `OnReconciled` and the other callbacks.

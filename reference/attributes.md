@@ -15,7 +15,7 @@ These attributes come from `Fomoxa.Attributes.dll`, in the namespace `Fomoxa`, a
 
 ## NetworkChannelAttribute
 
-`[NetworkChannel(string codec, Channel channel)]`, in the namespace `Fomoxa.Unity`, goes on a class and can be repeated once per codec. [Channels](../messaging/channels.md) explains how it is used.
+`[NetworkChannel(string codec, Channel channel)]`, in the namespace `Fomoxa.Networking`, goes on a class and can be repeated once per codec. [Channels](../messaging/channels.md) explains how it is used.
 
 | Property | Type | Meaning |
 |---|---|---|
@@ -24,7 +24,7 @@ These attributes come from `Fomoxa.Attributes.dll`, in the namespace `Fomoxa`, a
 
 ## ServerRpcAttribute
 
-`[ServerRpc]` or `[ServerRpc("ModelName")]`, in the namespace `Fomoxa.Unity`, goes on a method. [RPCs](../messaging/rpc.md) explains how it is used.
+`[ServerRpc]` or `[ServerRpc("ModelName")]`, in the namespace `Fomoxa.Networking`, goes on a method. [RPCs](../messaging/rpc.md) explains how it is used.
 
 | Property | Type | Default | Meaning |
 |---|---|---|---|
@@ -37,7 +37,7 @@ The method can have one of the signatures `void M()`, `void M(ulong peerId)`, `v
 
 ## ClientRpcAttribute
 
-`[ClientRpc]` or `[ClientRpc("ModelName")]`, in the namespace `Fomoxa.Unity`, goes on a method.
+`[ClientRpc]` or `[ClientRpc("ModelName")]`, in the namespace `Fomoxa.Networking`, goes on a method.
 
 | Property | Type | Default | Meaning |
 |---|---|---|---|
@@ -49,7 +49,7 @@ The method can have the signature `void M()` or `void M(TModel value)`.
 
 ## NetworkRpcAttribute
 
-`[NetworkRpc]` or `[NetworkRpc("ModelName")]`, in the namespace `Fomoxa.Unity`, goes on a method without parameters. It generates the model of a parameterless RPC without generating its registration, so you register the RPC yourself in `OnRegisterRpcs`.
+`[NetworkRpc]` or `[NetworkRpc("ModelName")]`, in the namespace `Fomoxa.Networking`, goes on a method without parameters. It generates the model of a parameterless RPC without generating its registration, so you register the RPC yourself in `OnRegisterRpcs`.
 
 | Property | Type | Default | Meaning |
 |---|---|---|---|
@@ -58,7 +58,7 @@ The method can have the signature `void M()` or `void M(TModel value)`.
 
 ## MessageAdapterAttribute
 
-`[MessageAdapter(string codec)]`, in the namespace `Fomoxa.Unity`, is written on every generated adapter class, and the RPC source generator uses it to find the adapter of a model and codec. Do not put it on your own classes.
+`[MessageAdapter(string codec)]`, in the namespace `Fomoxa.Networking`, is written on every generated adapter class, and the RPC source generator uses it to find the adapter of a model and codec. Do not put it on your own classes.
 
 ## Rules
 

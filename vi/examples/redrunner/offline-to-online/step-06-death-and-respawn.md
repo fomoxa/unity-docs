@@ -137,7 +137,7 @@ Ví dụ trên là `Saw`, và `Spike`, `Water`, `Mace` có cùng phép kiểm tr
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace RedRunner.Networking.Models
 {

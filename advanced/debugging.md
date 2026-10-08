@@ -35,6 +35,7 @@ The package logs `OnSendDropped` and `OnReceiveDropped` by default, which you ca
 A small on-screen overlay can show the most useful of these values:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using UnityEngine;
 

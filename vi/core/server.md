@@ -60,7 +60,7 @@ Khi một peer dừng, server despawn các object nó sở hữu. Object có `Ne
 | `ChangeOwner(networkObject, ownerId)` | [Ownership](ownership.md) |
 | `IsObserver`, `RebuildObservers`, `ObserverRule`, `ObserverInterval` | [Observer](observers.md) |
 | `Scenes` | [Network scene](scenes.md) |
-| `Spawned` | Mọi object server này đã spawn, theo object id |
+| `Spawned` | Mọi object server này đã spawn, theo object id. Giá trị là `INetworkEntity`; trong Unity mỗi giá trị là một `NetworkObject`. |
 
 ## Message <a href="#messages" id="messages"></a>
 

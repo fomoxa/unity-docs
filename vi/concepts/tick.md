@@ -18,16 +18,16 @@ Trên client kết nối tới server ở xa, manager còn chạy tick nhanh hơ
 
 ## Thứ tự một tick <a href="#order-of-one-tick" id="order-of-one-tick"></a>
 
-Ở timing mode Tick, một tick chạy các bước sau theo thứ tự:
+Ở timing mode Tick, một tick chạy các bước sau theo thứ tự. Mô phỏng physics bật khi component `RigidbodyPhysics` của `NetworkManager` được tick Simulate Physics, như mô tả trong [tổng quan physics](../physics/overview.md).
 
 1. `TimeManager.Tick` tăng thêm một và `OnPreTick` được gọi.
 2. Chỉ ở tick đầu tiên của frame, cả hai manager đọc các message đã tới, và client cập nhật ước lượng đồng hồ.
-3. Khi bật Simulate Physics, client ở xa đặt các body networked mà nó không dự đoán vào vị trí transform của chúng.
-4. Client chạy reconcile, rồi thu thập input cho các object nó dự đoán, áp dụng và gửi đi. Khi không bật Simulate Physics, nó cũng ghi lại state dự đoán ở bước này.
+3. Khi bật mô phỏng physics, client đặt các body networked mà nó không dự đoán vào vị trí transform của chúng.
+4. Client chạy reconcile, rồi thu thập input cho các object nó dự đoán, áp dụng và gửi đi.
 5. Server áp dụng input của tick này cho mọi object có input model.
-6. Khi bật Simulate Physics, manager step physics một lần và truy vấn contact.
-7. Khi bật Simulate Physics, client ghi lại state dự đoán và lưu physics cho tick này. Server gửi reconcile state tới các owner.
-8. Khi bật Simulate Physics, các contact event được gọi.
+6. Khi bật mô phỏng physics, manager step physics một lần và truy vấn contact.
+7. Client ghi lại state dự đoán cho tick này, kèm state physics khi bật mô phỏng physics. Server gửi reconcile state tới các owner.
+8. Khi bật mô phỏng physics, các contact event được gọi.
 9. `OnTick` được gọi, rồi tới `OnPostTick`.
 10. Server dựng lại một phần các tập observer, chụp state và transform, và đưa phần thay đổi vào queue.
 11. Cả hai manager flush send queue.
@@ -46,8 +46,9 @@ Trên client kết nối tới server ở xa, manager còn chạy tick nhanh hơ
 ## Tick event <a href="#tick-events" id="tick-events"></a>
 
 ```csharp
+using Fomoxa.Networking;
+using Fomoxa.Networking.Sessions;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Sessions;
 using UnityEngine;
 
 public sealed class RoundClock : MonoBehaviour

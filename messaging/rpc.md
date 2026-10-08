@@ -13,6 +13,7 @@ Each RPC takes either no argument or a single [model](models.md).
 ## Declaring RPCs with attributes
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;
@@ -105,6 +106,7 @@ A server RPC can only be sent where the object is spawned on a client, and an ob
 Instead of using attributes, you can register handlers in code in `OnRegisterRpcs`, which runs once per instance before `OnStartServer` or `OnStartClient`:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using UnityEngine;

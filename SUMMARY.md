@@ -76,7 +76,6 @@
 
 * [Dedicated server](server/dedicated-server.md)
 * [Deployment](server/deployment.md)
-* [Server console](server/server-console.md)
 
 ## Unity
 
@@ -88,6 +87,22 @@
 * [Custom codecs and Unity types](advanced/custom-codecs.md)
 * [Performance](advanced/performance.md)
 * [Debugging](advanced/debugging.md)
+
+## Rapier physics
+
+* [Overview](rapier/overview.md)
+* [Setup](rapier/setup.md)
+* [Bodies and colliders](rapier/bodies.md)
+* [Contact events](rapier/contacts.md)
+* [Determinism](rapier/determinism.md)
+
+## Console server
+
+* [Overview](console-server/overview.md)
+* [The project](console-server/project.md)
+* [The runtime](console-server/runtime.md)
+* [Physics](console-server/physics.md)
+* [Reference](console-server/reference.md)
 
 ## Examples
 
@@ -105,6 +120,11 @@
     * [Step 09: Final online game](examples/redrunner/offline-to-online/step-09-final-online-game.md)
   * [Online architecture](examples/redrunner/architecture.md)
   * [Troubleshooting](examples/redrunner/troubleshooting.md)
+  * [Rapier and a console server](examples/redrunner/rapier-and-console/README.md)
+    * [Step 10: Rapier backend](examples/redrunner/rapier-and-console/step-10-rapier-backend.md)
+    * [Step 11: Simulation library](examples/redrunner/rapier-and-console/step-11-simulation-library.md)
+    * [Step 12: Level catalogue](examples/redrunner/rapier-and-console/step-12-level-catalogue.md)
+    * [Step 13: Console server](examples/redrunner/rapier-and-console/step-13-console-server.md)
 
 ## Reference
 

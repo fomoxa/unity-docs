@@ -4,7 +4,7 @@ This page lists the messaging types. The guides on [models and codecs](../messag
 
 ## IMessageCodec<T>
 
-`public interface IMessageCodec<T>` in `Fomoxa.Unity.Messaging` is implemented by every generated adapter.
+`public interface IMessageCodec<T>` in `Fomoxa.Networking.Messaging` is implemented by every generated adapter.
 
 | Member | Description |
 |---|---|
@@ -16,7 +16,7 @@ Each generated adapter is a `public sealed class <Model><Codec>Adapter : IMessag
 
 ## FomoxaRegistry
 
-`public sealed class FomoxaRegistry` in `Fomoxa.Unity`.
+`public sealed class FomoxaRegistry` in `Fomoxa.Networking`.
 
 | Member | Description |
 |---|---|
@@ -32,7 +32,7 @@ The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a regi
 
 ## RpcMessageIds
 
-`public sealed class RpcMessageIds` in `Fomoxa.Unity`.
+`public sealed class RpcMessageIds` in `Fomoxa.Networking`.
 
 | Member | Description |
 |---|---|
@@ -42,7 +42,7 @@ The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a regi
 
 ## MessageChannels
 
-`public sealed class MessageChannels` in `Fomoxa.Unity.Messaging`.
+`public sealed class MessageChannels` in `Fomoxa.Networking.Messaging`.
 
 | Member | Description |
 |---|---|
@@ -53,7 +53,7 @@ The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a regi
 
 ## MessageDispatcher
 
-`public sealed class MessageDispatcher` in `Fomoxa.Unity.Messaging`. Each `ServerManager` and each `ClientManager` has one.
+`public sealed class MessageDispatcher` in `Fomoxa.Networking.Messaging`. Each `ServerManager` and each `ClientManager` has one.
 
 | Member | Description |
 |---|---|
@@ -76,12 +76,12 @@ public delegate void ObjectPayloadHandler(ulong peerId, uint objectId, byte beha
 
 | Exception | Namespace | Thrown when |
 |---|---|---|
-| `MessageDecodeException` | `Fomoxa.Unity.Messaging` | An adapter cannot decode a payload |
-| `HandlerRegistrationException` | `Fomoxa.Unity.Messaging` | A handler, RPC, state or input registration is invalid |
+| `MessageDecodeException` | `Fomoxa.Networking.Messaging` | An adapter cannot decode a payload |
+| `HandlerRegistrationException` | `Fomoxa.Networking.Messaging` | A handler, RPC, state or input registration is invalid |
 
 ## System models
 
-The package's own models live in `Fomoxa.Unity.Messaging`. They are generated together with your models and are part of every schema, but game code does not send them.
+The package's own models live in `Fomoxa.Networking.Messaging`. They are generated together with your models and are part of every schema, but game code does not send them.
 
 | Model | Purpose | Channel |
 |---|---|---|

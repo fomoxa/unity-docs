@@ -54,6 +54,7 @@ Cả hai model đều không cần `[NetworkChannel]`, vì package mang input v�
 Behaviour nối chúng lại với nhau:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;

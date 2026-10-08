@@ -37,12 +37,10 @@ To keep corrections rare, `apply` should read only the input it receives, the be
 
 ## Physics is approximate
 
-With Simulate Physics on, the client saves the state of each physics world every tick and loads it again to roll back. A saved state contains the position, rotation, velocity, angular velocity and sleep state of each dynamic body, but not the physics engine's contact data, so a replay that starts from a loaded state can differ from the original run. [Rollback with physics](../prediction/rollback.md) goes into the details.
+With physics simulation on, the client saves the state of each physics world every tick and loads it again to roll back. A saved state contains the position, rotation, velocity, angular velocity and sleep state of each dynamic body, but not the physics engine's contact data, so a replay that starts from a loaded state can differ from the original run. [Rollback with physics](../prediction/rollback.md) goes into the details.
 
 ## Not implemented
 
-Some features need a level of determinism that the package does not provide, and the package does not include them. There is no lockstep simulation, no deterministic random number generator, no state hashing to detect divergence and no physics that is deterministic across platforms. Nor can a match be recorded and replayed later; wherever this documentation says replay, it means re-applying input during reconciliation.
-
-The `PhysicsBackend.Rapier` value names a physics backend that does not exist yet, and selecting it leaves objects without a physics body.
+Some features need a level of determinism that the package does not provide, and the package does not include them. There is no lockstep simulation, no deterministic random number generator and no state hashing to detect divergence. A match cannot be recorded and replayed later either. Wherever this documentation says replay, it means applying input again during reconciliation.
 
 For more on the pieces this page relies on, see [prediction](prediction.md), [ticks and timing](tick.md) and the [physics overview](../physics/overview.md).

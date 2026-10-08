@@ -50,7 +50,7 @@ Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi 
 
 | Member | Mục đích |
 |---|---|
-| `Spawned` | Các object đã spawn trên client này, theo object id |
+| `Spawned` | Các object đã spawn trên client này, theo object id. Giá trị là `INetworkEntity`; trong Unity mỗi giá trị là một `NetworkObject`. |
 | `Rtt` | Round-trip time tới server; 0 với client của host |
 | `IsReplaying` | True khi client đang replay input trong lúc reconciliation |
 

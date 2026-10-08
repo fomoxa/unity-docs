@@ -1,6 +1,6 @@
 # TimeManager reference
 
-`public sealed class TimeManager` in `Fomoxa.Unity` has no public constructor; you reach it through `NetworkManager.TimeManager`. [Ticks and timing](../concepts/tick.md) explains the concepts behind it.
+`public sealed class TimeManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.TimeManager`. [Ticks and timing](../concepts/tick.md) explains the concepts behind it.
 
 ## Properties
 

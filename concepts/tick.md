@@ -18,16 +18,16 @@ On a client connected to a remote server, the manager also runs its ticks slight
 
 ## Order of one tick
 
-In the Tick timing mode, one tick runs these steps in order:
+In the Tick timing mode, one tick runs these steps in order. Physics simulation is on when the `RigidbodyPhysics` component of the `NetworkManager` has Simulate Physics checked, as described in the [physics overview](../physics/overview.md).
 
 1. `TimeManager.Tick` increases by one and `OnPreTick` fires.
 2. In the first tick of the frame only, both managers read the messages that arrived, and the client updates its clock estimate.
-3. With Simulate Physics on, a remote client places the networked bodies it does not predict at their transforms.
-4. The client reconciles, then gathers input for its predicted objects, applies it and sends it. Without Simulate Physics, it also records the predicted state here.
+3. With physics simulation on, the client places the networked bodies it does not predict at their transforms.
+4. The client reconciles, then gathers input for its predicted objects, applies it and sends it.
 5. The server applies the input for this tick to every object that has an input model.
-6. With Simulate Physics on, the manager steps physics once and queries contacts.
-7. With Simulate Physics on, the client records its predicted state and saves physics for this tick. The server sends reconcile states to owners.
-8. With Simulate Physics on, contact events fire.
+6. With physics simulation on, the manager steps physics once and queries contacts.
+7. The client records its predicted state for this tick, together with the physics state when physics simulation is on. The server sends reconcile states to owners.
+8. With physics simulation on, contact events fire.
 9. `OnTick` fires, then `OnPostTick`.
 10. The server rebuilds part of its observer sets, captures state and transforms, and queues what changed.
 11. Both managers flush their send queues.
@@ -46,8 +46,9 @@ In both modes, state, transforms and observers are processed per tick.
 ## Tick events
 
 ```csharp
+using Fomoxa.Networking;
+using Fomoxa.Networking.Sessions;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Sessions;
 using UnityEngine;
 
 public sealed class RoundClock : MonoBehaviour

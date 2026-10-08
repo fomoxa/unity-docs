@@ -8,6 +8,7 @@ The package does not read command-line arguments, so your code decides how a bui
 
 ```csharp
 using System;
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using UnityEngine;
 

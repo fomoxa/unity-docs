@@ -54,6 +54,7 @@ Neither model needs `[NetworkChannel]`, because the package carries input and re
 The behaviour ties them together:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;

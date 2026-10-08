@@ -1,6 +1,6 @@
 # Editor integration
 
-The package's Editor assembly generates code, assigns prefab, scene and scene object ids, and checks the project before a build. This page lists what runs when and which files each step writes.
+The package's Editor assembly generates code, assigns prefab, scene and scene object ids, writes a scene file for each network scene, and checks the project before a build. This page lists what runs when and which files each step writes.
 
 ## Settings
 
@@ -20,6 +20,7 @@ The generated namespace is named after the last folder of Generated Folder.
 | Tools > Fomoxa > Generate | Code generation |
 | Tools > Fomoxa > Assign Prefab Ids | The prefab step |
 | Tools > Fomoxa > Collect Network Scenes | The scene step |
+| Tools > Fomoxa > Export Network Scene Files | The scene file step for every network scene |
 | Assets > Create > Fomoxa > Settings | Creates the settings asset |
 | Assets > Create > Fomoxa > Distance Rule | Creates a [`DistanceRule`](../core/observers.md#distancerule) asset |
 
@@ -42,7 +43,7 @@ Errors and warnings appear in the Console with the prefix `[Fomoxa]`, and [troub
 
 ## RPC source generator
 
-`Runtime/Unity/Generators/Fomoxa.Unity.Generators.dll` is a Roslyn source generator that Unity runs for every assembly referencing `Fomoxa.Unity`. It writes the registration of `[ServerRpc]` and `[ClientRpc]` methods into each `partial` behaviour and reports the errors `FOMOXA001` to `FOMOXA010`, which are listed in [RPCs](../messaging/rpc.md#compile-errors).
+`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` is a Roslyn source generator that Unity runs for every assembly referencing `Fomoxa.Networking`. It writes the registration of `[ServerRpc]` and `[ClientRpc]` methods into each `partial` behaviour and reports the errors `FOMOXA001` to `FOMOXA010`, which are listed in [RPCs](../messaging/rpc.md#compile-errors).
 
 ## Prefab step
 
@@ -56,9 +57,17 @@ The step writes `<Generated Folder>/FomoxaPrefabList.asset` and `<Generated Fold
 
 The scene step runs when a scene asset is imported, when the Build Profiles scene list changes, from the menu, and before every player build.
 
-It computes the scene id of every scene under `Assets` from its GUID and checks that no id is 0 or repeated. It then writes `<Generated Folder>/FomoxaSceneList.asset` with the scenes of the build list, and `<Generated Folder>/FomoxaScenes.cs` with a constant for every scene.
+It computes the scene id of every scene under `Assets` from its GUID and checks that no id is 0 or repeated. It then writes `<Generated Folder>/FomoxaSceneList.asset` with the scenes of the build list and their scene files, and `<Generated Folder>/FomoxaScenes.cs` with a constant for every scene.
 
 To fix a scene id of 0 or a repeated id, recreate one of the scene assets, which gives it a new GUID.
+
+## Scene files
+
+A scene file, `<Generated Folder>/<scene id>.fomoxascene`, describes a network scene in a form that does not need Unity: its scene objects with their poses, behaviours and bodies, its static colliders, and the 3D and 2D layer collision matrices. It is encoded with the codec of the package's `SceneFile` system model, so it is only readable together with the schema it was generated with.
+
+The scene file step writes the file of a network scene when you save that scene, and for every network scene from the menu. Before a player build it writes the files that are missing, older than their scene or no longer readable, and it deletes the files of scenes that are no longer network scenes. Unity imports each file as a `TextAsset`, and the scene list references it, so builds include it. `RigidbodyPhysics` does not read scene files.
+
+A scene whose objects or colliders cannot be described, for example because a scene object has no scene object id yet, logs an error and keeps its previous file.
 
 ## Scene object ids
 
@@ -68,7 +77,7 @@ In Play Mode, a scene object without a valid id gets a temporary one, and the pa
 
 ## Build checks
 
-Before a player build, the package runs the prefab and scene steps and fails the build on their errors. It checks that the generated model of every parameterless RPC is present and current and that `FomoxaAdapters.cs` registers it, and fails with `run Tools > Fomoxa > Generate and commit the generated files` otherwise.
+Before a player build, the package runs the prefab, scene and scene file steps and fails the build on their errors. It checks that the generated model of every parameterless RPC is present and current and that `FomoxaAdapters.cs` registers it, and fails with `run Tools > Fomoxa > Generate and commit the generated files` otherwise.
 
 It then assigns the generated prefab list and scene list to every `NetworkManager` in the built scenes, the prefab list only where the manager's Collect Prefabs is on, and checks the scene object ids of every built scene.
 
@@ -80,7 +89,7 @@ It then assigns the generated prefab list and scene list to every `NetworkManage
 | `fomoxa.toml` | Yes |
 | `FomoxaSystemModels/` | Yes |
 | `.fomoxa/` | Yes |
-| Generated Folder, with `RpcModels/` and `UnityCodecs/` | Yes |
+| Generated Folder, with `RpcModels/`, `UnityCodecs/` and the scene files | Yes |
 
 Committing these files lets a fresh clone or a build machine compile without running the generator first.
 

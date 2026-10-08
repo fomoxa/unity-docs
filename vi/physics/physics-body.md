@@ -1,9 +1,10 @@
 # PhysicsBody
 
-`PhysicsBody` và `PhysicsBody2D` là cách package nhìn vào physics body của một network object, và bạn dùng chúng trong `apply`, `capture` và `restore` để đọc và thay đổi body. Chúng làm việc với vector `System.Numerics`, nên cùng một đoạn code sẽ dùng được với backend khác.
+`PhysicsBody` và `PhysicsBody2D` là cách package nhìn vào physics body của một network object, và bạn dùng chúng trong `apply`, `capture` và `restore` để đọc và thay đổi body. Chúng làm việc với vector `System.Numerics` và không phụ thuộc vào API `Rigidbody` của Unity.
 
 ```csharp
-using Fomoxa.Unity.Simulation;
+using Fomoxa.Networking.Simulation;
+using Fomoxa.Unity;
 
 PhysicsBody body = NetworkObject.Body;
 PhysicsBody2D body2D = NetworkObject.Body2D;
@@ -13,7 +14,7 @@ Cả hai là struct nhỏ, nên hãy lấy mới mỗi khi cần thay vì giữ 
 
 ## Khi nào hợp lệ <a href="#when-it-is-valid" id="when-it-is-valid"></a>
 
-`IsValid` là true khi ba điều kiện cùng đúng: object có `Rigidbody` (với `Body`) hoặc `Rigidbody2D` (với `Body2D`) trên cùng GameObject với `NetworkObject`, object đã spawn ở phía này, và Physics Backend là `Rigidbody`. Đọc hoặc ghi một body không hợp lệ sẽ ném exception.
+`IsValid` là true khi hai điều kiện cùng đúng: object có `Rigidbody` (với `Body`) hoặc `Rigidbody2D` (với `Body2D`) trên cùng GameObject với `NetworkObject`, và object đã spawn ở phía này. Đọc hoặc ghi một body không hợp lệ sẽ ném exception.
 
 ## PhysicsBody (3D) <a href="#physicsbody-3d" id="physicsbody-3d"></a>
 

@@ -120,10 +120,12 @@ public void StopGame()
 | Field | Giá trị | Lý do |
 |---|---|---|
 | Tick Rate | 50 | Fixed timestep của project là 0.02 giây, nên physics step thường xuyên như trong game offline. |
-| Simulate Physics | bật | Manager step physics 2D mỗi tick một lần. Trên client, `Rigidbody2D` networked mà client không dự đoán trở thành kinematic và đi theo `NetworkTransform` của nó. |
 | Max Reconnect Retries | 3 | Mặc định -1 thử lại mãi. Với 3, client không tới được server sẽ dừng và game quay về màn hình bắt đầu. |
 | Collected Prefabs | `Generated/FomoxaPrefabList.asset` | Xem bên dưới. |
 | Collected Scenes | `Generated/FomoxaSceneList.asset` | Xem bên dưới. |
+| Physics | `RigidbodyPhysics` trên cùng GameObject, bật Simulate Physics | Manager step physics 2D mỗi tick một lần. Trên client, `Rigidbody2D` networked mà client không dự đoán trở thành kinematic và đi theo `NetworkTransform` của nó. |
+
+Trước hết thêm component `RigidbodyPhysics` vào `Network Manager`, tick field Simulate Physics của nó, rồi kéo nó vào field Physics.
 
 Package tự gán cả hai danh sách khi Unity chuẩn bị scene cho Play Mode, nhưng trong Editor việc đó xảy ra sau khi `NetworkManager.Awake` đã đăng ký prefab, và khi đó việc spawn thất bại với `prefab id 0x... of RedRunner(Clone) is not registered`. Bản build player nhận các danh sách trong lúc build. Gán chúng trong scene thì dùng được cho cả hai trường hợp.
 

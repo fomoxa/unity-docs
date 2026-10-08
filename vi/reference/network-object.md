@@ -2,7 +2,7 @@
 
 ## NetworkObject <a href="#networkobject" id="networkobject"></a>
 
-`public sealed class NetworkObject : MonoBehaviour` trong `Fomoxa.Unity`, đánh dấu `[DisallowMultipleComponent]` và được giải thích trong hướng dẫn [NetworkObject](../core/network-object.md).
+`public sealed class NetworkObject : MonoBehaviour, INetworkEntity` trong `Fomoxa.Unity`, đánh dấu `[DisallowMultipleComponent]` và được giải thích trong hướng dẫn [NetworkObject](../core/network-object.md). `INetworkEntity` là interface mà tầng 1 dùng để xử lý object, nên có thể truyền một `NetworkObject` vào mọi chỗ manager nhận `INetworkEntity`.
 
 | Member | Type | Mô tả |
 |---|---|---|
@@ -15,10 +15,12 @@
 | `DespawnWithOwner` | `bool` | Đọc và ghi. Despawn khi owner ngắt kết nối; nếu không, server nhận ownership. |
 | `Visibility` | `NetworkVisibility` | Đọc và ghi. `Rule`, `Everyone` hoặc `OwnerOnly`. |
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | Các behaviour của object theo thứ tự behaviour index; được điền khi spawn |
-| `Body` | `PhysicsBody` | Body của `Rigidbody` trên GameObject này; không hợp lệ khi không có hoặc object chưa spawn |
+| `Body` | `PhysicsBody` | Body của `Rigidbody` trên GameObject này, lấy từ component physics của `NetworkManager`; không hợp lệ khi không có hoặc object chưa spawn |
 | `Body2D` | `PhysicsBody2D` | Body của `Rigidbody2D` trên GameObject này |
 
 ### NetworkVisibility <a href="#networkvisibility" id="networkvisibility"></a>
+
+`public enum NetworkVisibility` trong `Fomoxa.Networking`.
 
 | Giá trị | Observer |
 |---|---|

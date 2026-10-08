@@ -12,7 +12,7 @@ A state model must be on the reliable-ordered channel:
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace MyGame.Network.Models
 {
@@ -35,6 +35,7 @@ namespace MyGame.Network.Models
 The behaviour then registers an instance of it:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;

@@ -35,6 +35,7 @@ Package log `OnSendDropped` và `OnReceiveDropped` theo mặc định, có thể
 Một overlay nhỏ trên màn hình có thể hiển thị những giá trị hữu ích nhất trong số này:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using UnityEngine;
 

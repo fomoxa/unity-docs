@@ -1,6 +1,6 @@
 # ServerManager reference
 
-`public sealed class ServerManager` in `Fomoxa.Unity` has no public constructor; you reach it through `NetworkManager.ServerManager`. The [server](../core/server.md) guide explains how to use it.
+`public sealed class ServerManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.ServerManager`. The [server](../core/server.md) guide explains how to use it.
 
 ## Connection
 
@@ -21,27 +21,27 @@
 
 | Member | Description |
 |---|---|
-| `void Spawn(NetworkObject networkObject, ulong ownerId = 0)` | Spawns an instance. Throws `ArgumentNullException`, `InvalidOperationException` when the server is not started, `ArgumentException` for a prefab asset, an object already spawned, an unregistered prefab id, an invalid scene object or an owner that is not a started peer. |
-| `bool Despawn(NetworkObject networkObject)` | Despawns and destroys an instance, or deactivates a scene object. False when not spawned by this server. |
-| `bool ChangeOwner(NetworkObject networkObject, ulong ownerId)` | Changes the owner; 0 for the server. False when not spawned by this server or the owner is not a started peer. |
-| `IReadOnlyDictionary<uint, NetworkObject> Spawned` | Spawned objects by object id |
+| `void Spawn(INetworkEntity networkObject, ulong ownerId = 0)` | Spawns an instance. Throws `ArgumentNullException`, `InvalidOperationException` when the server is not started, `ArgumentException` for a prefab asset, an object already spawned, an unregistered prefab id, an invalid scene object or an owner that is not a started peer. |
+| `bool Despawn(INetworkEntity networkObject)` | Despawns and destroys an instance, or deactivates a scene object. False when not spawned by this server. |
+| `bool ChangeOwner(INetworkEntity networkObject, ulong ownerId)` | Changes the owner; 0 for the server. False when not spawned by this server or the owner is not a started peer. |
+| `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Spawned objects by object id |
 
 ## Observers
 
 | Member | Description |
 |---|---|
-| `ObserverRule ObserverRule` | The rule for objects with `Visibility.Rule`. Get and set. |
+| `IObserverRule ObserverRule` | The rule for objects with `Visibility.Rule`, usually an `ObserverRule` asset. Get and set. |
 | `int ObserverInterval` | Ticks over which every object is recalculated once. At least 1. |
-| `bool IsObserver(NetworkObject networkObject, ulong peerId)` | Whether the peer observes the object |
-| `bool RebuildObservers(NetworkObject networkObject)` | Recalculates one object for every peer |
+| `bool IsObserver(INetworkEntity networkObject, ulong peerId)` | Whether the peer observes the object |
+| `bool RebuildObservers(INetworkEntity networkObject)` | Recalculates one object for every peer |
 | `void RebuildObserversOfPeer(ulong peerId)` | Recalculates every object for one peer |
 | `void RebuildObservers()` | Recalculates every object for every peer |
 
-Calling a spawn, despawn, owner or rebuild method from inside `ObserverRule.Observes` throws.
+`NetworkObject` implements `INetworkEntity`, so you pass a `NetworkObject` to these methods. Calling a spawn, despawn, owner or rebuild method from inside `ObserverRule.Observes` throws.
 
 ## Scenes
 
-The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Unity` with these members:
+The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Networking` with these members:
 
 | Member | Description |
 |---|---|
@@ -54,7 +54,7 @@ The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Unity` with t
 | `bool Contains(uint sceneId)`, `bool IsGlobal(uint sceneId)` | Whether the scene is in use, and whether it is global |
 | `bool HasLoaded(ulong peerId, uint sceneId)` | Whether the peer reported the scene as loaded |
 | `IReadOnlyCollection<ulong> PeersOf(uint sceneId)` | Peers that have the scene |
-| `bool TryGetScene(uint sceneId, out Scene scene)` | The `Scene` the server loaded |
+| `bool TryGetScene(uint sceneId, out Scene scene)` | The `Scene` the server loaded; an extension method in `Fomoxa.Unity` |
 | `event Action<uint> OnLoaded` | The server finished loading a scene |
 | `event Action<uint, Exception> OnLoadFailed` | The server failed to load a scene |
 

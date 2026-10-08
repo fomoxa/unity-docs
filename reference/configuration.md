@@ -36,10 +36,15 @@ The [NetworkManager](../core/network-manager.md) guide explains what each field 
 | Max Input Lead | `int` | 30 | at least 1 |
 | Prediction History | `int` | 64 | at least 1 |
 | Reconcile Interval | `int` | 1 | at least 1 |
-| Physics Backend | `PhysicsBackend` | `Rigidbody` | `Rapier` is not implemented |
-| Simulate Physics | `bool` | false | |
+| Physics | `NetworkPhysics` | none; the manager adds a `RigidbodyPhysics` | |
 
 A value outside its range throws when the manager starts.
+
+## RigidbodyPhysics
+
+| Field | Type | Default |
+|---|---|---|
+| Simulate Physics | `bool` | false |
 
 ## NetworkObject
 

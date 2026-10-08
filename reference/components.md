@@ -26,7 +26,7 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 
 ## Contact components
 
-`NetworkCollision` and `NetworkTrigger` (3D) and `NetworkCollision2D` and `NetworkTrigger2D` (2D) are all `public sealed class ... : MonoBehaviour`, explained in the [contact events](../physics/contacts.md) guide.
+`NetworkCollision` and `NetworkTrigger` (3D) and `NetworkCollision2D` and `NetworkTrigger2D` (2D) are all `public sealed class ... : MonoBehaviour, IContactSource<...>`, explained in the [contact events](../physics/contacts.md) guide.
 
 | Member | Type | Description |
 |---|---|---|
@@ -34,6 +34,8 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `OnExit` | same | A collider stopped touching |
 | `Touching` | `IReadOnlyCollection<Collider>` or `<Collider2D>` | Colliders touching as of the last published tick |
 | `AdditionalSize` | `float` | `NetworkCollision` and `NetworkTrigger` only. Get and set; negative values become 0. |
+| `IsAttached` | `bool` | A physics component has taken the component over and reports contacts from its own world |
+| `Attach(tracker, query)`, `Detach(query)` | `bool`, `void` | Called by a physics component that reports contacts itself; `RigidbodyPhysics` does not use them |
 
 ## Observers
 

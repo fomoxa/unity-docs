@@ -41,7 +41,7 @@ UDP có độ trễ thấp nhất khi mất gói, vì một message unreliable b
 public abstract ITransportFactory CreateFactory();
 ```
 
-`NetworkManager` gọi nó một lần trong `Awake`. `ITransportFactory` trả về, nằm trong `Fomoxa.Unity.Transports`, tạo listener cho server và connector cho client:
+`NetworkManager` gọi nó một lần trong `Awake`. `ITransportFactory` trả về, nằm trong `Fomoxa.Networking.Transports`, tạo listener cho server và connector cho client:
 
 | Member | Ý nghĩa |
 |---|---|

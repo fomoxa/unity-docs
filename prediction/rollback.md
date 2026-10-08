@@ -1,10 +1,10 @@
 # Rollback with physics
 
-When a predicted object moves with a `Rigidbody` or `Rigidbody2D`, its result depends on the whole physics world, including other bodies, contacts and gravity. Correcting it therefore means rolling the physics world back to the corrected tick and stepping it forward again, which the package does when Simulate Physics is on.
+When a predicted object moves with a `Rigidbody` or `Rigidbody2D`, its result depends on the whole physics world, including other bodies, contacts and gravity. Correcting it therefore means rolling the physics world back to the corrected tick and stepping it forward again, which the package does when physics simulation is on.
 
 ## Requirements
 
-Simulate Physics must be on, both on the server and on the clients, so that the `NetworkManager` steps physics once per tick (see [physics](../physics/overview.md)). The predicted object must have its `Rigidbody` or `Rigidbody2D` on the same GameObject as its `NetworkObject`. `apply` moves the body through forces, impulses or velocity, and `capture` and `restore` read and write the body through `NetworkObject.Body` or `Body2D`:
+The `RigidbodyPhysics` component of the `NetworkManager` must have Simulate Physics on, both on the server and on the clients, so that the manager steps physics once per tick (see [physics](../physics/overview.md#turning-it-on)). The predicted object must have its `Rigidbody` or `Rigidbody2D` on the same GameObject as its `NetworkObject`. `apply` moves the body through forces, impulses or velocity, and `capture` and `restore` read and write the body through `NetworkObject.Body` or `Body2D`:
 
 ```csharp
 private void Apply(MoveInput input, InputContext context)
@@ -13,7 +13,7 @@ private void Apply(MoveInput input, InputContext context)
     NetworkObject.Body.AddImpulse(push);
 }
 
-private void Capture(BodyMotion state)
+private void Capture(PushState state)
 {
     BodyState body = NetworkObject.Body.State;
     state.X = body.Position.X;
@@ -22,7 +22,7 @@ private void Capture(BodyMotion state)
     state.VelocityZ = body.Velocity.Z;
 }
 
-private void Restore(BodyMotion state)
+private void Restore(PushState state)
 {
     PhysicsBody body = NetworkObject.Body;
     BodyState current = body.State;
@@ -31,14 +31,14 @@ private void Restore(BodyMotion state)
     body.State = current;
 }
 
-private static bool Matches(BodyMotion server, BodyMotion predicted) =>
+private static bool Matches(PushState server, PushState predicted) =>
     Math.Abs(server.X - predicted.X) <= 0.01f
     && Math.Abs(server.Z - predicted.Z) <= 0.01f
     && Math.Abs(server.VelocityX - predicted.VelocityX) <= 0.05f
     && Math.Abs(server.VelocityZ - predicted.VelocityZ) <= 0.05f;
 ```
 
-`BodyMotion` is a model with four `f32` properties, `X`, `Z`, `VelocityX` and `VelocityZ`. `BodyState` and `PhysicsBody` are in `Fomoxa.Unity.Simulation`, and `Math` is `System.Math`. The example moves on the ground plane and leaves the vertical axis to gravity.
+`PushState` is a model with four `f32` properties, `X`, `Z`, `VelocityX` and `VelocityZ`. `BodyState` and `PhysicsBody` are in `Fomoxa.Networking.Simulation`, and `Math` is `System.Math`. The example moves on the ground plane and leaves the vertical axis to gravity.
 
 ## Timeline
 

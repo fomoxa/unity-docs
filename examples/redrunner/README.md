@@ -1,6 +1,6 @@
 # Red Runner
 
-Red Runner is a free 2D platformer by Bayat Games, written for one player. The character runs to the right through a level of blocks, jumps over water, saws, spikes and swinging maces, and picks up coins on the way. This example turns that game into an online game built on `com.fomoxa.unity`, one step at a time.
+Red Runner is a free 2D platformer by Bayat Games, written for one player. The character runs to the right through a level of blocks, jumps over water, saws, spikes and swinging maces, and picks up coins on the way. This example turns that game into an online game built on `com.fomoxa.networking`, one step at a time.
 
 Where the other pages of this documentation explain how each part of the package works, these pages show what had to change in a real game that was never written for a network, in the order the changes were made.
 
@@ -58,6 +58,7 @@ Your own character moves as soon as you press a key, because the client predicts
 2. [Offline to online](offline-to-online/README.md) is the migration, in nine steps. Each step names the files it changes, the code, how to test it and the commit that made it.
 3. [Online architecture](architecture.md) describes the finished game.
 4. [Troubleshooting](troubleshooting.md) lists problems specific to this port.
+5. [Rapier and a console server](rapier-and-console/README.md) continues from the finished game in four more steps. It moves the game onto the Rapier physics backend and adds a server that runs without Unity. Read it once the Unity version works; nothing in the first part depends on it.
 
 If you have not used the package before, read [ticks and timing](../../concepts/tick.md), [authority](../../concepts/authority.md) and [prediction](../../concepts/prediction.md) first. The steps link to the pages they rely on instead of repeating them.
 

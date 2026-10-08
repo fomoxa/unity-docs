@@ -1,6 +1,6 @@
 # Physics overview
 
-The package can run Unity's 3D and 2D physics on the network tick. With Simulate Physics on, the `NetworkManager` steps physics once per tick, a client keeps the bodies it does not predict at their replicated positions, and prediction can roll physics back. Game code reaches a network object's body through the package's own types, `PhysicsBody` and `PhysicsBody2D`.
+The package can run Unity's 3D and 2D physics on the network tick. With physics simulation on, the `NetworkManager` steps physics once per tick, a client keeps the bodies it does not predict at their replicated positions, and prediction can roll physics back. Game code reaches a network object's body through the package's own types, `PhysicsBody` and `PhysicsBody2D`.
 
 ```text
 Game code: apply, capture, restore, OnTick
@@ -9,14 +9,20 @@ NetworkObject.Body / Body2D        PhysicsBody, PhysicsBody2D
     ↓
 IPhysicsWorld / IPhysicsWorld2D    one per Unity physics scene, both extend IPhysicsSimulation
     ↓
-Backend                            Rigidbody: Unity PhysicsScene and PhysicsScene2D
+RigidbodyPhysics                   Unity PhysicsScene and PhysicsScene2D
 ```
 
-The backend is an implementation detail, and code that uses `PhysicsBody` does not depend on Unity's `Rigidbody` API.
+Code that uses `PhysicsBody` does not depend on Unity's `Rigidbody` API.
 
 ## Turning it on
 
-Turn on Simulate Physics on the `NetworkManager` of the server and of every client. While at least one manager has it on, the package sets `Physics.simulationMode` and `Physics2D.simulationMode` to `Script`, so that Unity no longer steps physics after `FixedUpdate`, and it restores the original modes when the last such manager is destroyed.
+The Physics field of the `NetworkManager` holds the component that runs physics for it, `RigidbodyPhysics`. A manager whose Physics field is empty adds a `RigidbodyPhysics` to its GameObject when it starts, with physics simulation off.
+
+1. Add `RigidbodyPhysics` to the GameObject of the `NetworkManager`.
+2. Check its Simulate Physics field.
+3. Drag it into the Physics field of the `NetworkManager`.
+
+Do this for the server and for every client. While at least one manager simulates physics, the package sets `Physics.simulationMode` and `Physics2D.simulationMode` to `Script`, so that Unity no longer steps physics after `FixedUpdate`, and it restores the original modes when the last such manager is destroyed.
 
 From then on, the manager does four things each tick:
 
@@ -50,13 +56,17 @@ Proxies let predicted bodies collide with other players' objects at the position
 
 `NetworkObject.Body` returns a `PhysicsBody` for the object's `Rigidbody`, and `NetworkObject.Body2D` a `PhysicsBody2D` for its `Rigidbody2D`. The body component must be on the same GameObject as the `NetworkObject`. [PhysicsBody](physics-body.md) describes both types.
 
-## Backend
+## Geometry and bodies added at runtime
 
-The Physics Backend field selects the backend. `Rigidbody`, the default, uses Unity's built-in 3D and 2D physics and is the only backend implemented. `Rapier` is declared but not implemented, and with it selected, `Body` and `Body2D` return invalid bodies.
+A level built at runtime can hand its geometry to the physics component. `NetworkPhysics.AddStatic(Scene, IReadOnlyList<ColliderDesc>)` and `AddStatic2D` add a group of static colliders to a scene, `AddStatic(GameObject)` and `AddStatic2D(GameObject)` add the colliders under a GameObject, and `RemoveStatic` removes a group again. `AddBody` and `AddBody2D` add a body that belongs to no network object, such as a platform that every peer moves the same way from the tick number, and `RemoveBody` and `RemoveBody2D` remove it. `BodyDescriptions.TryDescribe` and `TryDescribe2D` build a `BodyDesc` or `BodyDesc2D` from a GameObject's colliders and `Rigidbody` or `Rigidbody2D`.
 
-The server tells each client which backend it uses, and a client with a different backend stops with `StopReason.PhysicsBackendMismatch` and does not reconnect.
+With `RigidbodyPhysics`, a static group is a hidden GameObject in the scene with one child per collider. `AddStatic(GameObject)` returns an empty group, because Unity's physics already has the colliders of that GameObject. A dynamic body added with `AddBody` is saved and restored with its world, while a kinematic one is not.
 
-## Without Simulate Physics
+## Physics backend
+
+The server tells each client which physics backend it uses, and a client with a different backend stops with `StopReason.PhysicsBackendMismatch` and does not reconnect. Give the server and the clients the same physics component.
+
+## Without physics simulation
 
 With Simulate Physics off, Unity steps physics on its own fixed timestep, independently of ticks. The server's bodies still move and `NetworkTransform` still replicates them, but a client's copies of dynamic bodies keep simulating on their own between updates. There are no proxies, and prediction cannot roll physics back.
 

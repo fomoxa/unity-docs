@@ -76,7 +76,6 @@
 
 * [Dedicated server](server/dedicated-server.md)
 * [Triển khai](server/deployment.md)
-* [Server console](server/server-console.md)
 
 ## Unity
 
@@ -88,6 +87,22 @@
 * [Codec tùy chỉnh và type của Unity](advanced/custom-codecs.md)
 * [Hiệu năng](advanced/performance.md)
 * [Debug](advanced/debugging.md)
+
+## Rapier physics
+
+* [Tổng quan](rapier/overview.md)
+* [Cài đặt](rapier/setup.md)
+* [Body và collider](rapier/bodies.md)
+* [Contact event](rapier/contacts.md)
+* [Tính tất định](rapier/determinism.md)
+
+## Server console
+
+* [Tổng quan](console-server/overview.md)
+* [Project](console-server/project.md)
+* [Runtime](console-server/runtime.md)
+* [Physics](console-server/physics.md)
+* [Tham chiếu](console-server/reference.md)
 
 ## Ví dụ
 
@@ -105,6 +120,11 @@
     * [Bước 09: Game online hoàn chỉnh](examples/redrunner/offline-to-online/step-09-final-online-game.md)
   * [Kiến trúc bản online](examples/redrunner/architecture.md)
   * [Xử lý sự cố](examples/redrunner/troubleshooting.md)
+  * [Rapier và server console](examples/redrunner/rapier-and-console/README.md)
+    * [Bước 10: Backend Rapier](examples/redrunner/rapier-and-console/step-10-rapier-backend.md)
+    * [Bước 11: Thư viện mô phỏng](examples/redrunner/rapier-and-console/step-11-simulation-library.md)
+    * [Bước 12: Catalogue level](examples/redrunner/rapier-and-console/step-12-level-catalogue.md)
+    * [Bước 13: Server console](examples/redrunner/rapier-and-console/step-13-console-server.md)
 
 ## Tham chiếu
 

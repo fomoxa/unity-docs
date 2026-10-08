@@ -15,17 +15,17 @@ Package còn phụ thuộc vào các module có sẵn Physics, Physics 2D và An
 Trong Unity, mở Window > Package Manager, bấm nút +, chọn Install package from git URL và nhập:
 
 ```
-https://github.com/fomoxa/com.fomoxa.unity.git
+https://github.com/fomoxa/com.fomoxa.networking.git
 ```
 
-Để cố định phiên bản, thêm branch, tag hoặc commit sau dấu `#`, ví dụ `https://github.com/fomoxa/com.fomoxa.unity.git#<tag>`.
+Để cố định phiên bản, thêm branch, tag hoặc commit sau dấu `#`, ví dụ `https://github.com/fomoxa/com.fomoxa.networking.git#<tag>`.
 
 ### Từ thư mục trên máy <a href="#from-a-local-folder" id="from-a-local-folder"></a>
 
 Để làm việc với một bản copy trên máy, chọn Install package from disk trong cùng menu rồi chọn file `package.json` của package, Package Manager sẽ thêm một mục `file:` vào `Packages/manifest.json`. Bạn cũng có thể tự viết mục này. Một đường dẫn tương đối so với thư mục `Packages` của project sẽ dùng được trên mọi máy có cùng cấu trúc thư mục:
 
 ```json
-"com.fomoxa.unity": "file:../../com.fomoxa.unity"
+"com.fomoxa.networking": "file:../../com.fomoxa.networking"
 ```
 
 ## Tạo settings asset <a href="#create-the-settings-asset" id="create-the-settings-asset"></a>
@@ -49,7 +49,7 @@ Package sinh code sau mỗi lần biên dịch script, và bạn cũng có thể
 | `fomoxa.toml` | Cấu hình của `fomoxac`, được ghi từ settings asset. Hãy sửa asset, đừng sửa file này. |
 | `FomoxaSystemModels/` | Các model của chính package, được copy ra khỏi package để `fomoxac` đọc được. Thư mục này nằm ngoài `Assets` nên Unity không biên dịch nó. |
 | `.fomoxa/` | Các file schema do `fomoxac` ghi. |
-| Generated Folder | Một codec và một adapter cho mỗi model, `NetSchema.cs`, `FomoxaAdapters.cs`, `FomoxaUnityRegistration.cs`, danh sách prefab và hằng số của chúng, danh sách scene và hằng số của chúng, cùng hai thư mục con `RpcModels` và `UnityCodecs`. |
+| Generated Folder | Một codec và một adapter cho mỗi model, `NetSchema.cs`, `FomoxaAdapters.cs`, `FomoxaUnityRegistration.cs`, danh sách prefab và hằng số của chúng, danh sách scene và hằng số của chúng, một scene file cho mỗi network scene, cùng hai thư mục con `RpcModels` và `UnityCodecs`. |
 
 Hãy commit tất cả để một bản clone mới biên dịch được trước khi bộ sinh code chạy.
 
