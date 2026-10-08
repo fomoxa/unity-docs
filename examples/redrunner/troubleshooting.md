@@ -32,7 +32,7 @@ The general checks are under [state does not update](../../getting-started/troub
 The general checks are under [remote objects jitter, lag or do not move](../../getting-started/troubleshooting.md#remote-objects-jitter-lag-or-do-not-move), with background in [NetworkTransform](../../synchronization/transform.md) and [authority](../../concepts/authority.md).
 
 - `RedRunner.prefab` has a `NetworkTransform` with Sync Scale on; without it, the character does not turn.
-- Simulate Physics is on. With it, a body the client does not predict is kinematic and follows its `NetworkTransform`, while without it the client's physics moves the body on its own.
+- Simulate Physics is on in the `RigidbodyPhysics` of the `Network Manager`, and that component is in its Physics field. With it, a body the client does not predict is kinematic and follows its `NetworkTransform`, while without it the client's physics moves the body on its own.
 - A character that moves but plays its idle animation needs the kinematic branch in `RedCharacter.LateUpdate`, which computes the speed from the distance moved, as shown in [step 05](offline-to-online/step-05-prediction-and-reconciliation.md#animate-characters-you-do-not-control).
 
 ## Your own character feels wrong

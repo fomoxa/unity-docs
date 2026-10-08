@@ -63,13 +63,13 @@ To follow the steps in your own project, work on a branch of the original commit
 2. Do step 01, run its test, and commit.
 3. Continue with the next step the same way.
 
-The pages show the code as it is at the end of the migration. Where a later step changes code that an earlier step added, the earlier step shows its own version and the later step shows the change.
+The pages show the code as it is at the end of the migration, in commit [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164d5624f171b64c8bfc6f029b12be2cfe41e27), which moves the finished game to the current package. Where a later step changes code that an earlier step added, the earlier step shows its own version and the later step shows the change.
 
 Replaying the history exactly has some limits:
 
 - Steps 04 and 05 were made in one commit, so the game is tested only once, at the end of step 05.
 - Step 08 spans four commits. Two of them, `c75cebd` and `c239d2a`, rely on package changes made during the port: teleport generations in `NetworkTransform`, the `PeerLeave` message and `InputContext.RepeatedTicks`. The published package has all of them.
-- The step commits reference the package as `file:../../fomoxa-unity/com.fomoxa.unity`, a local copy next to the project. To build one of them, replace that entry in `Packages/manifest.json` with the Git URL from [installation](../../../getting-started/installation.md). The latest `master` already uses the Git URL.
+- The step commits use the package under its earlier name, `com.fomoxa.unity`, from a local copy next to the project (`file:../../fomoxa-unity/com.fomoxa.unity`). To build one of them, replace that entry in `Packages/manifest.json` with `"com.fomoxa.unity": "https://github.com/fomoxa/com.fomoxa.unity.git"`. Commit `f164d56` moves the game to `com.fomoxa.networking`: it installs the package from the Git URL in [installation](../../../getting-started/installation.md), changes the `using` directives to the `Fomoxa.Networking` namespaces, and turns physics simulation on through a `RigidbodyPhysics` component on the `Network Manager`.
 - Nobody has checked commit by commit whether an early commit compiles with the current package after its code is regenerated.
 - `Play.unity`, `RedRunner.prefab` and `Generation Settings.asset` are stored in a form that `git diff` shows as binary, so the steps describe their changes as Inspector settings.
 - Each commit also adds automated checks under `Tools/PortChecks`, together with a script, `Tools/unity-windows.sh`, that runs them from WSL against a Windows Editor. The steps describe what each check verifies so that you can test by hand instead.

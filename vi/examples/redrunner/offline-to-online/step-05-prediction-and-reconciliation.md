@@ -44,7 +44,7 @@ Matches(server T, history[T])?
 
 Thứ client so sánh là một model thứ hai, `PlayerMotion`, giữ vị trí, vận tốc và vận tốc damping khi chạy. `NetworkPlayer` đăng ký nó bằng `input.Reconcile` với ba callback, `Capture`, `Restore` và `Matches`.
 
-Nhân vật là một `Rigidbody2D`, và scene có các body khác mà nhân vật chạm vào. Khi bật Simulate Physics, package lưu physics 2D của scene sau mỗi tick và khôi phục nó trước khi replay, nên lần replay bắt đầu từ đúng world mà server đã có.
+Nhân vật là một `Rigidbody2D`, và scene có các body khác mà nhân vật chạm vào. Khi bật Simulate Physics trên `RigidbodyPhysics` của `Network Manager`, package lưu physics 2D của scene sau mỗi tick và khôi phục nó trước khi replay, nên lần replay bắt đầu từ đúng world mà server đã có.
 
 Các client khác không dự đoán nhân vật này. Chúng thấy nó qua `NetworkTransform`, dưới dạng một body kinematic được interpolate chậm hai tick so với vị trí mới nhất chúng đã nhận.
 

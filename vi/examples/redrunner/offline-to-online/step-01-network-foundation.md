@@ -2,7 +2,7 @@
 
 ## Mục tiêu <a href="#goal" id="goal"></a>
 
-Bước này thêm `com.fomoxa.unity` vào Red Runner, thiết lập sinh code và đặt một `NetworkManager` vào `Play.unity`. Game vẫn chơi như trước, vì chưa có gì mở kết nối.
+Bước này thêm `com.fomoxa.networking` vào Red Runner, thiết lập sinh code và đặt một `NetworkManager` vào `Play.unity`. Game vẫn chơi như trước, vì chưa có gì mở kết nối.
 
 ## Điểm xuất phát <a href="#starting-point" id="starting-point"></a>
 
@@ -51,7 +51,7 @@ Mở project bằng Unity 6000.5 trở lên và chấp nhận nâng cấp. Packa
 Mở Window > Package Manager, bấm +, chọn Install package from git URL và nhập:
 
 ```
-https://github.com/fomoxa/com.fomoxa.unity.git
+https://github.com/fomoxa/com.fomoxa.networking.git
 ```
 
 Package phụ thuộc vào các module có sẵn Physics, Physics 2D và Animation, những module Red Runner đã dùng.

@@ -1,10 +1,10 @@
 # Fomoxa for Unity
 
-Fomoxa for Unity (`com.fomoxa.unity`) is a server-authoritative networking package for Unity games, built on the Fomoxa protocol and its C# runtime, Fomoxa.Net. A game declares its messages as plain C# classes and the package generates their codecs. Components such as `NetworkManager`, `NetworkObject` and `NetworkBehaviour` then take care of connections, spawning, RPCs, state, transforms and client-side prediction.
+Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking package for Unity games, built on the Fomoxa protocol and its C# runtime, Fomoxa.Net. A game declares its messages as plain C# classes and the package generates their codecs. Components such as `NetworkManager`, `NetworkObject` and `NetworkBehaviour` then take care of connections, spawning, RPCs, state, transforms and client-side prediction.
 
 | | |
 |---|---|
-| Package | `com.fomoxa.unity` 0.1.0 |
+| Package | `com.fomoxa.networking` 0.1.0 |
 | Unity | 6000.5 or later |
 | License | Apache-2.0 |
 | Bundled code generator | `fomoxac` v0.2.2, Windows x64 and Linux x64 |
@@ -24,3 +24,7 @@ Clients call the server and the server calls clients through RPCs declared with 
 The package also offers client-side prediction with input, reconciliation and replay, including rollback of Unity 3D and 2D physics. WebGL clients connect through the browser's WebSocket.
 
 The [introduction](getting-started/introduction.md#what-is-not-included) lists what the package does not do.
+
+## Beyond Unity's physics and Unity servers
+
+Two optional parts build on the same package once a game works in Unity. [Rapier physics](rapier/overview.md) is a separate package that replaces Unity's physics with Rapier, so that rollback replays the server's physics exactly. The [console server](console-server/overview.md) runs a game's server as a .NET program without Unity. The rest of this documentation does not depend on either of them, and the second part of the [Red Runner example](examples/redrunner/rapier-and-console/README.md) uses both.

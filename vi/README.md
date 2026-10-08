@@ -1,19 +1,19 @@
 # Fomoxa for Unity
 
-Fomoxa for Unity (`com.fomoxa.unity`) là package networking theo mô hình server-authoritative cho game Unity, xây trên giao thức Fomoxa và runtime C# của nó, Fomoxa.Net. Game khai báo các message của mình bằng class C# thông thường, package sinh codec cho chúng, rồi các component như `NetworkManager`, `NetworkObject` và `NetworkBehaviour` lo phần kết nối, spawn, RPC, state, transform và client-side prediction.
+Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình server-authoritative cho game Unity, xây trên giao thức Fomoxa và runtime C# của nó, Fomoxa.Net. Game khai báo các message của mình bằng class C# thông thường, package sinh codec cho chúng, rồi các component như `NetworkManager`, `NetworkObject` và `NetworkBehaviour` lo phần kết nối, spawn, RPC, state, transform và client-side prediction.
 
-|                          |                                            |
-| ------------------------ | ------------------------------------------ |
-| Package                  | `com.fomoxa.unity` 0.1.0                   |
-| Unity                    | 6000.5 trở lên                             |
-| Giấy phép                | Apache-2.0                                 |
+| | |
+|---|---|
+| Package | `com.fomoxa.networking` 0.1.0 |
+| Unity | 6000.5 trở lên |
+| Giấy phép | Apache-2.0 |
 | Công cụ sinh code đi kèm | `fomoxac` v0.2.2, Windows x64 và Linux x64 |
 
 ## Bắt đầu từ đâu <a href="#where-to-start" id="where-to-start"></a>
 
-Nếu mới làm quen với package, hãy đọc [giới thiệu](bat-dau/introduction.md) trước, rồi làm theo trang [cài đặt](bat-dau/installation.md) và ba trang hướng dẫn sau đó, nơi bạn xây một game nhỏ có server, host và client. Phần [khái niệm](khai-niem/architecture.md) giải thích package hoạt động bên dưới ra sao: các tầng, tick, authority, replication và prediction.
+Nếu mới làm quen với package, hãy đọc [giới thiệu](getting-started/introduction.md) trước, rồi làm theo trang [cài đặt](getting-started/installation.md) và ba trang hướng dẫn sau đó, nơi bạn xây một game nhỏ có server, host và client. Phần [khái niệm](concepts/architecture.md) giải thích package hoạt động bên dưới ra sao: các tầng, tick, authority, replication và prediction.
 
-Khi cần thêm một tính năng cụ thể, hãy xem các hướng dẫn trong Core, Messaging, Synchronization, Prediction, Physics và Transports; mỗi trang nói về một tính năng kèm code chạy được. Nếu đang chuyển một game có sẵn lên online, [ví dụ Red Runner](vi-du/redrunner/) đưa một game platformer một người chơi lên online qua chín bước, kèm code và commit thật. Để tra một member cụ thể, dùng phần [tham chiếu](tham-chieu/api.md), nơi liệt kê public API theo type.
+Khi cần thêm một tính năng cụ thể, hãy xem các hướng dẫn trong Core, Messaging, Synchronization, Prediction, Physics và Transports; mỗi trang nói về một tính năng kèm code chạy được. Nếu đang chuyển một game có sẵn lên online, [ví dụ Red Runner](examples/redrunner/README.md) đưa một game platformer một người chơi lên online qua chín bước, kèm code và commit thật. Để tra một member cụ thể, dùng phần [tham chiếu](reference/api.md), nơi liệt kê public API theo type.
 
 ## Package làm được gì <a href="#what-the-package-covers" id="what-the-package-covers"></a>
 
@@ -23,4 +23,8 @@ Client gọi server và server gọi client qua các RPC khai báo bằng attrib
 
 Package còn hỗ trợ client-side prediction với input, reconciliation và replay, bao gồm cả rollback physics 3D và 2D của Unity. Client WebGL kết nối qua WebSocket của trình duyệt.
 
-Trang [giới thiệu](bat-dau/introduction.md#what-is-not-included) liệt kê những gì package không làm.
+Trang [giới thiệu](getting-started/introduction.md#what-is-not-included) liệt kê những gì package không làm.
+
+## Ngoài physics của Unity và server Unity <a href="#beyond-unitys-physics-and-unity-servers" id="beyond-unitys-physics-and-unity-servers"></a>
+
+Có hai phần tùy chọn xây trên cùng package, dùng khi game đã chạy được trong Unity. [Rapier physics](rapier/overview.md) là một package riêng thay physics của Unity bằng Rapier, để rollback phát lại physics của server chính xác. [Server console](console-server/overview.md) chạy server của game như một chương trình .NET không cần Unity. Phần còn lại của tài liệu không phụ thuộc vào hai phần này, và phần hai của [ví dụ Red Runner](examples/redrunner/rapier-and-console/README.md) dùng cả hai.

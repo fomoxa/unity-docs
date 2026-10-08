@@ -4,7 +4,7 @@ Trang này liệt kê các type về messaging. Các hướng dẫn [model và c
 
 ## IMessageCodec<T> <a href="#imessagecodect" id="imessagecodect"></a>
 
-`public interface IMessageCodec<T>` trong `Fomoxa.Unity.Messaging` được mọi adapter sinh ra hiện thực.
+`public interface IMessageCodec<T>` trong `Fomoxa.Networking.Messaging` được mọi adapter sinh ra hiện thực.
 
 | Member | Mô tả |
 |---|---|
@@ -16,7 +16,7 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 
 ## FomoxaRegistry <a href="#fomoxaregistry" id="fomoxaregistry"></a>
 
-`public sealed class FomoxaRegistry` trong `Fomoxa.Unity`.
+`public sealed class FomoxaRegistry` trong `Fomoxa.Networking`.
 
 | Member | Mô tả |
 |---|---|
@@ -32,7 +32,7 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 
 ## RpcMessageIds <a href="#rpcmessageids" id="rpcmessageids"></a>
 
-`public sealed class RpcMessageIds` trong `Fomoxa.Unity`.
+`public sealed class RpcMessageIds` trong `Fomoxa.Networking`.
 
 | Member | Mô tả |
 |---|---|
@@ -42,7 +42,7 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 
 ## MessageChannels <a href="#messagechannels" id="messagechannels"></a>
 
-`public sealed class MessageChannels` trong `Fomoxa.Unity.Messaging`.
+`public sealed class MessageChannels` trong `Fomoxa.Networking.Messaging`.
 
 | Member | Mô tả |
 |---|---|
@@ -53,7 +53,7 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 
 ## MessageDispatcher <a href="#messagedispatcher" id="messagedispatcher"></a>
 
-`public sealed class MessageDispatcher` trong `Fomoxa.Unity.Messaging`. Mỗi `ServerManager` và mỗi `ClientManager` có một dispatcher.
+`public sealed class MessageDispatcher` trong `Fomoxa.Networking.Messaging`. Mỗi `ServerManager` và mỗi `ClientManager` có một dispatcher.
 
 | Member | Mô tả |
 |---|---|
@@ -76,12 +76,12 @@ public delegate void ObjectPayloadHandler(ulong peerId, uint objectId, byte beha
 
 | Exception | Namespace | Ném khi |
 |---|---|---|
-| `MessageDecodeException` | `Fomoxa.Unity.Messaging` | Adapter không decode được payload |
-| `HandlerRegistrationException` | `Fomoxa.Unity.Messaging` | Việc đăng ký handler, RPC, state hoặc input không hợp lệ |
+| `MessageDecodeException` | `Fomoxa.Networking.Messaging` | Adapter không decode được payload |
+| `HandlerRegistrationException` | `Fomoxa.Networking.Messaging` | Việc đăng ký handler, RPC, state hoặc input không hợp lệ |
 
 ## System model <a href="#system-models" id="system-models"></a>
 
-Các model của chính package nằm trong `Fomoxa.Unity.Messaging`. Chúng được sinh cùng model của bạn và là một phần của mọi schema, nhưng code game không gửi chúng.
+Các model của chính package nằm trong `Fomoxa.Networking.Messaging`. Chúng được sinh cùng model của bạn và là một phần của mọi schema, nhưng code game không gửi chúng.
 
 | Model | Mục đích | Channel |
 |---|---|---|

@@ -41,26 +41,26 @@ manager.ServerManager.OnRemoteConnectionState += args =>
 
 Hãy spawn object của một peer khi nó đã tới `Started`, vì trước đó nó chưa nhận được chúng. Server không cung cấp danh sách peer id, nên nếu cần, hãy tự giữ một tập từ các event này.
 
-| Member                            | Mục đích                                                      |
-| --------------------------------- | ------------------------------------------------------------- |
-| `PeerCount`                       | Số peer đã kết nối, kể cả peer còn đang handshake             |
-| `PeerState(peerId)`               | `ConnectionState` của một peer; `Stopped` với peer không biết |
-| `Disconnect(peerId)`              | Đóng kết nối của một peer; nó dừng với `LocalStop`            |
-| `HasRtt(peerId)`, `RttOf(peerId)` | Round-trip time mà client của peer báo qua các clock ping     |
-| `DroppedInputsOf(peerId)`         | Số input từ peer mà server không dùng được                    |
-| `FrameBudgetOf(peerId)`           | Frame budget của transport mà peer kết nối qua                |
+| Member | Mục đích |
+|---|---|
+| `PeerCount` | Số peer đã kết nối, kể cả peer còn đang handshake |
+| `PeerState(peerId)` | `ConnectionState` của một peer; `Stopped` với peer không biết |
+| `Disconnect(peerId)` | Đóng kết nối của một peer; nó dừng với `LocalStop` |
+| `HasRtt(peerId)`, `RttOf(peerId)` | Round-trip time mà client của peer báo qua các clock ping |
+| `DroppedInputsOf(peerId)` | Số input từ peer mà server không dùng được |
+| `FrameBudgetOf(peerId)` | Frame budget của transport mà peer kết nối qua |
 
 Khi một peer dừng, server despawn các object nó sở hữu. Object có `NetworkObject` tắt Despawn With Owner thì được giữ lại và chuyển sang do server sở hữu; xem [ownership](ownership.md).
 
 ## Object <a href="#objects" id="objects"></a>
 
-| Member                                                               | Hướng dẫn                                      |
-| -------------------------------------------------------------------- | ---------------------------------------------- |
-| `Spawn(networkObject, ownerId)`, `Despawn(networkObject)`            | [Spawn](spawning.md)                           |
-| `ChangeOwner(networkObject, ownerId)`                                | [Ownership](ownership.md)                      |
-| `IsObserver`, `RebuildObservers`, `ObserverRule`, `ObserverInterval` | [Observer](observers.md)                       |
-| `Scenes`                                                             | [Network scene](scenes.md)                     |
-| `Spawned`                                                            | Mọi object server này đã spawn, theo object id |
+| Member | Hướng dẫn |
+|---|---|
+| `Spawn(networkObject, ownerId)`, `Despawn(networkObject)` | [Spawn](spawning.md) |
+| `ChangeOwner(networkObject, ownerId)` | [Ownership](ownership.md) |
+| `IsObserver`, `RebuildObservers`, `ObserverRule`, `ObserverInterval` | [Observer](observers.md) |
+| `Scenes` | [Network scene](scenes.md) |
+| `Spawned` | Mọi object server này đã spawn, theo object id. Giá trị là `INetworkEntity`; trong Unity mỗi giá trị là một `NetworkObject`. |
 
 ## Message <a href="#messages" id="messages"></a>
 
@@ -72,4 +72,4 @@ Khi một handler ném exception lúc server xử lý message của một peer, 
 
 Exception ném ra trong `apply` của input model hoặc trong một `ObserverRule` được log và không ngắt kết nối ai.
 
-[Tham chiếu ServerManager](../tham-chieu/server-manager.md) liệt kê mọi member. Để chạy server riêng hoặc cùng một client, xem [dedicated server](../server/dedicated-server.md) và [host mode](host-mode.md).
+[Tham chiếu ServerManager](../reference/server-manager.md) liệt kê mọi member. Để chạy server riêng hoặc cùng một client, xem [dedicated server](../server/dedicated-server.md) và [host mode](host-mode.md).

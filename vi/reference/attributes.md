@@ -15,7 +15,7 @@ Các attribute này đến từ `Fomoxa.Attributes.dll`, trong namespace `Fomoxa
 
 ## NetworkChannelAttribute <a href="#networkchannelattribute" id="networkchannelattribute"></a>
 
-`[NetworkChannel(string codec, Channel channel)]`, trong namespace `Fomoxa.Unity`, đặt trên class và có thể lặp lại, mỗi codec một lần. [Channel](../messaging/channels.md) giải thích cách dùng nó.
+`[NetworkChannel(string codec, Channel channel)]`, trong namespace `Fomoxa.Networking`, đặt trên class và có thể lặp lại, mỗi codec một lần. [Channel](../messaging/channels.md) giải thích cách dùng nó.
 
 | Property | Type | Ý nghĩa |
 |---|---|---|
@@ -24,7 +24,7 @@ Các attribute này đến từ `Fomoxa.Attributes.dll`, trong namespace `Fomoxa
 
 ## ServerRpcAttribute <a href="#serverrpcattribute" id="serverrpcattribute"></a>
 
-`[ServerRpc]` hoặc `[ServerRpc("ModelName")]`, trong namespace `Fomoxa.Unity`, đặt trên method. [RPC](../messaging/rpc.md) giải thích cách dùng nó.
+`[ServerRpc]` hoặc `[ServerRpc("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên method. [RPC](../messaging/rpc.md) giải thích cách dùng nó.
 
 | Property | Type | Mặc định | Ý nghĩa |
 |---|---|---|---|
@@ -37,7 +37,7 @@ Method có thể có một trong các chữ ký `void M()`, `void M(ulong peerId
 
 ## ClientRpcAttribute <a href="#clientrpcattribute" id="clientrpcattribute"></a>
 
-`[ClientRpc]` hoặc `[ClientRpc("ModelName")]`, trong namespace `Fomoxa.Unity`, đặt trên method.
+`[ClientRpc]` hoặc `[ClientRpc("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên method.
 
 | Property | Type | Mặc định | Ý nghĩa |
 |---|---|---|---|
@@ -49,7 +49,7 @@ Method có thể có chữ ký `void M()` hoặc `void M(TModel value)`.
 
 ## NetworkRpcAttribute <a href="#networkrpcattribute" id="networkrpcattribute"></a>
 
-`[NetworkRpc]` hoặc `[NetworkRpc("ModelName")]`, trong namespace `Fomoxa.Unity`, đặt trên method không tham số. Nó sinh model của RPC không tham số mà không sinh phần đăng ký, nên bạn tự đăng ký RPC trong `OnRegisterRpcs`.
+`[NetworkRpc]` hoặc `[NetworkRpc("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên method không tham số. Nó sinh model của RPC không tham số mà không sinh phần đăng ký, nên bạn tự đăng ký RPC trong `OnRegisterRpcs`.
 
 | Property | Type | Mặc định | Ý nghĩa |
 |---|---|---|---|
@@ -58,7 +58,7 @@ Method có thể có chữ ký `void M()` hoặc `void M(TModel value)`.
 
 ## MessageAdapterAttribute <a href="#messageadapterattribute" id="messageadapterattribute"></a>
 
-`[MessageAdapter(string codec)]`, trong namespace `Fomoxa.Unity`, được viết trên mọi class adapter được sinh, và source generator cho RPC dùng nó để tìm adapter của một model và codec. Đừng đặt nó trên class của riêng bạn.
+`[MessageAdapter(string codec)]`, trong namespace `Fomoxa.Networking`, được viết trên mọi class adapter được sinh, và source generator cho RPC dùng nó để tìm adapter của một model và codec. Đừng đặt nó trên class của riêng bạn.
 
 ## Quy tắc <a href="#rules" id="rules"></a>
 

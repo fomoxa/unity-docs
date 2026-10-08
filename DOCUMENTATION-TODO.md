@@ -7,7 +7,7 @@ This file collects the questions that the documentation could not settle from th
 ### Local peer id on a client
 Question: Should a client be able to read its own peer id? `ClientObjects.LocalPeerId` exists but `ClientManager.Objects` is internal.
 Why it matters: Games that compare `NetworkObject.OwnerId` with "me" have to use `IsOwner` instead. Documented as "the client does not expose its own peer id".
-Source examined: `Runtime/Unity/ClientManager.cs`, `Runtime/Core/Objects/ClientObjects.cs`.
+Source examined: `Runtime/Core/ClientManager.cs`, `Runtime/Core/Objects/ClientObjects.cs`.
 
 ### Reaching the NetworkManager from a NetworkBehaviour
 Question: Is there an intended way for a behaviour to reach its `NetworkManager` or `TimeManager`, for `TickDelta` in `apply`? `NetworkObject.Server` and `Client` are internal.
@@ -17,12 +17,12 @@ Source examined: `Runtime/Unity/NetworkObject.cs`, `Runtime/Unity/NetworkBehavio
 ### Rejected input event
 Question: `ServerInputs.OnInputRejected` is public, but `ServerManager.Inputs` is internal, so game code cannot subscribe. Is that intended?
 Why it matters: Documented as "logged as a warning; no public event".
-Source examined: `Runtime/Core/Prediction/ServerInputs.cs`, `Runtime/Unity/ServerManager.cs`.
+Source examined: `Runtime/Core/Prediction/ServerInputs.cs`, `Runtime/Core/ServerManager.cs`.
 
 ### Peer list on the server
 Question: Should `ServerManager` expose the ids of connected peers?
 Why it matters: Documented that games keep their own set from `OnRemoteConnectionState`.
-Source examined: `Runtime/Unity/ServerManager.cs`, `Runtime/Core/Sessions/ServerSession.cs`.
+Source examined: `Runtime/Core/ServerManager.cs`, `Runtime/Core/Sessions/ServerSession.cs`.
 
 ### UDP listener limits in Fomoxa.Net
 Question: Does the bundled `Fomoxa.Net.dll` limit the number of UDP peers per listener (the `csharp` source has `PeerCeiling = 1024` and a per-peer queue of 64 datagrams)?
@@ -35,14 +35,6 @@ Why it matters: `PrefabRegistry.Register(prefabId, ...)` throws when the prefab 
 Source examined: `Runtime/Unity/PrefabRegistry.cs`, `Runtime/Unity/NetworkManager.cs`.
 
 ## Missing implementation
-
-### Rapier physics backend
-Current state: `PhysicsBackend.Rapier` exists; no backend implements it, and `NetworkObject.Body` returns invalid bodies when it is selected.
-Documentation impact: Marked "not implemented" wherever backends are mentioned.
-
-### Server console
-Current state: Layer 1 compiles without Unity, but there is no project, tick loop, object routing or physics backend outside Unity.
-Documentation impact: `server/server-console.md` describes what exists and is marked "not packaged".
 
 ### fomoxac for macOS
 Current state: `FomoxacBinary` expects `Tools~/fomoxac/osx/fomoxac`, which is not shipped.

@@ -100,8 +100,9 @@ You set these fields in the Inspector. The manager reads them once, in `Awake`, 
 
 | Field | Default | Meaning |
 |---|---|---|
-| Physics Backend | Rigidbody | The physics backend. Server and clients must use the same one. `Rapier` has no implementation. |
-| Simulate Physics | off | The manager steps Unity physics once per tick and enables physics rollback. See [physics](../physics/overview.md). |
+| Physics | none | The physics component, `RigidbodyPhysics`. Without one, the manager adds a `RigidbodyPhysics` with Simulate Physics off. Server and clients must use the same physics backend. See [physics](../physics/overview.md#turning-it-on). |
+
+`RigidbodyPhysics` has one field, Simulate Physics (off by default). With it on, the manager steps Unity physics once per tick and enables physics rollback.
 
 ## Several managers
 
@@ -111,6 +112,6 @@ Only one manager steps a given physics scene; see [physics](../physics/overview.
 
 ## Limitations
 
-The fields cannot be set from code; `Registry` is the only settable property. A manager added with `AddComponent` therefore uses the defaults, and it adds a `UdpNetworkTransport` unless a transport component is assigned through the Inspector. A manager only ticks while it is enabled and in a loaded scene.
+The fields cannot be set from code; `Registry` is the only settable property. A manager added with `AddComponent` therefore uses the defaults, and it adds a `UdpNetworkTransport` and a `RigidbodyPhysics` unless those components are assigned through the Inspector. A manager only ticks while it is enabled and in a loaded scene.
 
 The [NetworkManager reference](../reference/network-manager.md) and [configuration](../reference/configuration.md) list every member and field. The [server](server.md), [client](client.md) and [host mode](host-mode.md) pages describe what the manager runs.

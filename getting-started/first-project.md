@@ -22,7 +22,7 @@ A model is a C# class that the package can send. Here the player's state is a si
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace MyGame.Network.Models
 {
@@ -47,6 +47,7 @@ Save the file and let Unity compile. The package generates `PlayerStatsNetAdapte
 Create `Assets/Network/Player.cs`:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;

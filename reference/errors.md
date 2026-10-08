@@ -2,7 +2,7 @@
 
 ## StopReason
 
-`Fomoxa.Unity.Sessions.StopReason` appears in `ConnectionStateArgs.Reason` when a connection stops.
+`Fomoxa.Networking.Sessions.StopReason` appears in `ConnectionStateArgs.Reason` when a connection stops.
 
 | Value | Meaning | Client retries |
 |---|---|---|
@@ -30,7 +30,7 @@
 
 ## ObjectMismatchKind
 
-`Fomoxa.Unity.Objects.ObjectMismatchKind` appears in `ObjectMismatchArgs.Kind`. The first four kinds and `UnknownScene` stop the client with `PrefabMismatch`, and the others with `ObjectMismatch`.
+`Fomoxa.Networking.Objects.ObjectMismatchKind` appears in `ObjectMismatchArgs.Kind`. The first four kinds and `UnknownScene` stop the client with `PrefabMismatch`, and the others with `ObjectMismatch`.
 
 | Value | Meaning |
 |---|---|
@@ -46,7 +46,7 @@
 
 ## SendResult
 
-`Fomoxa.Unity.Sessions.SendResult` is returned by the send methods.
+`Fomoxa.Networking.Sessions.SendResult` is returned by the send methods.
 
 | Value | Meaning |
 |---|---|

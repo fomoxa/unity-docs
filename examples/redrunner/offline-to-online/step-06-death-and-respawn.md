@@ -137,7 +137,7 @@ The example is `Saw`, and `Spike`, `Water` and `Mace` get the same check.
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace RedRunner.Networking.Models
 {

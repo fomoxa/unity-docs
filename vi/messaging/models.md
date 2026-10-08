@@ -46,7 +46,7 @@ SendServerRpc(ShotNetAdapter.Instance, new Shot { Weapon = 2, Direction = transf
 | `[Codec("name")]`                                    | Property hoặc field | Member thuộc về codec này. `[Codec("net", "compact")]` khai báo nhiều codec cùng lúc. |
 | `[NetworkChannel("codec", Channel.ReliableOrdered)]` | Class               | Channel của một codec của model; xem [channel](channels.md)                           |
 
-`[Network]` và `[Codec]` đến từ `Fomoxa.Attributes.dll`, trong namespace `Fomoxa`, còn `[NetworkChannel]` và `Channel` nằm trong namespace `Fomoxa.Unity`.
+`[Network]` và `[Codec]` đến từ `Fomoxa.Attributes.dll`, trong namespace `Fomoxa`, còn `[NetworkChannel]` và `Channel` nằm trong namespace `Fomoxa.Networking`.
 
 Một codec chỉ mang một property khi property đó có cả `[Network("type")]` và một `[Codec("name")]` với tên của codec. Codec bỏ qua mọi property khác, nên một model có thể giữ dữ liệu cục bộ bên cạnh các field mạng.
 

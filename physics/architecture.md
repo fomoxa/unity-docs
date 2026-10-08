@@ -1,20 +1,22 @@
 # Physics architecture
 
-This page describes the physics interfaces in layer 1 and the Unity backend in layer 2. Game code normally only needs [`PhysicsBody`](physics-body.md), so read on if you want to understand how rollback works or to use the interfaces directly.
+This page describes the physics interfaces in layer 1 and the Unity physics component in layer 2. Game code normally only needs [`PhysicsBody`](physics-body.md), so read on if you want to understand how rollback works or to use the interfaces directly.
 
 ## Layers
 
 ```text
-Fomoxa physics API          PhysicsBody, PhysicsBody2D, PhysicsHistory      layer 1, Fomoxa.Unity.Simulation
+Fomoxa physics API          PhysicsBody, PhysicsBody2D, PhysicsHistory      layer 1, Fomoxa.Networking.Simulation
         ↓
 IPhysicsSimulation          Step, CreateSnapshot, Save, Load                layer 1
         ↓
 IPhysicsWorld / IPhysicsWorld2D   bodies, forces, queries                   layer 1
         ↓
-Backend implementation      UnityPhysicsWorld, UnityPhysicsWorld2D          layer 2, Fomoxa.Unity
+Physics component           NetworkPhysics, RigidbodyPhysics                layer 2, Fomoxa.Unity
+        ↓
+World implementation        UnityPhysicsWorld, UnityPhysicsWorld2D          layer 2
 ```
 
-Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, and the backend maps them to Unity's physics.
+Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, and the Unity worlds map them to Unity's physics.
 
 ## The rule of a world
 
@@ -22,7 +24,7 @@ Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, an
 one simulation world → one simulation state → one owner that steps it → exactly one Step per tick
 ```
 
-A world is one simulation state of the backend. With the Unity backend that is one `PhysicsScene` or one `PhysicsScene2D`, shared by every Unity scene that uses it. One `NetworkManager` owns the stepping of a world, and no other manager in the process steps it.
+A world is one simulation state of the physics engine. With `RigidbodyPhysics` that is one `PhysicsScene` or one `PhysicsScene2D`, shared by every Unity scene that uses it. One `NetworkManager` owns the stepping of a world, and no other manager in the process steps it.
 
 The owner steps the world once per tick. A replay steps it again, but only after loading an earlier state. Rollback therefore works per world and per group of worlds, never per object, as described under [rollback groups](../prediction/rollback.md#rollback-groups).
 
@@ -54,7 +56,7 @@ Both interfaces extend `IPhysicsSimulation`. They are separate because their sta
 | Forces | `AddForce`, `AddImpulse` with `Vector3` | with `Vector2` |
 | Queries | `Raycast(origin, direction, maxDistance, out RayHit)`, `Overlap(center, radius, BodyHandle[])` | `Raycast(..., out RayHit2D)`, `Overlap(Vector2, float, BodyHandle[])` |
 
-The interfaces use a small set of data types. `BodyHandle` is an opaque id whose `IsValid` is false for the default value. `BodyKind` is one of `Dynamic`, `Kinematic` and `Static`, and the shapes are `BodyShape` (`Box`, `Sphere`, `Capsule`) and `BodyShape2D` (`Box`, `Circle`, `Capsule`). `BodyDesc` and `BodyDesc2D` describe a new body by kind, shape, position, rotation and mass. The remaining types are `BodyState` and `BodyState2D`, and `RayHit` and `RayHit2D`. The [physics API reference](../reference/physics.md) lists their members.
+The interfaces use a small set of data types. `BodyHandle` is an opaque id whose `IsValid` is false for the default value. `BodyKind` is one of `Dynamic`, `Kinematic` and `Static`. The shapes are `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) and `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). A `ColliderDesc` or `ColliderDesc2D` places a shape with a `ColliderMaterial`, a layer and a trigger flag, and `BodyDesc` and `BodyDesc2D` describe a new body by kind, colliders, position, rotation, mass and a `BodyMotion` or `BodyMotion2D` (axis locks, gravity, damping). The remaining types are `BodyState` and `BodyState2D`, and `RayHit` and `RayHit2D`. The [physics API reference](../reference/physics.md) lists their members.
 
 `PhysicsBody` and `PhysicsBody2D` wrap a world and a handle, so game code does not have to deal with handles.
 
@@ -72,22 +74,22 @@ The interfaces use a small set of data types. `BodyHandle` is an opaque id whose
 
 The client keeps one history per predicted world, with Prediction History as its capacity.
 
-## The Unity backend
+## NetworkPhysics
 
-`UnityPhysicsWorld` and `UnityPhysicsWorld2D` implement the interfaces on a Unity physics scene. The `NetworkManager` creates and uses them internally and offers no public accessor for its worlds, but you can construct one yourself from a `Scene` to use the interfaces outside the network loop, for example in tests.
+`NetworkPhysics` is the abstract component that the Physics field of a `NetworkManager` holds, and `RigidbodyPhysics` is the one the package provides. The manager asks it which worlds to step, which worlds an object belongs to, for the body of a `NetworkObject` and for the history of a world. `WorldsOf(Scene, List<IPhysicsSimulation>)` returns the worlds of a scene, and the `AddStatic` and `AddBody` members described in the [physics overview](overview.md#geometry-and-bodies-added-at-runtime) add geometry and bodies at runtime.
+
+## The Unity worlds
+
+`UnityPhysicsWorld` and `UnityPhysicsWorld2D` implement the interfaces on a Unity physics scene. `RigidbodyPhysics` creates them for the scenes it steps, and you can also construct one yourself from a `Scene` to use the interfaces outside the network loop, for example in tests.
 
 | Behavior | 3D | 2D |
 |---|---|---|
 | `Step` | `PhysicsScene.Simulate(seconds)` | `PhysicsScene2D.Simulate(seconds)` |
 | Snapshot contents | Every dynamic `Rigidbody` that is not excluded: position, rotation, velocity, angular velocity, sleep | Same for `Rigidbody2D` |
 | `Register(rigidbody)` | Returns the handle of an existing `Rigidbody` | Same for `Rigidbody2D` |
-| `CreateBody` | Creates a GameObject named `FomoxaBody` with a collider and a `Rigidbody` in the world's first loaded scene; `Static` creates a kinematic body | Creates `FomoxaBody2D` with a collider and a `Rigidbody2D`; `Static` creates a kinematic body |
+| `CreateBody` | Creates a GameObject named `FomoxaBody` with its colliders and a `Rigidbody` in the world's first loaded scene, and applies the body's motion settings; `Static` creates a kinematic body | Creates `FomoxaBody2D` with its colliders and a `Rigidbody2D`; `Static` creates a kinematic body |
 | Units | Angular velocity in radians per second | Rotation in radians, angular velocity in radians per second |
 
 Contact data is not part of a snapshot, which makes a replay an approximation. Proxies are excluded from snapshots with `SetRewindable(handle, false)`.
-
-## Rapier
-
-`PhysicsBackend.Rapier` names a backend that the package does not include. The interfaces above are the boundary such a backend would implement.
 
 For how the package uses these interfaces, see the [physics overview](overview.md). The [physics API reference](../reference/physics.md) lists every member, and [architecture](../concepts/architecture.md) describes the layers as a whole.

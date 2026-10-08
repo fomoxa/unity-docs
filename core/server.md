@@ -60,7 +60,7 @@ When a peer stops, the server despawns the objects it owned. Objects whose `Netw
 | `ChangeOwner(networkObject, ownerId)` | [Ownership](ownership.md) |
 | `IsObserver`, `RebuildObservers`, `ObserverRule`, `ObserverInterval` | [Observers](observers.md) |
 | `Scenes` | [Network scenes](scenes.md) |
-| `Spawned` | All objects spawned by this server, by object id |
+| `Spawned` | All objects spawned by this server, by object id. The values are `INetworkEntity`; in Unity each one is a `NetworkObject`. |
 
 ## Messages
 

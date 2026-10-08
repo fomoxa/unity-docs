@@ -1,6 +1,6 @@
 # Red Runner
 
-Red Runner là một game platformer 2D miễn phí của Bayat Games, viết cho một người chơi. Nhân vật chạy sang phải qua một level gồm các khối, nhảy qua nước, lưỡi cưa, gai và chùy đung đưa, và nhặt đồng xu dọc đường. Ví dụ này biến game đó thành game online xây trên `com.fomoxa.unity`, từng bước một.
+Red Runner là một game platformer 2D miễn phí của Bayat Games, viết cho một người chơi. Nhân vật chạy sang phải qua một level gồm các khối, nhảy qua nước, lưỡi cưa, gai và chùy đung đưa, và nhặt đồng xu dọc đường. Ví dụ này biến game đó thành game online xây trên `com.fomoxa.networking`, từng bước một.
 
 Trong khi các trang khác của tài liệu giải thích từng phần của package hoạt động ra sao, các trang này cho thấy những gì phải thay đổi trong một game thật vốn không được viết cho mạng, theo đúng thứ tự các thay đổi đã được thực hiện.
 
@@ -58,6 +58,7 @@ Nhân vật của bạn di chuyển ngay khi bạn bấm phím, vì client dự 
 2. [Từ offline lên online](offline-to-online/README.md) là quá trình chuyển đổi, gồm chín bước. Mỗi bước nêu các file nó thay đổi, code, cách test và commit đã thực hiện nó.
 3. [Kiến trúc bản online](architecture.md) mô tả game đã hoàn chỉnh.
 4. [Xử lý sự cố](troubleshooting.md) liệt kê các vấn đề riêng của bản port này.
+5. [Rapier và server console](rapier-and-console/README.md) đi tiếp từ game hoàn chỉnh qua bốn bước nữa. Phần này chuyển game sang physics backend Rapier và thêm một server chạy không cần Unity. Hãy đọc nó khi bản Unity đã chạy; phần một không phụ thuộc gì vào nó.
 
 Nếu chưa dùng package bao giờ, hãy đọc [tick và thời gian](../../concepts/tick.md), [authority](../../concepts/authority.md) và [prediction](../../concepts/prediction.md) trước. Các bước link tới những trang chúng dựa vào thay vì nhắc lại nội dung.
 

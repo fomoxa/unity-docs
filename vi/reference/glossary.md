@@ -14,7 +14,7 @@
 | Host | Tiến trình chạy server và client trong cùng một `NetworkManager`. Xem [host mode](../core/host-mode.md). |
 | Input model | Model mà một behaviour đăng ký bằng `NetworkInput.Use`, được owner gửi mỗi tick. |
 | Interpolation | Hiển thị một object ở xa nằm giữa các transform đã nhận, chậm vài tick so với hiện tại. |
-| Tầng 1 | `Fomoxa.Unity.Core`, phần của package không tham chiếu Unity. |
+| Tầng 1 | `Fomoxa.Networking`, tức Core: phần của package không tham chiếu Unity. |
 | Tầng 2 | `Fomoxa.Unity`, phần tích hợp với Unity. |
 | Message id | Id 32 bit của một model và một codec trong schema. |
 | Model | Một class C# đánh dấu bằng `[Network]` mô tả một message. |

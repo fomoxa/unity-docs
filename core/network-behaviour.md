@@ -5,6 +5,7 @@
 ## Basic usage
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using UnityEngine;
 

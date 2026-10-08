@@ -44,7 +44,7 @@ Matches(server T, history[T])?
 
 What the client compares is a second model, `PlayerMotion`, holding the position, the velocity and the run damping velocity. `NetworkPlayer` registers it with `input.Reconcile` and three callbacks, `Capture`, `Restore` and `Matches`.
 
-The character is a `Rigidbody2D`, and the scene has other bodies the character touches. With Simulate Physics on, the package saves the 2D physics of the scene every tick and restores it before a replay, so the replay starts from the same world the server had.
+The character is a `Rigidbody2D`, and the scene has other bodies the character touches. With Simulate Physics on in the `RigidbodyPhysics` of the `Network Manager`, the package saves the 2D physics of the scene every tick and restores it before a replay, so the replay starts from the same world the server had.
 
 Other clients do not predict this character. They see it through `NetworkTransform`, as a kinematic body interpolated two ticks behind the newest position they have received.
 

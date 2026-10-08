@@ -39,13 +39,11 @@ Once objects are spawned, a `NetworkBehaviour` can call RPCs and register a stat
 | Client-side prediction, reconciliation and replay | Available |
 | Rollback of Unity physics (`Rigidbody` and `Rigidbody2D`) | Available, approximate (see [rollback](../prediction/rollback.md)) |
 | WebGL client | Available |
-| Rapier physics backend | Not implemented; the `PhysicsBackend.Rapier` value exists but has no backend |
-| Server console (a .NET server process without Unity) | Not packaged; see [server console](../server/server-console.md) |
 | `fomoxac` binary for macOS | Not bundled; code generation fails in the macOS Editor |
 
 ## What is not included
 
-The package has no lockstep simulation and cannot record or replay a whole match. It also has no deterministic random number generator, no state hashing and no physics that is deterministic across platforms. The documentation does not describe any of these.
+The package has no lockstep simulation and cannot record or replay a whole match. It also has no deterministic random number generator and no state hashing.
 
 Matchmaking, relay servers, lobbies and NAT traversal are outside the package as well, and so are encryption and authentication of connections. A WebSocket client in a browser can still reach a server over TLS through a proxy, as described in [WebSocket](../transports/websocket.md).
 

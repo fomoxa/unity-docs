@@ -7,8 +7,8 @@ A custom transport connects the package to another way of moving bytes, such as 
 | Type | Namespace | Role |
 |---|---|---|
 | `NetworkTransport` | `Fomoxa.Unity` | The component on the `NetworkManager`; `CreateFactory()` returns the factory |
-| `ITransportFactory` | `Fomoxa.Unity.Transports` | `FrameBudget`, `CreateListener(port, out boundPort)`, `CreateConnector(address, port)` |
-| `ITransportConnector` | `Fomoxa.Unity.Transports` | A connection attempt. `Poll(out ITransport)` returns `Pending`, `Connected` or `Failed`; `Dispose()` cancels it |
+| `ITransportFactory` | `Fomoxa.Networking.Transports` | `FrameBudget`, `CreateListener(port, out boundPort)`, `CreateConnector(address, port)` |
+| `ITransportConnector` | `Fomoxa.Networking.Transports` | A connection attempt. `Poll(out ITransport)` returns `Pending`, `Connected` or `Failed`; `Dispose()` cancels it |
 | `IListenerTransport` | `Fomoxa.Net.Transports` | The server side. `Accept()` returns an `AcceptOutcome`; `Dispose()` closes it |
 | `ITransport` | `Fomoxa.Net.Transports` | One connection: `Kind`, `Send`, `Receive`, `CloseGracefully`, `Dispose` |
 
@@ -29,8 +29,8 @@ The following transport connects clients to a server in the same process through
 ```csharp
 using Fomoxa.Net;
 using Fomoxa.Net.Transports;
+using Fomoxa.Networking.Transports;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Transports;
 
 public sealed class InMemoryNetworkTransport : NetworkTransport
 {

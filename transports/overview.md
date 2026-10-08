@@ -41,7 +41,7 @@ UDP has the lowest latency under packet loss, because a lost unreliable message 
 public abstract ITransportFactory CreateFactory();
 ```
 
-The `NetworkManager` calls it once in `Awake`. The returned `ITransportFactory`, in `Fomoxa.Unity.Transports`, creates listeners for the server and connectors for the client:
+The `NetworkManager` calls it once in `Awake`. The returned `ITransportFactory`, in `Fomoxa.Networking.Transports`, creates listeners for the server and connectors for the client:
 
 | Member | Meaning |
 |---|---|

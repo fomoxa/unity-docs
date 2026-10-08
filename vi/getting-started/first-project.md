@@ -22,7 +22,7 @@ Model là một class C# mà package có thể gửi đi. Ở đây state của 
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace MyGame.Network.Models
 {
@@ -47,6 +47,7 @@ Lưu file và để Unity biên dịch. Package sinh `PlayerStatsNetAdapter` tro
 Tạo `Assets/Network/Player.cs`:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;

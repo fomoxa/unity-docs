@@ -1,6 +1,6 @@
 # Tham chiếu ClientManager
 
-`public sealed class ClientManager` trong `Fomoxa.Unity` không có constructor public; bạn truy cập nó qua `NetworkManager.ClientManager`. Hướng dẫn [client](../core/client.md) giải thích cách dùng nó.
+`public sealed class ClientManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.ClientManager`. Hướng dẫn [client](../core/client.md) giải thích cách dùng nó.
 
 ## Kết nối <a href="#connection" id="connection"></a>
 
@@ -15,7 +15,7 @@
 
 | Member | Mô tả |
 |---|---|
-| `IReadOnlyDictionary<uint, NetworkObject> Spawned` | Các object đã spawn trên client này, theo object id |
+| `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Các object đã spawn trên client này, theo object id; trong Unity mỗi giá trị là một `NetworkObject` |
 | `bool IsReplaying` | True khi client đang replay input trong lúc reconciliation |
 
 ## Message <a href="#messages" id="messages"></a>

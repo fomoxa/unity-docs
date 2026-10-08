@@ -8,8 +8,9 @@ Create `Assets/Network/Launcher.cs`:
 
 ```csharp
 using System;
+using Fomoxa.Networking;
+using Fomoxa.Networking.Sessions;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Sessions;
 using UnityEngine;
 
 namespace MyGame.Network

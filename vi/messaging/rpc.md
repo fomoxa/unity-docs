@@ -13,6 +13,7 @@ Mỗi RPC nhận không tham số nào hoặc đúng một [model](models.md).
 ## Khai báo RPC bằng attribute <a href="#declaring-rpcs-with-attributes" id="declaring-rpcs-with-attributes"></a>
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;
@@ -105,6 +106,7 @@ Server RPC chỉ gửi được ở nơi object đã spawn trên client, còn ob
 Thay vì dùng attribute, bạn có thể đăng ký handler bằng code trong `OnRegisterRpcs`, hook chạy một lần cho mỗi instance trước `OnStartServer` hoặc `OnStartClient`:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using UnityEngine;

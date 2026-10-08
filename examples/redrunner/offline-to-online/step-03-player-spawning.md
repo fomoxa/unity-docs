@@ -120,10 +120,12 @@ public void StopGame()
 | Field | Value | Why |
 |---|---|---|
 | Tick Rate | 50 | The project's fixed timestep is 0.02 seconds, so physics steps as often as in the offline game. |
-| Simulate Physics | on | The manager steps 2D physics once per tick. On a client, a networked `Rigidbody2D` that the client does not predict becomes kinematic and follows its `NetworkTransform`. |
 | Max Reconnect Retries | 3 | The default, -1, retries forever. With 3, a client that cannot reach the server stops and the game returns to the start screen. |
 | Collected Prefabs | `Generated/FomoxaPrefabList.asset` | See below. |
 | Collected Scenes | `Generated/FomoxaSceneList.asset` | See below. |
+| Physics | the `RigidbodyPhysics` of the same GameObject, with Simulate Physics on | The manager steps 2D physics once per tick. On a client, a networked `Rigidbody2D` that the client does not predict becomes kinematic and follows its `NetworkTransform`. |
+
+Add the `RigidbodyPhysics` component to `Network Manager` first, check its Simulate Physics field, then drag it into the Physics field.
 
 The package assigns both lists itself when Unity prepares a scene for Play Mode, but in the Editor that happens after `NetworkManager.Awake` has registered prefabs, and spawning then fails with `prefab id 0x... of RedRunner(Clone) is not registered`. Player builds get the lists during the build. Assigning them in the scene works in both cases.
 

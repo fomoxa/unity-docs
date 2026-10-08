@@ -6,13 +6,15 @@ Trang này mô tả cấu trúc của package và cách chạy test của nó t�
 
 | Thư mục | Nội dung |
 |---|---|
-| `Runtime/Core` | Tầng 1, assembly `Fomoxa.Unity.Core`; không tham chiếu Unity |
+| `Runtime/Core` | Tầng 1, assembly `Fomoxa.Networking`; không tham chiếu Unity |
 | `Runtime/Core/SystemModels` | Các model của chính package, được copy vào project để sinh code |
+| `Runtime/Core/Generators` | Source generator cho RPC, build thành DLL |
 | `Runtime/Unity` | Tầng 2, assembly `Fomoxa.Unity`, và `FomoxaWebSocket.jslib` |
-| `Runtime/Unity/Generators` | Source generator cho RPC, build thành DLL |
 | `Runtime/Plugins` | `Fomoxa.Net.dll` và `Fomoxa.Attributes.dll` |
-| `Editor` | Assembly `Fomoxa.Unity.Editor`: sinh code, gán id, kiểm tra khi build |
+| `Editor` | Assembly `Fomoxa.Unity.Editor`: sinh code, gán id, scene file, kiểm tra khi build |
+| `Standalone~` | Mã nguồn của [backend console](../console-server/overview.md), Unity không import |
 | `Tests/Core`, `Tests/Unity`, `Tests/Fixtures` | Các assembly test, chỉ được biên dịch khi project bao gồm test của package |
+| `Tests/Standalone~` | Test của backend console, Unity không import |
 | `Tools~/fomoxac` | Các binary `fomoxac`; Unity không import thư mục có tên kết thúc bằng `~` |
 
 ## Chạy test <a href="#running-the-tests" id="running-the-tests"></a>
@@ -21,11 +23,11 @@ Các assembly test dùng define `UNITY_INCLUDE_TESTS`, nên Unity chỉ biên d�
 
 ```json
 "testables": [
-  "com.fomoxa.unity"
+  "com.fomoxa.networking"
 ]
 ```
 
-Sau đó mở Window > General > Test Runner và chạy các test EditMode. Test trong `Fomoxa.Unity.Core.Tests` bao phủ tầng 1, còn test trong `Fomoxa.Unity.Tests` tạo các component `NetworkManager`, transport và physics scene trong Editor.
+Sau đó mở Window > General > Test Runner và chạy các test EditMode. Test trong `Fomoxa.Networking.Tests` bao phủ tầng 1, còn test trong `Fomoxa.Unity.Tests` tạo các component `NetworkManager`, transport và physics scene trong Editor.
 
 ## Phong cách code <a href="#code-style" id="code-style"></a>
 

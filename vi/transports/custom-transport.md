@@ -7,8 +7,8 @@ Transport tùy chỉnh nối package với một cách chuyển byte khác, như
 | Type | Namespace | Vai trò |
 |---|---|---|
 | `NetworkTransport` | `Fomoxa.Unity` | Component trên `NetworkManager`; `CreateFactory()` trả về factory |
-| `ITransportFactory` | `Fomoxa.Unity.Transports` | `FrameBudget`, `CreateListener(port, out boundPort)`, `CreateConnector(address, port)` |
-| `ITransportConnector` | `Fomoxa.Unity.Transports` | Một lần thử kết nối. `Poll(out ITransport)` trả về `Pending`, `Connected` hoặc `Failed`; `Dispose()` hủy nó |
+| `ITransportFactory` | `Fomoxa.Networking.Transports` | `FrameBudget`, `CreateListener(port, out boundPort)`, `CreateConnector(address, port)` |
+| `ITransportConnector` | `Fomoxa.Networking.Transports` | Một lần thử kết nối. `Poll(out ITransport)` trả về `Pending`, `Connected` hoặc `Failed`; `Dispose()` hủy nó |
 | `IListenerTransport` | `Fomoxa.Net.Transports` | Phía server. `Accept()` trả về một `AcceptOutcome`; `Dispose()` đóng nó |
 | `ITransport` | `Fomoxa.Net.Transports` | Một kết nối: `Kind`, `Send`, `Receive`, `CloseGracefully`, `Dispose` |
 
@@ -29,8 +29,8 @@ Transport sau nối client với server trong cùng tiến trình qua các type 
 ```csharp
 using Fomoxa.Net;
 using Fomoxa.Net.Transports;
+using Fomoxa.Networking.Transports;
 using Fomoxa.Unity;
-using Fomoxa.Unity.Transports;
 
 public sealed class InMemoryNetworkTransport : NetworkTransport
 {

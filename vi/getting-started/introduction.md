@@ -39,13 +39,11 @@ Khi object đã được spawn, một `NetworkBehaviour` có thể gọi RPC và
 | Client-side prediction, reconciliation và replay | Có |
 | Rollback physics của Unity (`Rigidbody` và `Rigidbody2D`) | Có, gần đúng (xem [rollback](../prediction/rollback.md)) |
 | Client WebGL | Có |
-| Physics backend Rapier | Chưa hiện thực; giá trị `PhysicsBackend.Rapier` có tồn tại nhưng không có backend |
-| Server console (tiến trình server .NET không có Unity) | Chưa đóng gói; xem [server console](../server/server-console.md) |
 | Binary `fomoxac` cho macOS | Không đi kèm; sinh code thất bại trong Editor trên macOS |
 
 ## Những gì không có <a href="#what-is-not-included" id="what-is-not-included"></a>
 
-Package không có lockstep simulation và không thể ghi lại hay phát lại cả một trận đấu. Package cũng không có bộ sinh số ngẫu nhiên tất định, không có state hashing và không có physics tất định giữa các nền tảng. Tài liệu không mô tả những tính năng này.
+Package không có lockstep simulation và không thể ghi lại hay phát lại cả một trận đấu. Package cũng không có bộ sinh số ngẫu nhiên tất định và không có state hashing.
 
 Matchmaking, relay server, lobby và NAT traversal cũng nằm ngoài package, cũng như mã hóa và xác thực kết nối. Client WebSocket trong trình duyệt vẫn có thể tới server qua TLS thông qua một proxy, như mô tả trong [WebSocket](../transports/websocket.md).
 

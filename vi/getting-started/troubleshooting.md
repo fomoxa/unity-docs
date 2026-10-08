@@ -13,8 +13,8 @@ Lỗi sinh code xuất hiện trong Console với tiền tố `[Fomoxa]`.
 | `more than one FomoxaSettings asset exists; keep exactly one` | Xóa asset thừa. |
 | `the FomoxaSettings asset needs both a models folder and a generated folder` | Điền cả hai field của settings asset. |
 | `fomoxac generate exited with ...` | `fomoxac` từ chối một model hoặc một đường dẫn. Phần còn lại của thông báo là output của chính `fomoxac`. Nguyên nhân hay gặp là thiếu thư mục model; hãy tạo thư mục đó. |
-| `... was not written by com.fomoxa.unity; remove it ...` | Một file do package quản lý, như `fomoxa.toml` hoặc một file trong `FomoxaSystemModels`, lại do người khác ghi. Xóa file đó và sinh lại. |
-| `the field type ... is neither a model nor a Unity type com.fomoxa.unity knows` | Một field của model dùng type không có codec. Xem [codec tùy chỉnh](../advanced/custom-codecs.md). |
+| `... was not written by com.fomoxa.networking; remove it ...` | Một file do package quản lý, như `fomoxa.toml` hoặc một file trong `FomoxaSystemModels`, lại do người khác ghi. Xóa file đó và sinh lại. |
+| `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | Một field của model dùng type không có codec. Xem [codec tùy chỉnh](../advanced/custom-codecs.md). |
 
 ## NetworkManager ném exception khi scene khởi động <a href="#networkmanager-throws-when-the-scene-starts" id="networkmanager-throws-when-the-scene-starts"></a>
 
@@ -39,7 +39,7 @@ Exception có nội dung `no Fomoxa schema is registered; FomoxaAdapters.Registe
    - `Timeout` nghĩa là handshake không xong trong Handshake Timeout Seconds. Với UDP, server không tới được cũng có thể biểu hiện như vậy, vì UDP không có bước kết nối trước handshake.
 7. `Reason` là `TransportError` nghĩa là chính transport thất bại, ví dụ kết nối TCP bị từ chối hoặc host name không phân giải được. Log sẽ cho biết là trường hợp nào.
 
-Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, hoặc `HandshakeFailed` với failure khác `Timeout`. `PhysicsBackendMismatch` nghĩa là field Physics Backend khác nhau giữa `NetworkManager` của server và của client.
+Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, hoặc `HandshakeFailed` với failure khác `Timeout`. `PhysicsBackendMismatch` nghĩa là `NetworkManager` của server và của client dùng physics backend khác nhau trong field Physics.
 
 ## Client kết nối được rồi dừng với PrefabMismatch hoặc ObjectMismatch <a href="#client-connects-then-stops-with-prefabmismatch-or-objectmismatch" id="client-connects-then-stops-with-prefabmismatch-or-objectmismatch"></a>
 
@@ -90,7 +90,7 @@ Nếu server đã spawn object nhưng một client không hiện nó, hãy kiể
 1. Prefab cần có `NetworkTransform`.
 2. Chuyển động nhỏ hơn ngưỡng vị trí, góc xoay hoặc tỉ lệ sẽ không được gửi cho tới khi object dừng lại.
 3. Client hiển thị object từ xa chậm Interpolation Ticks so với vị trí mới nhất. Giảm giá trị này để bớt trễ, hoặc tăng lên để chuyển động mượt hơn trên mạng hay mất gói.
-4. `Rigidbody` hoặc `Rigidbody2D` dynamic trên client vẫn tự mô phỏng trừ khi bật Simulate Physics. Khi bật, client biến các body mà nó không dự đoán thành body kinematic đi theo `NetworkTransform`; xem [physics](../physics/overview.md).
+4. `Rigidbody` hoặc `Rigidbody2D` dynamic trên client vẫn tự mô phỏng trừ khi bật Simulate Physics trên `RigidbodyPhysics` của `NetworkManager`. Khi bật, client biến các body mà nó không dự đoán thành body kinematic đi theo `NetworkTransform`; xem [physics](../physics/overview.md).
 
 ## Prediction liên tục bị sửa <a href="#prediction-keeps-correcting" id="prediction-keeps-correcting"></a>
 
@@ -99,7 +99,7 @@ Mỗi lần client sửa một lần dự đoán, nó gọi `OnReconciled` và t
 1. `apply` phải di chuyển theo `TimeManager.TickDelta`, không bao giờ theo `Time.deltaTime`.
 2. Input theo frame, như một lần bấm nút, phải được lưu trong `Update` và đọc trong `gather`, để lần bấm ngắn không bị mất.
 3. `apply` chỉ được đọc input, state của chính behaviour và độ dài tick. Đọc object khác, thời gian frame hoặc số ngẫu nhiên không có seed sẽ làm hai bên khác nhau.
-4. Khi có physics, Simulate Physics phải được bật để package step và rollback physics theo tick. Dù vậy, rollback physics của Unity vẫn chỉ gần đúng; xem [rollback](../prediction/rollback.md).
+4. Khi có physics, Simulate Physics trên `RigidbodyPhysics` của `NetworkManager` phải được bật để package step và rollback physics theo tick. Dù vậy, rollback physics của Unity vẫn chỉ gần đúng; xem [rollback](../prediction/rollback.md).
 5. Reconcile model phải chứa mọi thứ `apply` phụ thuộc vào. Một giá trị được mang từ tick này sang tick sau, như vận tốc damping, phải nằm trong đó.
 6. Không có hàm `matches`, package so sánh chính xác các byte đã encode, nên nhiễu số thực cũng bị tính là mismatch. Hãy truyền một hàm `matches` có dung sai.
 

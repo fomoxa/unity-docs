@@ -36,10 +36,15 @@ Hướng dẫn [NetworkManager](../core/network-manager.md) giải thích tác d
 | Max Input Lead | `int` | 30 | tối thiểu 1 |
 | Prediction History | `int` | 64 | tối thiểu 1 |
 | Reconcile Interval | `int` | 1 | tối thiểu 1 |
-| Physics Backend | `PhysicsBackend` | `Rigidbody` | `Rapier` chưa được hiện thực |
-| Simulate Physics | `bool` | false | |
+| Physics | `NetworkPhysics` | không có; manager tự thêm một `RigidbodyPhysics` | |
 
 Giá trị nằm ngoài phạm vi sẽ ném exception khi manager khởi động.
+
+## RigidbodyPhysics <a href="#rigidbodyphysics" id="rigidbodyphysics"></a>
+
+| Field | Type | Mặc định |
+|---|---|---|
+| Simulate Physics | `bool` | false |
 
 ## NetworkObject <a href="#networkobject" id="networkobject"></a>
 

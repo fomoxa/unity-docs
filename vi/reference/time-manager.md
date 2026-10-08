@@ -1,6 +1,6 @@
 # Tham chiếu TimeManager
 
-`public sealed class TimeManager` trong `Fomoxa.Unity` không có constructor public; bạn truy cập nó qua `NetworkManager.TimeManager`. [Tick và thời gian](../concepts/tick.md) giải thích các khái niệm đằng sau nó.
+`public sealed class TimeManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.TimeManager`. [Tick và thời gian](../concepts/tick.md) giải thích các khái niệm đằng sau nó.
 
 ## Property <a href="#properties" id="properties"></a>
 

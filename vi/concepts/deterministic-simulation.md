@@ -37,12 +37,10 @@ Client so sánh state đã dự đoán với state của server cho cùng một 
 
 ## Physics chỉ gần đúng <a href="#physics-is-approximate" id="physics-is-approximate"></a>
 
-Khi bật Simulate Physics, client lưu state của mỗi physics world sau mỗi tick và load lại nó để rollback. State đã lưu chứa vị trí, góc xoay, vận tốc, vận tốc góc và trạng thái ngủ của mỗi body dynamic, nhưng không chứa dữ liệu contact của physics engine, nên một lần replay bắt đầu từ state đã load có thể khác lần chạy gốc. [Rollback với physics](../prediction/rollback.md) đi vào chi tiết.
+Khi bật mô phỏng physics, client lưu state của mỗi physics world sau mỗi tick và load lại nó để rollback. State đã lưu chứa vị trí, góc xoay, vận tốc, vận tốc góc và trạng thái ngủ của mỗi body dynamic, nhưng không chứa dữ liệu contact của physics engine, nên một lần replay bắt đầu từ state đã load có thể khác lần chạy gốc. [Rollback với physics](../prediction/rollback.md) đi vào chi tiết.
 
 ## Chưa hiện thực <a href="#not-implemented" id="not-implemented"></a>
 
-Một số tính năng cần mức tất định mà package không cung cấp, và package không có chúng. Không có lockstep simulation, không có bộ sinh số ngẫu nhiên tất định, không có state hashing để phát hiện lệch và không có physics tất định giữa các nền tảng. Cũng không thể ghi lại một trận đấu rồi phát lại sau; ở mọi chỗ trong tài liệu này, replay nghĩa là áp dụng lại input trong lúc reconciliation.
-
-Giá trị `PhysicsBackend.Rapier` đặt tên cho một physics backend chưa tồn tại, và chọn nó sẽ khiến object không có physics body.
+Một số tính năng cần mức tất định mà package không cung cấp, và package không có chúng. Không có lockstep simulation, không có bộ sinh số ngẫu nhiên tất định và không có state hashing để phát hiện lệch. Cũng không thể ghi lại một trận đấu rồi phát lại sau. Ở mọi chỗ trong tài liệu này, replay nghĩa là áp dụng lại input trong lúc reconciliation.
 
 Để tìm hiểu thêm các phần trang này dựa vào, xem [prediction](prediction.md), [tick và thời gian](tick.md) và [tổng quan physics](../physics/overview.md).

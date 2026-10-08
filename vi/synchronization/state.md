@@ -12,7 +12,7 @@ State model phải nằm trên channel reliable-ordered:
 
 ```csharp
 using Fomoxa;
-using Fomoxa.Unity;
+using Fomoxa.Networking;
 
 namespace MyGame.Network.Models
 {
@@ -35,6 +35,7 @@ namespace MyGame.Network.Models
 Sau đó behaviour đăng ký một instance của nó:
 
 ```csharp
+using Fomoxa.Networking;
 using Fomoxa.Unity;
 using Generated;
 using MyGame.Network.Models;

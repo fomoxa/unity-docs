@@ -10,7 +10,7 @@ manager.ClientManager.StartConnection("game.example.com", 7777);
 manager.ClientManager.StopConnection();
 ```
 
-`StartConnection(address, port)` nhận host name hoặc địa chỉ IP. Host name được phân giải mà không chặn main thread, và địa chỉ IPv4 được thử trước. Với transport WebSocket, địa chỉ cũng có thể là một URL `ws://`, như mô tả trong [WebSocket](../transport/websocket.md). Gọi `StartConnection` trên client đang chạy sẽ ném `the client is already running`.
+`StartConnection(address, port)` nhận host name hoặc địa chỉ IP. Host name được phân giải mà không chặn main thread, và địa chỉ IPv4 được thử trước. Với transport WebSocket, địa chỉ cũng có thể là một URL `ws://`, như mô tả trong [WebSocket](../transports/websocket.md). Gọi `StartConnection` trên client đang chạy sẽ ném `the client is already running`.
 
 Nếu cùng `NetworkManager` đang chạy server, `StartConnection` bỏ qua địa chỉ và port và kết nối qua kết nối trong tiến trình. Đây là [host mode](host-mode.md).
 
@@ -20,13 +20,13 @@ Nếu cùng `NetworkManager` đang chạy server, `StartConnection` bỏ qua đ�
 
 `State` là một `ConnectionState`, một trong `Stopped`, `Starting` và `Started`, và `OnClientConnectionState` báo mỗi lần thay đổi kèm một `ConnectionStateArgs`:
 
-| Field               | Ý nghĩa                                                         |
-| ------------------- | --------------------------------------------------------------- |
-| `State`             | Trạng thái mới                                                  |
-| `Reason`            | Lý do kết nối dừng; `None` khi đang khởi động hoặc đã khởi động |
-| `Failure`           | Lỗi handshake khi `Reason` là `HandshakeFailed`                 |
-| `DiscardedMessages` | Số message còn trong queue bị bỏ khi kết nối dừng               |
-| `WillRetry`         | True khi client sẽ khởi động lại sau khoảng chờ kết nối lại     |
+| Field | Ý nghĩa |
+|---|---|
+| `State` | Trạng thái mới |
+| `Reason` | Lý do kết nối dừng; `None` khi đang khởi động hoặc đã khởi động |
+| `Failure` | Lỗi handshake khi `Reason` là `HandshakeFailed` |
+| `DiscardedMessages` | Số message còn trong queue bị bỏ khi kết nối dừng |
+| `WillRetry` | True khi client sẽ khởi động lại sau khoảng chờ kết nối lại |
 
 ```csharp
 manager.ClientManager.OnClientConnectionState += args =>
@@ -48,10 +48,10 @@ Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi 
 
 ## Object và thời gian <a href="#objects-and-timing" id="objects-and-timing"></a>
 
-| Member        | Mục đích                                                   |
-| ------------- | ---------------------------------------------------------- |
-| `Spawned`     | Các object đã spawn trên client này, theo object id        |
-| `Rtt`         | Round-trip time tới server; 0 với client của host          |
+| Member | Mục đích |
+|---|---|
+| `Spawned` | Các object đã spawn trên client này, theo object id. Giá trị là `INetworkEntity`; trong Unity mỗi giá trị là một `NetworkObject`. |
+| `Rtt` | Round-trip time tới server; 0 với client của host |
 | `IsReplaying` | True khi client đang replay input trong lúc reconciliation |
 
 `NetworkObject.IsOwner` cho biết client này có sở hữu một object hay không. Client không cung cấp peer id của chính nó, nên hãy xác định ownership qua `IsOwner`.
@@ -62,6 +62,6 @@ Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi 
 
 ## Lỗi <a href="#errors" id="errors"></a>
 
-Message handler ném exception, ví dụ một client RPC, sẽ dừng client với `HandlerException` và phát `OnHandlerException`. Object message mà client không áp dụng được sẽ dừng nó với `PrefabMismatch` hoặc `ObjectMismatch` và phát `OnObjectMismatch`. Trong cả hai trường hợp, package tự log vấn đề khi không có ai subscribe, với mismatch là thông báo `Fomoxa stopped the client: object mismatch ...`. Message không decode được chỉ bị bỏ và phát `OnReceiveDropped`. [Xử lý sự cố](../bat-dau/troubleshooting.md#client-connects-then-stops-with-prefabmismatch-or-objectmismatch) giải thích ý nghĩa của từng loại mismatch.
+Message handler ném exception, ví dụ một client RPC, sẽ dừng client với `HandlerException` và phát `OnHandlerException`. Object message mà client không áp dụng được sẽ dừng nó với `PrefabMismatch` hoặc `ObjectMismatch` và phát `OnObjectMismatch`. Trong cả hai trường hợp, package tự log vấn đề khi không có ai subscribe, với mismatch là thông báo `Fomoxa stopped the client: object mismatch ...`. Message không decode được chỉ bị bỏ và phát `OnReceiveDropped`. [Xử lý sự cố](../getting-started/troubleshooting.md#client-connects-then-stops-with-prefabmismatch-or-objectmismatch) giải thích ý nghĩa của từng loại mismatch.
 
-[Tham chiếu ClientManager](../tham-chieu/client-manager.md) liệt kê mọi member, [vòng đời](../khai-niem/lifecycle.md) đưa ra thứ tự các event của client, và [transport](../transport/overview.md) mô tả những gì client kết nối qua.
+[Tham chiếu ClientManager](../reference/client-manager.md) liệt kê mọi member, [vòng đời](../concepts/lifecycle.md) đưa ra thứ tự các event của client, và [transport](../transports/overview.md) mô tả những gì client kết nối qua.

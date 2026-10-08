@@ -2,7 +2,7 @@
 
 ## NetworkObject
 
-`public sealed class NetworkObject : MonoBehaviour` in `Fomoxa.Unity`, marked `[DisallowMultipleComponent]` and explained in the [NetworkObject](../core/network-object.md) guide.
+`public sealed class NetworkObject : MonoBehaviour, INetworkEntity` in `Fomoxa.Unity`, marked `[DisallowMultipleComponent]` and explained in the [NetworkObject](../core/network-object.md) guide. `INetworkEntity` is the interface through which layer 1 handles the object, so a `NetworkObject` can be passed wherever the managers take an `INetworkEntity`.
 
 | Member | Type | Description |
 |---|---|---|
@@ -15,10 +15,12 @@
 | `DespawnWithOwner` | `bool` | Get and set. Despawn when the owner disconnects; otherwise the server takes ownership. |
 | `Visibility` | `NetworkVisibility` | Get and set. `Rule`, `Everyone` or `OwnerOnly`. |
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | The object's behaviours in behaviour index order; filled at spawn |
-| `Body` | `PhysicsBody` | The body of the `Rigidbody` on this GameObject; invalid when there is none or the object is not spawned |
+| `Body` | `PhysicsBody` | The body of the `Rigidbody` on this GameObject, from the physics component of the `NetworkManager`; invalid when there is none or the object is not spawned |
 | `Body2D` | `PhysicsBody2D` | The body of the `Rigidbody2D` on this GameObject |
 
 ### NetworkVisibility
+
+`public enum NetworkVisibility` in `Fomoxa.Networking`.
 
 | Value | Observers |
 |---|---|

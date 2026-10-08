@@ -20,6 +20,6 @@ The loopback connection still runs the Fomoxa handshake, bundles, reliability an
 
 ## Using it directly
 
-`LoopbackListener` and `LoopbackTransport`, in `Fomoxa.Unity.Transports`, are public, which makes them useful for tests and for a [custom transport](custom-transport.md) that runs in memory. `new LoopbackListener(maxQueuedPackets)` creates a listener. Its `Connect()` returns the client end of a new pair, and its `Accept()` returns the server end. `LoopbackTransport.CreatePair` creates a connected pair without a listener.
+`LoopbackListener` and `LoopbackTransport`, in `Fomoxa.Networking.Transports`, are public, which makes them useful for tests and for a [custom transport](custom-transport.md) that runs in memory. `new LoopbackListener(maxQueuedPackets)` creates a listener. Its `Connect()` returns the client end of a new pair, and its `Accept()` returns the server end. `LoopbackTransport.CreatePair` creates a connected pair without a listener.
 
 The [transports overview](overview.md) lists the network transports that the loopback connection stands in for.

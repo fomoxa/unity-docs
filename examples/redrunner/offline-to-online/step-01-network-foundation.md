@@ -2,7 +2,7 @@
 
 ## Goal
 
-This step adds `com.fomoxa.unity` to Red Runner, sets up code generation and puts a `NetworkManager` in `Play.unity`. The game still plays as before, because nothing opens a connection yet.
+This step adds `com.fomoxa.networking` to Red Runner, sets up code generation and puts a `NetworkManager` in `Play.unity`. The game still plays as before, because nothing opens a connection yet.
 
 ## Starting point
 
@@ -51,7 +51,7 @@ Open the project with Unity 6000.5 or later and accept the upgrade. Package Mana
 Open Window > Package Manager, click +, choose Install package from git URL and enter:
 
 ```
-https://github.com/fomoxa/com.fomoxa.unity.git
+https://github.com/fomoxa/com.fomoxa.networking.git
 ```
 
 The package depends on the built-in Physics, Physics 2D and Animation modules, which Red Runner already uses.

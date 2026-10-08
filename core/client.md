@@ -50,7 +50,7 @@ Every reconnect is a new connection. The client despawns all objects when the co
 
 | Member | Purpose |
 |---|---|
-| `Spawned` | Objects spawned on this client, by object id |
+| `Spawned` | Objects spawned on this client, by object id. The values are `INetworkEntity`; in Unity each one is a `NetworkObject`. |
 | `Rtt` | Round-trip time to the server; 0 for a host's client |
 | `IsReplaying` | True while the client replays input during reconciliation |
 

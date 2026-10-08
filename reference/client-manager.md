@@ -1,6 +1,6 @@
 # ClientManager reference
 
-`public sealed class ClientManager` in `Fomoxa.Unity` has no public constructor; you reach it through `NetworkManager.ClientManager`. The [client](../core/client.md) guide explains how to use it.
+`public sealed class ClientManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.ClientManager`. The [client](../core/client.md) guide explains how to use it.
 
 ## Connection
 
@@ -15,7 +15,7 @@
 
 | Member | Description |
 |---|---|
-| `IReadOnlyDictionary<uint, NetworkObject> Spawned` | Objects spawned on this client, by object id |
+| `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Objects spawned on this client, by object id; each value is a `NetworkObject` in Unity |
 | `bool IsReplaying` | True while the client replays input during reconciliation |
 
 ## Messages

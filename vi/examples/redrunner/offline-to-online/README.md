@@ -63,13 +63,13 @@ Bước 04 và 05 dùng chung một commit, còn bước 08 trải trên bốn c
 2. Làm bước 01, chạy test của nó, rồi commit.
 3. Tiếp tục với bước tiếp theo theo cách đó.
 
-Các trang hiển thị code như ở cuối quá trình chuyển đổi. Khi một bước sau thay đổi code mà bước trước đã thêm, bước trước hiển thị phiên bản của nó và bước sau hiển thị phần thay đổi.
+Các trang hiển thị code như ở cuối quá trình chuyển đổi, trong commit [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164d5624f171b64c8bfc6f029b12be2cfe41e27), commit chuyển game hoàn chỉnh sang package hiện tại. Khi một bước sau thay đổi code mà bước trước đã thêm, bước trước hiển thị phiên bản của nó và bước sau hiển thị phần thay đổi.
 
 Việc phát lại chính xác lịch sử có một số giới hạn:
 
 - Bước 04 và 05 được làm trong một commit, nên game chỉ được test một lần, ở cuối bước 05.
 - Bước 08 trải trên bốn commit. Hai trong số đó, `c75cebd` và `c239d2a`, dựa vào các thay đổi package thực hiện trong lúc port: teleport generation trong `NetworkTransform`, message `PeerLeave` và `InputContext.RepeatedTicks`. Package đã phát hành có tất cả những thay đổi này.
-- Các commit của từng bước tham chiếu package dưới dạng `file:../../fomoxa-unity/com.fomoxa.unity`, một bản copy cục bộ nằm cạnh project. Để build một commit trong số đó, hãy thay mục đó trong `Packages/manifest.json` bằng Git URL từ trang [cài đặt](../../../getting-started/installation.md). `master` mới nhất đã dùng Git URL.
+- Các commit của từng bước dùng package dưới tên cũ, `com.fomoxa.unity`, từ một bản copy cục bộ nằm cạnh project (`file:../../fomoxa-unity/com.fomoxa.unity`). Để build một commit trong số đó, hãy thay mục đó trong `Packages/manifest.json` bằng `"com.fomoxa.unity": "https://github.com/fomoxa/com.fomoxa.unity.git"`. Commit `f164d56` chuyển game sang `com.fomoxa.networking`: nó cài package từ Git URL trong trang [cài đặt](../../../getting-started/installation.md), đổi các chỉ thị `using` sang namespace `Fomoxa.Networking`, và bật mô phỏng physics qua một component `RigidbodyPhysics` trên `Network Manager`.
 - Chưa ai kiểm tra từng commit xem một commit cũ có biên dịch được với package hiện tại sau khi sinh lại code hay không.
 - `Play.unity`, `RedRunner.prefab` và `Generation Settings.asset` được lưu ở dạng mà `git diff` hiển thị là nhị phân, nên các bước mô tả thay đổi của chúng dưới dạng thiết lập Inspector.
 - Mỗi commit còn thêm các bài kiểm tra tự động trong `Tools/PortChecks`, cùng một script, `Tools/unity-windows.sh`, chạy chúng từ WSL với một Editor Windows. Các bước mô tả mỗi bài kiểm tra xác minh điều gì để bạn có thể test thủ công.

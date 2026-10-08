@@ -1,6 +1,6 @@
 # Tham chiếu ServerManager
 
-`public sealed class ServerManager` trong `Fomoxa.Unity` không có constructor public; bạn truy cập nó qua `NetworkManager.ServerManager`. Hướng dẫn [server](../core/server.md) giải thích cách dùng nó.
+`public sealed class ServerManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.ServerManager`. Hướng dẫn [server](../core/server.md) giải thích cách dùng nó.
 
 ## Kết nối <a href="#connection" id="connection"></a>
 
@@ -21,27 +21,27 @@
 
 | Member | Mô tả |
 |---|---|
-| `void Spawn(NetworkObject networkObject, ulong ownerId = 0)` | Spawn một instance. Ném `ArgumentNullException`, `InvalidOperationException` khi server chưa khởi động, `ArgumentException` với asset prefab, object đã spawn, prefab id chưa đăng ký, scene object không hợp lệ hoặc owner không phải peer đã khởi động. |
-| `bool Despawn(NetworkObject networkObject)` | Despawn và hủy một instance, hoặc tắt một scene object. False khi server này không spawn object đó. |
-| `bool ChangeOwner(NetworkObject networkObject, ulong ownerId)` | Đổi owner; 0 cho server. False khi server này không spawn object đó hoặc owner không phải peer đã khởi động. |
-| `IReadOnlyDictionary<uint, NetworkObject> Spawned` | Các object đã spawn theo object id |
+| `void Spawn(INetworkEntity networkObject, ulong ownerId = 0)` | Spawn một instance. Ném `ArgumentNullException`, `InvalidOperationException` khi server chưa khởi động, `ArgumentException` với asset prefab, object đã spawn, prefab id chưa đăng ký, scene object không hợp lệ hoặc owner không phải peer đã khởi động. |
+| `bool Despawn(INetworkEntity networkObject)` | Despawn và hủy một instance, hoặc tắt một scene object. False khi server này không spawn object đó. |
+| `bool ChangeOwner(INetworkEntity networkObject, ulong ownerId)` | Đổi owner; 0 cho server. False khi server này không spawn object đó hoặc owner không phải peer đã khởi động. |
+| `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Các object đã spawn theo object id |
 
 ## Observer <a href="#observers" id="observers"></a>
 
 | Member | Mô tả |
 |---|---|
-| `ObserverRule ObserverRule` | Rule cho các object có `Visibility.Rule`. Đọc và ghi. |
+| `IObserverRule ObserverRule` | Rule cho các object có `Visibility.Rule`, thường là một asset `ObserverRule`. Đọc và ghi. |
 | `int ObserverInterval` | Số tick mà sau đó mọi object được tính lại một lần. Tối thiểu 1. |
-| `bool IsObserver(NetworkObject networkObject, ulong peerId)` | Peer có observe object hay không |
-| `bool RebuildObservers(NetworkObject networkObject)` | Tính lại một object cho mọi peer |
+| `bool IsObserver(INetworkEntity networkObject, ulong peerId)` | Peer có observe object hay không |
+| `bool RebuildObservers(INetworkEntity networkObject)` | Tính lại một object cho mọi peer |
 | `void RebuildObserversOfPeer(ulong peerId)` | Tính lại mọi object cho một peer |
 | `void RebuildObservers()` | Tính lại mọi object cho mọi peer |
 
-Gọi một method spawn, despawn, đổi owner hoặc dựng lại observer từ bên trong `ObserverRule.Observes` sẽ ném exception.
+`NetworkObject` hiện thực `INetworkEntity`, nên bạn truyền một `NetworkObject` vào các method này. Gọi một method spawn, despawn, đổi owner hoặc dựng lại observer từ bên trong `ObserverRule.Observes` sẽ ném exception.
 
 ## Scene <a href="#scenes" id="scenes"></a>
 
-Property `Scenes` trả về một `NetworkScenes`, type trong `Fomoxa.Unity` có các member sau:
+Property `Scenes` trả về một `NetworkScenes`, type trong `Fomoxa.Networking` có các member sau:
 
 | Member | Mô tả |
 |---|---|
@@ -54,7 +54,7 @@ Property `Scenes` trả về một `NetworkScenes`, type trong `Fomoxa.Unity` c�
 | `bool Contains(uint sceneId)`, `bool IsGlobal(uint sceneId)` | Scene có đang được dùng không, và có phải global không |
 | `bool HasLoaded(ulong peerId, uint sceneId)` | Peer đã báo load xong scene hay chưa |
 | `IReadOnlyCollection<ulong> PeersOf(uint sceneId)` | Các peer có scene |
-| `bool TryGetScene(uint sceneId, out Scene scene)` | `Scene` mà server đã load |
+| `bool TryGetScene(uint sceneId, out Scene scene)` | `Scene` mà server đã load; một extension method trong `Fomoxa.Unity` |
 | `event Action<uint> OnLoaded` | Server đã load xong một scene |
 | `event Action<uint, Exception> OnLoadFailed` | Server không load được một scene |
 

@@ -26,7 +26,7 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 
 ## Component contact <a href="#contact-components" id="contact-components"></a>
 
-`NetworkCollision` và `NetworkTrigger` (3D), `NetworkCollision2D` và `NetworkTrigger2D` (2D) đều là `public sealed class ... : MonoBehaviour`, được giải thích trong hướng dẫn [contact event](../physics/contacts.md).
+`NetworkCollision` và `NetworkTrigger` (3D), `NetworkCollision2D` và `NetworkTrigger2D` (2D) đều là `public sealed class ... : MonoBehaviour, IContactSource<...>`, được giải thích trong hướng dẫn [contact event](../physics/contacts.md).
 
 | Member | Type | Mô tả |
 |---|---|---|
@@ -34,6 +34,8 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `OnExit` | như trên | Một collider thôi chạm |
 | `Touching` | `IReadOnlyCollection<Collider>` hoặc `<Collider2D>` | Các collider đang chạm tính tới tick đã công bố gần nhất |
 | `AdditionalSize` | `float` | Chỉ có trên `NetworkCollision` và `NetworkTrigger`. Đọc và ghi; giá trị âm thành 0. |
+| `IsAttached` | `bool` | Một component physics đã tiếp quản component này và báo contact từ world của chính nó |
+| `Attach(tracker, query)`, `Detach(query)` | `bool`, `void` | Do component physics tự báo contact gọi; `RigidbodyPhysics` không dùng chúng |
 
 ## Observer <a href="#observers" id="observers"></a>
 
@@ -52,6 +54,8 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | Member | Type | Mô tả |
 |---|---|---|
 | `Radius` | `float` | Đọc và ghi. Khoảng cách observe tính từ bất kỳ object nào peer sở hữu; giá trị âm thành 0. |
+| `IsAttached` | `bool` | Một component physics đã tiếp quản component này và báo contact từ world của chính nó |
+| `Attach(tracker, query)`, `Detach(query)` | `bool`, `void` | Do component physics tự báo contact gọi; `RigidbodyPhysics` không dùng chúng |
 
 ### ObserverRange <a href="#observerrange" id="observerrange"></a>
 

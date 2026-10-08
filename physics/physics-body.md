@@ -1,9 +1,10 @@
 # PhysicsBody
 
-`PhysicsBody` and `PhysicsBody2D` are the package's view of a network object's physics body, and you use them in `apply`, `capture` and `restore` to read and change the body. They work with `System.Numerics` vectors, so the same code would work with another backend.
+`PhysicsBody` and `PhysicsBody2D` are the package's view of a network object's physics body, and you use them in `apply`, `capture` and `restore` to read and change the body. They work with `System.Numerics` vectors and do not depend on Unity's `Rigidbody` API.
 
 ```csharp
-using Fomoxa.Unity.Simulation;
+using Fomoxa.Networking.Simulation;
+using Fomoxa.Unity;
 
 PhysicsBody body = NetworkObject.Body;
 PhysicsBody2D body2D = NetworkObject.Body2D;
@@ -13,7 +14,7 @@ Both are small structs, so get a fresh one when you need it instead of storing i
 
 ## When it is valid
 
-`IsValid` is true when three conditions hold: the object has a `Rigidbody` (for `Body`) or a `Rigidbody2D` (for `Body2D`) on the same GameObject as its `NetworkObject`, the object is spawned on this side, and the Physics Backend is `Rigidbody`. Reading or writing an invalid body throws.
+`IsValid` is true when two conditions hold: the object has a `Rigidbody` (for `Body`) or a `Rigidbody2D` (for `Body2D`) on the same GameObject as its `NetworkObject`, and the object is spawned on this side. Reading or writing an invalid body throws.
 
 ## PhysicsBody (3D)
 

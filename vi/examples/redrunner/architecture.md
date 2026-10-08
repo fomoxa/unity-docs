@@ -1,6 +1,6 @@
 # Kiến trúc bản online của Red Runner
 
-Trang này mô tả bản port hoàn chỉnh trên branch `master` của [fomoxa/RedRunner](https://github.com/fomoxa/RedRunner), với code game tính tới commit [`c239d2a`](https://github.com/fomoxa/RedRunner/commit/c239d2a0988dcf2af5821b41f1ba7cc2f6372baf). Quá trình [chuyển đổi](offline-to-online/README.md) giải thích từng phần đã đi tới đây như thế nào.
+Trang này mô tả game online ở cuối quá trình [chuyển đổi](offline-to-online/README.md), trên physics của Unity và server Unity, với code game tính tới commit [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164d5624f171b64c8bfc6f029b12be2cfe41e27) của [fomoxa/RedRunner](https://github.com/fomoxa/RedRunner). [Rapier và server console](rapier-and-console/README.md) mô tả các commit sau đó, chuyển game sang backend Rapier và thêm một server không cần Unity.
 
 ```
                          Red Runner (one player build)
@@ -38,13 +38,13 @@ Trang này mô tả bản port hoàn chỉnh trên branch `master` của [fomoxa
 
 | Object | Component | Vai trò |
 |---|---|---|
-| Network Manager | `NetworkManager`, `UdpNetworkTransport`, `NetworkGame` | Kết nối và tick; logic khởi động, spawn và người chơi cục bộ của game |
+| Network Manager | `NetworkManager`, `UdpNetworkTransport`, `RigidbodyPhysics`, `NetworkGame` | Kết nối và tick; logic khởi động, spawn và người chơi cục bộ của game |
 | Network Level | `NetworkObject`, `NetworkLevel` | Scene object chứa seed của level; di chuyển các path follower |
 | Terrain Generator | `TerrainGenerator` | Dựng level từ seed; nền quanh người chơi cục bộ |
 | Canvas/Start Screen | `StartScreen`, Address Field | Kết nối tới địa chỉ |
 | Canvas/Pause Screen | `PauseScreen` | Rời server |
 
-`NetworkManager` dùng Tick Rate 50, Timing Mode Tick, Simulate Physics bật và Max Reconnect Retries 3, với Collected Prefabs và Collected Scenes đặt thành các danh sách đã sinh. Mọi thứ khác giữ mặc định.
+`NetworkManager` dùng Tick Rate 50, Timing Mode Tick, một `RigidbodyPhysics` bật Simulate Physics và Max Reconnect Retries 3, với Collected Prefabs và Collected Scenes đặt thành các danh sách đã sinh. Mọi thứ khác giữ mặc định.
 
 `Assets/Prefabs/RedRunner.prefab` là người chơi trên mạng. Nó có `RedCharacter`, `Rigidbody2D`, `NetworkObject`, `NetworkTransform` (Sync Rotation tắt và Sync Scale bật) và `NetworkPlayer`.
 
