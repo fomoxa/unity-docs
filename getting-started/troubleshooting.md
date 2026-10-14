@@ -4,7 +4,7 @@ This page is organized by symptom. Each entry goes through the checks in order a
 
 ## Code generation fails
 
-Generation errors appear in the Console with the prefix `[Fomoxa]`.
+Generation errors and warnings appear in the Console with the prefix `[Fomoxa]`.
 
 | Message | Cause and fix |
 |---|---|
@@ -14,7 +14,8 @@ Generation errors appear in the Console with the prefix `[Fomoxa]`.
 | `the FomoxaSettings asset needs both a models folder and a generated folder` | Fill both fields of the settings asset. |
 | `fomoxac generate exited with ...` | `fomoxac` rejected a model or a path. The rest of the message is `fomoxac`'s own output. A missing models folder is a common cause; create the folder. |
 | `... was not written by com.fomoxa.networking; remove it ...` | A file the package manages, such as `fomoxa.toml` or a file in `FomoxaSystemModels`, was written by someone else. Remove it and generate again. |
-| `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | A model field uses a type that has no codec. See [custom codecs](../advanced/custom-codecs.md). |
+| `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | Logged as a warning. A model field uses a type the package has no codec for. Write its codec by hand or register the type, as described in [custom codecs](../advanced/custom-codecs.md). |
+| A warning that lists changes such as `+ new message` | Not a problem. After a generation the package lists every change to the schema and marks whether each change is compatible. |
 
 ## NetworkManager throws when the scene starts
 
@@ -31,7 +32,7 @@ The client's `OnClientConnectionState` reports `Stopped` with a `Reason`, and `W
 1. The server is running, that is, its `ServerManager.State` is `Started`.
 2. The client uses the server machine's address. `127.0.0.1` only reaches a server on the same machine.
 3. The client's port is the one the server reports in `ServerManager.Port`.
-4. Both sides use the same transport. A UDP client cannot reach a TCP or WebSocket listener, and a server with a [`MultiNetworkTransport`](../transports/multi-transport.md) listens on a separate port for each transport.
+4. Both sides use the same transport. A UDP client cannot reach a TCP or WebSocket listener, and a server with a [`MultiNetworkTransport`](../connections/transports/multi-transport.md) listens on a separate port for each transport.
 5. The firewall lets the transport's protocol, UDP or TCP, through on the server's port.
 6. If the `Reason` is `HandshakeFailed`, it comes with a `Failure` that narrows the cause down.
    - `SchemaConflict` means the client and the server were built from different models. Generate code once and build both from the same project state.
@@ -60,13 +61,13 @@ Start on the server.
 
 1. The code calls `ServerManager.Spawn` only after the server has started; before that, the call throws `the server is not started`.
 2. The argument is an instance in a scene. Passing the prefab asset throws `<name> is a prefab asset; spawn an instance of it`.
-3. The prefab is registered. `prefab id 0x... of <name> is not registered` means it is in neither Collected Prefabs nor the Prefabs list of the `NetworkManager`; see step 5 of [your first project](first-project.md).
+3. The prefab is registered. `prefab id 0x... of <name> is not registered` means it is in neither Collected Prefabs nor the Prefabs list of the `NetworkManager`; see step 5 of [the tutorial](tutorial/project-setup.md#5-give-the-networkmanager-the-generated-lists).
 4. The prefab has a prefab id. A prefab with Prefab Id 0 cannot be registered, so run Tools > Fomoxa > Assign Prefab Ids.
 5. The owner is a connected client. `owner <id> is not a started peer` means it is not; pass 0 for an object without an owner.
 
 If the server spawns the object but a client does not show it, continue on the client.
 
-1. The client only receives objects it observes. Check the object's Visibility field, the Observer Rule of the `NetworkManager`, and `ServerManager.IsObserver(networkObject, peerId)`. With a [`DistanceRule`](../core/observers.md#distancerule), a peer that owns no object observes nothing except what it owns.
+1. The client only receives objects it observes. Check the object's Visibility field, the Observer Rule of the `NetworkManager`, and `ServerManager.IsObserver(networkObject, peerId)`. With a [`DistanceRule`](../objects/observers.md#distancerule), a peer that owns no object observes nothing except what it owns.
 2. An object in a network scene only reaches peers that have loaded that scene.
 3. If the client stopped with a mismatch, see the previous section.
 
@@ -113,4 +114,4 @@ The message `<Type> registers an input model, but its NetworkManager uses the Va
 
 ## WebGL build fails to connect
 
-`UdpNetworkTransport cannot run in a browser` or `TcpNetworkTransport cannot run in a browser` means the build uses the wrong transport: a WebGL build needs a `WebSocketNetworkTransport`, alone or inside a `MultiNetworkTransport`. `a server cannot listen in a browser; WebGL builds are clients only` means the build tried to start a server or a host, which a WebGL build cannot do. See [WebGL](../unity/webgl.md).
+`UdpNetworkTransport cannot run in a browser` or `TcpNetworkTransport cannot run in a browser` means the build uses the wrong transport: a WebGL build needs a `WebSocketNetworkTransport`, alone or inside a `MultiNetworkTransport`. `a server cannot listen in a browser; WebGL builds are clients only` means the build tried to start a server or a host, which a WebGL build cannot do. See [WebGL](../deploy/webgl.md).

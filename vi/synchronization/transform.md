@@ -18,14 +18,9 @@ Ngoài việc di chuyển object, không cần code gì thêm.
 
 Server lấy mẫu vị trí, góc xoay và tỉ lệ local sau mỗi tick.
 
-```text
-server tick   ... 10    11    12    13    14    15 ...
-moving             ●─────●─────●─────●
-transform update   U     U     U     U          unreliable, carries tick 10, 11, 12, 13
-stopped                                    S    reliable settle with the final values
-```
+<figure><img src="../.gitbook/assets/diagrams/transform-updates.svg" alt="Một dòng thời gian các tick 10 tới 16 của server. Object di chuyển trong các tick 10 tới 13, và server gửi một bản cập nhật unreliable cho mỗi tick đó. Bản cập nhật của tick 12 bị mất. Tới tick 14 object đã dừng, và server gửi một settle reliable với giá trị cuối chính xác. Client nhận bản cập nhật của tick 10, 11 và 13 và hiển thị object lùi tối đa Interpolation Ticks, mặc định 2, so với snapshot mới nhất, đi giữa các giá trị đã nhận qua chỗ tick 12 bị mất."><figcaption><p>Các bản cập nhật trong lúc object di chuyển, một settle khi nó dừng, và client đi theo chậm hơn một chút.</p></figcaption></figure>
 
-Khi object di chuyển, server gửi một bản cập nhật cho mỗi tick mà một phần được đồng bộ di chuyển quá ngưỡng của nó. Các bản cập nhật này là unreliable và mang tick. Khi object dừng, server gửi một message settle trên channel reliable với giá trị cuối cùng chính xác, nên một bản cập nhật bị mất không bao giờ khiến object dừng sai chỗ. Client cũng nhận một settle với giá trị hiện tại khi object spawn và mỗi khi nó bắt đầu observe object.
+Khi object di chuyển, server gửi một bản cập nhật cho mỗi tick mà một phần được đồng bộ đã rời giá trị gửi lần trước quá ngưỡng của nó. Các bản cập nhật này là unreliable và mang tick. Khi object dừng, server gửi một message settle trên channel reliable với giá trị cuối cùng chính xác, nên một bản cập nhật bị mất không bao giờ khiến object dừng sai chỗ. Client cũng nhận một settle với giá trị hiện tại khi object spawn và mỗi khi nó bắt đầu observe object.
 
 Bản cập nhật chỉ chứa những phần đã thay đổi, và client không bao giờ áp dụng một phần nó chưa nhận được.
 
@@ -35,7 +30,7 @@ Server chỉ đọc transform, nên bạn có thể di chuyển nó bằng bất
 
 ## Hành vi trên client <a href="#client-behavior" id="client-behavior"></a>
 
-Client giữ một danh sách ngắn các snapshot đã nhận và hiển thị object chậm Interpolation Ticks (mặc định 2) so với snapshot mới nhất, nội suy tuyến tính vị trí và tỉ lệ và nội suy cầu góc xoay. Một settle thay thế danh sách và đặt object vào giá trị của nó ngay lập tức.
+Client giữ một danh sách ngắn các snapshot đã nhận và hiển thị object chậm tối đa Interpolation Ticks (mặc định 2) so với snapshot mới nhất, nội suy tuyến tính vị trí và tỉ lệ và nội suy cầu góc xoay. Một settle thay thế danh sách và đặt object vào giá trị của nó ngay lập tức.
 
 Client áp giá trị vào vị trí, góc xoay và tỉ lệ local, nên object phải có cùng parent trên server và client để các giá trị mang cùng ý nghĩa.
 
@@ -66,6 +61,8 @@ Với object có physics body, hãy đặt cả vị trí của body, như mô t
 
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 
+<figure><img src="../.gitbook/assets/screenshots/network-transform-inspector.png" alt="Inspector của một NetworkTransform với giá trị mặc định: Sync Position và Sync Rotation bật, Sync Scale tắt, Position Threshold 0.01, Rotation Threshold 0.1, Scale Threshold 0.01, Interpolation Ticks 2, Visual None và Smoothing Time 0.1." width="460"><figcaption><p>Một NetworkTransform với giá trị mặc định.</p></figcaption></figure>
+
 | Field | Mặc định | Ý nghĩa |
 |---|---|---|
 | Sync Position | bật | Replicate vị trí local |
@@ -74,7 +71,7 @@ Với object có physics body, hãy đặt cả vị trí của body, như mô t
 | Position Threshold | 0.01 | Quãng đường vị trí phải di chuyển trước khi được đưa vào bản cập nhật |
 | Rotation Threshold | 0.1 | Góc, tính bằng độ, mà góc xoay phải quay trước khi được đưa vào bản cập nhật |
 | Scale Threshold | 0.01 | Mức thay đổi tỉ lệ phải đạt trước khi được đưa vào bản cập nhật |
-| Interpolation Ticks | 2 | Số tick client hiển thị object chậm so với snapshot mới nhất |
+| Interpolation Ticks | 2 | Số tick tối đa client hiển thị object chậm so với snapshot mới nhất |
 | Visual | không có | Transform con được làm mượt sau các lần sửa prediction |
 | Smoothing Time | 0.1 | Số giây để Visual quay về vị trí nghỉ |
 
@@ -82,6 +79,6 @@ Với object có physics body, hãy đặt cả vị trí của body, như mô t
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Transform chỉ đi từ server tới client, và client chỉ có thể di chuyển một networked object cho người khác thấy thông qua RPC hoặc input. Giá trị được replicate trong không gian local, và việc đổi parent của object được replicate lúc chạy không được replicate. Ngưỡng áp dụng theo từng bản cập nhật, nên chuyển động nhỏ hơn ngưỡng chỉ được gửi khi object dừng lại. Trên host, transform của server được hiển thị nguyên trạng, không có interpolation cho góc nhìn của host.
+Transform chỉ đi từ server tới client, và client chỉ có thể di chuyển một networked object cho người khác thấy thông qua RPC hoặc input. Giá trị được replicate trong không gian local, và việc đổi parent của object được replicate lúc chạy không được replicate. Chuyển động chưa rời giá trị gửi lần trước quá ngưỡng chỉ được gửi khi object dừng lại. Trên host, transform của server được hiển thị nguyên trạng, không có interpolation cho góc nhìn của host.
 
 [Replication](../concepts/replication.md) giải thích message transform nằm ở đâu so với các message khác, [tổng quan prediction](../prediction/overview.md) cho thấy `NetworkTransform` trên một nhân vật được dự đoán, và [tham chiếu component](../reference/components.md#networktransform) liệt kê các member của nó.

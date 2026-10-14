@@ -16,7 +16,7 @@ In step 10 the level's colliders and bodies come from the block prefabs that `Te
 
 - [Models and codecs](../../../messaging/models.md)
 - [Console physics: bodies of entities](../../../console-server/physics.md#bodies-of-entities)
-- [Scene files](../../../unity/editor-integration.md#scene-files), whose collider models the catalogue reuses
+- [Scene files](../../../advanced/editor-integration.md#scene-files), whose collider models the catalogue reuses
 
 ## Design
 

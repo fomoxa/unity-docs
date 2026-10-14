@@ -44,15 +44,7 @@ private static bool Matches(PushState server, PushState predicted) =>
 
 Mỗi tick, sau khi step physics, client của owner lưu state của mỗi physics world chứa một object nó dự đoán và ghi lại state của mỗi behaviour được dự đoán. Lịch sử giữ Prediction History tick (mặc định 64).
 
-```text
-T0 → T1 → T2 → T3 → T4                  client has predicted up to T4
-             ↑
-        server state for T2 does not match
-
-Load(T2)                                 every world of the group goes back to T2
-restore(server state for T2)
-T2 → T3 → T4                             apply input, step every world, capture, save
-```
+<figure><img src="../.gitbook/assets/diagrams/physics-rollback.svg" alt="Trong lần chạy đầu, client dự đoán các tick 0 tới 4 và lưu các physics world sau mỗi tick. State của server cho tick 2 không khớp. Lần sửa load tick 2 vào mọi world của nhóm và khôi phục state của server, rồi replay các tick 3 và 4: apply input, step các world, capture và lưu. State đã lưu gồm vị trí, góc xoay, vận tốc, vận tốc góc và trạng thái ngủ của mỗi dynamic body không phải proxy. Dữ liệu contact không được lưu, nên replay có thể khác lần chạy đầu."><figcaption><p>Một lần sửa ở T2 khi client đã dự đoán tới T4.</p></figcaption></figure>
 
 Với mỗi tick của lần replay, từ T3 tới T4, `apply` chạy cho mọi object được dự đoán của nhóm rồi mỗi world step một lần.
 
@@ -60,12 +52,7 @@ Với mỗi tick của lần replay, từ T3 tới T4, `apply` chạy cho mọi 
 
 Một lần replay bao một rollback group, tức tập các physics world mà các object client dự đoán nằm trong đó.
 
-```text
-Rollback group
- ├── 3D world of scene A
- ├── 3D world of scene B        scenes A and B share one physics scene, so they are one world
- └── 2D world of scene A
-```
+<figure><img src="../.gitbook/assets/diagrams/rollback-groups.svg" alt="Rollback group 1 gồm world 3D mà scene A và B dùng chung, vì chúng dùng một physics scene, và world 2D của scene A. Chúng được sửa cùng nhau: load một tick là load cả hai world và mọi object được dự đoán trong đó đều replay. Rollback group 2 gồm world 3D của scene C. Nó không chung world nào với nhóm 1 và được sửa riêng. Một nhóm chỉ được load khi mọi world trong đó có state đã lưu cho tick được sửa."><figcaption><p>Các world có chung object được dự đoán sẽ rollback cùng nhau.</p></figcaption></figure>
 
 Mỗi scene có object được dự đoán đưa 3D world và 2D world của nó vào một nhóm. Hai scene dùng chung một physics scene của Unity cũng dùng chung một world, và các nhóm của chúng gộp lại, còn các nhóm không chung world nào được sửa độc lập với nhau.
 

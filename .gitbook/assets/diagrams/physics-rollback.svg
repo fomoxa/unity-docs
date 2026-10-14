@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="330" viewBox="0 0 920 330" role="img" aria-label="Rolling the physics worlds back to a corrected tick">
+  <title>Rolling the physics worlds back to a corrected tick</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker><marker id="arrow-D97706" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#D97706"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="329" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="74.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">First run</text>
+  <rect x="170.0" y="50.0" width="105.0" height="44.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="222.5" y="68.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#065F46" text-anchor="middle">T0</text>
+  <text x="222.5" y="84.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">world saved</text>
+  <rect x="305.0" y="50.0" width="105.0" height="44.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="357.5" y="68.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#065F46" text-anchor="middle">T1</text>
+  <text x="357.5" y="84.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">world saved</text>
+  <path d="M 275.0 72.0 L 305.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="440.0" y="50.0" width="105.0" height="44.0" rx="10" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="492.5" y="68.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#7F1D1D" text-anchor="middle">T2</text>
+  <text x="492.5" y="84.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">world saved</text>
+  <path d="M 410.0 72.0 L 440.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="575.0" y="50.0" width="105.0" height="44.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="627.5" y="68.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#065F46" text-anchor="middle">T3</text>
+  <text x="627.5" y="84.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">world saved</text>
+  <path d="M 545.0 72.0 L 575.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="710.0" y="50.0" width="105.0" height="44.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="762.5" y="68.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#065F46" text-anchor="middle">T4</text>
+  <text x="762.5" y="84.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">world saved</text>
+  <path d="M 680.0 72.0 L 710.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="492.0" y="118.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="600" fill="#DC2626" text-anchor="middle">server state for T2 does not match</text>
+  <text x="30.0" y="204.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Correction</text>
+  <rect x="420.0" y="150.0" width="145.0" height="104.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="492.5" y="182.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#1E3A8A" text-anchor="middle">Load(T2)</text>
+  <text x="492.5" y="198.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">every world of the</text>
+  <text x="492.5" y="214.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">group goes back,</text>
+  <text x="492.5" y="230.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">then restore()</text>
+  <rect x="575.0" y="150.0" width="105.0" height="104.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="627.5" y="182.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#78350F" text-anchor="middle">T3</text>
+  <text x="627.5" y="198.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">apply input</text>
+  <text x="627.5" y="214.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">step worlds</text>
+  <text x="627.5" y="230.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">capture, save</text>
+  <rect x="710.0" y="150.0" width="105.0" height="104.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="762.5" y="182.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#78350F" text-anchor="middle">T4</text>
+  <text x="762.5" y="198.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">apply input</text>
+  <text x="762.5" y="214.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">step worlds</text>
+  <text x="762.5" y="230.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">capture, save</text>
+  <path d="M 565.0 202.0 L 575.0 202.0" fill="none" stroke="#D97706" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-D97706)"/>
+  <path d="M 680.0 202.0 L 710.0 202.0" fill="none" stroke="#D97706" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-D97706)"/>
+  <text x="30.0" y="290.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">A saved state holds position, rotation, velocity, angular velocity and sleep state of each dynamic body that is not a proxy.</text>
+  <text x="30.0" y="310.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">Contact data is not saved, so a replay can differ from the first run.</text>
+</svg>

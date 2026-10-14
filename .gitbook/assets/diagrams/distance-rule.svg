@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="400" viewBox="0 0 920 400" role="img" aria-label="Which objects a DistanceRule lets a peer observe">
+  <title>Which objects a DistanceRule lets a peer observe</title>
+  <defs></defs>
+  <rect x="0.5" y="0.5" width="919" height="399" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="30.0" y="30.0" width="520.0" height="340.0" rx="12" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+  <circle cx="300" cy="190" r="150" fill="#FEF3C7" fill-opacity="0.45" stroke="#D97706" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="190" cy="270" r="80" fill="#E6F6EF" fill-opacity="0.8" stroke="#0E9F6E" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <circle cx="190.0" cy="270.0" r="11" fill="#0E9F6E"/>
+  <text x="190.0" y="300.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="600" fill="#065F46" text-anchor="middle">player of peer A</text>
+  <line x1="190.0" y1="270.0" x2="270.0" y2="270.0" stroke="#0E9F6E" stroke-width="1.2"/>
+  <text x="230.0" y="264.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11" font-weight="600" fill="#0E9F6E" text-anchor="middle">Radius</text>
+  <rect x="221.0" y="213.0" width="18.0" height="18.0" rx="3" fill="#0E9F6E" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="246.0" y="226.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="600" fill="#065F46" text-anchor="start">crate</text>
+  <rect x="291.0" y="174.0" width="18.0" height="32.0" rx="3" fill="#D97706" stroke="#D97706" stroke-width="1.5"/>
+  <text x="316.0" y="194.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="600" fill="#78350F" text-anchor="start">tower</text>
+  <text x="300.0" y="62.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11" font-weight="600" fill="#D97706" text-anchor="middle">ObserverRange</text>
+  <circle cx="480.0" cy="320.0" r="9" fill="#9CA3AF"/>
+  <text x="464.0" y="324.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="600" fill="#6B7280" text-anchor="end">enemy</text>
+  <circle cx="590.0" cy="62.0" r="7" fill="#0E9F6E"/>
+  <text x="608.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="600" fill="#1F2937" text-anchor="start">Crate: inside Radius of the player.</text>
+  <text x="608.0" y="87.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">Peer A observes it.</text>
+  <circle cx="590.0" cy="140.0" r="7" fill="#D97706"/>
+  <text x="608.0" y="145.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="600" fill="#1F2937" text-anchor="start">Tower: outside Radius, but its own</text>
+  <text x="608.0" y="165.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">ObserverRange reaches the player.</text>
+  <circle cx="590.0" cy="218.0" r="7" fill="#9CA3AF"/>
+  <text x="608.0" y="223.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="600" fill="#1F2937" text-anchor="start">Enemy: too far from every object</text>
+  <text x="608.0" y="243.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">peer A owns. Not observed.</text>
+  <text x="580.0" y="300.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">Distance is measured between world positions,</text>
+  <text x="580.0" y="320.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">from any object the peer owns. A peer that</text>
+  <text x="580.0" y="340.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">owns nothing observes nothing.</text>
+</svg>

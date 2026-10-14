@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="410" viewBox="0 0 920 410" role="img" aria-label="Package làm cho phần nào tất định">
+  <title>Package làm cho phần nào tất định</title>
+  <defs></defs>
+  <rect x="0.5" y="0.5" width="919" height="409" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="30.0" y="40.0" width="860.0" height="40.0" rx="8" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.2"/>
+  <text x="48.0" y="65.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#065F46" text-anchor="start">Protocol</text>
+  <text x="190.0" y="65.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">mỗi message có layout cố định; schema được so ở handshake</text>
+  <rect x="851.9" y="49.5" width="28.1" height="21.0" rx="10.5" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1"/>
+  <text x="865.9" y="64.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#065F46" text-anchor="middle">có</text>
+  <rect x="30.0" y="90.0" width="860.0" height="40.0" rx="8" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.2"/>
+  <text x="48.0" y="115.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#065F46" text-anchor="start">Input</text>
+  <text x="190.0" y="115.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">input gắn với một tick; thiếu input thì lặp input trước</text>
+  <rect x="851.9" y="99.5" width="28.1" height="21.0" rx="10.5" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1"/>
+  <text x="865.9" y="114.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#065F46" text-anchor="middle">có</text>
+  <rect x="30.0" y="140.0" width="860.0" height="40.0" rx="8" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.2"/>
+  <text x="48.0" y="165.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#065F46" text-anchor="start">Tick</text>
+  <text x="190.0" y="165.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">độ dài cố định TickDelta, cùng cách đánh số ở hai phía</text>
+  <rect x="851.9" y="149.5" width="28.1" height="21.0" rx="10.5" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1"/>
+  <text x="865.9" y="164.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#065F46" text-anchor="middle">có</text>
+  <rect x="30.0" y="190.0" width="860.0" height="40.0" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="1.2"/>
+  <text x="48.0" y="215.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#78350F" text-anchor="start">Logic game</text>
+  <text x="190.0" y="215.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">apply() chỉ được đọc input, state riêng và TickDelta</text>
+  <rect x="795.6" y="199.5" width="84.4" height="21.0" rx="10.5" fill="#FEF3C7" stroke="#D97706" stroke-width="1"/>
+  <text x="837.8" y="214.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#78350F" text-anchor="middle">code của bạn</text>
+  <rect x="30.0" y="240.0" width="860.0" height="40.0" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.2"/>
+  <text x="48.0" y="265.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#7F1D1D" text-anchor="start">Physics</text>
+  <text x="190.0" y="265.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">physics của Unity không bảo đảm kết quả giống hệt</text>
+  <rect x="817.7" y="249.5" width="62.3" height="21.0" rx="10.5" fill="#FEE2E2" stroke="#DC2626" stroke-width="1"/>
+  <text x="848.8" y="264.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#7F1D1D" text-anchor="middle">không có</text>
+  <rect x="30.0" y="290.0" width="860.0" height="40.0" rx="8" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.2"/>
+  <text x="48.0" y="315.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#1F2937" text-anchor="start">State</text>
+  <text x="190.0" y="315.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">matches() quyết định gần tới mức nào là đủ</text>
+  <rect x="785.6" y="299.5" width="94.4" height="21.0" rx="10.5" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="832.8" y="314.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#1F2937" text-anchor="middle">không bắt buộc</text>
+  <text x="30.0" y="370.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">Không có trong package: lockstep, ghi và phát lại trận đấu, số ngẫu nhiên tất định, state hashing.</text>
+  <text x="30.0" y="392.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">Prediction chỉ cần kết quả đủ gần. Chênh lệch được reconciliation sửa.</text>
+</svg>

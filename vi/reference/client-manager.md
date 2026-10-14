@@ -1,6 +1,6 @@
 # Tham chiếu ClientManager
 
-`public sealed class ClientManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.ClientManager`. Hướng dẫn [client](../core/client.md) giải thích cách dùng nó.
+`public sealed class ClientManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.ClientManager`. Hướng dẫn [client](../connections/client.md) giải thích cách dùng nó.
 
 ## Kết nối <a href="#connection" id="connection"></a>
 

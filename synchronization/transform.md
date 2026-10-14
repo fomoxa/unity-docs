@@ -18,14 +18,9 @@ No code is needed beyond moving the object.
 
 The server samples the local position, rotation and scale after every tick.
 
-```text
-server tick   ... 10    11    12    13    14    15 ...
-moving             ●─────●─────●─────●
-transform update   U     U     U     U          unreliable, carries tick 10, 11, 12, 13
-stopped                                    S    reliable settle with the final values
-```
+<figure><img src="../.gitbook/assets/diagrams/transform-updates.svg" alt="A timeline of server ticks 10 to 16. The object moves during ticks 10 to 13, and the server sends an unreliable update for each of those ticks. The update for tick 12 is lost. At tick 14 the object has stopped, and the server sends a reliable settle with the exact final values. The client receives the updates for ticks 10, 11 and 13 and shows the object up to Interpolation Ticks, 2 by default, behind the newest snapshot, moving between the received values over the lost tick 12."><figcaption><p>Updates while the object moves, one settle when it stops, and the client following a little behind.</p></figcaption></figure>
 
-While the object moves, the server sends an update for each tick in which a synced part moved more than its threshold. These updates are unreliable and carry the tick. When the object stops, the server sends one settle message on the reliable channel with the exact final values, so a lost update can never leave an object resting in the wrong place. A client also gets a settle with the current values when the object spawns and whenever it starts observing the object.
+While the object moves, the server sends an update for each tick in which a synced part has moved more than its threshold away from the value it last sent. These updates are unreliable and carry the tick. When the object stops, the server sends one settle message on the reliable channel with the exact final values, so a lost update can never leave an object resting in the wrong place. A client also gets a settle with the current values when the object spawns and whenever it starts observing the object.
 
 An update contains only the parts that changed, and the client never applies a part it has not received yet.
 
@@ -35,7 +30,7 @@ The server only reads the transform, so you can move it any way you like, whethe
 
 ## Client behavior
 
-Clients keep a short list of received snapshots and show the object Interpolation Ticks (2 by default) behind the newest one, interpolating position and scale linearly and rotation spherically. A settle replaces the list and puts the object at its values at once.
+Clients keep a short list of received snapshots and show the object up to Interpolation Ticks (2 by default) behind the newest one, interpolating position and scale linearly and rotation spherically. A settle replaces the list and puts the object at its values at once.
 
 The client applies the values to the local position, rotation and scale, so the object must have the same parent on the server and on the clients for the values to mean the same thing.
 
@@ -66,6 +61,8 @@ For an object with a physics body, set the body's position as well, as described
 
 ## Configuration
 
+<figure><img src="../.gitbook/assets/screenshots/network-transform-inspector.png" alt="The Inspector of a NetworkTransform with its defaults: Sync Position and Sync Rotation on, Sync Scale off, Position Threshold 0.01, Rotation Threshold 0.1, Scale Threshold 0.01, Interpolation Ticks 2, Visual None and Smoothing Time 0.1." width="460"><figcaption><p>A NetworkTransform with its default values.</p></figcaption></figure>
+
 | Field | Default | Meaning |
 |---|---|---|
 | Sync Position | on | Replicate the local position |
@@ -74,7 +71,7 @@ For an object with a physics body, set the body's position as well, as described
 | Position Threshold | 0.01 | Distance a position must move before an update includes it |
 | Rotation Threshold | 0.1 | Angle in degrees a rotation must turn before an update includes it |
 | Scale Threshold | 0.01 | Change a scale must make before an update includes it |
-| Interpolation Ticks | 2 | How many ticks behind the newest snapshot clients show the object |
+| Interpolation Ticks | 2 | At most how many ticks behind the newest snapshot clients show the object |
 | Visual | none | A child transform that is smoothed after prediction corrections |
 | Smoothing Time | 0.1 | Seconds over which the Visual returns to its rest position |
 
@@ -82,6 +79,6 @@ For an object with a physics body, set the body's position as well, as described
 
 ## Limitations
 
-Transforms flow from the server to clients only, and a client can move a networked object for others only through RPCs or input. Values are replicated in local space, and re-parenting a replicated object at run time is not replicated. Thresholds apply per update, so movement smaller than a threshold is only sent once the object stops. On a host, the server's transform is shown as it is, without interpolation for the host's own view.
+Transforms flow from the server to clients only, and a client can move a networked object for others only through RPCs or input. Values are replicated in local space, and re-parenting a replicated object at run time is not replicated. Movement that stays within a threshold of the last sent value is only sent once the object stops. On a host, the server's transform is shown as it is, without interpolation for the host's own view.
 
 [Replication](../concepts/replication.md) explains how transform messages fit with the other messages, the [prediction overview](../prediction/overview.md) shows `NetworkTransform` on a predicted character, and the [components reference](../reference/components.md#networktransform) lists its members.

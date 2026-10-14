@@ -21,6 +21,8 @@ public class Status
 }
 ```
 
+<figure><img src="../.gitbook/assets/diagrams/model-codecs.svg" alt="Một class Status có hai codec net và compact. Health thuộc cả hai codec, còn Title chỉ thuộc net. fomoxac viết StatusNetCodec và StatusCompactCodec, mỗi codec có message id riêng, và package bọc mỗi codec trong một adapter."><figcaption><p>Hai codec của Status và adapter của chúng.</p></figcaption></figure>
+
 `StatusCompactAdapter` chỉ encode `Health`, và decode bằng nó sẽ giữ nguyên `Title`. Mỗi codec cũng có thể có channel riêng, khai báo bằng `[NetworkChannel("compact", Channel.ReliableOrdered)]`. [Model và codec](../messaging/models.md) mô tả các attribute.
 
 ## Type của Unity <a href="#unity-types" id="unity-types"></a>
@@ -81,4 +83,4 @@ Sau đó một model có thể khai báo `[Network("GridCell")]` trên một pro
 
 `IMessageCodec<T>` là interface public, nhưng mọi message id phải thuộc schema đã sinh, vì dispatcher từ chối handler cho id nằm ngoài schema và handshake so sánh schema. Thay vào đó, hãy viết model và để package sinh adapter cho chúng.
 
-[Model và codec](../messaging/models.md) nói chung về model, và [tích hợp Editor](../unity/editor-integration.md) mô tả bước sinh code ghi ra các codec này.
+[Model và codec](../messaging/models.md) nói chung về model, và [tích hợp Editor](editor-integration.md) mô tả bước sinh code ghi ra các codec này.

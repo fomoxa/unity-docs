@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="404" viewBox="0 0 920 404" role="img" aria-label="NetworkManager gồm những gì">
+  <title>NetworkManager gồm những gì</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="403" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Trong scene</text>
+  <text x="30.0" y="58.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">Các component bạn thêm và chỉnh trong Inspector</text>
+  <rect x="30.0" y="76.0" width="300.0" height="288.0" rx="12" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="46.0" y="98.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="600" fill="#1F2937" text-anchor="start">GameObject "Network Manager"</text>
+  <rect x="46.0" y="112.0" width="268.0" height="76.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="180.0" y="137.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#78350F" text-anchor="middle">NetworkManager</text>
+  <text x="180.0" y="154.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">tick rate, timing, hàng đợi,</text>
+  <text x="180.0" y="172.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">danh sách prefab và scene</text>
+  <rect x="46.0" y="202.0" width="268.0" height="64.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <text x="180.0" y="230.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">UdpNetworkTransport</text>
+  <text x="180.0" y="247.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">field Transport</text>
+  <rect x="46.0" y="280.0" width="268.0" height="64.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <text x="180.0" y="308.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">RigidbodyPhysics</text>
+  <text x="180.0" y="325.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">field Physics</text>
+  <text x="420.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Được dựng trong Awake</text>
+  <text x="420.0" y="58.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">Truy cập qua các property của NetworkManager</text>
+  <rect x="420.0" y="76.0" width="470.0" height="288.0" rx="12" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <rect x="440.0" y="96.0" width="205.0" height="72.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="542.5" y="128.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">ServerManager</text>
+  <text x="542.5" y="145.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">lắng nghe, spawn, observer</text>
+  <rect x="665.0" y="96.0" width="205.0" height="72.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="767.5" y="128.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">ClientManager</text>
+  <text x="767.5" y="145.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">kết nối, kết nối lại</text>
+  <rect x="440.0" y="280.0" width="205.0" height="64.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="542.5" y="308.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">TimeManager</text>
+  <text x="542.5" y="325.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">tick và event của tick</text>
+  <rect x="665.0" y="280.0" width="205.0" height="64.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="767.5" y="308.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">TransportManager</text>
+  <text x="767.5" y="325.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">transport factory</text>
+  <rect x="440.0" y="188.0" width="205.0" height="72.0" rx="10" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="542.5" y="220.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Prefabs</text>
+  <text x="542.5" y="237.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">prefab có thể spawn</text>
+  <rect x="665.0" y="188.0" width="205.0" height="72.0" rx="10" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="767.5" y="220.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Scenes</text>
+  <text x="767.5" y="237.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">network scene có thể load</text>
+  <path d="M 314.0 150.0 L 420.0 150.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="350.4" y="131.5" width="33.3" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="367.0" y="143.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#4B5563" text-anchor="middle">dựng</text>
+  <path d="M 314.0 234.0 L 367.0 234.0 L 367.0 386.0 L 767.0 386.0 L 767.0 344.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 4" marker-end="url(#arrow-4B5563)"/>
+  <rect x="462.1" y="368.5" width="111.5" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="517.9" y="380.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11.5" font-weight="500" fill="#4B5563" text-anchor="middle">CreateFactory()</text>
+</svg>

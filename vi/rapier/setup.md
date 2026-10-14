@@ -27,7 +27,7 @@ Làm như vậy cho mọi `NetworkManager` chạy server hoặc client của gam
 
 ## Xuất scene file <a href="#export-the-scene-files" id="export-the-scene-files"></a>
 
-Rapier đọc geometry tĩnh của một scene từ scene file mà package ghi vào Generated Folder, `<scene id>.fomoxascene`. Editor ghi file khi bạn lưu một network scene, trước mỗi lần build player, và khi chọn Tools > Fomoxa > Export Network Scene Files, như mô tả trong [tích hợp Editor](../unity/editor-integration.md#scene-files). Commit các file này cùng phần code sinh ra còn lại.
+Rapier đọc geometry tĩnh của một scene từ scene file mà package ghi vào Generated Folder, `<scene id>.fomoxascene`. Editor ghi file khi bạn lưu một network scene, trước mỗi lần build player, và khi chọn Tools > Fomoxa > Export Network Scene Files, như mô tả trong [tích hợp Editor](../advanced/editor-integration.md#scene-files). Commit các file này cùng phần code sinh ra còn lại.
 
 Chỉ network scene mới có world. Scene phải nằm trong Scene List của Build Profiles, để có scene id trong `FomoxaSceneList.asset`, và `NetworkManager` phải có danh sách đó trong Collected Scenes. Network scene đã load mà không có scene file sẽ được mô phỏng không có geometry tĩnh, và backend cảnh báo `scene 0x... has no scene file; Rapier simulates it without static geometry. Export the network scene files`.
 

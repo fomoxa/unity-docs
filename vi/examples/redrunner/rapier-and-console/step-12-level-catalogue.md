@@ -16,7 +16,7 @@ Game với luật nằm trong `RedRunner.Simulation`, commit `d8a30c4`.
 
 - [Model và codec](../../../messaging/models.md)
 - [Physics của console: body của entity](../../../console-server/physics.md#bodies-of-entities)
-- [Scene file](../../../unity/editor-integration.md#scene-files), mà các model collider của nó catalogue dùng lại
+- [Scene file](../../../advanced/editor-integration.md#scene-files), mà các model collider của nó catalogue dùng lại
 
 ## Thiết kế <a href="#design" id="design"></a>
 

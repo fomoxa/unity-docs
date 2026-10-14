@@ -89,6 +89,8 @@ Các adapter hiện thực `IMessageCodec<T>`, interface có ba member:
 
 ## Nhiều codec cho một model <a href="#several-codecs-per-model" id="several-codecs-per-model"></a>
 
+<figure><img src="../.gitbook/assets/diagrams/model-codecs.svg" alt="Một class Status có hai codec net và compact. Health, kiểu u32, thuộc cả hai codec, còn Title, kiểu string, chỉ thuộc net. fomoxac viết StatusNetCodec với Health, Title và message id A, và StatusCompactCodec với Health và message id B. Package bọc mỗi codec trong một adapter, StatusNetAdapter và StatusCompactAdapter, cả hai đều là IMessageCodec của Status."><figcaption><p>Ví dụ Status bên dưới: một class, hai codec, hai message id.</p></figcaption></figure>
+
 Một model có thể khai báo nhiều codec, mỗi codec chọn một tập field riêng:
 
 ```csharp
@@ -118,4 +120,4 @@ Mỗi lần sinh code còn ghi `NetSchema.cs`, danh sách mọi message id và l
 
 Ngoài các model của chính package và các model nó sinh cho RPC không tham số, chỉ những class trong Models Folder mới có codec. Binary `fomoxac` chỉ đi kèm cho Editor Windows x64 và Linux x64.
 
-Model được dùng bởi [RPC](rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md). [Messaging API](../reference/messaging.md) liệt kê các type codec, và [tích hợp Editor](../unity/editor-integration.md) mô tả bước sinh code.
+Model được dùng bởi [RPC](rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md). [Messaging API](../reference/messaging.md) liệt kê các type codec, và [tích hợp Editor](../advanced/editor-integration.md) mô tả bước sinh code.

@@ -2,7 +2,7 @@
 
 ## NetworkObject <a href="#networkobject" id="networkobject"></a>
 
-`public sealed class NetworkObject : MonoBehaviour, INetworkEntity` trong `Fomoxa.Unity`, đánh dấu `[DisallowMultipleComponent]` và được giải thích trong hướng dẫn [NetworkObject](../core/network-object.md). `INetworkEntity` là interface mà tầng 1 dùng để xử lý object, nên có thể truyền một `NetworkObject` vào mọi chỗ manager nhận `INetworkEntity`.
+`public sealed class NetworkObject : MonoBehaviour, INetworkEntity` trong `Fomoxa.Unity`, đánh dấu `[DisallowMultipleComponent]` và được giải thích trong hướng dẫn [NetworkObject](../objects/network-object.md). `INetworkEntity` là interface mà tầng 1 dùng để xử lý object, nên có thể truyền một `NetworkObject` vào mọi chỗ manager nhận `INetworkEntity`.
 
 | Member | Type | Mô tả |
 |---|---|---|
@@ -32,7 +32,7 @@ Dù giá trị là gì, owner luôn observe object của nó, và network scene 
 
 ## NetworkBehaviour <a href="#networkbehaviour" id="networkbehaviour"></a>
 
-`public abstract class NetworkBehaviour : MonoBehaviour` trong `Fomoxa.Unity`, được giải thích trong hướng dẫn [NetworkBehaviour](../core/network-behaviour.md).
+`public abstract class NetworkBehaviour : MonoBehaviour` trong `Fomoxa.Unity`, được giải thích trong hướng dẫn [NetworkBehaviour](../objects/network-behaviour.md).
 
 ### Property <a href="#properties" id="properties"></a>
 

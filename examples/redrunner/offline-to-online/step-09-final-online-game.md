@@ -14,9 +14,9 @@ The steps so far ran mostly in the Editor, and a player build shows things the E
 
 ## Fomoxa concepts
 
-- [Dedicated server](../../../server/dedicated-server.md)
-- [Deployment](../../../server/deployment.md)
-- [Editor integration: build checks](../../../unity/editor-integration.md#build-checks)
+- [Dedicated server](../../../deploy/dedicated-server.md)
+- [Deployment](../../../deploy/deployment.md)
+- [Editor integration: build checks](../../../advanced/editor-integration.md#build-checks)
 
 ## Design
 
@@ -50,7 +50,7 @@ In the game, the left and right arrow keys run, Space, W or the up arrow jump, a
 
 ## Test
 
-Run a dedicated server and two clients from the build, as in [step 08](step-08-two-clients.md#test). The port's checks ran the server and the clients on one machine. To play across machines, clients enter the server's address and the server must accept UDP on its port, as described in [deployment](../../../server/deployment.md).
+Run a dedicated server and two clients from the build, as in [step 08](step-08-two-clients.md#test). The port's checks ran the server and the clients on one machine. To play across machines, clients enter the server's address and the server must accept UDP on its port, as described in [deployment](../../../deploy/deployment.md).
 
 ## Expected result
 

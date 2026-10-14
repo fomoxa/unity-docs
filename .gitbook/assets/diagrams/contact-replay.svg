@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="300" viewBox="0 0 920 300" role="img" aria-label="Contact events around a replay">
+  <title>Contact events around a replay</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker><marker id="arrow-D97706" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#D97706"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="299" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="74.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Shown so far</text>
+  <rect x="190.0" y="50.0" width="120.0" height="46.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="250.0" y="68.7" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#065F46" text-anchor="middle">T2</text>
+  <text x="250.0" y="85.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#065F46" text-anchor="middle">{ }</text>
+  <rect x="340.0" y="50.0" width="120.0" height="46.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="400.0" y="68.7" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#065F46" text-anchor="middle">T3</text>
+  <text x="400.0" y="85.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#065F46" text-anchor="middle">{ B }</text>
+  <rect x="490.0" y="50.0" width="120.0" height="46.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="550.0" y="68.7" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#065F46" text-anchor="middle">T4</text>
+  <text x="550.0" y="85.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#065F46" text-anchor="middle">{ B }</text>
+  <rect x="352.2" y="101.8" width="95.7" height="20.5" rx="10.25" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1"/>
+  <text x="400.0" y="115.8" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="10.5" font-weight="600" fill="#065F46" text-anchor="middle">OnEnter(B) fired</text>
+  <text x="30.0" y="194.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Replay from T2</text>
+  <rect x="190.0" y="170.0" width="120.0" height="46.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="250.0" y="188.7" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#1E3A8A" text-anchor="middle">T2</text>
+  <text x="250.0" y="205.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#1E3A8A" text-anchor="middle">{ }</text>
+  <rect x="340.0" y="170.0" width="120.0" height="46.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="400.0" y="188.7" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#78350F" text-anchor="middle">T3</text>
+  <text x="400.0" y="205.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#78350F" text-anchor="middle">{ }</text>
+  <path d="M 310.0 193.0 L 340.0 193.0" fill="none" stroke="#D97706" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-D97706)"/>
+  <rect x="490.0" y="170.0" width="120.0" height="46.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="550.0" y="188.7" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#78350F" text-anchor="middle">T4</text>
+  <text x="550.0" y="205.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#78350F" text-anchor="middle">{ C }</text>
+  <path d="M 460.0 193.0 L 490.0 193.0" fill="none" stroke="#D97706" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-D97706)"/>
+  <text x="250.0" y="232.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="500" fill="#2F6FEB" text-anchor="middle">restored set</text>
+  <text x="400.0" y="232.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="500" fill="#6B7280" text-anchor="middle">no events yet</text>
+  <rect x="640.0" y="150.0" width="160.0" height="86.0" rx="10" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="720.0" y="172.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="700" fill="#1F2937" text-anchor="middle">After the replay,</text>
+  <text x="720.0" y="190.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">once:</text>
+  <text x="720.0" y="208.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="700" fill="#DC2626" text-anchor="middle">OnExit(B)</text>
+  <text x="720.0" y="226.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="700" fill="#0E9F6E" text-anchor="middle">OnEnter(C)</text>
+  <path d="M 610.0 193.0 L 640.0 193.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="30.0" y="284.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">The events are the difference between what was shown and the replayed result, so no event fires twice.</text>
+</svg>

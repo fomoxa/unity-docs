@@ -85,6 +85,8 @@ Exception ném ra trong `apply` hoặc `gather` được log và không ngắt k
 
 Mỗi tick, client của owner gửi một input message unreliable cho mỗi behaviour. Message chứa input mới nhất cùng các input trước đó, tổng cộng Input Redundancy input (mặc định 3), nên một gói bị mất không làm mất input.
 
+<figure><img src="../.gitbook/assets/diagrams/input-redundancy.svg" alt="Client của owner gửi một input message mỗi tick. Message của tick 22 mang input 22, 21 và 20, message của tick 23 mang 23, 22 và 21, và message của tick 24 mang 24, 23 và 22. Message của tick 23 bị mất, nhưng input 23 vẫn tới server trong message của tick 24."><figcaption><p>Với Input Redundancy mặc định là 3, mất một message không làm mất input nào.</p></figcaption></figure>
+
 ## Trên server <a href="#on-the-server" id="on-the-server"></a>
 
 Server giữ các input nhận được theo object và behaviour, sắp theo tick. Nó chấp nhận input cho các tick từ tick hiện tại của nó tới tối đa Max Input Lead tick phía trước (mặc định 30). Message có input mới nhất dành cho một tick đã qua, hoặc xa hơn giới hạn đó, sẽ bị bỏ và được đếm trong `ServerManager.DroppedInputsOf(peerId)`.
@@ -97,4 +99,4 @@ Client cố gắng để mỗi input tới sớm Input Buffer tick (mặc địn
 
 Server áp dụng bất cứ gì owner gửi lên, nên hãy kẹp hoặc từ chối giá trị trong `apply`, ví dụ bằng `Vector3.ClampMagnitude` trên một hướng, để một client bị sửa đổi không thể di chuyển nhanh hơn mức cho phép. Vì cùng `apply` chạy trên client của owner, một client trung thực sẽ dự đoán ra đúng kết quả đã kẹp.
 
-Input làm việc cùng [reconciliation](reconciliation.md) và đồng hồ tick mô tả trong [tick và thời gian](../concepts/tick.md). [NetworkBehaviour](../core/network-behaviour.md) liệt kê các hook đăng ký.
+Input làm việc cùng [reconciliation](reconciliation.md) và đồng hồ tick mô tả trong [tick và thời gian](../concepts/tick.md). [NetworkBehaviour](../objects/network-behaviour.md) liệt kê các hook đăng ký.

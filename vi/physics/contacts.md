@@ -53,6 +53,8 @@ Cuối tick, kết quả được so sánh với tập đã công bố trước 
 
 Trên client của owner, các component còn ghi lại tập đang chạm của mỗi tick. Một lần replay khôi phục tập của tick được sửa, cập nhật nó khi các world step lại và công bố một lần sau khi replay xong. Event đã phát ở lần chạy gốc không phát lại, còn contact bị lần replay loại bỏ sẽ phát một exit.
 
+<figure><img src="../.gitbook/assets/diagrams/contact-replay.svg" alt="Tới lúc này client đã hiển thị không có contact ở T2 và có contact với B ở T3 và T4, và OnEnter(B) đã chạy. Một lần replay từ T2 khôi phục tập rỗng của T2, rồi thấy không có contact ở T3 và có contact với C ở T4, mà không phát event nào. Sau khi replay, component phát phần khác nhau một lần: OnExit(B) và OnEnter(C)."><figcaption><p>Event sau một lần replay là phần khác so với những gì đã hiển thị.</p></figcaption></figure>
+
 Khi không có `NetworkManager` nào step world, ví dụ khi Simulate Physics tắt, các component chỉ chuyển tiếp callback của Unity thành `OnEnter` và `OnExit`.
 
 ## Cấu hình <a href="#configuration" id="configuration"></a>

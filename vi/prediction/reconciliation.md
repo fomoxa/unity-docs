@@ -39,14 +39,7 @@ private static bool Matches(MoveState server, MoveState predicted) =>
 
 ## Sửa và replay <a href="#correction-and-replay" id="correction-and-replay"></a>
 
-```text
-predicted   T10  T11  T12  T13  T14       client is at T14
-                  ↑
-            server state for T11 arrives, does not match
-
-restore(server state of T11)
-replay      T12  T13  T14                 apply(input, Replaying = true), capture each
-```
+<figure><img src="../.gitbook/assets/diagrams/reconcile-replay.svg" alt="Client đã dự đoán các tick 10 tới 14 và đang ở tick 14 khi state của server cho tick 11 tới. matches() trả về false cho tick 11. Client khôi phục state của server ở tick 11 và replay các tick 12, 13 và 14. Mỗi tick replay gọi apply với context.Replaying là true, rồi capture. Sau đó OnReconciled(11) chạy và ReconcileCount tăng thêm một."><figcaption><p>Một lần sửa ở tick 11 khi client đã ở tick 14.</p></figcaption></figure>
 
 Client giữ input và state của Prediction History tick gần nhất (mặc định 64). Một lần replay bao các tick từ tick được sửa tới tick dự đoán mới nhất, dùng các input client đã ghi lại, và sau lần sửa package gọi `OnReconciled(tick)` trên behaviour và tăng `ReconcileCount` của nó.
 
@@ -84,4 +77,4 @@ Một lần sửa di chuyển object ngay lập tức. Để che điều đó, h
 
 Khi object di chuyển bằng `Rigidbody` hoặc `Rigidbody2D` và mô phỏng physics đang bật, một lần sửa còn rollback cả các physics world, như mô tả trong [rollback với physics](rollback.md).
 
-Reconciliation xây trên [input](input.md), và [tổng quan prediction](overview.md) cho thấy cả hai trong một nhân vật hoàn chỉnh. [NetworkBehaviour](../core/network-behaviour.md) liệt kê `OnReconciled` và các callback khác.
+Reconciliation xây trên [input](input.md), và [tổng quan prediction](overview.md) cho thấy cả hai trong một nhân vật hoàn chỉnh. [NetworkBehaviour](../objects/network-behaviour.md) liệt kê `OnReconciled` và các callback khác.

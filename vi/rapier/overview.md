@@ -22,15 +22,7 @@ Snapshot của Rapier giữ cả world, kể cả contact, nên replay sau `Load
 
 ## Nó nằm ở đâu <a href="#how-it-fits-in" id="how-it-fits-in"></a>
 
-```text
-Game code: apply, capture, restore, OnTick
-    ↓
-NetworkObject.Body / Body2D        PhysicsBody, PhysicsBody2D (unchanged)
-    ↓
-RapierPhysics                      one Rapier world per network scene and dimension
-    ↓
-fomoxa_rapier (native library)     rapier3d, rapier2d
-```
+<figure><img src="../.gitbook/assets/diagrams/rapier-stack.svg" alt="Trong client hoặc server Unity, code game với apply, capture, restore và OnTick dùng PhysicsBody và PhysicsBody2D, không đổi, và chúng dùng RapierPhysics, một world mỗi network scene và mỗi chiều. Trong console server không có Unity, chương trình console của bạn với các class EntityBehaviour và cùng model dùng RapierScenes, dựng cùng các world từ cùng scene file. Cả hai nằm trên thư viện native fomoxa_rapier, build từ rapier3d và rapier2d 0.36.0 với enhanced-determinism. Snapshot chứa toàn bộ world Rapier, kể cả contact, nên replay cho ra đúng các tick như lần chạy đầu."><figcaption><p>Code game giữ nguyên; chỉ các tầng bên dưới PhysicsBody thay đổi.</p></figcaption></figure>
 
 Code game vẫn dùng `PhysicsBody` và `PhysicsBody2D`, model input và reconcile, và các component contact. Phần thay đổi nằm bên dưới:
 

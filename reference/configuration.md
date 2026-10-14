@@ -4,7 +4,7 @@ This page lists the Inspector fields of every component and asset. Unless noted 
 
 ## NetworkManager
 
-The [NetworkManager](../core/network-manager.md) guide explains what each field does.
+The [NetworkManager](../connections/network-manager.md) guide explains what each field does.
 
 | Field | Type | Default | Range |
 |---|---|---|---|
@@ -114,4 +114,4 @@ A value outside its range throws when the manager starts.
 | Models Folder | `string` | `Assets/Models` |
 | Generated Folder | `string` | `Assets/Generated` |
 
-The members behind these fields are listed in the [NetworkManager reference](network-manager.md) and the [components reference](components.md). [Editor integration](../unity/editor-integration.md) explains the `FomoxaSettings` asset.
+The members behind these fields are listed in the [NetworkManager reference](network-manager.md) and the [components reference](components.md). [Editor integration](../advanced/editor-integration.md) explains the `FomoxaSettings` asset.

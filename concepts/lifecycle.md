@@ -1,6 +1,6 @@
 # Lifecycle
 
-This page gives the order of events for the `NetworkManager`, for connections and for network objects.
+This page gives the order of events for the `NetworkManager`, for connections and for network objects. Use it to decide where a piece of your code belongs: in `Awake`, in `OnStartServer`, in a connection event or in `OnStopClient`.
 
 ## NetworkManager
 
@@ -13,52 +13,62 @@ This page gives the order of events for the `NetworkManager`, for connections an
 
 The manager also stops both connections when the application quits.
 
-Because the managers are created in `Awake`, other components can rely on them from `Start` on, while in their own `Awake` the managers may not exist yet.
+Because the managers are created in `Awake`, other components can rely on them from `Start` on. In their own `Awake` the managers may not exist yet.
 
 ## Server
 
-```text
-ServerManager.StartConnection(port)
-    ServerState: Stopped → Starting → Started
-    every scene object in the loaded scenes is spawned
-    for each client:
-        OnRemoteConnectionState: Starting   transport connected, handshake runs
-        OnRemoteConnectionState: Started    the client receives the objects it observes
-        OnRemoteConnectionState: Stopped    with a StopReason; owned objects are despawned
-ServerManager.StopConnection()
-    ServerState: Started → Stopping → Stopped
-    every client is disconnected, every object is despawned
+```mermaid
+sequenceDiagram
+    participant Code as Your code
+    participant SM as ServerManager
+    participant Peer as A client
+    Code->>SM: StartConnection(port)
+    Note over SM: ServerState Stopped → Starting → Started<br/>spawns every scene object in the loaded scenes
+    Peer->>SM: transport connects
+    SM-->>Code: OnRemoteConnectionState: Starting (handshake runs)
+    SM-->>Code: OnRemoteConnectionState: Started
+    Note over SM,Peer: the client receives the objects it observes
+    Peer->>SM: leaves, times out or fails
+    SM-->>Code: OnRemoteConnectionState: Stopped, with a StopReason
+    Note over SM: despawns the objects the peer owned
+    Code->>SM: StopConnection()
+    Note over SM: ServerState Started → Stopping → Stopped<br/>disconnects every client, despawns every object
 ```
 
 ## Client
 
-```text
-ClientManager.StartConnection(address, port)
-    OnClientConnectionState: Starting
-    OnClientConnectionState: Started      scene objects are deactivated until the server spawns them
-    ... objects spawn, change and despawn ...
-    OnClientConnectionState: Stopped      every object is despawned on the client
-        WillRetry = true  → Starting again after the reconnect interval
-        WillRetry = false → stays Stopped
-ClientManager.StopConnection()
+```mermaid
+stateDiagram-v2
+    direction LR
+    [*] --> Starting: StartConnection(address, port)
+    Starting --> Started: handshake succeeded
+    Started --> Stopped: connection ends
+    Starting --> Stopped: connection fails
+    Stopped --> Starting: WillRetry, after the reconnect interval
+    Stopped --> [*]: WillRetry is false, or StopConnection()
 ```
+
+`OnClientConnectionState` reports each change. When the client reaches `Started`, the scene objects in its loaded scenes are deactivated until the server spawns them. Objects then spawn, change and despawn. When the connection stops, every object is despawned on the client, and `ConnectionStateArgs.WillRetry` tells whether the client starts again after the reconnect interval.
 
 ## Network objects
 
 ### On the server
 
-```text
-Instantiate(prefab)            Awake, OnEnable of your components
-ServerManager.Spawn(instance)
-    OnRegisterRpcs, OnRegisterState, OnRegisterInput   first spawn of this instance only
-    initial state captured, spawn message queued to observers
-    OnStartServer
-... ticks ...
-    OnOwnerChangedServer(previousOwnerId)              when the owner changes
-ServerManager.Despawn(instance), owner leaves, or server stops
-    OnStopServer
-    despawn message queued
-    prefab instance destroyed, scene object deactivated
+```mermaid
+sequenceDiagram
+    participant Code as Your code
+    participant Obj as The object
+    participant SM as ServerManager
+    Code->>Obj: Instantiate(prefab): Awake, OnEnable
+    Code->>SM: Spawn(instance, owner)
+    SM->>Obj: OnRegisterRpcs, OnRegisterState, OnRegisterInput (first spawn of this instance only)
+    Note over SM: captures the initial state,<br/>queues the spawn message to observers
+    SM->>Obj: OnStartServer
+    Note over Obj: ... ticks ...
+    SM->>Obj: OnOwnerChangedServer(previousOwnerId), when the owner changes
+    Code->>SM: Despawn(instance), or the owner leaves, or the server stops
+    SM->>Obj: OnStopServer
+    Note over SM: queues the despawn message,<br/>destroys a prefab instance or deactivates a scene object
 ```
 
 The spawn message contains the state captured before `OnStartServer`, so set the initial state before calling `Spawn`. A change made in `OnStartServer` reaches clients only with the next tick's state update.
@@ -67,17 +77,18 @@ Destroying a spawned `GameObject` on the server despawns it.
 
 ### On a client
 
-```text
-spawn message arrives
-    prefab instantiated, or scene object activated     Awake, OnEnable of your components
-    OnRegisterRpcs, OnRegisterState, OnRegisterInput
-    initial state applied
-    OnStartClient                                      NetworkObject.IsOwner is valid here
-... state changes, RPCs, transforms ...
-    OnOwnerChangedClient(previousOwnerId)
-despawn message, loss of observation, or client stops
-    OnStopClient
-    prefab instance destroyed or released to its factory, scene object deactivated
+```mermaid
+sequenceDiagram
+    participant CM as ClientManager
+    participant Obj as The object
+    CM->>Obj: spawn arrives: instantiate the prefab or activate the scene object (Awake, OnEnable)
+    CM->>Obj: OnRegisterRpcs, OnRegisterState, OnRegisterInput
+    Note over CM: applies the initial state
+    CM->>Obj: OnStartClient (IsOwner is valid here)
+    Note over Obj: ... state changes, RPCs, transforms ...
+    CM->>Obj: OnOwnerChangedClient(previousOwnerId)
+    CM->>Obj: despawn, loss of observation, or the client stops: OnStopClient
+    Note over CM: destroys the instance or returns it to its factory,<br/>or deactivates a scene object
 ```
 
 `NetworkBehaviour.NetworkObject` is set when the object spawns, so in `Awake` of a freshly instantiated prefab it is still null.
@@ -86,6 +97,6 @@ If a client destroys a spawned `GameObject` without a despawn from the server, t
 
 ### In host mode
 
-In host mode the server and the host's client share one instance. That instance gets `OnStartServer` when the server spawns it and `OnStartClient` when the host's client receives it, and on despawn `OnStopClient` runs before `OnStopServer`. [Host mode](../core/host-mode.md) covers the consequences for your code.
+In host mode the server and the host's client share one instance. That instance gets `OnStartServer` when the server spawns it and `OnStartClient` when the host's client receives it. On despawn, `OnStopClient` runs before `OnStopServer`. [Host mode](../connections/host-mode.md) covers the consequences for your code.
 
-The callbacks themselves are described in [NetworkBehaviour](../core/network-behaviour.md) and listed in [events and callbacks](../reference/callbacks.md). The [networking model](networking-model.md) explains the connection states in more depth.
+The callbacks themselves are described in [NetworkBehaviour](../objects/network-behaviour.md) and listed in [events and callbacks](../reference/callbacks.md). [Server, clients and messages](networking-model.md) explains the connection states in more depth.

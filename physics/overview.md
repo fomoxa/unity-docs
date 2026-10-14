@@ -2,15 +2,7 @@
 
 The package can run Unity's 3D and 2D physics on the network tick. With physics simulation on, the `NetworkManager` steps physics once per tick, a client keeps the bodies it does not predict at their replicated positions, and prediction can roll physics back. Game code reaches a network object's body through the package's own types, `PhysicsBody` and `PhysicsBody2D`.
 
-```text
-Game code: apply, capture, restore, OnTick
-    ↓
-NetworkObject.Body / Body2D        PhysicsBody, PhysicsBody2D
-    ↓
-IPhysicsWorld / IPhysicsWorld2D    one per Unity physics scene, both extend IPhysicsSimulation
-    ↓
-RigidbodyPhysics                   Unity PhysicsScene and PhysicsScene2D
-```
+<figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Seven levels from top to bottom. Game code, with apply, capture, restore and OnTick. The Fomoxa physics API: PhysicsBody, PhysicsBody2D and PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save and Load. IPhysicsWorld and IPhysicsWorld2D: bodies, forces and queries. These three form layer 1, in Fomoxa.Networking. The physics component, NetworkPhysics and RigidbodyPhysics, and the world implementation, UnityPhysicsWorld and UnityPhysicsWorld2D, form layer 2, in Fomoxa.Unity. At the bottom is Unity with PhysicsScene and PhysicsScene2D. Layer 1 does not reference Unity, so its vectors are System.Numerics types."><figcaption><p>How game code reaches Unity physics.</p></figcaption></figure>
 
 Code that uses `PhysicsBody` does not depend on Unity's `Rigidbody` API.
 
@@ -42,6 +34,8 @@ A world is one Unity physics scene, either the 3D `PhysicsScene` or the 2D `Phys
 Each world has one simulation state and is stepped by exactly one `NetworkManager`, exactly once per tick. The first manager that steps a world owns it, and any other manager in the same process leaves it alone, so a server manager and a client manager in one process never step the same physics twice.
 
 ## Predicted and interpolated bodies in one world
+
+<figure><img src="../.gitbook/assets/diagrams/body-roles.svg" alt="The physics world on client A holds A's own player, which is simulated, and the body of B, another player, which is kinematic and placed at its NetworkTransform position. A collides with B where client A shows it. Predicted bodies are the objects client A owns and predicts: simulated, saved every tick and rolled back on corrections. Proxies are every other networked body: kinematic, placed before each step and excluded from snapshots."><figcaption><p>Proxies let a predicted body collide with other objects where the client shows them.</p></figcaption></figure>
 
 On a remote client, a networked object's body plays one of two roles:
 

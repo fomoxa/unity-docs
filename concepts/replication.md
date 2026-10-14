@@ -2,6 +2,27 @@
 
 Replication is how the server's objects and their data reach the clients. Everything is sent from the server, and each client receives only the objects it observes.
 
+## The life of an object on a client
+
+From a client's point of view, an object arrives with a spawn, changes through state and transform messages, and leaves with a despawn:
+
+```mermaid
+sequenceDiagram
+    participant Server
+    participant Client
+    Server->>Client: spawn (reliable): prefab, owner, transform, initial state
+    Note over Client: instantiates the prefab,<br/>applies the state, OnStartClient
+    loop while the client observes the object
+        Server-->>Client: transform update (unreliable)
+        Server->>Client: state change (reliable)
+        Server->>Client: RPC to observers (the RPC's channel)
+    end
+    Server->>Client: despawn (reliable)
+    Note over Client: OnStopClient, destroys the instance
+```
+
+Solid arrows are reliable and ordered; the dashed arrow is unreliable.
+
 ## What a client receives about an object
 
 | Event on the server | Message to observers | Channel |
@@ -15,7 +36,7 @@ Replication is how the server's objects and their data reach the clients. Everyt
 | `ServerManager.ChangeOwner` | An owner change | Reliable ordered |
 | `ServerManager.Despawn`, or the client stops observing | A despawn | Reliable ordered |
 
-Reliable messages arrive in the order the server sent them, so a client always has the object before any of its state changes and never gets a state change after the despawn. Unreliable messages for an object the client does not have are ignored.
+Reliable messages arrive in the order the server sent them. A client therefore always has the object before any of its state changes, and never gets a state change after the despawn. Unreliable messages for an object the client does not have are ignored.
 
 ## Spawning on the client
 
@@ -25,20 +46,20 @@ When a spawn arrives, the client goes through three steps.
 2. It instantiates the prefab at the spawn's position and rotation and sets its scale, or activates the scene object and places it.
 3. It calls the registration callbacks of every `NetworkBehaviour`, applies the initial states and then calls `OnStartClient`.
 
-On a host, the client does not create a second instance and uses the server's instead, as described in [host mode](../core/host-mode.md).
+On a host, the client does not create a second instance and uses the server's instead, as described in [host mode](../connections/host-mode.md).
 
 ## Clients that join late
 
-A client that connects after objects were spawned gets a spawn message for every object it observes as soon as it reaches `Started`. That message carries the object's current transform and the last state the server captured, so the late client starts from the present values and not from those of the original spawn.
+A client that connects after objects were spawned gets a spawn message for every object it observes as soon as it reaches `Started`. That message carries the object's current transform and the last state the server captured, so the late client starts from the present values, not from those of the original spawn.
 
 ## Observers decide who receives
 
-For each object the server keeps the set of peers that observe it. A peer that enters the set receives a spawn, a peer that leaves it receives a despawn, and state, transforms and RPCs to observers go only to the peers in the set. The owner of an object always observes it, unless the object is in a network scene the owner has not loaded. [Observers](../core/observers.md) explains how the set is built.
+For each object, the server keeps the set of peers that observe it. A peer that enters the set receives a spawn, a peer that leaves it receives a despawn, and state, transforms and RPCs to observers go only to the peers in the set. The owner of an object always observes it, unless the object is in a network scene the owner has not loaded. [Observers](../objects/observers.md) explains how the set is built.
 
 ## What is not replicated
 
-Only what the package's components and your models send is replicated. Other components, the fields of ordinary MonoBehaviours, child objects created at run time and materials stay local, so put any data that clients need into a [state model](../synchronization/state.md) or send it with an [RPC](../messaging/rpc.md).
+Only what the package's components and your models send is replicated. Other components, the fields of ordinary MonoBehaviours, child objects created at run time, and materials stay local. Put any data that clients need into a [state model](../synchronization/state.md), or send it with an [RPC](../messaging/rpc.md).
 
-A `NetworkObject` may have `NetworkBehaviour` components on its children, including `NetworkTransform`, and each `NetworkTransform` replicates the local position, rotation and scale of the GameObject it sits on.
+A `NetworkObject` may have `NetworkBehaviour` components on its children, including `NetworkTransform`. Each `NetworkTransform` replicates the local position, rotation and scale of the GameObject it sits on.
 
-The guides on [spawning](../core/spawning.md), [state](../synchronization/state.md) and [NetworkTransform](../synchronization/transform.md) cover each kind of message in detail, and [authority](authority.md) explains why everything flows from the server.
+The guides on [spawning](../objects/spawning.md), [state](../synchronization/state.md) and [NetworkTransform](../synchronization/transform.md) cover each kind of message in detail, and [authority](authority.md) explains why everything flows from the server.

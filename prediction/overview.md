@@ -70,7 +70,7 @@ public sealed class PredictedMover : NetworkBehaviour
 
     private void Awake()
     {
-        manager = FindFirstObjectByType<NetworkManager>();
+        manager = FindAnyObjectByType<NetworkManager>();
     }
 
     protected override void OnRegisterInput(NetworkInput input)

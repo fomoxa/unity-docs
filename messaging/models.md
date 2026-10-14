@@ -89,6 +89,8 @@ The adapters implement `IMessageCodec<T>`, which has three members:
 
 ## Several codecs per model
 
+<figure><img src="../.gitbook/assets/diagrams/model-codecs.svg" alt="A class Status with the codecs net and compact. Health, a u32, belongs to both codecs, and Title, a string, only to net. fomoxac writes StatusNetCodec with Health and Title and message id A, and StatusCompactCodec with Health and message id B. The package wraps each one in an adapter, StatusNetAdapter and StatusCompactAdapter, both IMessageCodec of Status."><figcaption><p>The Status example below: one class, two codecs, two message ids.</p></figcaption></figure>
+
 A model can declare more than one codec, each with its own selection of fields:
 
 ```csharp
@@ -118,4 +120,4 @@ Every generation also writes `NetSchema.cs`, the list of all message ids and the
 
 Apart from the package's own models and the models it generates for parameterless RPCs, only classes in the Models Folder get codecs. The `fomoxac` binary is bundled for Windows x64 and Linux x64 Editors only.
 
-Models are used by [RPCs](rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md). The [messaging API](../reference/messaging.md) lists the codec types, and [editor integration](../unity/editor-integration.md) describes the generation step.
+Models are used by [RPCs](rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md). The [messaging API](../reference/messaging.md) lists the codec types, and [editor integration](../advanced/editor-integration.md) describes the generation step.

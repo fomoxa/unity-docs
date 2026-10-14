@@ -2,15 +2,7 @@
 
 Package có thể chạy physics 3D và 2D của Unity theo tick của network. Khi bật mô phỏng physics, `NetworkManager` step physics mỗi tick một lần, client giữ các body nó không dự đoán ở vị trí được replicate, và prediction có thể rollback physics. Code game truy cập body của một network object qua các type riêng của package, `PhysicsBody` và `PhysicsBody2D`.
 
-```text
-Game code: apply, capture, restore, OnTick
-    ↓
-NetworkObject.Body / Body2D        PhysicsBody, PhysicsBody2D
-    ↓
-IPhysicsWorld / IPhysicsWorld2D    one per Unity physics scene, both extend IPhysicsSimulation
-    ↓
-RigidbodyPhysics                   Unity PhysicsScene and PhysicsScene2D
-```
+<figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Bảy tầng từ trên xuống. Code game, với apply, capture, restore và OnTick. API physics của Fomoxa: PhysicsBody, PhysicsBody2D và PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save và Load. IPhysicsWorld và IPhysicsWorld2D: body, lực và truy vấn. Ba tầng này là tầng 1, trong Fomoxa.Networking. Component physics, NetworkPhysics và RigidbodyPhysics, và hiện thực world, UnityPhysicsWorld và UnityPhysicsWorld2D, là tầng 2, trong Fomoxa.Unity. Dưới cùng là Unity với PhysicsScene và PhysicsScene2D. Tầng 1 không tham chiếu Unity, nên vector của nó là kiểu System.Numerics."><figcaption><p>Code game tới physics của Unity thế nào.</p></figcaption></figure>
 
 Code dùng `PhysicsBody` không phụ thuộc vào API `Rigidbody` của Unity.
 
@@ -42,6 +34,8 @@ World là một physics scene của Unity, hoặc `PhysicsScene` 3D hoặc `Phys
 Mỗi world có một simulation state và được step bởi đúng một `NetworkManager`, đúng một lần mỗi tick. Manager đầu tiên step một world sẽ sở hữu nó, và mọi manager khác trong cùng tiến trình để yên world đó, nên một server manager và một client manager trong cùng tiến trình không bao giờ step cùng một physics hai lần.
 
 ## Body được dự đoán và body được interpolate trong cùng world <a href="#predicted-and-interpolated-bodies-in-one-world" id="predicted-and-interpolated-bodies-in-one-world"></a>
+
+<figure><img src="../.gitbook/assets/diagrams/body-roles.svg" alt="Physics world trên client A chứa player của chính A, được mô phỏng, và body của B, một người chơi khác, là kinematic và được đặt tại vị trí NetworkTransform của nó. A va chạm với B ở chỗ client A hiển thị B. Body được dự đoán là các object client A sở hữu và dự đoán: được mô phỏng, lưu mỗi tick và rollback khi có lần sửa. Proxy là mọi networked body khác: kinematic, được đặt trước mỗi step và không nằm trong snapshot."><figcaption><p>Proxy cho phép một body được dự đoán va chạm với object khác ở chỗ client hiển thị chúng.</p></figcaption></figure>
 
 Trên client ở xa, body của một networked object đóng một trong hai vai:
 

@@ -41,7 +41,7 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 
 ### ObserverRule
 
-`public abstract class ObserverRule : ScriptableObject`, explained in the [observers](../core/observers.md) guide.
+`public abstract class ObserverRule : ScriptableObject`, explained in the [observers](../objects/observers.md) guide.
 
 | Member | Description |
 |---|---|
@@ -73,7 +73,7 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `WebSocketNetworkTransport` | WebSocket; native code on desktop, the browser in WebGL |
 | `MultiNetworkTransport` | Several transports, each with a port, on one server |
 
-The [transports overview](../transports/overview.md) explains each transport.
+The [transports overview](../connections/transports/README.md) explains each transport.
 
 ## Generated assets
 

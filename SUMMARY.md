@@ -2,19 +2,20 @@
 
 * [Fomoxa for Unity](README.md)
 
-## Getting started
+## Get started
 
 * [Introduction](getting-started/introduction.md)
 * [Installation](getting-started/installation.md)
-* [Your first project](getting-started/first-project.md)
-* [Your first server](getting-started/first-server.md)
-* [Your first client](getting-started/first-client.md)
+* [Tutorial: your first multiplayer game](getting-started/tutorial/README.md)
+  * [1. Set up the project](getting-started/tutorial/project-setup.md)
+  * [2. Start a server](getting-started/tutorial/server.md)
+  * [3. Connect clients](getting-started/tutorial/clients.md)
 * [Troubleshooting](getting-started/troubleshooting.md)
 
-## Concepts
+## Learn the basics
 
-* [Architecture](concepts/architecture.md)
-* [Networking model](concepts/networking-model.md)
+* [How the package is built](concepts/architecture.md)
+* [Server, clients and messages](concepts/networking-model.md)
 * [Ticks and timing](concepts/tick.md)
 * [Authority](concepts/authority.md)
 * [Replication](concepts/replication.md)
@@ -22,18 +23,28 @@
 * [Deterministic simulation](concepts/deterministic-simulation.md)
 * [Lifecycle](concepts/lifecycle.md)
 
-## Core
+## Connections
 
-* [NetworkManager](core/network-manager.md)
-* [Server](core/server.md)
-* [Client](core/client.md)
-* [Host mode](core/host-mode.md)
-* [NetworkObject](core/network-object.md)
-* [NetworkBehaviour](core/network-behaviour.md)
-* [Spawning](core/spawning.md)
-* [Ownership](core/ownership.md)
-* [Observers](core/observers.md)
-* [Network scenes](core/scenes.md)
+* [NetworkManager](connections/network-manager.md)
+* [Server](connections/server.md)
+* [Client](connections/client.md)
+* [Host mode](connections/host-mode.md)
+* [Transports](connections/transports/README.md)
+  * [UDP](connections/transports/udp.md)
+  * [TCP](connections/transports/tcp.md)
+  * [WebSocket](connections/transports/websocket.md)
+  * [Multiple transports](connections/transports/multi-transport.md)
+  * [Loopback](connections/transports/loopback.md)
+  * [Custom transport](connections/transports/custom-transport.md)
+
+## Network objects
+
+* [NetworkObject](objects/network-object.md)
+* [NetworkBehaviour](objects/network-behaviour.md)
+* [Spawning](objects/spawning.md)
+* [Ownership](objects/ownership.md)
+* [Observers](objects/observers.md)
+* [Network scenes](objects/scenes.md)
 
 ## Messaging
 
@@ -62,28 +73,15 @@
 * [Contact events](physics/contacts.md)
 * [Physics architecture](physics/architecture.md)
 
-## Transports
+## Deploy
 
-* [Overview](transports/overview.md)
-* [UDP](transports/udp.md)
-* [TCP](transports/tcp.md)
-* [WebSocket](transports/websocket.md)
-* [Multiple transports](transports/multi-transport.md)
-* [Loopback](transports/loopback.md)
-* [Custom transport](transports/custom-transport.md)
-
-## Server
-
-* [Dedicated server](server/dedicated-server.md)
-* [Deployment](server/deployment.md)
-
-## Unity
-
-* [Editor integration](unity/editor-integration.md)
-* [WebGL](unity/webgl.md)
+* [Dedicated server](deploy/dedicated-server.md)
+* [Deployment](deploy/deployment.md)
+* [WebGL](deploy/webgl.md)
 
 ## Advanced
 
+* [Editor integration](advanced/editor-integration.md)
 * [Custom codecs and Unity types](advanced/custom-codecs.md)
 * [Performance](advanced/performance.md)
 * [Debugging](advanced/debugging.md)

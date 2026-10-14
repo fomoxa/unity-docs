@@ -39,14 +39,7 @@ private static bool Matches(MoveState server, MoveState predicted) =>
 
 ## Correction and replay
 
-```text
-predicted   T10  T11  T12  T13  T14       client is at T14
-                  ↑
-            server state for T11 arrives, does not match
-
-restore(server state of T11)
-replay      T12  T13  T14                 apply(input, Replaying = true), capture each
-```
+<figure><img src="../.gitbook/assets/diagrams/reconcile-replay.svg" alt="The client has predicted ticks 10 to 14 and is at tick 14 when the server state for tick 11 arrives. matches() returns false for tick 11. The client restores the server state of tick 11 and replays ticks 12, 13 and 14. Each replayed tick calls apply with context.Replaying set to true, then capture. Afterwards OnReconciled(11) runs and ReconcileCount goes up by one."><figcaption><p>A correction at tick 11 while the client is already at tick 14.</p></figcaption></figure>
 
 The client keeps the inputs and states of the last Prediction History ticks (64 by default). A replay covers the ticks from the corrected one up to the newest predicted tick, using the inputs the client recorded, and after the correction the package calls `OnReconciled(tick)` on the behaviour and increases its `ReconcileCount`.
 
@@ -84,4 +77,4 @@ A correction moves the object at once. To hide that, assign a child holding the 
 
 When the object moves with a `Rigidbody` or `Rigidbody2D` and physics simulation is on, a correction also rolls the physics worlds back, as described in [rollback with physics](rollback.md).
 
-Reconciliation builds on [input](input.md), and the [prediction overview](overview.md) shows both in a complete character. [NetworkBehaviour](../core/network-behaviour.md) lists `OnReconciled` and the other callbacks.
+Reconciliation builds on [input](input.md), and the [prediction overview](overview.md) shows both in a complete character. [NetworkBehaviour](../objects/network-behaviour.md) lists `OnReconciled` and the other callbacks.

@@ -29,15 +29,15 @@ Server quyết định khi nào người chơi chết. Lưỡi cưa, gai, nướ
 
 Nhân vật của bạn di chuyển ngay khi bạn bấm phím, vì client dự đoán nó bằng physics `Rigidbody2D` và sửa lại khi kết quả của server khác đi. Nhân vật của người chơi khác được interpolate từ server.
 
-![Hai người chơi chạy gần điểm bắt đầu của một level dựng từ seed](../../../.gitbook/assets/redrunner-two-players.png)
+![Hai người chơi chạy gần điểm bắt đầu của một level dựng từ seed](../../.gitbook/assets/redrunner-two-players.png)
 
 ## Fomoxa được dùng ở đâu <a href="#where-fomoxa-is-used" id="where-fomoxa-is-used"></a>
 
 | Phần của game | Tính năng Fomoxa | Trang |
 |---|---|---|
-| Khởi động server, host hoặc client | `NetworkManager`, `ServerManager`, `ClientManager` | [Server](../../core/server.md), [Client](../../core/client.md), [Host mode](../../core/host-mode.md) |
-| Seed của level | State trên một scene object | [State](../../synchronization/state.md), [Spawn](../../core/spawning.md#scene-objects) |
-| Mỗi người chơi một nhân vật | Spawn prefab kèm owner | [Spawn](../../core/spawning.md), [Ownership](../../core/ownership.md) |
+| Khởi động server, host hoặc client | `NetworkManager`, `ServerManager`, `ClientManager` | [Server](../../connections/server.md), [Client](../../connections/client.md), [Host mode](../../connections/host-mode.md) |
+| Seed của level | State trên một scene object | [State](../../synchronization/state.md), [Spawn](../../objects/spawning.md#scene-objects) |
+| Mỗi người chơi một nhân vật | Spawn prefab kèm owner | [Spawn](../../objects/spawning.md), [Ownership](../../objects/ownership.md) |
 | Vị trí của người chơi khác | `NetworkTransform` | [NetworkTransform](../../synchronization/transform.md) |
 | Nhân vật của bạn | Input, prediction và reconciliation với physics 2D | [Tổng quan prediction](../../prediction/overview.md), [Rollback với physics](../../prediction/rollback.md) |
 | Chết và hồi sinh | State, `NetworkTransform.Teleport` | [State](../../synchronization/state.md), [Teleport](../../synchronization/transform.md#teleporting) |

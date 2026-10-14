@@ -4,25 +4,13 @@ Trang này mô tả các interface physics ở tầng 1 và component physics c�
 
 ## Các tầng <a href="#layers" id="layers"></a>
 
-```text
-Fomoxa physics API          PhysicsBody, PhysicsBody2D, PhysicsHistory      layer 1, Fomoxa.Networking.Simulation
-        ↓
-IPhysicsSimulation          Step, CreateSnapshot, Save, Load                layer 1
-        ↓
-IPhysicsWorld / IPhysicsWorld2D   bodies, forces, queries                   layer 1
-        ↓
-Physics component           NetworkPhysics, RigidbodyPhysics                layer 2, Fomoxa.Unity
-        ↓
-World implementation        UnityPhysicsWorld, UnityPhysicsWorld2D          layer 2
-```
+<figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Bảy tầng từ trên xuống. Code game, với apply, capture, restore và OnTick. API physics của Fomoxa: PhysicsBody, PhysicsBody2D và PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save và Load. IPhysicsWorld và IPhysicsWorld2D: body, lực và truy vấn. Ba tầng này là tầng 1, trong Fomoxa.Networking. Component physics, NetworkPhysics và RigidbodyPhysics, và hiện thực world, UnityPhysicsWorld và UnityPhysicsWorld2D, là tầng 2, trong Fomoxa.Unity. Dưới cùng là Unity với PhysicsScene và PhysicsScene2D. Tầng 1 không tham chiếu Unity, nên vector của nó là kiểu System.Numerics."><figcaption><p>Các tầng physics và assembly chứa chúng.</p></figcaption></figure>
 
 Tầng 1 không tham chiếu Unity, nên vector của nó là các type `System.Numerics`, và các world của Unity ánh xạ chúng sang physics của Unity.
 
 ## Quy tắc của một world <a href="#the-rule-of-a-world" id="the-rule-of-a-world"></a>
 
-```text
-one simulation world → one simulation state → one owner that steps it → exactly one Step per tick
-```
+<figure><img src="../.gitbook/assets/diagrams/world-rule.svg" alt="Một world, tức một PhysicsScene, có một state được lưu và load nguyên khối, một owner là manager đầu tiên step nó, và một Step mỗi tick, thêm chỉ khi replay. Vì vậy rollback hoạt động theo world và theo nhóm world, không bao giờ theo từng object."><figcaption><p>Quy tắc mà mọi physics backend tuân theo.</p></figcaption></figure>
 
 World là một simulation state của physics engine. Với `RigidbodyPhysics`, đó là một `PhysicsScene` hoặc một `PhysicsScene2D`, dùng chung bởi mọi scene Unity sử dụng nó. Một `NetworkManager` sở hữu việc step một world, và không manager nào khác trong tiến trình step world đó.
 

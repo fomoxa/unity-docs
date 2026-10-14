@@ -1,6 +1,6 @@
 # The runtime
 
-This page writes a console server for the game from [your first project](../getting-started/first-project.md): a capsule per player, a `PlayerStats` state with a jump counter, and a parameterless `Jump` RPC. Unity clients built from that tutorial connect to it unchanged.
+This page writes a console server for the game from [your first project](../getting-started/tutorial/project-setup.md): a capsule per player, a `PlayerStats` state with a jump counter, and a parameterless `Jump` RPC. Unity clients built from that tutorial connect to it unchanged.
 
 ## Entities and behaviours
 
@@ -191,7 +191,7 @@ public static NetworkRuntime Create(
 | `physics` | An `IPhysicsScenes`, or null for a server without physics; see [physics](physics.md) |
 | `bootScenes` | Scene ids whose scene objects exist from the start, as described below |
 
-The result is a `NetworkRuntime`, which holds the `ServerManager`, `ClientManager` and `TimeManager` that Unity code reaches through `NetworkManager`. Everything on the [server](../core/server.md) and [client](../core/client.md) pages applies to them, except what involves Unity objects.
+The result is a `NetworkRuntime`, which holds the `ServerManager`, `ClientManager` and `TimeManager` that Unity code reaches through `NetworkManager`. Everything on the [server](../connections/server.md) and [client](../connections/client.md) pages applies to them, except what involves Unity objects.
 
 ## The frame loop
 

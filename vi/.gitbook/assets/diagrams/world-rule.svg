@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="150" viewBox="0 0 920 150" role="img" aria-label="Quy tắc của một physics world">
+  <title>Quy tắc của một physics world</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="149" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="30.0" y="34.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="125.0" y="68.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Một world</text>
+  <text x="125.0" y="85.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">một PhysicsScene</text>
+  <rect x="250.0" y="34.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="345.0" y="68.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Một state</text>
+  <text x="345.0" y="85.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">lưu và load nguyên khối</text>
+  <path d="M 220.0 72.0 L 250.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="470.0" y="34.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="565.0" y="68.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Một owner</text>
+  <text x="565.0" y="85.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">manager đầu tiên step nó</text>
+  <path d="M 440.0 72.0 L 470.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="690.0" y="34.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="785.0" y="68.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Một Step mỗi tick</text>
+  <text x="785.0" y="85.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">thêm chỉ khi replay</text>
+  <path d="M 660.0 72.0 L 690.0 72.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="30.0" y="138.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">Vì vậy rollback hoạt động theo world và theo nhóm world, không bao giờ theo từng object.</text>
+</svg>

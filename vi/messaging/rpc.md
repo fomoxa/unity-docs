@@ -10,6 +10,8 @@ RPC (remote procedure call) chạy một method của `NetworkBehaviour` ở ph�
 
 Mỗi RPC nhận không tham số nào hoặc đúng một [model](models.md).
 
+<figure><img src="../.gitbook/assets/diagrams/rpc-directions.svg" alt="Ba khung, mỗi khung có một server và các client A, B, C, trong đó A sở hữu object. Server RPC: A gọi và nó chạy trên server, còn lời gọi tương tự từ B bị bỏ. Observers RPC: server gửi tới A và B, hai client observe object, và không gửi tới C, client không observe. Target RPC: server chỉ gửi tới B."><figcaption><p>Phía nào gửi từng loại RPC, và ai nhận.</p></figcaption></figure>
+
 ## Khai báo RPC bằng attribute <a href="#declaring-rpcs-with-attributes" id="declaring-rpcs-with-attributes"></a>
 
 ```csharp
@@ -176,4 +178,4 @@ RPC nhận nhiều nhất một tham số, nên nhiều giá trị phải gom v�
 
 RPC luôn gửi tới một behaviour của một object đã spawn. Để gửi message không gắn với object, dùng [raw message](messages.md).
 
-Tham số là các [model](models.md) đi trên [channel](channels.md) của chúng. [Tham chiếu attribute](../reference/attributes.md) liệt kê mọi attribute và property của RPC, và [NetworkBehaviour](../core/network-behaviour.md) tóm tắt các method gửi.
+Tham số là các [model](models.md) đi trên [channel](channels.md) của chúng. [Tham chiếu attribute](../reference/attributes.md) liệt kê mọi attribute và property của RPC, và [NetworkBehaviour](../objects/network-behaviour.md) tóm tắt các method gửi.

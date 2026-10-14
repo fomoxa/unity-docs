@@ -1,6 +1,6 @@
 # Tham chiếu ServerManager
 
-`public sealed class ServerManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.ServerManager`. Hướng dẫn [server](../core/server.md) giải thích cách dùng nó.
+`public sealed class ServerManager` trong `Fomoxa.Networking` không có constructor public; bạn truy cập nó qua `NetworkManager.ServerManager`. Hướng dẫn [server](../connections/server.md) giải thích cách dùng nó.
 
 ## Kết nối <a href="#connection" id="connection"></a>
 

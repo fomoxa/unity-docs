@@ -14,7 +14,7 @@ Most of the work happens once per tick, including input, physics, state and tran
 | State | Sent only when its encoding changed, and as a delta when that is smaller. Keep state models small and fixed in size so deltas apply. Split rarely and often changing data into different behaviours. |
 | `NetworkTransform` | Sends only the parts that moved more than their threshold, and nothing while still. Turn off the parts you do not need; raise thresholds for objects where precision matters less. |
 | `NetworkAnimator` | Float Step rounds float parameters, so tiny changes do not trigger a message. |
-| Observers | An [observer rule](../core/observers.md) keeps each client from receiving objects it does not need. This is usually the largest saving in big worlds. |
+| Observers | An [observer rule](../objects/observers.md) keeps each client from receiving objects it does not need. This is usually the largest saving in big worlds. |
 | Input Redundancy | Each input message carries this many inputs. Higher values survive more loss and cost more bytes. |
 | Reconcile Interval | The server sends reconcile states every this many ticks. Higher values send less and correct later. |
 | Channels | Reliable messages carry a sequence number and need acknowledgements. Use the unreliable channel for data that is replaced soon anyway. |

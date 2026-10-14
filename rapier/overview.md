@@ -22,15 +22,7 @@ A Rapier snapshot holds the whole world, contacts included, so a replay after `L
 
 ## How it fits in
 
-```text
-Game code: apply, capture, restore, OnTick
-    ↓
-NetworkObject.Body / Body2D        PhysicsBody, PhysicsBody2D (unchanged)
-    ↓
-RapierPhysics                      one Rapier world per network scene and dimension
-    ↓
-fomoxa_rapier (native library)     rapier3d, rapier2d
-```
+<figure><img src="../.gitbook/assets/diagrams/rapier-stack.svg" alt="In a Unity client or server, game code with apply, capture, restore and OnTick uses PhysicsBody and PhysicsBody2D, which are unchanged, and those use RapierPhysics, with one world per network scene and dimension. In a console server without Unity, your console program with EntityBehaviour classes and the same models uses RapierScenes, which builds the same worlds from the same scene file. Both sit on the native library fomoxa_rapier, built from rapier3d and rapier2d 0.36.0 with enhanced-determinism. A snapshot holds the whole Rapier world, contacts included, so a replay gives the same ticks as the first run."><figcaption><p>Game code stays the same; only the layers under PhysicsBody change.</p></figcaption></figure>
 
 Game code keeps using `PhysicsBody` and `PhysicsBody2D`, input and reconcile models, and the contact components. What changes is underneath:
 

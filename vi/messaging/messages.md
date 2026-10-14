@@ -82,6 +82,19 @@ public sealed class Chat : MonoBehaviour
 }
 ```
 
+Luồng chuyển tiếp như sau:
+
+```mermaid
+sequenceDiagram
+    participant A as Client A
+    participant Server
+    participant Others as Mọi client đã khởi động
+    A->>Server: ChatLine "hello" (ClientManager.Send)
+    Note over Server: OnServerReceived(peerId, payload)<br/>kiểm tra độ dài, thêm peer id vào đầu
+    Server->>Others: ChatLine "7: hello" (ServerManager.Broadcast)
+    Note over Others: OnClientReceived log dòng chat
+```
+
 ## Gửi <a href="#sending" id="sending"></a>
 
 | Method | Gửi tới |

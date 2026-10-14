@@ -39,6 +39,8 @@ Phần đăng ký sinh ra ghi các channel vào `FomoxaRegistry.Channels`, nên 
 
 ## Độ tin cậy hoạt động thế nào <a href="#how-reliability-works" id="how-reliability-works"></a>
 
+<figure><img src="../.gitbook/assets/diagrams/reliable-ordering.svg" alt="Một dòng thời gian có bên gửi và bên nhận. Bên gửi gửi các message reliable 10, 11, 12 và 13, và message 11 bị mất. Bên nhận xử lý 10, rồi giữ 12 và 13 vì thiếu 11. Một message unreliable gửi sau đó được xử lý ngay khi tới. Khi không có acknowledgement cho 11 trong retransmission timeout, bên gửi gửi lại 11, và bên nhận khi đó xử lý 11, 12 và 13 theo thứ tự."><figcaption><p>Message reliable giữ thứ tự, nên một lần mất làm chậm các message reliable phía sau, nhưng không làm chậm message unreliable.</p></figcaption></figure>
+
 Mỗi message reliable mang một sequence number 2 byte. Bên nhận gửi acknowledgement gồm sequence number tiếp theo nó chờ và một mask 32 bit cho các message đã nhận sau số đó, và các acknowledgement này đi chung bundle với các message khác. Message tới trước một message còn thiếu sẽ chờ trong buffer cho tới khi chỗ trống được lấp, và message trùng bị bỏ.
 
 Bên gửi gửi lại message nếu acknowledgement của nó không tới trong retransmission timeout. Timeout bắt đầu ở 200 ms rồi theo round trip đo được, nằm trong khoảng 50 ms tới 1 s. Tối đa Reliable Window message (mặc định 1024) có thể đang bay mà chưa được acknowledge, và các message reliable tiếp theo chờ trong send queue.

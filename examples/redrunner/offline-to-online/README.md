@@ -28,15 +28,15 @@ Offline game (2b675b5)
 
 | Step | What changes | Fomoxa pages |
 |---|---|---|
-| [01 Network foundation](step-01-network-foundation.md) | Unity 6000.5, the package, code generation, a `NetworkManager` in `Play.unity` | [Installation](../../../getting-started/installation.md), [NetworkManager](../../../core/network-manager.md) |
-| [02 Shared level](step-02-shared-level.md) | A finite level built from a seed that the server keeps in a state | [State](../../../synchronization/state.md), [Spawning](../../../core/spawning.md#scene-objects) |
-| [03 Player spawning](step-03-player-spawning.md) | The character becomes a network prefab; the game starts as a server, a host or a client | [Spawning](../../../core/spawning.md), [Server](../../../core/server.md), [Client](../../../core/client.md) |
+| [01 Network foundation](step-01-network-foundation.md) | Unity 6000.5, the package, code generation, a `NetworkManager` in `Play.unity` | [Installation](../../../getting-started/installation.md), [NetworkManager](../../../connections/network-manager.md) |
+| [02 Shared level](step-02-shared-level.md) | A finite level built from a seed that the server keeps in a state | [State](../../../synchronization/state.md), [Spawning](../../../objects/spawning.md#scene-objects) |
+| [03 Player spawning](step-03-player-spawning.md) | The character becomes a network prefab; the game starts as a server, a host or a client | [Spawning](../../../objects/spawning.md), [Server](../../../connections/server.md), [Client](../../../connections/client.md) |
 | [04 Player input](step-04-player-input.md) | The input model and the tick step that the server applies | [Input](../../../prediction/input.md), [Authority](../../../concepts/authority.md) |
 | [05 Prediction and reconciliation](step-05-prediction-and-reconciliation.md) | The motion model, rollback of 2D physics, the camera on the local player | [Reconciliation](../../../prediction/reconciliation.md), [Rollback with physics](../../../prediction/rollback.md) |
 | [06 Death and respawn](step-06-death-and-respawn.md) | Deaths on the server, a player state, teleporting respawns | [State](../../../synchronization/state.md), [Teleporting](../../../synchronization/transform.md#teleporting) |
 | [07 Moving hazards](step-07-moving-hazards.md) | Path followers placed by tick number | [Ticks and timing](../../../concepts/tick.md) |
 | [08 Two clients](step-08-two-clients.md) | Animation of remote characters, players who leave or crash | [NetworkTransform](../../../synchronization/transform.md), [Input](../../../prediction/input.md) |
-| [09 Final online game](step-09-final-online-game.md) | A player build, a dedicated server, screenshots | [Dedicated server](../../../server/dedicated-server.md) |
+| [09 Final online game](step-09-final-online-game.md) | A player build, a dedicated server, screenshots | [Dedicated server](../../../deploy/dedicated-server.md) |
 
 ## Commits
 

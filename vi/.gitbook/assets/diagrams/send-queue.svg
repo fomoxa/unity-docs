@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="290" viewBox="0 0 920 290" role="img" aria-label="Lệnh gửi đi vào hàng đợi rồi được flush thành bundle">
+  <title>Lệnh gửi đi vào hàng đợi rồi được flush thành bundle</title>
+  <defs><marker id="arrow-2F6FEB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6FEB"/></marker><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="289" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="40.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="start">Code của bạn và package</text>
+  <rect x="30.0" y="61.2" width="140.2" height="21.5" rx="10.75" fill="#F8FAFC" stroke="#64748B" stroke-width="1"/>
+  <text x="100.1" y="76.1" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11.5" font-weight="600" fill="#0F172A" text-anchor="middle">SendServerRpc(...)</text>
+  <path d="M 196.0 72.0 L 262.0 126.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="105.2" width="90.5" height="21.5" rx="10.75" fill="#F8FAFC" stroke="#64748B" stroke-width="1"/>
+  <text x="75.3" y="120.1" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="600" fill="#0F172A" text-anchor="middle">state thay đổi</text>
+  <path d="M 196.0 116.0 L 262.0 142.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="149.2" width="116.1" height="21.5" rx="10.75" fill="#F8FAFC" stroke="#64748B" stroke-width="1"/>
+  <text x="88.0" y="164.1" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="600" fill="#0F172A" text-anchor="middle">cập nhật transform</text>
+  <path d="M 196.0 160.0 L 262.0 158.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="193.2" width="78.1" height="21.5" rx="10.75" fill="#F8FAFC" stroke="#64748B" stroke-width="1"/>
+  <text x="69.0" y="208.1" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11.5" font-weight="600" fill="#0F172A" text-anchor="middle">Send(...)</text>
+  <path d="M 196.0 204.0 L 262.0 174.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="270.0" y="40.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="start">Hàng đợi gửi của một kết nối</text>
+  <rect x="270.0" y="106.0" width="250.0" height="88.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <rect x="284.0" y="126.0" width="30.0" height="48.0" rx="5" fill="#FEF3C7" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="322.0" y="126.0" width="30.0" height="48.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="360.0" y="126.0" width="30.0" height="48.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="398.0" y="126.0" width="30.0" height="48.0" rx="5" fill="#FEF3C7" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="436.0" y="126.0" width="30.0" height="48.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="474.0" y="126.0" width="30.0" height="48.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="270.0" y="218.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#374151" text-anchor="start">Message Capacity: 1024 message</text>
+  <text x="270.0" y="236.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#374151" text-anchor="start">Byte Capacity: 1 MiB</text>
+  <text x="270.0" y="254.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#374151" text-anchor="start">Reliable Window: 1024 chưa được xác nhận</text>
+  <path d="M 520.0 150.0 L 600.0 150.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="542.8" y="128.5" width="34.3" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="560.0" y="140.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#4B5563" text-anchor="middle">flush</text>
+  <text x="560.0" y="182.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">mỗi tick một lần</text>
+  <text x="606.0" y="40.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="start">Bundle, mỗi bundle là một frame</text>
+  <rect x="606.0" y="82.0" width="200.0" height="54.0" rx="8" fill="#FFFFFF" stroke="#2F6FEB" stroke-width="1.5"/>
+  <rect x="616.0" y="92.0" width="38.0" height="34.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="662.0" y="92.0" width="38.0" height="34.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="708.0" y="92.0" width="38.0" height="34.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="754.0" y="92.0" width="38.0" height="34.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <path d="M 806.0 109.0 L 862.0 109.0" fill="none" stroke="#2F6FEB" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <rect x="606.0" y="156.0" width="200.0" height="54.0" rx="8" fill="#FFFFFF" stroke="#2F6FEB" stroke-width="1.5"/>
+  <rect x="616.0" y="166.0" width="38.0" height="34.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <rect x="662.0" y="166.0" width="38.0" height="34.0" rx="5" fill="#F8FAFC" stroke="#9CA3AF" stroke-width="1"/>
+  <path d="M 806.0 183.0 L 862.0 183.0" fill="none" stroke="#2F6FEB" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <text x="880.0" y="150.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">tới</text>
+  <text x="880.0" y="166.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="600" fill="#1F2937" text-anchor="middle">transport</text>
+  <text x="606.0" y="236.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#374151" text-anchor="start">Mỗi bundle tối đa bằng frame budget:</text>
+  <text x="606.0" y="253.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#374151" text-anchor="start">1200 byte với UDP, frame lớn nhất của</text>
+  <text x="606.0" y="270.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#374151" text-anchor="start">Fomoxa với TCP và WebSocket.</text>
+</svg>

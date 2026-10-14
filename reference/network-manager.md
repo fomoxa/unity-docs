@@ -1,6 +1,6 @@
 # NetworkManager reference
 
-`public sealed class NetworkManager : MonoBehaviour` in `Fomoxa.Unity`, marked `[DisallowMultipleComponent]`. The [NetworkManager](../core/network-manager.md) guide explains how to use it, and its fields are listed in [configuration](configuration.md#networkmanager).
+`public sealed class NetworkManager : MonoBehaviour` in `Fomoxa.Unity`, marked `[DisallowMultipleComponent]`. The [NetworkManager](../connections/network-manager.md) guide explains how to use it, and its fields are listed in [configuration](configuration.md#networkmanager).
 
 ## Purpose
 

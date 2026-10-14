@@ -21,8 +21,8 @@ Chạy hai client làm lộ ra ba vấn đề:
 - [NetworkTransform](../../../synchronization/transform.md)
 - [Teleport](../../../synchronization/transform.md#teleporting)
 - [Input trên server](../../../prediction/input.md#on-the-server)
-- [Client](../../../core/client.md#connect-and-disconnect)
-- [UDP](../../../transports/udp.md)
+- [Client](../../../connections/client.md#connect-and-disconnect)
+- [UDP](../../../connections/transports/udp.md)
 - [Cấu hình](../../../reference/configuration.md)
 
 ## Thiết kế <a href="#design" id="design"></a>

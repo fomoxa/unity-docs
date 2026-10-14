@@ -14,7 +14,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Component, interface | [Component](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Type asset, component | [Component](components.md#observers) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Class, interface, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
-| `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../unity/editor-integration.md) |
+| `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../advanced/editor-integration.md) |
 | `NetworkTransport`, `UdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Component | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics world, helper | [Physics API](physics.md#unity-worlds) |
@@ -43,7 +43,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `IMessageCodec<T>`, `MessageDecodeException` | Interface, exception | [Messaging API](messaging.md) |
 | `MessageDispatcher`, `PayloadHandler`, `ObjectPayloadHandler`, `HandlerRegistrationException`, `MessageChannels` | Class, delegate | [Messaging API](messaging.md) |
 | `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle` | System model của package | [Messaging API](messaging.md#system-models) |
-| `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System model của scene file | [Tích hợp Editor](../unity/editor-integration.md#scene-files) |
+| `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System model của scene file | [Tích hợp Editor](../advanced/editor-integration.md#scene-files) |
 | `BundleFormat`, `BundleReader`, `BundleWriter`, `ObjectHeader`, `SeqHeader`, `OutgoingEntry`, `OutgoingKind`, `OutgoingQueue`, `QueuedMessage`, `EnqueueResult`, `MessageSender`, `ReliableChannel`, `ReliableVerdict`, `SessionProtocol`, `ZeroRuns` | Building block | |
 
 ## Fomoxa.Networking.Sessions <a href="#fomoxanetworkingsessions" id="fomoxanetworkingsessions"></a>
@@ -83,18 +83,18 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 
 | Type | Loại | Trang |
 |---|---|---|
-| `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interface, enum | [Transport tùy chỉnh](../transports/custom-transport.md) |
-| `UdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../transports/overview.md) |
-| `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transport | [Loopback](../transports/loopback.md) |
-| `IHostResolver`, `HostResolver`, `ResolveStatus` | Phân giải tên | [Tổng quan transport](../transports/overview.md#non-blocking-operation) |
+| `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interface, enum | [Transport tùy chỉnh](../connections/transports/custom-transport.md) |
+| `UdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
+| `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transport | [Loopback](../connections/transports/loopback.md) |
+| `IHostResolver`, `HostResolver`, `ResolveStatus` | Phân giải tên | [Tổng quan transport](../connections/transports/README.md#non-blocking-operation) |
 
 ## Fomoxa.Unity.Editor <a href="#fomoxaunityeditor" id="fomoxaunityeditor"></a>
 
 | Type | Loại | Trang |
 |---|---|---|
-| `FomoxaSettings` | Type asset | [Tích hợp Editor](../unity/editor-integration.md) |
+| `FomoxaSettings` | Type asset | [Tích hợp Editor](../advanced/editor-integration.md) |
 | `FomoxaUnityTypes`, `FomoxaUnityField`, `FomoxaUnityType` | Layout type của Unity | [Codec tùy chỉnh](../advanced/custom-codecs.md) |
-| `FomoxaHook`, `FomoxaGenerator`, `FomoxaPrefabStep`, `FomoxaSceneStep`, `FomoxaSceneFileStep`, `FomoxaSceneFileImporter`, `FomoxaSceneObjectIds`, `FomoxaRpcScanner`, `FomoxaChannelScanner`, `FomoxaPrefabBuild`, `FomoxaRpcBuild` and their data types | Các bước Editor | [Tích hợp Editor](../unity/editor-integration.md) |
+| `FomoxaHook`, `FomoxaGenerator`, `FomoxaPrefabStep`, `FomoxaSceneStep`, `FomoxaSceneFileStep`, `FomoxaSceneFileImporter`, `FomoxaSceneObjectIds`, `FomoxaRpcScanner`, `FomoxaChannelScanner`, `FomoxaPrefabBuild`, `FomoxaRpcBuild` and their data types | Các bước Editor | [Tích hợp Editor](../advanced/editor-integration.md) |
 
 ## Từ các DLL đi kèm <a href="#from-the-bundled-dlls" id="from-the-bundled-dlls"></a>
 
@@ -102,4 +102,4 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 |---|---|---|
 | `NetworkAttribute`, `CodecAttribute` (`[Network]`, `[Codec]`) | `Fomoxa` | [Model và codec](../messaging/models.md) |
 | `HandshakeFailure`, `SendStatus`, `Schema`, `FomoxaWire` | `Fomoxa.Net` | [Lỗi](errors.md) |
-| `ITransport`, `IListenerTransport`, `SendOutcome`, `ReceiveOutcome`, `AcceptOutcome`, `TransportKind` | `Fomoxa.Net.Transports` | [Transport tùy chỉnh](../transports/custom-transport.md) |
+| `ITransport`, `IListenerTransport`, `SendOutcome`, `ReceiveOutcome`, `AcceptOutcome`, `TransportKind` | `Fomoxa.Net.Transports` | [Transport tùy chỉnh](../connections/transports/custom-transport.md) |

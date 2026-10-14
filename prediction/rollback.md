@@ -44,15 +44,7 @@ private static bool Matches(PushState server, PushState predicted) =>
 
 Every tick, after stepping physics, the owner's client saves the state of each physics world that holds one of its predicted objects and records the state of each predicted behaviour. The history keeps Prediction History ticks (64 by default).
 
-```text
-T0 → T1 → T2 → T3 → T4                  client has predicted up to T4
-             ↑
-        server state for T2 does not match
-
-Load(T2)                                 every world of the group goes back to T2
-restore(server state for T2)
-T2 → T3 → T4                             apply input, step every world, capture, save
-```
+<figure><img src="../.gitbook/assets/diagrams/physics-rollback.svg" alt="In the first run the client predicts ticks 0 to 4 and saves the physics worlds after each tick. The server state for tick 2 does not match. The correction loads tick 2 into every world of the group and restores the server state, then replays ticks 3 and 4: apply input, step the worlds, capture and save. A saved state holds position, rotation, velocity, angular velocity and sleep state of each dynamic body that is not a proxy. Contact data is not saved, so a replay can differ from the first run."><figcaption><p>A correction at T2 when the client has predicted up to T4.</p></figcaption></figure>
 
 For each tick of the replay, from T3 to T4, `apply` runs for every predicted object of the group and then each world steps once.
 
@@ -60,12 +52,7 @@ For each tick of the replay, from T3 to T4, `apply` runs for every predicted obj
 
 A replay covers a rollback group, which is the set of physics worlds that the client's predicted objects live in.
 
-```text
-Rollback group
- ├── 3D world of scene A
- ├── 3D world of scene B        scenes A and B share one physics scene, so they are one world
- └── 2D world of scene A
-```
+<figure><img src="../.gitbook/assets/diagrams/rollback-groups.svg" alt="Rollback group 1 holds the 3D world shared by scenes A and B, which use one physics scene, and the 2D world of scene A. These are corrected together: loading a tick loads both worlds and every predicted object in them replays. Rollback group 2 holds the 3D world of scene C. It shares no world with group 1 and is corrected on its own. A group is loaded only when every world in it has a saved state for the corrected tick."><figcaption><p>Worlds that share predicted objects roll back together.</p></figcaption></figure>
 
 Each scene with a predicted object brings its 3D world and its 2D world into a group. Two scenes that share a Unity physics scene also share a world, and their groups merge, while groups that share no world are corrected independently.
 

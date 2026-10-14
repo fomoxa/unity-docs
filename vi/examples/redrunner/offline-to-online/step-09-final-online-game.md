@@ -14,9 +14,9 @@ Các bước trước chủ yếu chạy trong Editor, và một bản build pla
 
 ## Khái niệm Fomoxa <a href="#fomoxa-concepts" id="fomoxa-concepts"></a>
 
-- [Dedicated server](../../../server/dedicated-server.md)
-- [Triển khai](../../../server/deployment.md)
-- [Tích hợp Editor: kiểm tra khi build](../../../unity/editor-integration.md#build-checks)
+- [Dedicated server](../../../deploy/dedicated-server.md)
+- [Triển khai](../../../deploy/deployment.md)
+- [Tích hợp Editor: kiểm tra khi build](../../../advanced/editor-integration.md#build-checks)
 
 ## Thiết kế <a href="#design" id="design"></a>
 
@@ -50,11 +50,11 @@ Trong game, phím mũi tên trái và phải để chạy, Space, W hoặc mũi 
 
 ## Test <a href="#test" id="test"></a>
 
-Chạy một dedicated server và hai client từ bản build, như ở [bước 08](step-08-two-clients.md#test). Các bài kiểm tra của bản port chạy server và client trên cùng một máy. Để chơi qua nhiều máy, client nhập địa chỉ của server và server phải nhận UDP trên port của nó, như mô tả trong [triển khai](../../../server/deployment.md).
+Chạy một dedicated server và hai client từ bản build, như ở [bước 08](step-08-two-clients.md#test). Các bài kiểm tra của bản port chạy server và client trên cùng một máy. Để chơi qua nhiều máy, client nhập địa chỉ của server và server phải nhận UDP trên port của nó, như mô tả trong [triển khai](../../../deploy/deployment.md).
 
 ## Kết quả mong đợi <a href="#expected-result" id="expected-result"></a>
 
-![Hai người chơi chạy gần điểm bắt đầu của một level dựng từ seed](../../../../.gitbook/assets/redrunner-two-players.png)
+![Hai người chơi chạy gần điểm bắt đầu của một level dựng từ seed](../../../.gitbook/assets/redrunner-two-players.png)
 
 - Màn hình bắt đầu hiện `localhost` trong ô địa chỉ.
 - Mọi client chạy trên cùng một level, thấy nhau, và chết rồi hồi sinh theo quyết định của server.

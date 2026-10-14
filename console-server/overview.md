@@ -2,19 +2,11 @@
 
 A console server is a .NET program that runs the server of a game without the Unity Engine. Unity clients connect to it as they connect to a Unity server: the same transports, the same handshake and the same messages. The host only needs the .NET runtime, and the server process carries nothing of Unity's player.
 
-The game logic has to be written twice for it, once as `NetworkBehaviour` components for Unity and once as `EntityBehaviour` classes for the console, or moved into a library without Unity references that both call. Read this section if that trade is worth it for your game. Otherwise run the server as a Unity player, as described in [dedicated server](../server/dedicated-server.md).
+The game logic has to be written twice for it, once as `NetworkBehaviour` components for Unity and once as `EntityBehaviour` classes for the console, or moved into a library without Unity references that both call. Read this section if that trade is worth it for your game. Otherwise run the server as a Unity player, as described in [dedicated server](../deploy/dedicated-server.md).
 
 ## What it is made of
 
-```text
-Your console program: Main, game rules as EntityBehaviour classes
-    ↓
-Console backend: StandaloneRuntime, StandaloneEntity       com.fomoxa.networking/Standalone~ (source)
-    ↓
-Layer 1: Fomoxa.Networking                                 com.fomoxa.networking/Runtime/Core (source)
-    ↓
-Fomoxa.Net, Fomoxa.Attributes                              com.fomoxa.networking/Runtime/Plugins
-```
+<figure><img src="../.gitbook/assets/diagrams/console-stack.svg" alt="Four levels. Your console program: Main and the game rules as EntityBehaviour classes. The console backend: StandaloneRuntime and StandaloneEntity, shipped as source in com.fomoxa.networking/Standalone~. Layer 1, Fomoxa.Networking, as source in Runtime/Core. The libraries Fomoxa.Net and Fomoxa.Attributes in Runtime/Plugins. The Unity project stays the source of the models, the prefab ids and fingerprints, and the scene files, and a console project compiles all of this together with the generated code of the Unity project."><figcaption><p>A console server is built from the package source and the Unity project's generated code.</p></figcaption></figure>
 
 The package ships the console backend as source in `Standalone~`, a folder that Unity does not import. A console project compiles it together with the source of layer 1, the generated code of the Unity project and its own code. The Unity project stays the source of the models, the prefab ids and fingerprints, and the scene files.
 
@@ -32,7 +24,7 @@ The backend also has a client side, so a console program can connect to a server
 ## Requirements
 
 - The .NET 8 SDK or later, on any platform where Fomoxa.Net runs. With the Rapier backend, Windows x64 or Linux x64.
-- A Unity project that has generated its code and exported its [scene files](../unity/editor-integration.md#scene-files), with `com.fomoxa.networking` installed from Git or cloned, so that its source is available to the console project.
+- A Unity project that has generated its code and exported its [scene files](../advanced/editor-integration.md#scene-files), with `com.fomoxa.networking` installed from Git or cloned, so that its source is available to the console project.
 - C# 9. Layer 1 and the console backend are written for the C# version Unity compiles, so the console project sets `LangVersion` to 9.0.
 
 ## Limitations

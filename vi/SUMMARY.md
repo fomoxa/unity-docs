@@ -6,15 +6,16 @@
 
 * [Giới thiệu](getting-started/introduction.md)
 * [Cài đặt](getting-started/installation.md)
-* [Project đầu tiên](getting-started/first-project.md)
-* [Server đầu tiên](getting-started/first-server.md)
-* [Client đầu tiên](getting-started/first-client.md)
+* [Tutorial: game nhiều người chơi đầu tiên](getting-started/tutorial/README.md)
+  * [1. Chuẩn bị project](getting-started/tutorial/project-setup.md)
+  * [2. Khởi động server](getting-started/tutorial/server.md)
+  * [3. Kết nối client](getting-started/tutorial/clients.md)
 * [Xử lý sự cố](getting-started/troubleshooting.md)
 
-## Khái niệm
+## Kiến thức nền
 
-* [Kiến trúc](concepts/architecture.md)
-* [Mô hình networking](concepts/networking-model.md)
+* [Package được xây dựng thế nào](concepts/architecture.md)
+* [Server, client và message](concepts/networking-model.md)
 * [Tick và thời gian](concepts/tick.md)
 * [Authority](concepts/authority.md)
 * [Replication](concepts/replication.md)
@@ -22,18 +23,28 @@
 * [Mô phỏng tất định](concepts/deterministic-simulation.md)
 * [Vòng đời](concepts/lifecycle.md)
 
-## Core
+## Kết nối
 
-* [NetworkManager](core/network-manager.md)
-* [Server](core/server.md)
-* [Client](core/client.md)
-* [Host mode](core/host-mode.md)
-* [NetworkObject](core/network-object.md)
-* [NetworkBehaviour](core/network-behaviour.md)
-* [Spawn](core/spawning.md)
-* [Ownership](core/ownership.md)
-* [Observer](core/observers.md)
-* [Network scene](core/scenes.md)
+* [NetworkManager](connections/network-manager.md)
+* [Server](connections/server.md)
+* [Client](connections/client.md)
+* [Host mode](connections/host-mode.md)
+* [Transport](connections/transports/README.md)
+  * [UDP](connections/transports/udp.md)
+  * [TCP](connections/transports/tcp.md)
+  * [WebSocket](connections/transports/websocket.md)
+  * [Nhiều transport](connections/transports/multi-transport.md)
+  * [Loopback](connections/transports/loopback.md)
+  * [Transport tùy chỉnh](connections/transports/custom-transport.md)
+
+## Network object
+
+* [NetworkObject](objects/network-object.md)
+* [NetworkBehaviour](objects/network-behaviour.md)
+* [Spawn](objects/spawning.md)
+* [Ownership](objects/ownership.md)
+* [Observer](objects/observers.md)
+* [Network scene](objects/scenes.md)
 
 ## Messaging
 
@@ -62,28 +73,15 @@
 * [Contact event](physics/contacts.md)
 * [Kiến trúc physics](physics/architecture.md)
 
-## Transport
+## Triển khai
 
-* [Tổng quan](transports/overview.md)
-* [UDP](transports/udp.md)
-* [TCP](transports/tcp.md)
-* [WebSocket](transports/websocket.md)
-* [Nhiều transport](transports/multi-transport.md)
-* [Loopback](transports/loopback.md)
-* [Transport tùy chỉnh](transports/custom-transport.md)
-
-## Server
-
-* [Dedicated server](server/dedicated-server.md)
-* [Triển khai](server/deployment.md)
-
-## Unity
-
-* [Tích hợp Editor](unity/editor-integration.md)
-* [WebGL](unity/webgl.md)
+* [Dedicated server](deploy/dedicated-server.md)
+* [Đưa server lên môi trường thật](deploy/deployment.md)
+* [WebGL](deploy/webgl.md)
 
 ## Nâng cao
 
+* [Tích hợp Editor](advanced/editor-integration.md)
 * [Codec tùy chỉnh và type của Unity](advanced/custom-codecs.md)
 * [Hiệu năng](advanced/performance.md)
 * [Debug](advanced/debugging.md)
