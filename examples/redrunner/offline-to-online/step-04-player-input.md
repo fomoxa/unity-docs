@@ -43,7 +43,7 @@ Three things keep the offline controller from running on the server:
 - [Input](../../../prediction/input.md)
 - [Authority](../../../concepts/authority.md#what-a-client-can-send)
 - [Ticks and timing](../../../concepts/tick.md)
-- [NetworkBehaviour registration hooks](../../../core/network-behaviour.md#registration-hooks)
+- [NetworkBehaviour registration hooks](../../../objects/network-behaviour.md#registration-hooks)
 
 ## Design
 

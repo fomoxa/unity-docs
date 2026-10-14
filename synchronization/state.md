@@ -76,6 +76,8 @@ Call `TakeDamage` on the server, and the clients' `health` changes at the end of
 
 ## How it works
 
+<figure><img src="../.gitbook/assets/diagrams/state-sync.svg" alt="On the server, every tick: your code changes health.Current, the server encodes the state after OnTick and OnPostTick and compares the bytes with the state it sent last time. If they are the same, nothing is sent. If they differ, the server sends the full state or a delta, whichever is smaller, reliable and ordered. Each observing client decodes it into your instance and calls onChanged with the previous values. A delta the client cannot apply is dropped, the client sends StateResync and the server answers with the full state."><figcaption><p>The server sends state only when its encoded bytes change.</p></figcaption></figure>
+
 `NetworkState.Use(codec, instance, onChanged)` registers the instance. After the tick's `OnTick` and `OnPostTick` events, the server encodes every state instance, compares the bytes with what it sent last, and sends the state to every observer if they differ.
 
 Because the comparison works on the encoded bytes, any change of a carried property is detected without you having to mark anything dirty. A property the codec does not carry is neither compared nor sent.
@@ -113,4 +115,4 @@ Fixed-size fields keep the encoding length stable, which lets deltas apply. A ch
 
 Each `NetworkBehaviour` has at most one state model, so data that needs more is split across several behaviours. State is sent at most once per tick, which merges all changes made within one tick. Every observer receives the same state, so data meant for a single client goes in a target RPC instead.
 
-State is registered in a [NetworkBehaviour](../core/network-behaviour.md) and declared like any other [model](../messaging/models.md). [NetworkAnimator](animator.md) is built on the same mechanism.
+State is registered in a [NetworkBehaviour](../objects/network-behaviour.md) and declared like any other [model](../messaging/models.md). [NetworkAnimator](animator.md) is built on the same mechanism.

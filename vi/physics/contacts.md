@@ -2,12 +2,12 @@
 
 Unity phát `OnCollisionEnter`, `OnTriggerEnter` và các event exit tương ứng từ bên trong mỗi bước physics. Khi client replay các tick trong lúc reconciliation, các bước đó chạy lại, và Unity sẽ phát cùng event lần thứ hai. Các component contact của package tránh điều đó bằng cách phát event enter và exit một lần mỗi tick, và sau một lần replay thì chỉ cho những gì đã thay đổi.
 
-| Component            | Collider trên GameObject của nó | Báo                             |
-| -------------------- | ------------------------------- | ------------------------------- |
-| `NetworkCollision`   | 3D, không phải trigger          | Collider đang chạm vào chúng    |
-| `NetworkTrigger`     | 3D, trigger                     | Collider đang ở bên trong chúng |
-| `NetworkCollision2D` | 2D, không phải trigger          | Collider đang chạm vào chúng    |
-| `NetworkTrigger2D`   | 2D, trigger                     | Collider đang ở bên trong chúng |
+| Component | Collider trên GameObject của nó | Báo |
+|---|---|---|
+| `NetworkCollision` | 3D, không phải trigger | Collider đang chạm vào chúng |
+| `NetworkTrigger` | 3D, trigger | Collider đang ở bên trong chúng |
+| `NetworkCollision2D` | 2D, không phải trigger | Collider đang chạm vào chúng |
+| `NetworkTrigger2D` | 2D, trigger | Collider đang ở bên trong chúng |
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
@@ -37,10 +37,10 @@ public sealed class Pickup : MonoBehaviour
 }
 ```
 
-| Member     | Ý nghĩa                                                   |
-| ---------- | --------------------------------------------------------- |
-| `OnEnter`  | Một collider bắt đầu chạm, hoặc đi vào trigger            |
-| `OnExit`   | Một collider thôi chạm, hoặc rời trigger                  |
+| Member | Ý nghĩa |
+|---|---|
+| `OnEnter` | Một collider bắt đầu chạm, hoặc đi vào trigger |
+| `OnExit` | Một collider thôi chạm, hoặc rời trigger |
 | `Touching` | Các collider đang chạm, tính tới tick đã công bố gần nhất |
 
 Trong một tick, exit được phát trước enter. Exception trong một handler được log và không ngăn các handler khác chạy.
@@ -53,14 +53,16 @@ Cuối tick, kết quả được so sánh với tập đã công bố trước 
 
 Trên client của owner, các component còn ghi lại tập đang chạm của mỗi tick. Một lần replay khôi phục tập của tick được sửa, cập nhật nó khi các world step lại và công bố một lần sau khi replay xong. Event đã phát ở lần chạy gốc không phát lại, còn contact bị lần replay loại bỏ sẽ phát một exit.
 
+<figure><img src="../.gitbook/assets/diagrams/contact-replay.svg" alt="Tới lúc này client đã hiển thị không có contact ở T2 và có contact với B ở T3 và T4, và OnEnter(B) đã chạy. Một lần replay từ T2 khôi phục tập rỗng của T2, rồi thấy không có contact ở T3 và có contact với C ở T4, mà không phát event nào. Sau khi replay, component phát phần khác nhau một lần: OnExit(B) và OnEnter(C)."><figcaption><p>Event sau một lần replay là phần khác so với những gì đã hiển thị.</p></figcaption></figure>
+
 Khi không có `NetworkManager` nào step world, ví dụ khi Simulate Physics tắt, các component chỉ chuyển tiếp callback của Unity thành `OnEnter` và `OnExit`.
 
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 
-| Field           | Trên               | Mặc định                           | Ý nghĩa                                                                            |
-| --------------- | ------------------ | ---------------------------------- | ---------------------------------------------------------------------------------- |
+| Field | Trên | Mặc định | Ý nghĩa |
+|---|---|---|---|
 | Additional Size | `NetworkCollision` | `Physics.defaultContactOffset` × 2 | Khoảng nới rộng hình dạng truy vấn, để contact đang nằm yên được tính là đang chạm |
-| Additional Size | `NetworkTrigger`   | 0                                  | Khoảng nới rộng hình dạng truy vấn                                                 |
+| Additional Size | `NetworkTrigger` | 0 | Khoảng nới rộng hình dạng truy vấn |
 
 ## Event được phát ở đâu <a href="#where-events-fire" id="where-events-fire"></a>
 
@@ -70,4 +72,4 @@ Các component phát event ở mọi phía chạy chúng, dù là server, client
 
 Truy vấn 3D xử lý chính xác collider box, sphere và capsule, và dùng bounding box cho các loại collider khác. Các component chỉ thấy collider trên chính GameObject của chúng, được thu thập khi component được bật.
 
-Component contact phụ thuộc vào việc step mô tả trong [tổng quan physics](overview.md) và vào replay mô tả trong [rollback với physics](../prediction/rollback.md). [Tham chiếu component](../tham-chieu/components.md#contact-components) liệt kê các member của chúng.
+Component contact phụ thuộc vào việc step mô tả trong [tổng quan physics](overview.md) và vào replay mô tả trong [rollback với physics](../prediction/rollback.md). [Tham chiếu component](../reference/components.md#contact-components) liệt kê các member của chúng.

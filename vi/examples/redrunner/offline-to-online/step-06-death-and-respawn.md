@@ -311,7 +311,7 @@ Log của server ghi nguyên nhân:
 
 Bộ xương rơi xuống, và hai giây sau nhân vật lại đứng ở điểm bắt đầu. Trong một lần chạy `LifeCheck`, nhân vật chết dưới nước 3.1 giây sau khi bắt đầu, hồi sinh ở điểm bắt đầu và đã nhặt được một đồng xu.
 
-![Một nhân vật rơi xuống nước](../../../../.gitbook/assets/redrunner-death.png)
+![Một nhân vật rơi xuống nước](../../../.gitbook/assets/redrunner-death.png)
 
 ## Commit <a href="#commit" id="commit"></a>
 

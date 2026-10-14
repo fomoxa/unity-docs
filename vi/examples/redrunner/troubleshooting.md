@@ -12,7 +12,7 @@ Các bước kiểm tra chung nằm ở [client không kết nối được](../
 
 ## Người chơi không được spawn <a href="#the-player-does-not-spawn" id="the-player-does-not-spawn"></a>
 
-Các bước kiểm tra chung nằm ở [object không được spawn](../../getting-started/troubleshooting.md#object-does-not-spawn), và [spawn](../../core/spawning.md) giải thích cơ chế.
+Các bước kiểm tra chung nằm ở [object không được spawn](../../getting-started/troubleshooting.md#object-does-not-spawn), và [spawn](../../objects/spawning.md) giải thích cơ chế.
 
 - Nếu Console hiện `prefab id 0x... of RedRunner(Clone) is not registered`, hãy kéo `Generated/FomoxaPrefabList.asset` vào Collected Prefabs và `Generated/FomoxaSceneList.asset` vào Collected Scenes trên `NetworkManager` trong `Play.unity`. Trong Editor, package chỉ gán các danh sách này sau `NetworkManager.Awake`, như [bước 03](offline-to-online/step-03-player-spawning.md#configure-the-networkmanager) giải thích.
 - `RedRunner.prefab` có `NetworkObject` và prefab id. Chọn Tools > Fomoxa > Assign Prefab Ids sau khi sửa nó.
@@ -59,7 +59,7 @@ Các cơ chế liên quan được mô tả trong [teleport](../../synchronizati
 
 ## Người chơi đã rời vẫn tiếp tục chạy <a href="#a-player-who-left-keeps-running" id="a-player-who-left-keeps-running"></a>
 
-Các cơ chế liên quan được mô tả trong [client](../../core/client.md#connect-and-disconnect) và [input](../../prediction/input.md#on-the-server).
+Các cơ chế liên quan được mô tả trong [client](../../connections/client.md#connect-and-disconnect) và [input](../../prediction/input.md#on-the-server).
 
 - Nếu người chơi thoát bằng Home hoặc đóng game, client gửi `PeerLeave` và nhân vật phải bị despawn ngay. Nếu không, hãy sinh lại code bằng Tools > Fomoxa > Generate để `PeerLeave` được đăng ký.
 - Nếu client bị crash, server chờ heartbeat, khoảng 20 giây với giá trị mặc định. Nhân vật vẫn phải đứng yên sau 10 tick bị lặp; nếu không, hãy kiểm tra quy tắc `RepeatedTicks` trong `NetworkPlayer.Apply` mô tả ở [bước 08](offline-to-online/step-08-two-clients.md#stop-a-character-whose-player-vanished).

@@ -16,9 +16,9 @@ The package needs Unity 6000.5 or later, and the project is on an older version.
 
 - [Installation](../../../getting-started/installation.md)
 - [Models and codecs](../../../messaging/models.md)
-- [Editor integration](../../../unity/editor-integration.md)
-- [NetworkManager](../../../core/network-manager.md)
-- [UDP](../../../transports/udp.md)
+- [Editor integration](../../../advanced/editor-integration.md)
+- [NetworkManager](../../../connections/network-manager.md)
+- [UDP](../../../connections/transports/udp.md)
 
 ## Design
 
@@ -63,11 +63,11 @@ The package depends on the built-in Physics, Physics 2D and Animation modules, w
 3. Set Models Folder to `Assets/Scripts/RedRunner/Networking/Models` and Generated Folder to `Assets/Scripts/RedRunner/Networking/Generated`.
 4. Add an empty `.gitkeep` file to the models folder. The folder stays empty until step 02, and `fomoxac` stops when a source folder is missing.
 
-After the next compilation the package writes `fomoxa.toml`, `FomoxaSystemModels/`, `.fomoxa/` and the generated folder, each of which [installation](../../../getting-started/installation.md#generate-the-code) describes. Commit all of them.
+After the next compilation the package writes `fomoxa.toml`, `FomoxaSystemModels/`, `.fomoxa/` and the generated folder, each of which [installation](../../../getting-started/installation.md#how-code-generation-works) describes. Commit all of them.
 
 ### Fix the build scene list
 
-Open File > Build Profiles, remove the missing `Assets/Scenes/Gooose.unity` from the Scene List and add `Assets/Scenes/Play.unity`. The package refreshes `Generated/FomoxaSceneList.asset` from this list, as described in [network scenes](../../../core/scenes.md#scene-ids).
+Open File > Build Profiles, remove the missing `Assets/Scenes/Gooose.unity` from the Scene List and add `Assets/Scenes/Play.unity`. The package refreshes `Generated/FomoxaSceneList.asset` from this list, as described in [network scenes](../../../objects/scenes.md#scene-ids).
 
 ### Add the NetworkManager
 

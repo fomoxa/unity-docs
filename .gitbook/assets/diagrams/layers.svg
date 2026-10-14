@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="470" viewBox="0 0 920 470" role="img" aria-label="The layers on both ends of a connection">
+  <title>The layers on both ends of a connection</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker><marker id="arrow-D97706" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#D97706"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="469" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="220.0" y="50.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#0E9F6E" text-anchor="middle">Client process</text>
+  <rect x="60.0" y="74.0" width="320.0" height="54.0" rx="10" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="220.0" y="97.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Your game</text>
+  <text x="220.0" y="114.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">MonoBehaviours, NetworkBehaviours, models</text>
+  <rect x="60.0" y="142.0" width="320.0" height="54.0" rx="10" fill="#F1EAFE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="220.0" y="165.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#4C1D95" text-anchor="middle">Fomoxa.Unity</text>
+  <text x="220.0" y="182.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">layer 2: Unity integration</text>
+  <rect x="60.0" y="210.0" width="320.0" height="54.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <text x="220.0" y="233.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">Fomoxa.Networking</text>
+  <text x="220.0" y="250.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">layer 1: the Core, no UnityEngine</text>
+  <rect x="60.0" y="278.0" width="320.0" height="54.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="220.0" y="301.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Fomoxa.Net</text>
+  <text x="220.0" y="318.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">framing, handshake, heartbeat</text>
+  <rect x="60.0" y="346.0" width="320.0" height="54.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="220.0" y="369.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Transport</text>
+  <text x="220.0" y="386.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">UDP, TCP, WebSocket or loopback</text>
+  <text x="700.0" y="50.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#2F6FEB" text-anchor="middle">Server process</text>
+  <rect x="540.0" y="74.0" width="320.0" height="54.0" rx="10" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="700.0" y="97.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Your game</text>
+  <text x="700.0" y="114.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">MonoBehaviours, NetworkBehaviours, models</text>
+  <rect x="540.0" y="142.0" width="320.0" height="54.0" rx="10" fill="#F1EAFE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="700.0" y="165.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#4C1D95" text-anchor="middle">Fomoxa.Unity</text>
+  <text x="700.0" y="182.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">layer 2: Unity integration</text>
+  <rect x="540.0" y="210.0" width="320.0" height="54.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <text x="700.0" y="233.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">Fomoxa.Networking</text>
+  <text x="700.0" y="250.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">layer 1: the Core, no UnityEngine</text>
+  <rect x="540.0" y="278.0" width="320.0" height="54.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="700.0" y="301.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Fomoxa.Net</text>
+  <text x="700.0" y="318.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">framing, handshake, heartbeat</text>
+  <rect x="540.0" y="346.0" width="320.0" height="54.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="700.0" y="369.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Transport</text>
+  <text x="700.0" y="386.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">UDP, TCP, WebSocket or loopback</text>
+  <path d="M 380.0 373.0 L 540.0 373.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)" marker-start="url(#arrow-4B5563)"/>
+  <rect x="435.3" y="351.5" width="49.4" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="460.0" y="363.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#4B5563" text-anchor="middle">network</text>
+  <path d="M 44.0 84.0 L 44.0 390.0" fill="none" stroke="#D97706" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-D97706)"/>
+  <path d="M 876.0 390.0 L 876.0 84.0" fill="none" stroke="#D97706" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-D97706)"/>
+  <text x="30.0" y="434.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">A message from the client passes down its stack, across the network and up the server's stack.</text>
+  <text x="30.0" y="454.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#6B7280" text-anchor="start">Messages from the server travel the same way in the opposite direction.</text>
+</svg>

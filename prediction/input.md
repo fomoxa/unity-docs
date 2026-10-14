@@ -85,6 +85,8 @@ An exception thrown in `apply` or `gather` is logged and does not disconnect any
 
 Each tick the owner's client sends one unreliable input message per behaviour. The message holds the newest input together with the previous ones, Input Redundancy inputs in total (3 by default), so a single lost packet does not lose an input.
 
+<figure><img src="../.gitbook/assets/diagrams/input-redundancy.svg" alt="The owner's client sends one input message per tick. The message for tick 22 carries inputs 22, 21 and 20, the one for tick 23 carries 23, 22 and 21, and the one for tick 24 carries 24, 23 and 22. The message for tick 23 is lost, but input 23 still reaches the server inside the message for tick 24."><figcaption><p>With the default Input Redundancy of 3, one lost message costs no input.</p></figcaption></figure>
+
 ## On the server
 
 The server keeps the inputs it receives per object and behaviour, sorted by tick. It accepts input for ticks from its current tick up to Max Input Lead ticks ahead (30 by default). A message whose newest input is for a tick that has already passed, or lies further ahead, is dropped and counted in `ServerManager.DroppedInputsOf(peerId)`.
@@ -97,4 +99,4 @@ The client aims to have each input arrive Input Buffer ticks (2 by default) befo
 
 The server applies whatever the owner sends, so clamp or reject values in `apply`, for example with `Vector3.ClampMagnitude` on a direction, to keep a modified client from moving faster than allowed. Since the same `apply` runs on the owner's client, an honest client predicts the clamped result.
 
-Input works together with [reconciliation](reconciliation.md) and the tick clock described in [ticks and timing](../concepts/tick.md). [NetworkBehaviour](../core/network-behaviour.md) lists the registration hooks.
+Input works together with [reconciliation](reconciliation.md) and the tick clock described in [ticks and timing](../concepts/tick.md). [NetworkBehaviour](../objects/network-behaviour.md) lists the registration hooks.

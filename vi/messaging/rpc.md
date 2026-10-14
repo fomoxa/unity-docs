@@ -2,13 +2,15 @@
 
 RPC (remote procedure call) chạy một method của `NetworkBehaviour` ở phía bên kia của kết nối. RPC đi theo ba hướng:
 
-| RPC           | Từ         | Tới                            | Gửi bằng           |
-| ------------- | ---------- | ------------------------------ | ------------------ |
-| Server RPC    | Một client | Server                         | `SendServerRpc`    |
-| Observers RPC | Server     | Mọi client đang observe object | `SendObserversRpc` |
-| Target RPC    | Server     | Một client đang observe object | `SendTargetRpc`    |
+| RPC | Từ | Tới | Gửi bằng |
+|---|---|---|---|
+| Server RPC | Một client | Server | `SendServerRpc` |
+| Observers RPC | Server | Mọi client đang observe object | `SendObserversRpc` |
+| Target RPC | Server | Một client đang observe object | `SendTargetRpc` |
 
 Mỗi RPC nhận không tham số nào hoặc đúng một [model](models.md).
+
+<figure><img src="../.gitbook/assets/diagrams/rpc-directions.svg" alt="Ba khung, mỗi khung có một server và các client A, B, C, trong đó A sở hữu object. Server RPC: A gọi và nó chạy trên server, còn lời gọi tương tự từ B bị bỏ. Observers RPC: server gửi tới A và B, hai client observe object, và không gửi tới C, client không observe. Target RPC: server chỉ gửi tới B."><figcaption><p>Phía nào gửi từng loại RPC, và ai nhận.</p></figcaption></figure>
 
 ## Khai báo RPC bằng attribute <a href="#declaring-rpcs-with-attributes" id="declaring-rpcs-with-attributes"></a>
 
@@ -56,10 +58,10 @@ Class phải là `partial`, và mọi class chứa nó cũng vậy, vì một so
 
 ### Chữ ký được phép <a href="#allowed-signatures" id="allowed-signatures"></a>
 
-| Attribute     | Chữ ký                                                                                           |
-| ------------- | ------------------------------------------------------------------------------------------------ |
+| Attribute | Chữ ký |
+|---|---|
 | `[ServerRpc]` | `void M()`, `void M(ulong peerId)`, `void M(TModel value)`, `void M(ulong peerId, TModel value)` |
-| `[ClientRpc]` | `void M()`, `void M(TModel value)`                                                               |
+| `[ClientRpc]` | `void M()`, `void M(TModel value)` |
 
 `TModel` là một model có adapter đã sinh, và `peerId` nhận peer id của bên gọi. Method có thể là private, nhưng không được là static hay generic.
 
@@ -91,10 +93,10 @@ Server RPC chỉ chạy khi bên gọi sở hữu object. Server bỏ các lời
 
 Các method gửi là member `protected` của `NetworkBehaviour`:
 
-| Method                                                                                                       | Trả về                                                    |
-| ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
-| `SendServerRpc<T>(IMessageCodec<T> codec, T value)`, `SendServerRpc(string rpc)`                             | `SendResult` của queue                                    |
-| `SendObserversRpc<T>(IMessageCodec<T> codec, T value)`, `SendObserversRpc(string rpc)`                       | Số observer mà RPC đã được đưa vào queue                  |
+| Method | Trả về |
+|---|---|
+| `SendServerRpc<T>(IMessageCodec<T> codec, T value)`, `SendServerRpc(string rpc)` | `SendResult` của queue |
+| `SendObserversRpc<T>(IMessageCodec<T> codec, T value)`, `SendObserversRpc(string rpc)` | Số observer mà RPC đã được đưa vào queue |
 | `SendTargetRpc<T>(ulong peerId, IMessageCodec<T> codec, T value)`, `SendTargetRpc(ulong peerId, string rpc)` | `SendResult`; `NotObserver` khi peer không observe object |
 
 Giá trị được encode ngay trong lúc gọi, nên bạn có thể thay đổi hoặc dùng lại nó sau đó, và RPC đi cùng lần flush tiếp theo ở cuối tick.
@@ -136,12 +138,12 @@ public sealed class Lever : NetworkBehaviour
 }
 ```
 
-| Method                                                                                        | Đăng ký                  |
-| --------------------------------------------------------------------------------------------- | ------------------------ |
-| `OnServer<T>(IMessageCodec<T> codec, Action<ulong, T> handler, bool requireOwnership = true)` | Server RPC có model      |
-| `OnClient<T>(IMessageCodec<T> codec, Action<T> handler)`                                      | Client RPC có model      |
-| `OnServer(string rpc, Action<ulong> handler, bool requireOwnership = true)`                   | Server RPC không tham số |
-| `OnClient(string rpc, Action handler)`                                                        | Client RPC không tham số |
+| Method | Đăng ký |
+|---|---|
+| `OnServer<T>(IMessageCodec<T> codec, Action<ulong, T> handler, bool requireOwnership = true)` | Server RPC có model |
+| `OnClient<T>(IMessageCodec<T> codec, Action<T> handler)` | Client RPC có model |
+| `OnServer(string rpc, Action<ulong> handler, bool requireOwnership = true)` | Server RPC không tham số |
+| `OnClient(string rpc, Action handler)` | Client RPC không tham số |
 
 RPC không tham số đăng ký thủ công vẫn cần model được sinh của nó. `[NetworkRpc]` sinh model đó mà không sinh phần đăng ký, nên class chỉ dùng `[NetworkRpc]` không cần là `partial`. Nó nhận cùng tham số tên model và property `Channel` như `[ServerRpc]`. Nếu thiếu model, việc đăng ký ném `<Type>.<Method> has no generated parameterless RPC model; mark the method with [NetworkRpc] and run Tools > Fomoxa > Generate`.
 
@@ -157,17 +159,17 @@ Server RPC handler ném exception sẽ ngắt kết nối client gọi nó với
 
 Source generator báo các lỗi biên dịch sau:
 
-| Id          | Ý nghĩa                                                                              |
-| ----------- | ------------------------------------------------------------------------------------ |
-| `FOMOXA001` | Method không nằm trong một `NetworkBehaviour`                                        |
-| `FOMOXA002` | Class, hoặc một class chứa nó, không phải `partial`                                  |
-| `FOMOXA003` | Chữ ký `[ServerRpc]` không được hỗ trợ                                               |
-| `FOMOXA004` | Chữ ký `[ClientRpc]` không được hỗ trợ                                               |
-| `FOMOXA005` | Method mang nhiều hơn một trong `[NetworkRpc]`, `[ServerRpc]`, `[ClientRpc]`         |
-| `FOMOXA006` | Model không có adapter đã sinh; chạy Tools > Fomoxa > Generate                       |
-| `FOMOXA007` | Model có nhiều codec và attribute không chỉ ra codec nào                             |
-| `FOMOXA008` | Codec được chỉ ra không tồn tại cho model                                            |
-| `FOMOXA009` | `Codec` được đặt trên RPC không có model                                             |
+| Id | Ý nghĩa |
+|---|---|
+| `FOMOXA001` | Method không nằm trong một `NetworkBehaviour` |
+| `FOMOXA002` | Class, hoặc một class chứa nó, không phải `partial` |
+| `FOMOXA003` | Chữ ký `[ServerRpc]` không được hỗ trợ |
+| `FOMOXA004` | Chữ ký `[ClientRpc]` không được hỗ trợ |
+| `FOMOXA005` | Method mang nhiều hơn một trong `[NetworkRpc]`, `[ServerRpc]`, `[ClientRpc]` |
+| `FOMOXA006` | Model không có adapter đã sinh; chạy Tools > Fomoxa > Generate |
+| `FOMOXA007` | Model có nhiều codec và attribute không chỉ ra codec nào |
+| `FOMOXA008` | Codec được chỉ ra không tồn tại cho model |
+| `FOMOXA009` | `Codec` được đặt trên RPC không có model |
 | `FOMOXA010` | Tên model hoặc `Channel` được đặt trên RPC có model; hãy khai báo channel trên model |
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
@@ -176,4 +178,4 @@ RPC nhận nhiều nhất một tham số, nên nhiều giá trị phải gom v�
 
 RPC luôn gửi tới một behaviour của một object đã spawn. Để gửi message không gắn với object, dùng [raw message](messages.md).
 
-Tham số là các [model](models.md) đi trên [channel](channels.md) của chúng. [Tham chiếu attribute](../tham-chieu/attributes.md) liệt kê mọi attribute và property của RPC, và [NetworkBehaviour](../core/network-behaviour.md) tóm tắt các method gửi.
+Tham số là các [model](models.md) đi trên [channel](channels.md) của chúng. [Tham chiếu attribute](../reference/attributes.md) liệt kê mọi attribute và property của RPC, và [NetworkBehaviour](../objects/network-behaviour.md) tóm tắt các method gửi.

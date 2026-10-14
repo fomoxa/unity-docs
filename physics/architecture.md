@@ -4,25 +4,13 @@ This page describes the physics interfaces in layer 1 and the Unity physics comp
 
 ## Layers
 
-```text
-Fomoxa physics API          PhysicsBody, PhysicsBody2D, PhysicsHistory      layer 1, Fomoxa.Networking.Simulation
-        ↓
-IPhysicsSimulation          Step, CreateSnapshot, Save, Load                layer 1
-        ↓
-IPhysicsWorld / IPhysicsWorld2D   bodies, forces, queries                   layer 1
-        ↓
-Physics component           NetworkPhysics, RigidbodyPhysics                layer 2, Fomoxa.Unity
-        ↓
-World implementation        UnityPhysicsWorld, UnityPhysicsWorld2D          layer 2
-```
+<figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Seven levels from top to bottom. Game code, with apply, capture, restore and OnTick. The Fomoxa physics API: PhysicsBody, PhysicsBody2D and PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save and Load. IPhysicsWorld and IPhysicsWorld2D: bodies, forces and queries. These three form layer 1, in Fomoxa.Networking. The physics component, NetworkPhysics and RigidbodyPhysics, and the world implementation, UnityPhysicsWorld and UnityPhysicsWorld2D, form layer 2, in Fomoxa.Unity. At the bottom is Unity with PhysicsScene and PhysicsScene2D. Layer 1 does not reference Unity, so its vectors are System.Numerics types."><figcaption><p>The physics layers and the assemblies they live in.</p></figcaption></figure>
 
 Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, and the Unity worlds map them to Unity's physics.
 
 ## The rule of a world
 
-```text
-one simulation world → one simulation state → one owner that steps it → exactly one Step per tick
-```
+<figure><img src="../.gitbook/assets/diagrams/world-rule.svg" alt="One world, which is one PhysicsScene, has one state that is saved and loaded whole, one owner that is the first manager to step it, and one Step per tick, with more only during a replay. Rollback therefore works per world and per group of worlds, never per object."><figcaption><p>The rule every physics backend follows.</p></figcaption></figure>
 
 A world is one simulation state of the physics engine. With `RigidbodyPhysics` that is one `PhysicsScene` or one `PhysicsScene2D`, shared by every Unity scene that uses it. One `NetworkManager` owns the stepping of a world, and no other manager in the process steps it.
 

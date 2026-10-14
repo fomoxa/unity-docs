@@ -1,24 +1,32 @@
 # Ticks and timing
 
-The package advances the network in fixed steps called ticks. During a tick the server applies input, steps physics and captures state and transforms, and messages are sent at the end of it. The tick belongs to `TimeManager`, which you reach through `NetworkManager.TimeManager`.
+The package advances the network in fixed steps called ticks. During a tick the server applies input, steps physics and captures state and transforms, and messages are sent at the end of it. Fixed steps let the server and every client agree on what happened at tick 100, even though their frame rates differ.
+
+The tick belongs to `TimeManager`, which you reach through `NetworkManager.TimeManager`.
 
 ## Tick rate
 
-The Tick Rate field of the `NetworkManager` sets the number of ticks per second, 30 by default, and `TimeManager.TickDelta` gives the length of one tick in seconds, `1.0 / TickRate`.
+The **Tick Rate** field of the `NetworkManager` sets the number of ticks per second, 30 by default. `TimeManager.TickDelta` gives the length of one tick in seconds, `1.0 / TickRate`.
 
-The server decides the tick rate. When a client connects, the server tells it the rate, and the client's `TimeManager.TickRate` follows that value until the connection stops. The client's own Tick Rate field only applies while it is not connected.
+The server decides the tick rate. When a client connects, the server tells it the rate, and the client's `TimeManager.TickRate` follows that value until the connection stops. The client's own **Tick Rate** field only applies while it is not connected.
 
-## Where ticks run
+## Ticks and frames
 
-An enabled `NetworkManager` has two entries in Unity's player loop, one at the start of `EarlyUpdate` and one at the end of `PostLateUpdate`. It adds them when it is enabled and removes them when it is disabled.
+An enabled `NetworkManager` has two entries in Unity's player loop: one at the start of `EarlyUpdate` and one at the end of `PostLateUpdate`. It adds them when it is enabled and removes them when it is disabled.
 
-At the start of each frame the manager adds the frame's unscaled time (`Time.unscaledDeltaTime`) to an accumulator and runs every tick that is due, up to Max Ticks Per Frame (3 by default). Ticks beyond that limit are dropped rather than carried to the next frame, so a long frame does not lead to a burst of catch-up ticks afterwards. Because the accumulator uses unscaled time, `Time.timeScale` does not slow the network down.
+At the start of each frame, the manager adds the frame's unscaled time (`Time.unscaledDeltaTime`) to an accumulator and runs every tick that is due, up to **Max Ticks Per Frame** (3 by default). A short frame may run no tick at all, and a long frame runs several.
+
+<figure><img src="../.gitbook/assets/diagrams/frame-ticks.svg" alt="A timeline from 0 to 250 milliseconds with a tick due every 33.3 milliseconds. Five frames of 16, 16, 16, 50 and 142 milliseconds run 0, 0, 1, 1 and 3 ticks. In the last frame two more ticks were due and are dropped."><figcaption><p>At 30 ticks per second, frames run whole ticks. Ticks beyond Max Ticks Per Frame are dropped.</p></figcaption></figure>
+
+Ticks beyond the limit are dropped, not carried to the next frame, so a long frame does not cause a burst of catch-up ticks afterwards. Because the accumulator uses unscaled time, `Time.timeScale` does not slow the network down.
 
 On a client connected to a remote server, the manager also runs its ticks slightly faster or slower to keep its prediction tick at the right distance ahead of the server, as described under [clock synchronization](#clock-synchronization).
 
 ## Order of one tick
 
-In the Tick timing mode, one tick runs these steps in order. Physics simulation is on when the `RigidbodyPhysics` component of the `NetworkManager` has Simulate Physics checked, as described in the [physics overview](../physics/overview.md).
+In the Tick timing mode, one tick runs these steps in order. Physics simulation is on when the `RigidbodyPhysics` component of the `NetworkManager` has **Simulate Physics** checked, as described in the [physics overview](../physics/overview.md).
+
+<figure><img src="../.gitbook/assets/diagrams/tick-order.svg" alt="Eleven steps in two lanes, client and server: 1 OnPreTick; 2 receive messages; 3 the client places bodies it does not predict; 4 the client reconciles and gathers, applies and sends input; 5 the server applies input; 6 physics steps; 7 the client records its predicted state and the server sends reconcile states; 8 contact events; 9 OnTick and OnPostTick; 10 the server captures observers, state and transforms; 11 both flush. Steps 3, 6 and 8 run only with physics simulation on."><figcaption><p>Which side does what in one tick. A manager that runs only a server skips the client lane, and a client skips the server lane.</p></figcaption></figure>
 
 1. `TimeManager.Tick` increases by one and `OnPreTick` fires.
 2. In the first tick of the frame only, both managers read the messages that arrived, and the client updates its clock estimate.
@@ -32,7 +40,7 @@ In the Tick timing mode, one tick runs these steps in order. Physics simulation 
 10. The server rebuilds part of its observer sets, captures state and transforms, and queues what changed.
 11. Both managers flush their send queues.
 
-In the Variable timing mode, step 2 runs once at the start of every frame before the ticks, and step 11 runs once at the end of the frame instead of after each tick. Input and prediction are not available in this mode.
+In the Variable timing mode, step 2 runs once at the start of every frame, before the ticks, and step 11 runs once at the end of the frame instead of after each tick. Input and prediction are not available in this mode.
 
 ## Timing modes
 
@@ -44,6 +52,8 @@ In the Variable timing mode, step 2 runs once at the start of every frame before
 In both modes, state, transforms and observers are processed per tick.
 
 ## Tick events
+
+`OnPreTick`, `OnTick` and `OnPostTick` fire on both sides for every tick. State and transforms are captured after them, in step 10, so server game logic that must change state before it is sent belongs in `OnTick` or `OnPostTick`.
 
 ```csharp
 using Fomoxa.Networking;
@@ -82,9 +92,11 @@ public sealed class RoundClock : MonoBehaviour
 
 The example subscribes in `Start` because `NetworkManager` creates its `TimeManager` in `Awake`, and Unity runs every `Awake` of a scene before any `Start`.
 
-`OnPreTick`, `OnTick` and `OnPostTick` fire on both sides for every tick. State and transforms are captured after them, in step 10, so server game logic that must change state before it is sent belongs in `OnTick` or `OnPostTick`.
-
 ## Three tick numbers
+
+A client connected to a remote server works with three tick numbers. Its own counter, an estimate of the server's tick, and the tick its input is for, which is ahead of the server.
+
+<figure><img src="../.gitbook/assets/diagrams/tick-numbers.svg" alt="Two tick axes from 96 to 107. On the server axis the server's tick is now 100. On the client axis ServerTick is the client's estimate of 100 and PredictionTick is 104. The distance between them is about RTT/2 plus Input Buffer ticks. The input for tick 104 reaches the server around its tick 102, before the server needs it."><figcaption><p>The client sends input for a tick the server has not reached yet, so the input arrives in time.</p></figcaption></figure>
 
 | Property | On a manager running a server, including a host | On a client connected to a remote server |
 |---|---|---|
@@ -96,17 +108,12 @@ On a manager that runs neither a server nor a connected client, `ServerTick` and
 
 The client sends its input for `PredictionTick`. That tick is ahead of the server by about half the round trip plus a small buffer, so the input reaches the server before the server needs it.
 
-```text
-server            ... 98   99   100  101  102  103 ...
-                              ↑ ServerTick (estimated)
-client input                             ↑ PredictionTick
-                              ←── RTT/2 + Input Buffer ──→
-```
-
 ## Clock synchronization
 
-A remote client sends a ping three times right after connecting and then once every Clock Ping Interval Seconds (1 by default). The server answers with its tick and with how far ahead the client's input has been arriving, and from these answers the client estimates the round-trip time (`ClientManager.Rtt`) and the server tick.
+A remote client sends a ping three times right after connecting, and then once every **Clock Ping Interval Seconds** (1 by default). The server answers with its tick and with how far ahead the client's input has been arriving. From these answers the client estimates the round-trip time (`ClientManager.Rtt`) and the server tick.
 
-The client aims for a lead of half the round trip, in ticks, plus Input Buffer ticks (2 by default). Once the server reports the actual input lead, the client corrects towards a margin of Input Buffer ticks at the server. It closes the gap by running its ticks up to Max Tick Speed Adjust faster or slower (0.1, that is 10 %), and when the error exceeds Clock Reset Ticks (10) it jumps straight to the target instead.
+The client aims for a lead of half the round trip, in ticks, plus **Input Buffer** ticks (2 by default). Once the server reports the actual input lead, the client corrects towards a margin of **Input Buffer** ticks at the server. It closes the gap by running its ticks up to **Max Tick Speed Adjust** faster or slower (0.1, that is 10 %). When the error exceeds **Clock Reset Ticks** (10), it jumps straight to the target instead.
 
-`TimeManager.ClockSynced` stays false until the first answer arrives, and the client does not predict before then. The [prediction overview](../prediction/overview.md) shows how prediction uses these ticks, [lifecycle](lifecycle.md) gives the order of events for connections and network objects, and the [TimeManager reference](../reference/time-manager.md) lists its members.
+`TimeManager.ClockSynced` stays false until the first answer arrives, and the client does not predict before then.
+
+The [prediction overview](../prediction/overview.md) shows how prediction uses these ticks, [lifecycle](lifecycle.md) gives the order of events for connections and network objects, and the [TimeManager reference](../reference/time-manager.md) lists its members.

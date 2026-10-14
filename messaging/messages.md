@@ -82,6 +82,19 @@ public sealed class Chat : MonoBehaviour
 }
 ```
 
+The relay works like this:
+
+```mermaid
+sequenceDiagram
+    participant A as Client A
+    participant Server
+    participant Others as Every started client
+    A->>Server: ChatLine "hello" (ClientManager.Send)
+    Note over Server: OnServerReceived(peerId, payload)<br/>checks the length, prefixes the peer id
+    Server->>Others: ChatLine "7: hello" (ServerManager.Broadcast)
+    Note over Others: OnClientReceived logs the line
+```
+
 ## Sending
 
 | Method | Sends to |

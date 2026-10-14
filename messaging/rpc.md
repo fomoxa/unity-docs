@@ -10,6 +10,8 @@ An RPC (remote procedure call) runs a method of a `NetworkBehaviour` on the othe
 
 Each RPC takes either no argument or a single [model](models.md).
 
+<figure><img src="../.gitbook/assets/diagrams/rpc-directions.svg" alt="Three panels with a server and clients A, B and C, where A owns the object. Server RPC: A calls it and it runs on the server, while the same call from B is dropped. Observers RPC: the server sends to A and B, which observe the object, and not to C, which does not. Target RPC: the server sends to B only."><figcaption><p>Which side sends each kind of RPC, and who receives it.</p></figcaption></figure>
+
 ## Declaring RPCs with attributes
 
 ```csharp
@@ -176,4 +178,4 @@ An RPC takes one argument at most, so several values go into one model. On each 
 
 An RPC is always addressed to one behaviour of one spawned object. To send a message without an object, use [raw messages](messages.md).
 
-The arguments are [models](models.md) that travel on their [channel](channels.md). The [attributes reference](../reference/attributes.md) lists every RPC attribute and property, and [NetworkBehaviour](../core/network-behaviour.md) summarizes the send methods.
+The arguments are [models](models.md) that travel on their [channel](channels.md). The [attributes reference](../reference/attributes.md) lists every RPC attribute and property, and [NetworkBehaviour](../objects/network-behaviour.md) summarizes the send methods.

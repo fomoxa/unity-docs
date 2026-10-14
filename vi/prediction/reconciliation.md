@@ -16,11 +16,11 @@ protected override void OnRegisterInput(NetworkInput input)
 
 `NetworkInput.Reconcile<TState>(codec, capture, restore, matches = null)` nhận ba callback:
 
-| Callback                                   | Chạy khi                                                                                  | Làm gì                                    |
-| ------------------------------------------ | ----------------------------------------------------------------------------------------- | ----------------------------------------- |
-| `capture(TState state)`                    | Sau mỗi input được áp dụng trên server; sau mỗi tick được dự đoán hoặc replay trên client | Copy state của behaviour vào model        |
-| `restore(TState state)`                    | Trên client, khi bắt đầu một lần sửa                                                      | Copy state của server ngược vào behaviour |
-| `matches(TState server, TState predicted)` | Trên client, cho mỗi state tới                                                            | Trả về dự đoán có đủ gần hay không        |
+| Callback | Chạy khi | Làm gì |
+|---|---|---|
+| `capture(TState state)` | Sau mỗi input được áp dụng trên server; sau mỗi tick được dự đoán hoặc replay trên client | Copy state của behaviour vào model |
+| `restore(TState state)` | Trên client, khi bắt đầu một lần sửa | Copy state của server ngược vào behaviour |
+| `matches(TState server, TState predicted)` | Trên client, cho mỗi state tới | Trả về dự đoán có đủ gần hay không |
 
 `Reconcile` ném `HandlerRegistrationException` khi được gọi trước `Use` hoặc bị gọi hai lần.
 
@@ -39,14 +39,7 @@ private static bool Matches(MoveState server, MoveState predicted) =>
 
 ## Sửa và replay <a href="#correction-and-replay" id="correction-and-replay"></a>
 
-```
-predicted   T10  T11  T12  T13  T14       client is at T14
-                  ↑
-            server state for T11 arrives, does not match
-
-restore(server state of T11)
-replay      T12  T13  T14                 apply(input, Replaying = true), capture each
-```
+<figure><img src="../.gitbook/assets/diagrams/reconcile-replay.svg" alt="Client đã dự đoán các tick 10 tới 14 và đang ở tick 14 khi state của server cho tick 11 tới. matches() trả về false cho tick 11. Client khôi phục state của server ở tick 11 và replay các tick 12, 13 và 14. Mỗi tick replay gọi apply với context.Replaying là true, rồi capture. Sau đó OnReconciled(11) chạy và ReconcileCount tăng thêm một."><figcaption><p>Một lần sửa ở tick 11 khi client đã ở tick 14.</p></figcaption></figure>
 
 Client giữ input và state của Prediction History tick gần nhất (mặc định 64). Một lần replay bao các tick từ tick được sửa tới tick dự đoán mới nhất, dùng các input client đã ghi lại, và sau lần sửa package gọi `OnReconciled(tick)` trên behaviour và tăng `ReconcileCount` của nó.
 
@@ -66,22 +59,22 @@ Server gửi state sau mỗi Reconcile Interval tick (mặc định 1), cho các
 
 ## Hiển thị lần sửa mượt mà <a href="#showing-corrections-smoothly" id="showing-corrections-smoothly"></a>
 
-Một lần sửa di chuyển object ngay lập tức. Để che điều đó, hãy gán một object con chứa các phần hiển thị vào field Visual của `NetworkTransform` trên object. Package khi đó giữ object con ở chỗ nó đang hiện trên màn hình rồi đưa nó về dần trong Smoothing Time, như mô tả trong [NetworkTransform](../dong-bo/transform.md#prediction).
+Một lần sửa di chuyển object ngay lập tức. Để che điều đó, hãy gán một object con chứa các phần hiển thị vào field Visual của `NetworkTransform` trên object. Package khi đó giữ object con ở chỗ nó đang hiện trên màn hình rồi đưa nó về dần trong Smoothing Time, như mô tả trong [NetworkTransform](../synchronization/transform.md#prediction).
 
 ## Chẩn đoán việc sửa thường xuyên <a href="#diagnosing-frequent-corrections" id="diagnosing-frequent-corrections"></a>
 
 `ReconcileCount` nên giữ ở mức thấp chừng nào không có gì bất thường xảy ra. Khi nó cứ tăng, nguyên nhân thường gặp là:
 
-* `apply` dùng `Time.deltaTime` thay vì `TimeManager.TickDelta`.
-* `apply` đọc dữ liệu khác nhau giữa server và client, như object khác hoặc số ngẫu nhiên không có seed.
-* Reconcile model thiếu state được mang qua các tick.
-* `matches` bị thiếu hoặc quá chặt.
-* Input tới server muộn và bị lặp lại, điều mà `ServerManager.DroppedInputsOf` cho thấy.
+- `apply` dùng `Time.deltaTime` thay vì `TimeManager.TickDelta`.
+- `apply` đọc dữ liệu khác nhau giữa server và client, như object khác hoặc số ngẫu nhiên không có seed.
+- Reconcile model thiếu state được mang qua các tick.
+- `matches` bị thiếu hoặc quá chặt.
+- Input tới server muộn và bị lặp lại, điều mà `ServerManager.DroppedInputsOf` cho thấy.
 
-[Mô phỏng tất định](../khai-niem/deterministic-simulation.md) giải thích vì sao mỗi nguyên nhân trên làm hai bên khác nhau.
+[Mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao mỗi nguyên nhân trên làm hai bên khác nhau.
 
 ## Với physics <a href="#with-physics" id="with-physics"></a>
 
 Khi object di chuyển bằng `Rigidbody` hoặc `Rigidbody2D` và mô phỏng physics đang bật, một lần sửa còn rollback cả các physics world, như mô tả trong [rollback với physics](rollback.md).
 
-Reconciliation xây trên [input](input.md), và [tổng quan prediction](overview.md) cho thấy cả hai trong một nhân vật hoàn chỉnh. [NetworkBehaviour](../core/network-behaviour.md) liệt kê `OnReconciled` và các callback khác.
+Reconciliation xây trên [input](input.md), và [tổng quan prediction](overview.md) cho thấy cả hai trong một nhân vật hoàn chỉnh. [NetworkBehaviour](../objects/network-behaviour.md) liệt kê `OnReconciled` và các callback khác.

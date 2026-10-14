@@ -12,7 +12,7 @@ The general checks are under [client cannot connect](../../getting-started/troub
 
 ## The player does not spawn
 
-The general checks are under [object does not spawn](../../getting-started/troubleshooting.md#object-does-not-spawn), and [spawning](../../core/spawning.md) explains the mechanism.
+The general checks are under [object does not spawn](../../getting-started/troubleshooting.md#object-does-not-spawn), and [spawning](../../objects/spawning.md) explains the mechanism.
 
 - If the Console shows `prefab id 0x... of RedRunner(Clone) is not registered`, drag `Generated/FomoxaPrefabList.asset` into Collected Prefabs and `Generated/FomoxaSceneList.asset` into Collected Scenes on the `NetworkManager` in `Play.unity`. In the Editor the package assigns these lists only after `NetworkManager.Awake`, as [step 03](offline-to-online/step-03-player-spawning.md#configure-the-networkmanager) explains.
 - `RedRunner.prefab` has a `NetworkObject` and a prefab id. Choose Tools > Fomoxa > Assign Prefab Ids after changing it.
@@ -59,7 +59,7 @@ The mechanisms involved are described in [teleporting](../../synchronization/tra
 
 ## A player who left keeps running
 
-The mechanisms involved are described in [client](../../core/client.md#connect-and-disconnect) and [input](../../prediction/input.md#on-the-server).
+The mechanisms involved are described in [client](../../connections/client.md#connect-and-disconnect) and [input](../../prediction/input.md#on-the-server).
 
 - If the player quit with Home or by closing the game, the client sends `PeerLeave` and the character should despawn at once. If it does not, regenerate the code with Tools > Fomoxa > Generate so that `PeerLeave` is registered.
 - If the client crashed, the server waits for the heartbeat, about 20 seconds with the defaults. The character should still stand still after 10 repeated ticks; if it does not, check the `RepeatedTicks` rule in `NetworkPlayer.Apply` described in [step 08](offline-to-online/step-08-two-clients.md#stop-a-character-whose-player-vanished).

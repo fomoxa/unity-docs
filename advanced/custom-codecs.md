@@ -21,6 +21,8 @@ public class Status
 }
 ```
 
+<figure><img src="../.gitbook/assets/diagrams/model-codecs.svg" alt="A class Status with the codecs net and compact. Health belongs to both codecs and Title only to net. fomoxac writes StatusNetCodec and StatusCompactCodec, each with its own message id, and the package wraps each one in an adapter."><figcaption><p>The two codecs of Status and their adapters.</p></figcaption></figure>
+
 `StatusCompactAdapter` encodes only `Health`, and decoding with it leaves `Title` unchanged. Each codec can also have its own channel, declared with `[NetworkChannel("compact", Channel.ReliableOrdered)]`. [Models and codecs](../messaging/models.md) describes the attributes.
 
 ## Unity types
@@ -81,4 +83,4 @@ Put the script in an `Editor` folder, and keep the type in an assembly that the 
 
 `IMessageCodec<T>` is a public interface, but every message id must be part of the generated schema, because the dispatcher rejects handlers for ids outside it and the handshake compares schemas. Write models instead and let the package generate their adapters.
 
-[Models and codecs](../messaging/models.md) covers models in general, and [editor integration](../unity/editor-integration.md) describes the generation step that writes these codecs.
+[Models and codecs](../messaging/models.md) covers models in general, and [editor integration](editor-integration.md) describes the generation step that writes these codecs.

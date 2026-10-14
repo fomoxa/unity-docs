@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="344" viewBox="0 0 920 344" role="img" aria-label="Behaviour index và fingerprint được lấy từ hierarchy thế nào">
+  <title>Behaviour index và fingerprint được lấy từ hierarchy thế nào</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="343" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Hierarchy của prefab</text>
+  <rect x="30.0" y="62.0" width="250.0" height="88.0" rx="8" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="42.0" y="78.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Player</text>
+  <text x="52.0" y="100.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">NetworkObject</text>
+  <text x="52.0" y="122.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#1F2937" text-anchor="start">NetworkTransform</text>
+  <text x="52.0" y="144.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#1F2937" text-anchor="start">PlayerMovement</text>
+  <line x1="43.0" y1="152.0" x2="43.0" y2="176.0" stroke="#D1D5DB" stroke-width="1.2"/>
+  <line x1="43.0" y1="176.0" x2="52.0" y2="176.0" stroke="#D1D5DB" stroke-width="1.2"/>
+  <rect x="56.0" y="166.0" width="224.0" height="44.0" rx="8" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="68.0" y="182.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Weapon</text>
+  <text x="78.0" y="204.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#1F2937" text-anchor="start">WeaponBehaviour</text>
+  <line x1="43.0" y1="212.0" x2="43.0" y2="236.0" stroke="#D1D5DB" stroke-width="1.2"/>
+  <line x1="43.0" y1="236.0" x2="52.0" y2="236.0" stroke="#D1D5DB" stroke-width="1.2"/>
+  <rect x="56.0" y="226.0" width="224.0" height="44.0" rx="8" fill="#FFFFFF" stroke="#D1D5DB" stroke-width="1.5"/>
+  <text x="68.0" y="242.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Model</text>
+  <text x="78.0" y="264.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">MeshRenderer</text>
+  <text x="330.0" y="38.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">GetComponentsInChildren</text>
+  <text x="330.0" y="58.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">Các NetworkBehaviour theo thứ tự, kể cả cái đang tắt</text>
+  <rect x="330.0" y="76.0" width="240.0" height="40.0" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <circle cx="354.0" cy="96.0" r="12" fill="#D97706"/>
+  <text x="354.0" y="101.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">0</text>
+  <text x="378.0" y="101.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#78350F" text-anchor="start">NetworkTransform</text>
+  <rect x="330.0" y="128.0" width="240.0" height="40.0" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <circle cx="354.0" cy="148.0" r="12" fill="#D97706"/>
+  <text x="354.0" y="153.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
+  <text x="378.0" y="153.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#78350F" text-anchor="start">PlayerMovement</text>
+  <rect x="330.0" y="180.0" width="240.0" height="40.0" rx="8" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <circle cx="354.0" cy="200.0" r="12" fill="#D97706"/>
+  <text x="354.0" y="205.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
+  <text x="378.0" y="205.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12.5" font-weight="600" fill="#78350F" text-anchor="start">WeaponBehaviour</text>
+  <path d="M 282.0 130.0 L 326.0 130.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="620.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Index được dùng vào đâu</text>
+  <rect x="620.0" y="62.0" width="270.0" height="92.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="755.0" y="95.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Message tới một behaviour</text>
+  <text x="755.0" y="112.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">mang object id và</text>
+  <text x="755.0" y="130.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">behaviour index, ví dụ 17 / 1</text>
+  <rect x="620.0" y="172.0" width="270.0" height="110.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="755.0" y="205.8" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Fingerprint</text>
+  <text x="755.0" y="223.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">Hash FNV-1a của tên type</text>
+  <text x="755.0" y="240.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">đầy đủ, nối theo thứ tự này.</text>
+  <text x="755.0" y="258.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">Gửi kèm mỗi lần spawn.</text>
+  <path d="M 570.0 96.0 L 620.0 108.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <path d="M 570.0 200.0 L 620.0 222.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="300.0" width="860.0" height="30.0" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="1.5"/>
+  <text x="460.0" y="320.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="600" fill="#7F1D1D" text-anchor="middle">Client có prefab cho ra danh sách khác sẽ dừng với PrefabMismatch.</text>
+</svg>

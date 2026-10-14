@@ -27,7 +27,7 @@ Do the same for every `NetworkManager` that runs a server or a client of the gam
 
 ## Export the scene files
 
-Rapier reads the static geometry of a scene from the scene file that the package writes into the Generated Folder, `<scene id>.fomoxascene`. The Editor writes it when you save a network scene, before every player build, and on Tools > Fomoxa > Export Network Scene Files, as described in [Editor integration](../unity/editor-integration.md#scene-files). Commit the files with the rest of the generated code.
+Rapier reads the static geometry of a scene from the scene file that the package writes into the Generated Folder, `<scene id>.fomoxascene`. The Editor writes it when you save a network scene, before every player build, and on Tools > Fomoxa > Export Network Scene Files, as described in [Editor integration](../advanced/editor-integration.md#scene-files). Commit the files with the rest of the generated code.
 
 Only network scenes have worlds. A scene must be in the Build Profiles scene list, so that it has a scene id in `FomoxaSceneList.asset`, and the `NetworkManager` must have that list in Collected Scenes. A loaded network scene without a scene file is simulated without static geometry, and the backend warns `scene 0x... has no scene file; Rapier simulates it without static geometry. Export the network scene files`.
 

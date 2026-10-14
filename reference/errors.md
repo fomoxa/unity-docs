@@ -89,6 +89,6 @@
 | `Fomoxa: object N (prefab 0x...) was destroyed on the client without a despawn from the server` | A spawned GameObject was destroyed on a client |
 | `Fomoxa: <name> received Animator state with layout 0x..., but its Animator has layout 0x...` | The Animator controllers differ between server and client |
 
-Editor messages start with `[Fomoxa]` and are covered in [troubleshooting](../getting-started/troubleshooting.md#code-generation-fails) and [editor integration](../unity/editor-integration.md).
+Editor messages start with `[Fomoxa]` and are covered in [troubleshooting](../getting-started/troubleshooting.md#code-generation-fails) and [editor integration](../advanced/editor-integration.md).
 
 [Troubleshooting](../getting-started/troubleshooting.md) goes from symptoms to these values, and [events and callbacks](callbacks.md) lists the events that carry them.

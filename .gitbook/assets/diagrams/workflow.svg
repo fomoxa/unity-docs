@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="236" viewBox="0 0 920 236" role="img" aria-label="The four steps a game takes to use the package">
+  <title>The four steps a game takes to use the package</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="235" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="22.0" y="34.0" width="196.0" height="172.0" rx="12" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <circle cx="48.0" cy="62.0" r="14" fill="#64748B"/>
+  <text x="48.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">1</text>
+  <text x="68.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0F172A" text-anchor="start">Declare models</text>
+  <text x="38.0" y="104.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">C# classes marked with</text>
+  <text x="38.0" y="123.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">[Network] and [Codec].</text>
+  <text x="38.0" y="142.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">The package generates</text>
+  <text x="38.0" y="161.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">their codecs.</text>
+  <path d="M 222.0 120.0 L 244.0 120.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="248.0" y="34.0" width="196.0" height="172.0" rx="12" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <circle cx="274.0" cy="62.0" r="14" fill="#9CA3AF"/>
+  <text x="274.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">2</text>
+  <text x="294.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#1F2937" text-anchor="start">Add a NetworkManager</text>
+  <text x="264.0" y="104.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">One per scene, with a</text>
+  <text x="264.0" y="123.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">transport such as</text>
+  <text x="264.0" y="142.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">UdpNetworkTransport.</text>
+  <path d="M 448.0 120.0 L 470.0 120.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="474.0" y="34.0" width="196.0" height="172.0" rx="12" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <circle cx="500.0" cy="62.0" r="14" fill="#9CA3AF"/>
+  <text x="500.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">3</text>
+  <text x="520.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#1F2937" text-anchor="start">Make network prefabs</text>
+  <text x="490.0" y="104.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">NetworkObject on the root,</text>
+  <text x="490.0" y="123.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">NetworkBehaviour scripts</text>
+  <text x="490.0" y="142.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">for the networked logic.</text>
+  <path d="M 674.0 120.0 L 696.0 120.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="700.0" y="34.0" width="196.0" height="172.0" rx="12" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <circle cx="726.0" cy="62.0" r="14" fill="#2F6FEB"/>
+  <text x="726.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">4</text>
+  <text x="746.0" y="67.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#1E3A8A" text-anchor="start">Start and spawn</text>
+  <text x="716.0" y="104.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">Start a server, a client</text>
+  <text x="716.0" y="123.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">or a host from code. The</text>
+  <text x="716.0" y="142.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="400" fill="#374151" text-anchor="start">server spawns objects.</text>
+</svg>

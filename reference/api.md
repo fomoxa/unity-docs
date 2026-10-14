@@ -14,7 +14,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Components, interfaces | [Components](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Asset types, component | [Components](components.md#observers) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Classes, interface, extension methods | [NetworkManager reference](network-manager.md#prefabregistry) |
-| `NetworkPrefabList`, `NetworkSceneList` | Generated asset types | [Editor integration](../unity/editor-integration.md) |
+| `NetworkPrefabList`, `NetworkSceneList` | Generated asset types | [Editor integration](../advanced/editor-integration.md) |
 | `NetworkTransport`, `UdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Components | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics worlds, helper | [Physics API](physics.md#unity-worlds) |
@@ -43,7 +43,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `IMessageCodec<T>`, `MessageDecodeException` | Interface, exception | [Messaging API](messaging.md) |
 | `MessageDispatcher`, `PayloadHandler`, `ObjectPayloadHandler`, `HandlerRegistrationException`, `MessageChannels` | Classes, delegates | [Messaging API](messaging.md) |
 | `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle` | The package's system models | [Messaging API](messaging.md#system-models) |
-| `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System models of the scene file | [Editor integration](../unity/editor-integration.md#scene-files) |
+| `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System models of the scene file | [Editor integration](../advanced/editor-integration.md#scene-files) |
 | `BundleFormat`, `BundleReader`, `BundleWriter`, `ObjectHeader`, `SeqHeader`, `OutgoingEntry`, `OutgoingKind`, `OutgoingQueue`, `QueuedMessage`, `EnqueueResult`, `MessageSender`, `ReliableChannel`, `ReliableVerdict`, `SessionProtocol`, `ZeroRuns` | Building blocks | |
 
 ## Fomoxa.Networking.Sessions
@@ -83,18 +83,18 @@ This page lists the public types of the package by namespace. Types marked "buil
 
 | Type | Kind | Page |
 |---|---|---|
-| `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interfaces, enum | [Custom transport](../transports/custom-transport.md) |
-| `UdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../transports/overview.md) |
-| `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transports | [Loopback](../transports/loopback.md) |
-| `IHostResolver`, `HostResolver`, `ResolveStatus` | Name resolution | [Transports overview](../transports/overview.md#non-blocking-operation) |
+| `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interfaces, enum | [Custom transport](../connections/transports/custom-transport.md) |
+| `UdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
+| `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transports | [Loopback](../connections/transports/loopback.md) |
+| `IHostResolver`, `HostResolver`, `ResolveStatus` | Name resolution | [Transports overview](../connections/transports/README.md#non-blocking-operation) |
 
 ## Fomoxa.Unity.Editor
 
 | Type | Kind | Page |
 |---|---|---|
-| `FomoxaSettings` | Asset type | [Editor integration](../unity/editor-integration.md) |
+| `FomoxaSettings` | Asset type | [Editor integration](../advanced/editor-integration.md) |
 | `FomoxaUnityTypes`, `FomoxaUnityField`, `FomoxaUnityType` | Unity type layouts | [Custom codecs](../advanced/custom-codecs.md) |
-| `FomoxaHook`, `FomoxaGenerator`, `FomoxaPrefabStep`, `FomoxaSceneStep`, `FomoxaSceneFileStep`, `FomoxaSceneFileImporter`, `FomoxaSceneObjectIds`, `FomoxaRpcScanner`, `FomoxaChannelScanner`, `FomoxaPrefabBuild`, `FomoxaRpcBuild` and their data types | Editor steps | [Editor integration](../unity/editor-integration.md) |
+| `FomoxaHook`, `FomoxaGenerator`, `FomoxaPrefabStep`, `FomoxaSceneStep`, `FomoxaSceneFileStep`, `FomoxaSceneFileImporter`, `FomoxaSceneObjectIds`, `FomoxaRpcScanner`, `FomoxaChannelScanner`, `FomoxaPrefabBuild`, `FomoxaRpcBuild` and their data types | Editor steps | [Editor integration](../advanced/editor-integration.md) |
 
 ## From the bundled DLLs
 
@@ -102,4 +102,4 @@ This page lists the public types of the package by namespace. Types marked "buil
 |---|---|---|
 | `NetworkAttribute`, `CodecAttribute` (`[Network]`, `[Codec]`) | `Fomoxa` | [Models and codecs](../messaging/models.md) |
 | `HandshakeFailure`, `SendStatus`, `Schema`, `FomoxaWire` | `Fomoxa.Net` | [Errors](errors.md) |
-| `ITransport`, `IListenerTransport`, `SendOutcome`, `ReceiveOutcome`, `AcceptOutcome`, `TransportKind` | `Fomoxa.Net.Transports` | [Custom transport](../transports/custom-transport.md) |
+| `ITransport`, `IListenerTransport`, `SendOutcome`, `ReceiveOutcome`, `AcceptOutcome`, `TransportKind` | `Fomoxa.Net.Transports` | [Custom transport](../connections/transports/custom-transport.md) |

@@ -11,7 +11,7 @@ Source examined: `Runtime/Core/ClientManager.cs`, `Runtime/Core/Objects/ClientOb
 
 ### Reaching the NetworkManager from a NetworkBehaviour
 Question: Is there an intended way for a behaviour to reach its `NetworkManager` or `TimeManager`, for `TickDelta` in `apply`? `NetworkObject.Server` and `Client` are internal.
-Why it matters: The prediction example uses `FindFirstObjectByType<NetworkManager>()`, which picks the wrong manager when a scene has several.
+Why it matters: The prediction example uses `FindAnyObjectByType<NetworkManager>()`, which can pick the wrong manager when a scene has several.
 Source examined: `Runtime/Unity/NetworkObject.cs`, `Runtime/Unity/NetworkBehaviour.cs`.
 
 ### Rejected input event

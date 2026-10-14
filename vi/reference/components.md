@@ -41,7 +41,7 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 
 ### ObserverRule <a href="#observerrule" id="observerrule"></a>
 
-`public abstract class ObserverRule : ScriptableObject`, được giải thích trong hướng dẫn [observer](../core/observers.md).
+`public abstract class ObserverRule : ScriptableObject`, được giải thích trong hướng dẫn [observer](../objects/observers.md).
 
 | Member | Mô tả |
 |---|---|
@@ -75,7 +75,7 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `WebSocketNetworkTransport` | WebSocket; code native trên desktop, trình duyệt trong WebGL |
 | `MultiNetworkTransport` | Nhiều transport, mỗi transport một port, trên một server |
 
-[Tổng quan transport](../transports/overview.md) giải thích từng transport.
+[Tổng quan transport](../connections/transports/README.md) giải thích từng transport.
 
 ## Asset được sinh <a href="#generated-assets" id="generated-assets"></a>
 

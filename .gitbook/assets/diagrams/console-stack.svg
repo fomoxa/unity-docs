@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="330" viewBox="0 0 920 330" role="img" aria-label="What a console server is made of">
+  <title>What a console server is made of</title>
+  <defs><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="329" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="30.0" y="30.0" width="600.0" height="50.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <text x="50.0" y="52.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0F172A" text-anchor="start">Your console program</text>
+  <text x="50.0" y="70.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">Main, game rules as EntityBehaviour classes</text>
+  <rect x="30.0" y="96.0" width="600.0" height="50.0" rx="10" fill="#F1EAFE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="50.0" y="118.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#4C1D95" text-anchor="start">Console backend</text>
+  <text x="50.0" y="136.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">StandaloneRuntime, StandaloneEntity</text>
+  <text x="650.0" y="126.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">Standalone~ (source)</text>
+  <path d="M 330.0 80.0 L 330.0 96.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="162.0" width="600.0" height="50.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="50.0" y="184.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#1E3A8A" text-anchor="start">Layer 1</text>
+  <text x="50.0" y="202.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">Fomoxa.Networking</text>
+  <text x="650.0" y="192.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">Runtime/Core (source)</text>
+  <path d="M 330.0 146.0 L 330.0 162.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="228.0" width="600.0" height="50.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="50.0" y="250.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#1F2937" text-anchor="start">Libraries</text>
+  <text x="50.0" y="268.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">Fomoxa.Net, Fomoxa.Attributes</text>
+  <text x="650.0" y="258.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="start">Runtime/Plugins</text>
+  <path d="M 330.0 212.0 L 330.0 228.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="650.0" y="84.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11" font-weight="600" fill="#6B7280" text-anchor="start">com.fomoxa.networking/</text>
+  <text x="30.0" y="300.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">The Unity project stays the source of the models, the prefab ids and fingerprints, and the scene files.</text>
+  <text x="30.0" y="318.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">A console project compiles all of this together with the generated code of the Unity project.</text>
+</svg>

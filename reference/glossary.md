@@ -11,17 +11,17 @@
 | Delta | The XOR of a state's new and previous encoding, with unchanged runs compressed. |
 | Fingerprint | A hash of a prefab's or scene object's list of `NetworkBehaviour` types, compared at spawn. |
 | Frame budget | The largest frame the package builds for a transport: 1200 bytes for UDP. |
-| Host | A process that runs a server and a client in the same `NetworkManager`. See [host mode](../core/host-mode.md). |
+| Host | A process that runs a server and a client in the same `NetworkManager`. See [host mode](../connections/host-mode.md). |
 | Input model | The model a behaviour registers with `NetworkInput.Use`, sent each tick by the owner. |
 | Interpolation | Showing a remote object between received transforms, a few ticks in the past. |
 | Layer 1 | `Fomoxa.Networking`, the Core: the part of the package that does not reference Unity. |
 | Layer 2 | `Fomoxa.Unity`, the Unity integration. |
 | Message id | The 32-bit id of one model and codec in the schema. |
 | Model | A C# class marked with `[Network]` that describes a message. |
-| Network scene | A scene the server loads additively on itself and on chosen peers. See [network scenes](../core/scenes.md). |
+| Network scene | A scene the server loads additively on itself and on chosen peers. See [network scenes](../objects/scenes.md). |
 | `NetworkObject` | A GameObject that exists on the network, with an object id and an owner. |
 | Object id | The id the server assigns to a `NetworkObject` when it spawns. |
-| Observer | A peer that receives an object. See [observers](../core/observers.md). |
+| Observer | A peer that receives an object. See [observers](../objects/observers.md). |
 | Owner | The peer an object belongs to; 0 for the server. |
 | Peer id | The id of a connected client on the server; never 0. |
 | Prediction | Applying the owner's input on its client before the server confirms it. |

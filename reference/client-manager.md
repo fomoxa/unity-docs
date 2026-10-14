@@ -1,6 +1,6 @@
 # ClientManager reference
 
-`public sealed class ClientManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.ClientManager`. The [client](../core/client.md) guide explains how to use it.
+`public sealed class ClientManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.ClientManager`. The [client](../connections/client.md) guide explains how to use it.
 
 ## Connection
 

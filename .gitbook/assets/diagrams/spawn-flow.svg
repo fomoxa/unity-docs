@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="400" viewBox="0 0 920 400" role="img" aria-label="From a saved prefab to an object on every observer">
+  <title>From a saved prefab to an object on every observer</title>
+  <defs><marker id="arrow-2F6FEB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6FEB"/></marker><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="399" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Editor</text>
+  <rect x="30.0" y="56.0" width="260.0" height="70.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="160.0" y="87.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Prefab saved</text>
+  <text x="160.0" y="104.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">Prefab Id from the GUID</text>
+  <rect x="30.0" y="148.0" width="260.0" height="70.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="160.0" y="170.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Lists written</text>
+  <text x="160.0" y="187.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">FomoxaPrefabList.asset</text>
+  <text x="160.0" y="205.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">FomoxaPrefabs.cs</text>
+  <path d="M 160.0 126.0 L 160.0 148.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="330.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Server</text>
+  <rect x="330.0" y="56.0" width="260.0" height="70.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="460.0" y="87.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Awake</text>
+  <text x="460.0" y="104.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">registers the prefabs</text>
+  <rect x="330.0" y="148.0" width="260.0" height="70.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="460.0" y="179.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Instantiate</text>
+  <text x="460.0" y="196.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">place it, set its state</text>
+  <path d="M 460.0 126.0 L 460.0 148.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="330.0" y="240.0" width="260.0" height="70.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="460.0" y="271.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Spawn(instance, owner)</text>
+  <text x="460.0" y="288.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">object id, OnStartServer</text>
+  <path d="M 460.0 218.0 L 460.0 240.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <text x="630.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Each observing client</text>
+  <rect x="630.0" y="56.0" width="260.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="760.0" y="87.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Awake</text>
+  <text x="760.0" y="104.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">registers the same prefabs</text>
+  <rect x="630.0" y="148.0" width="260.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="760.0" y="179.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Look up the prefab id</text>
+  <text x="760.0" y="196.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">compare the fingerprint</text>
+  <path d="M 760.0 126.0 L 760.0 148.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="630.0" y="240.0" width="260.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="760.0" y="271.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Instantiate</text>
+  <text x="760.0" y="288.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">apply state, OnStartClient</text>
+  <path d="M 760.0 218.0 L 760.0 240.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <path d="M 290.0 91.0 L 330.0 91.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 4" marker-end="url(#arrow-4B5563)"/>
+  <rect x="282.1" y="71.5" width="55.8" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="310.0" y="83.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#4B5563" text-anchor="middle">same list</text>
+  <path d="M 590.0 276.0 L 610.0 276.0 L 610.0 183.0 L 630.0 183.0" fill="none" stroke="#2F6FEB" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <rect x="330.0" y="336.0" width="560.0" height="50.0" rx="10" fill="#FFFFFF" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="346.0" y="356.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12.5" font-weight="700" fill="#2F6FEB" text-anchor="start">Spawn message, reliable and ordered</text>
+  <text x="346.0" y="375.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="start">object id, prefab id, fingerprint, owner, position, rotation, scale, state</text>
+  <line x1="610.0" y1="276.0" x2="610.0" y2="336.0" stroke="#2F6FEB" stroke-width="1.2" stroke-dasharray="4 4"/>
+</svg>

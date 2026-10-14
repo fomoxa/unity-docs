@@ -23,14 +23,14 @@ Một nhân vật trong scene tồn tại một lần trong mỗi tiến trình,
 
 ## Khái niệm Fomoxa <a href="#fomoxa-concepts" id="fomoxa-concepts"></a>
 
-- [Spawn](../../../core/spawning.md)
-- [Ownership](../../../core/ownership.md)
-- [Server](../../../core/server.md)
-- [Client](../../../core/client.md)
-- [Host mode](../../../core/host-mode.md)
+- [Spawn](../../../objects/spawning.md)
+- [Ownership](../../../objects/ownership.md)
+- [Server](../../../connections/server.md)
+- [Client](../../../connections/client.md)
+- [Host mode](../../../connections/host-mode.md)
 - [NetworkTransform](../../../synchronization/transform.md)
 - [Tổng quan physics](../../../physics/overview.md)
-- [Tích hợp Editor](../../../unity/editor-integration.md#prefab-step)
+- [Tích hợp Editor](../../../advanced/editor-integration.md#prefab-step)
 
 ## Thiết kế <a href="#design" id="design"></a>
 
@@ -228,7 +228,7 @@ Fomoxa tạo nhân vật trên mọi client, gán owner và despawn nhân vật 
 
 Dưới `Canvas/Start Screen`, thêm một GameObject > UI > Legacy > Input Field tên `Address Field`, bên dưới hàng nút nhỏ (vị trí 0, -222, kích thước 320 × 48). Đặt text của nó là `localhost` và placeholder là `Server address`. Cho cả hai text dùng font của game, `Baloo-Regular`, cỡ 24, căn giữa, với Vertical Overflow đặt là Overflow, vì với Truncate thì chiều cao dòng của Baloo che mất chữ. Các thiết lập bố cục này đến từ commit `7396f92` ở bước 09; trong `1b65628`, ô này nằm ở chỗ khác trên màn hình và chữ của nó không hiện.
 
-![Màn hình bắt đầu với ô địa chỉ](../../../../.gitbook/assets/redrunner-start-screen.png)
+![Màn hình bắt đầu với ô địa chỉ](../../../.gitbook/assets/redrunner-start-screen.png)
 
 `StartScreen` có thêm field `AddressField` và `Network`. Nút Play gọi `Network.Join(AddressField.text)` trước khi mở màn hình trong game, và nếu kết nối của client dừng trong lúc game chạy, màn hình bắt đầu hiện lại. `PauseScreen` cũng có field `Network`, và nút Home của nó gọi `Network.Leave()` trước `GameManager.Init()`.
 

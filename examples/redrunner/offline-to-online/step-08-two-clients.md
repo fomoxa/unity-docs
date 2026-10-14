@@ -21,8 +21,8 @@ Running two clients turned up three problems:
 - [NetworkTransform](../../../synchronization/transform.md)
 - [Teleporting](../../../synchronization/transform.md#teleporting)
 - [Input on the server](../../../prediction/input.md#on-the-server)
-- [Client](../../../core/client.md#connect-and-disconnect)
-- [UDP](../../../transports/udp.md)
+- [Client](../../../connections/client.md#connect-and-disconnect)
+- [UDP](../../../connections/transports/udp.md)
 - [Configuration](../../../reference/configuration.md)
 
 ## Design

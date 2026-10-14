@@ -43,7 +43,7 @@ Ba điều khiến controller offline không chạy được trên server:
 - [Input](../../../prediction/input.md)
 - [Authority](../../../concepts/authority.md#what-a-client-can-send)
 - [Tick và thời gian](../../../concepts/tick.md)
-- [Hook đăng ký của NetworkBehaviour](../../../core/network-behaviour.md#registration-hooks)
+- [Hook đăng ký của NetworkBehaviour](../../../objects/network-behaviour.md#registration-hooks)
 
 ## Thiết kế <a href="#design" id="design"></a>
 

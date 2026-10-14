@@ -1,6 +1,6 @@
 # Runtime
 
-Trang này viết một server console cho game ở [project đầu tiên của bạn](../getting-started/first-project.md): mỗi người chơi một capsule, state `PlayerStats` với bộ đếm số lần nhảy, và một RPC `Jump` không tham số. Client Unity build từ hướng dẫn đó kết nối tới nó mà không cần sửa.
+Trang này viết một server console cho game ở [project đầu tiên của bạn](../getting-started/tutorial/project-setup.md): mỗi người chơi một capsule, state `PlayerStats` với bộ đếm số lần nhảy, và một RPC `Jump` không tham số. Client Unity build từ hướng dẫn đó kết nối tới nó mà không cần sửa.
 
 ## Entity và behaviour <a href="#entities-and-behaviours" id="entities-and-behaviours"></a>
 
@@ -191,7 +191,7 @@ public static NetworkRuntime Create(
 | `physics` | Một `IPhysicsScenes`, hoặc null cho server không có physics; xem [physics](physics.md) |
 | `bootScenes` | Các scene id có scene object tồn tại từ đầu, như mô tả bên dưới |
 
-Kết quả là một `NetworkRuntime`, giữ `ServerManager`, `ClientManager` và `TimeManager` mà code Unity truy cập qua `NetworkManager`. Mọi thứ trong các trang [server](../core/server.md) và [client](../core/client.md) đều áp dụng cho chúng, trừ những gì liên quan tới object Unity.
+Kết quả là một `NetworkRuntime`, giữ `ServerManager`, `ClientManager` và `TimeManager` mà code Unity truy cập qua `NetworkManager`. Mọi thứ trong các trang [server](../connections/server.md) và [client](../connections/client.md) đều áp dụng cho chúng, trừ những gì liên quan tới object Unity.
 
 ## Vòng lặp frame <a href="#the-frame-loop" id="the-frame-loop"></a>
 

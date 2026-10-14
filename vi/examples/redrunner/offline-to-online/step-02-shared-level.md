@@ -28,7 +28,7 @@ Server có thể gửi từng khối, nhưng không cần. Nếu server và mọ
 ## Khái niệm Fomoxa <a href="#fomoxa-concepts" id="fomoxa-concepts"></a>
 
 - [State](../../../synchronization/state.md)
-- [Scene object](../../../core/spawning.md#scene-objects)
+- [Scene object](../../../objects/spawning.md#scene-objects)
 - [Model và codec](../../../messaging/models.md)
 - [Channel và độ tin cậy](../../../messaging/channels.md)
 

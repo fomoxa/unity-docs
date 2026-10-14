@@ -35,9 +35,9 @@ Your own character moves as soon as you press a key, because the client predicts
 
 | Part of the game | Fomoxa feature | Page |
 |---|---|---|
-| Starting a server, a host or a client | `NetworkManager`, `ServerManager`, `ClientManager` | [Server](../../core/server.md), [Client](../../core/client.md), [Host mode](../../core/host-mode.md) |
-| The level seed | State on a scene object | [State](../../synchronization/state.md), [Spawning](../../core/spawning.md#scene-objects) |
-| One character per player | Prefab spawning with an owner | [Spawning](../../core/spawning.md), [Ownership](../../core/ownership.md) |
+| Starting a server, a host or a client | `NetworkManager`, `ServerManager`, `ClientManager` | [Server](../../connections/server.md), [Client](../../connections/client.md), [Host mode](../../connections/host-mode.md) |
+| The level seed | State on a scene object | [State](../../synchronization/state.md), [Spawning](../../objects/spawning.md#scene-objects) |
+| One character per player | Prefab spawning with an owner | [Spawning](../../objects/spawning.md), [Ownership](../../objects/ownership.md) |
 | Other players' positions | `NetworkTransform` | [NetworkTransform](../../synchronization/transform.md) |
 | Your own character | Input, prediction and reconciliation with 2D physics | [Prediction overview](../../prediction/overview.md), [Rollback with physics](../../prediction/rollback.md) |
 | Deaths and respawns | State, `NetworkTransform.Teleport` | [State](../../synchronization/state.md), [Teleporting](../../synchronization/transform.md#teleporting) |

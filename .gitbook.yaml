@@ -1,3 +1,29 @@
 structure:
   readme: README.md
   summary: SUMMARY.md
+
+redirects:
+  getting-started/first-project: getting-started/tutorial/project-setup.md
+  getting-started/first-server: getting-started/tutorial/server.md
+  getting-started/first-client: getting-started/tutorial/clients.md
+  core/network-manager: connections/network-manager.md
+  core/server: connections/server.md
+  core/client: connections/client.md
+  core/host-mode: connections/host-mode.md
+  transports/overview: connections/transports/README.md
+  transports/udp: connections/transports/udp.md
+  transports/tcp: connections/transports/tcp.md
+  transports/websocket: connections/transports/websocket.md
+  transports/multi-transport: connections/transports/multi-transport.md
+  transports/loopback: connections/transports/loopback.md
+  transports/custom-transport: connections/transports/custom-transport.md
+  core/network-object: objects/network-object.md
+  core/network-behaviour: objects/network-behaviour.md
+  core/spawning: objects/spawning.md
+  core/ownership: objects/ownership.md
+  core/observers: objects/observers.md
+  core/scenes: objects/scenes.md
+  server/dedicated-server: deploy/dedicated-server.md
+  server/deployment: deploy/deployment.md
+  unity/webgl: deploy/webgl.md
+  unity/editor-integration: advanced/editor-integration.md

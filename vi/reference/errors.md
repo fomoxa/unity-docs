@@ -89,6 +89,6 @@
 | `Fomoxa: object N (prefab 0x...) was destroyed on the client without a despawn from the server` | Một GameObject đã spawn bị hủy trên client |
 | `Fomoxa: <name> received Animator state with layout 0x..., but its Animator has layout 0x...` | Animator controller khác nhau giữa server và client |
 
-Message của Editor bắt đầu bằng `[Fomoxa]` và được nói tới trong [xử lý sự cố](../getting-started/troubleshooting.md#code-generation-fails) và [tích hợp Editor](../unity/editor-integration.md).
+Message của Editor bắt đầu bằng `[Fomoxa]` và được nói tới trong [xử lý sự cố](../getting-started/troubleshooting.md#code-generation-fails) và [tích hợp Editor](../advanced/editor-integration.md).
 
 [Xử lý sự cố](../getting-started/troubleshooting.md) đi từ triệu chứng tới các giá trị này, và [event và callback](callbacks.md) liệt kê các event mang chúng.

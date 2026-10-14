@@ -2,7 +2,7 @@
 
 ## NetworkObject
 
-`public sealed class NetworkObject : MonoBehaviour, INetworkEntity` in `Fomoxa.Unity`, marked `[DisallowMultipleComponent]` and explained in the [NetworkObject](../core/network-object.md) guide. `INetworkEntity` is the interface through which layer 1 handles the object, so a `NetworkObject` can be passed wherever the managers take an `INetworkEntity`.
+`public sealed class NetworkObject : MonoBehaviour, INetworkEntity` in `Fomoxa.Unity`, marked `[DisallowMultipleComponent]` and explained in the [NetworkObject](../objects/network-object.md) guide. `INetworkEntity` is the interface through which layer 1 handles the object, so a `NetworkObject` can be passed wherever the managers take an `INetworkEntity`.
 
 | Member | Type | Description |
 |---|---|---|
@@ -32,7 +32,7 @@ Whatever the value, the owner always observes its objects, and network scenes re
 
 ## NetworkBehaviour
 
-`public abstract class NetworkBehaviour : MonoBehaviour` in `Fomoxa.Unity`, explained in the [NetworkBehaviour](../core/network-behaviour.md) guide.
+`public abstract class NetworkBehaviour : MonoBehaviour` in `Fomoxa.Unity`, explained in the [NetworkBehaviour](../objects/network-behaviour.md) guide.
 
 ### Properties
 

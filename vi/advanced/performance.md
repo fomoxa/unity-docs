@@ -14,7 +14,7 @@ Phần lớn công việc diễn ra mỗi tick một lần, gồm input, physics
 | State | Chỉ gửi khi bản encode thay đổi, và gửi dạng delta khi delta nhỏ hơn. Giữ state model nhỏ và cố định kích thước để delta áp dụng được. Tách dữ liệu ít thay đổi và dữ liệu thay đổi thường xuyên vào các behaviour khác nhau. |
 | `NetworkTransform` | Chỉ gửi phần di chuyển quá ngưỡng, và không gửi gì khi đứng yên. Tắt các phần không cần; tăng ngưỡng cho object không cần độ chính xác cao. |
 | `NetworkAnimator` | Float Step làm tròn parameter float, để thay đổi rất nhỏ không tạo message. |
-| Observer | Một [observer rule](../core/observers.md) giữ cho mỗi client không nhận object nó không cần. Đây thường là mức tiết kiệm lớn nhất trong thế giới lớn. |
+| Observer | Một [observer rule](../objects/observers.md) giữ cho mỗi client không nhận object nó không cần. Đây thường là mức tiết kiệm lớn nhất trong thế giới lớn. |
 | Input Redundancy | Mỗi input message mang chừng này input. Giá trị cao hơn chịu được mất gói nhiều hơn nhưng tốn nhiều byte hơn. |
 | Reconcile Interval | Server gửi reconcile state sau mỗi chừng này tick. Giá trị cao hơn gửi ít hơn và sửa muộn hơn. |
 | Channel | Message reliable mang sequence number và cần acknowledgement. Dùng channel unreliable cho dữ liệu sắp được thay thế. |

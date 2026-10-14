@@ -11,17 +11,17 @@
 | Delta | XOR giữa bản encode mới và bản encode trước của một state, với các đoạn không đổi được nén lại. |
 | Fingerprint | Hash của danh sách type `NetworkBehaviour` của một prefab hoặc scene object, được so sánh khi spawn. |
 | Frame budget | Frame lớn nhất package dựng cho một transport: 1200 byte với UDP. |
-| Host | Tiến trình chạy server và client trong cùng một `NetworkManager`. Xem [host mode](../core/host-mode.md). |
+| Host | Tiến trình chạy server và client trong cùng một `NetworkManager`. Xem [host mode](../connections/host-mode.md). |
 | Input model | Model mà một behaviour đăng ký bằng `NetworkInput.Use`, được owner gửi mỗi tick. |
 | Interpolation | Hiển thị một object ở xa nằm giữa các transform đã nhận, chậm vài tick so với hiện tại. |
 | Tầng 1 | `Fomoxa.Networking`, tức Core: phần của package không tham chiếu Unity. |
 | Tầng 2 | `Fomoxa.Unity`, phần tích hợp với Unity. |
 | Message id | Id 32 bit của một model và một codec trong schema. |
 | Model | Một class C# đánh dấu bằng `[Network]` mô tả một message. |
-| Network scene | Scene mà server load theo kiểu additive trên chính nó và trên các peer được chọn. Xem [network scene](../core/scenes.md). |
+| Network scene | Scene mà server load theo kiểu additive trên chính nó và trên các peer được chọn. Xem [network scene](../objects/scenes.md). |
 | `NetworkObject` | Một GameObject tồn tại trên mạng, có object id và owner. |
 | Object id | Id mà server gán cho một `NetworkObject` khi nó spawn. |
-| Observer | Một peer nhận một object. Xem [observer](../core/observers.md). |
+| Observer | Một peer nhận một object. Xem [observer](../objects/observers.md). |
 | Owner | Peer mà object thuộc về; 0 với server. |
 | Peer id | Id của một client đang kết nối trên server; không bao giờ bằng 0. |
 | Prediction | Áp dụng input của owner trên client của nó trước khi server xác nhận. |

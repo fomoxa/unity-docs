@@ -39,6 +39,8 @@ The generated registration records the channels in `FomoxaRegistry.Channels`, so
 
 ## How reliability works
 
+<figure><img src="../.gitbook/assets/diagrams/reliable-ordering.svg" alt="A timeline with a sender and a receiver. The sender sends reliable messages 10, 11, 12 and 13, and message 11 is lost. The receiver handles 10, then holds 12 and 13 because 11 is missing. An unreliable message sent afterwards is handled as soon as it arrives. When no acknowledgement for 11 comes within the retransmission timeout, the sender sends 11 again, and the receiver then handles 11, 12 and 13 in order."><figcaption><p>Reliable messages keep their order, so one loss delays the reliable messages behind it but not the unreliable ones.</p></figcaption></figure>
+
 Every reliable message carries a 2-byte sequence number. The receiver acknowledges with the next sequence number it expects and a 32-bit mask of the messages it has received after that one, and these acknowledgements travel in the same bundles as other messages. A message that arrives ahead of a missing one waits in a buffer until the gap is filled, and duplicates are dropped.
 
 The sender resends a message whose acknowledgement does not arrive within the retransmission timeout. That timeout starts at 200 ms and then follows the measured round trip, staying between 50 ms and 1 s. At most Reliable Window messages (1024 by default) can be in flight without acknowledgement, and further reliable messages wait in the send queue.

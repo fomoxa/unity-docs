@@ -82,13 +82,26 @@ public sealed class Chat : MonoBehaviour
 }
 ```
 
+Luồng chuyển tiếp như sau:
+
+```mermaid
+sequenceDiagram
+    participant A as Client A
+    participant Server
+    participant Others as Mọi client đã khởi động
+    A->>Server: ChatLine "hello" (ClientManager.Send)
+    Note over Server: OnServerReceived(peerId, payload)<br/>kiểm tra độ dài, thêm peer id vào đầu
+    Server->>Others: ChatLine "7: hello" (ServerManager.Broadcast)
+    Note over Others: OnClientReceived log dòng chat
+```
+
 ## Gửi <a href="#sending" id="sending"></a>
 
-| Method                                           | Gửi tới                                                               |
-| ------------------------------------------------ | --------------------------------------------------------------------- |
-| `ClientManager.Send(messageId, payload)`         | Server                                                                |
-| `ServerManager.Send(peerId, messageId, payload)` | Một peer                                                              |
-| `ServerManager.Broadcast(messageId, payload)`    | Mọi peer ở trạng thái `Started`; trả về số peer đã được đưa vào queue |
+| Method | Gửi tới |
+|---|---|
+| `ClientManager.Send(messageId, payload)` | Server |
+| `ServerManager.Send(peerId, messageId, payload)` | Một peer |
+| `ServerManager.Broadcast(messageId, payload)` | Mọi peer ở trạng thái `Started`; trả về số peer đã được đưa vào queue |
 
 Payload được copy vào send queue trong lúc gọi, và message đi trên channel của model. `Send` trả về một `SendResult`, trong đó `NotConnected` nghĩa là kết nối hoặc peer không tồn tại.
 
@@ -106,4 +119,4 @@ Message id phải có trong schema đã sinh, và mỗi id chỉ có một handl
 
 Trên client, `peerId` luôn là 0. `payload` chỉ hợp lệ trong lúc gọi, nên hãy decode hoặc copy nó trước khi return. Handler ném exception sẽ ngắt kết nối peer trên server, hoặc dừng client, với `StopReason.HandlerException`, còn `MessageDecodeException` từ `Decode` chỉ làm message bị bỏ.
 
-Raw message là [model](models.md) đi trên [channel](channels.md) của nó, giống như [RPC](rpc.md). [Messaging API](../tham-chieu/messaging.md) liệt kê các member của dispatcher và các method gửi.
+Raw message là [model](models.md) đi trên [channel](channels.md) của nó, giống như [RPC](rpc.md). [Messaging API](../reference/messaging.md) liệt kê các member của dispatcher và các method gửi.

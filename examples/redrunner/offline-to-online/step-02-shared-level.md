@@ -28,7 +28,7 @@ The server could send every block, but it does not need to. If the server and ev
 ## Fomoxa concepts
 
 - [State](../../../synchronization/state.md)
-- [Scene objects](../../../core/spawning.md#scene-objects)
+- [Scene objects](../../../objects/spawning.md#scene-objects)
 - [Models and codecs](../../../messaging/models.md)
 - [Channels and reliability](../../../messaging/channels.md)
 

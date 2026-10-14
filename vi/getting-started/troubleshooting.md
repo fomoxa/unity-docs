@@ -4,7 +4,7 @@ Trang này sắp xếp theo triệu chứng. Mỗi mục đi qua các bước ki
 
 ## Sinh code thất bại <a href="#code-generation-fails" id="code-generation-fails"></a>
 
-Lỗi sinh code xuất hiện trong Console với tiền tố `[Fomoxa]`.
+Lỗi và cảnh báo khi sinh code xuất hiện trong Console với tiền tố `[Fomoxa]`.
 
 | Thông báo | Nguyên nhân và cách sửa |
 |---|---|
@@ -14,7 +14,8 @@ Lỗi sinh code xuất hiện trong Console với tiền tố `[Fomoxa]`.
 | `the FomoxaSettings asset needs both a models folder and a generated folder` | Điền cả hai field của settings asset. |
 | `fomoxac generate exited with ...` | `fomoxac` từ chối một model hoặc một đường dẫn. Phần còn lại của thông báo là output của chính `fomoxac`. Nguyên nhân hay gặp là thiếu thư mục model; hãy tạo thư mục đó. |
 | `... was not written by com.fomoxa.networking; remove it ...` | Một file do package quản lý, như `fomoxa.toml` hoặc một file trong `FomoxaSystemModels`, lại do người khác ghi. Xóa file đó và sinh lại. |
-| `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | Một field của model dùng type không có codec. Xem [codec tùy chỉnh](../advanced/custom-codecs.md). |
+| `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | Được log dưới dạng cảnh báo. Một field của model dùng type mà package không có codec. Hãy tự viết codec hoặc đăng ký type đó, như mô tả trong [codec tùy chỉnh](../advanced/custom-codecs.md). |
+| Một cảnh báo liệt kê các thay đổi như `+ new message` | Không phải lỗi. Sau mỗi lần sinh code, package liệt kê mọi thay đổi của schema và ghi rõ từng thay đổi có tương thích hay không. |
 
 ## NetworkManager ném exception khi scene khởi động <a href="#networkmanager-throws-when-the-scene-starts" id="networkmanager-throws-when-the-scene-starts"></a>
 
@@ -31,7 +32,7 @@ Exception có nội dung `no Fomoxa schema is registered; FomoxaAdapters.Registe
 1. Server đang chạy, tức `ServerManager.State` của nó là `Started`.
 2. Client dùng địa chỉ của máy chạy server. `127.0.0.1` chỉ tới được server trên cùng máy.
 3. Port của client là port mà server báo trong `ServerManager.Port`.
-4. Hai bên dùng cùng một transport. Client UDP không tới được listener TCP hay WebSocket, và server có [`MultiNetworkTransport`](../transports/multi-transport.md) lắng nghe trên port riêng cho mỗi transport.
+4. Hai bên dùng cùng một transport. Client UDP không tới được listener TCP hay WebSocket, và server có [`MultiNetworkTransport`](../connections/transports/multi-transport.md) lắng nghe trên port riêng cho mỗi transport.
 5. Firewall cho phép giao thức của transport, UDP hoặc TCP, đi qua port của server.
 6. Nếu `Reason` là `HandshakeFailed`, nó đi kèm một `Failure` giúp thu hẹp nguyên nhân.
    - `SchemaConflict` nghĩa là client và server được build từ các model khác nhau. Sinh code một lần và build cả hai từ cùng một trạng thái project.
@@ -60,13 +61,13 @@ Bắt đầu kiểm tra từ server.
 
 1. Code chỉ gọi `ServerManager.Spawn` sau khi server đã khởi động; trước đó lời gọi ném `the server is not started`.
 2. Tham số là một instance trong scene. Truyền asset prefab sẽ ném `<name> is a prefab asset; spawn an instance of it`.
-3. Prefab đã được đăng ký. `prefab id 0x... of <name> is not registered` nghĩa là prefab không có trong Collected Prefabs lẫn danh sách Prefabs của `NetworkManager`; xem bước 5 của [project đầu tiên](first-project.md).
+3. Prefab đã được đăng ký. `prefab id 0x... of <name> is not registered` nghĩa là prefab không có trong Collected Prefabs lẫn danh sách Prefabs của `NetworkManager`; xem bước 5 của [tutorial](tutorial/project-setup.md#5-give-the-networkmanager-the-generated-lists).
 4. Prefab có prefab id. Prefab có Prefab Id bằng 0 không đăng ký được, nên hãy chạy Tools > Fomoxa > Assign Prefab Ids.
 5. Owner là một client đang kết nối. `owner <id> is not a started peer` nghĩa là không phải vậy; truyền 0 cho object không có owner.
 
 Nếu server đã spawn object nhưng một client không hiện nó, hãy kiểm tra tiếp trên client.
 
-1. Client chỉ nhận object mà nó observe. Kiểm tra field Visibility của object, Observer Rule của `NetworkManager`, và `ServerManager.IsObserver(networkObject, peerId)`. Với [`DistanceRule`](../core/observers.md#distancerule), peer không sở hữu object nào sẽ không observe gì ngoài những gì nó sở hữu.
+1. Client chỉ nhận object mà nó observe. Kiểm tra field Visibility của object, Observer Rule của `NetworkManager`, và `ServerManager.IsObserver(networkObject, peerId)`. Với [`DistanceRule`](../objects/observers.md#distancerule), peer không sở hữu object nào sẽ không observe gì ngoài những gì nó sở hữu.
 2. Object trong một network scene chỉ tới các peer đã load scene đó.
 3. Nếu client đã dừng vì mismatch, xem mục trước.
 
@@ -113,4 +114,4 @@ Thông báo `<Type> registers an input model, but its NetworkManager uses the Va
 
 ## Bản build WebGL không kết nối được <a href="#webgl-build-fails-to-connect" id="webgl-build-fails-to-connect"></a>
 
-`UdpNetworkTransport cannot run in a browser` hoặc `TcpNetworkTransport cannot run in a browser` nghĩa là bản build dùng sai transport: build WebGL cần `WebSocketNetworkTransport`, dùng riêng hoặc đặt trong `MultiNetworkTransport`. `a server cannot listen in a browser; WebGL builds are clients only` nghĩa là bản build đã cố khởi động server hoặc host, điều mà build WebGL không làm được. Xem [WebGL](../unity/webgl.md).
+`UdpNetworkTransport cannot run in a browser` hoặc `TcpNetworkTransport cannot run in a browser` nghĩa là bản build dùng sai transport: build WebGL cần `WebSocketNetworkTransport`, dùng riêng hoặc đặt trong `MultiNetworkTransport`. `a server cannot listen in a browser; WebGL builds are clients only` nghĩa là bản build đã cố khởi động server hoặc host, điều mà build WebGL không làm được. Xem [WebGL](../deploy/webgl.md).

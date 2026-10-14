@@ -23,14 +23,14 @@ A scene character exists once in every process, belongs to nobody, and moves wit
 
 ## Fomoxa concepts
 
-- [Spawning](../../../core/spawning.md)
-- [Ownership](../../../core/ownership.md)
-- [Server](../../../core/server.md)
-- [Client](../../../core/client.md)
-- [Host mode](../../../core/host-mode.md)
+- [Spawning](../../../objects/spawning.md)
+- [Ownership](../../../objects/ownership.md)
+- [Server](../../../connections/server.md)
+- [Client](../../../connections/client.md)
+- [Host mode](../../../connections/host-mode.md)
 - [NetworkTransform](../../../synchronization/transform.md)
 - [Physics overview](../../../physics/overview.md)
-- [Editor integration](../../../unity/editor-integration.md#prefab-step)
+- [Editor integration](../../../advanced/editor-integration.md#prefab-step)
 
 ## Design
 

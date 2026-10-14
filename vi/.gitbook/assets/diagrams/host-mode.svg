@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="376" viewBox="0 0 920 376" role="img" aria-label="Host: một tiến trình, mỗi object một instance">
+  <title>Host: một tiến trình, mỗi object một instance</title>
+  <defs><marker id="arrow-0E9F6E" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0E9F6E"/></marker><marker id="arrow-2F6FEB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6FEB"/></marker><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="375" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="30.0" y="30.0" width="520.0" height="300.0" rx="14" fill="#F1EAFE" stroke="#7C3AED" stroke-width="1.5"/>
+  <text x="50.0" y="56.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#4C1D95" text-anchor="start">Tiến trình host, một NetworkManager</text>
+  <rect x="56.0" y="78.0" width="170.0" height="64.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="141.0" y="106.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">ClientManager</text>
+  <text x="141.0" y="123.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">người chơi host</text>
+  <rect x="354.0" y="78.0" width="170.0" height="64.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="439.0" y="106.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">ServerManager</text>
+  <text x="439.0" y="123.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">server</text>
+  <path d="M 226.0 100.0 L 354.0 100.0" fill="none" stroke="#0E9F6E" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-0E9F6E)"/>
+  <path d="M 354.0 120.0 L 226.0 120.0" fill="none" stroke="#2F6FEB" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <text x="290.0" y="90.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="600" fill="#6B7280" text-anchor="middle">loopback</text>
+  <text x="290.0" y="138.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">trong tiến trình</text>
+  <rect x="150.0" y="196.0" width="280.0" height="110.0" rx="12" fill="#FFFFFF" stroke="#D97706" stroke-width="1.5"/>
+  <text x="290.0" y="220.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#78350F" text-anchor="middle">Object Player, một instance duy nhất</text>
+  <text x="290.0" y="244.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">giữ giá trị của server, không decode lại</text>
+  <text x="290.0" y="266.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">không interpolation, không prediction</text>
+  <text x="290.0" y="288.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">bị ẩn khi không được observe</text>
+  <path d="M 141.0 142.0 L 141.0 172.0 L 200.0 196.0" fill="none" stroke="#0E9F6E" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-0E9F6E)"/>
+  <text x="135.0" y="170.1" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11.5" font-weight="500" fill="#0E9F6E" text-anchor="end">OnStartClient</text>
+  <path d="M 439.0 142.0 L 439.0 172.0 L 380.0 196.0" fill="none" stroke="#2F6FEB" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <text x="445.0" y="170.1" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="11.5" font-weight="500" fill="#2F6FEB" text-anchor="start">OnStartServer</text>
+  <rect x="690.0" y="78.0" width="200.0" height="64.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="790.0" y="106.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Client B</text>
+  <text x="790.0" y="123.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">người chơi từ xa</text>
+  <rect x="690.0" y="196.0" width="200.0" height="110.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="790.0" y="238.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Bản sao riêng</text>
+  <text x="790.0" y="255.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">của object Player,</text>
+  <text x="790.0" y="273.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">interpolation hoặc prediction</text>
+  <path d="M 690.0 100.0 L 524.0 100.0" fill="none" stroke="#0E9F6E" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-0E9F6E)"/>
+  <path d="M 524.0 120.0 L 690.0 120.0" fill="none" stroke="#2F6FEB" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <text x="607.0" y="90.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="600" fill="#6B7280" text-anchor="middle">transport</text>
+  <text x="607.0" y="138.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">ví dụ UDP</text>
+  <path d="M 790.0 142.0 L 790.0 196.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="6 4" marker-end="url(#arrow-4B5563)"/>
+  <path d="M 30.0 358.0 L 66.0 358.0" fill="none" stroke="#0E9F6E" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-0E9F6E)"/>
+  <text x="76.0" y="362.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="start">tới server</text>
+  <path d="M 200.0 358.0 L 236.0 358.0" fill="none" stroke="#2F6FEB" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <text x="246.0" y="362.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#1F2937" text-anchor="start">từ server</text>
+</svg>

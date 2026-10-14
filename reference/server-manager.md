@@ -1,6 +1,6 @@
 # ServerManager reference
 
-`public sealed class ServerManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.ServerManager`. The [server](../core/server.md) guide explains how to use it.
+`public sealed class ServerManager` in `Fomoxa.Networking` has no public constructor; you reach it through `NetworkManager.ServerManager`. The [server](../connections/server.md) guide explains how to use it.
 
 ## Connection
 

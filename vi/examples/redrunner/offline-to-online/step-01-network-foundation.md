@@ -16,9 +16,9 @@ Package cần Unity 6000.5 trở lên, còn project đang ở phiên bản cũ h
 
 - [Cài đặt](../../../getting-started/installation.md)
 - [Model và codec](../../../messaging/models.md)
-- [Tích hợp Editor](../../../unity/editor-integration.md)
-- [NetworkManager](../../../core/network-manager.md)
-- [UDP](../../../transports/udp.md)
+- [Tích hợp Editor](../../../advanced/editor-integration.md)
+- [NetworkManager](../../../connections/network-manager.md)
+- [UDP](../../../connections/transports/udp.md)
 
 ## Thiết kế <a href="#design" id="design"></a>
 
@@ -63,11 +63,11 @@ Package phụ thuộc vào các module có sẵn Physics, Physics 2D và Animati
 3. Đặt Models Folder thành `Assets/Scripts/RedRunner/Networking/Models` và Generated Folder thành `Assets/Scripts/RedRunner/Networking/Generated`.
 4. Thêm một file `.gitkeep` trống vào thư mục model. Thư mục này trống cho tới bước 02, và `fomoxac` dừng lại khi thiếu thư mục nguồn.
 
-Sau lần biên dịch tiếp theo, package ghi `fomoxa.toml`, `FomoxaSystemModels/`, `.fomoxa/` và thư mục code sinh ra, mỗi thứ đều được [cài đặt](../../../getting-started/installation.md#generate-the-code) mô tả. Hãy commit tất cả.
+Sau lần biên dịch tiếp theo, package ghi `fomoxa.toml`, `FomoxaSystemModels/`, `.fomoxa/` và thư mục code sinh ra, mỗi thứ đều được [cài đặt](../../../getting-started/installation.md#how-code-generation-works) mô tả. Hãy commit tất cả.
 
 ### Sửa scene list của build <a href="#fix-the-build-scene-list" id="fix-the-build-scene-list"></a>
 
-Mở File > Build Profiles, xóa `Assets/Scenes/Gooose.unity` không tồn tại khỏi Scene List và thêm `Assets/Scenes/Play.unity`. Package làm mới `Generated/FomoxaSceneList.asset` từ danh sách này, như mô tả trong [network scene](../../../core/scenes.md#scene-ids).
+Mở File > Build Profiles, xóa `Assets/Scenes/Gooose.unity` không tồn tại khỏi Scene List và thêm `Assets/Scenes/Play.unity`. Package làm mới `Generated/FomoxaSceneList.asset` từ danh sách này, như mô tả trong [network scene](../../../objects/scenes.md#scene-ids).
 
 ### Thêm NetworkManager <a href="#add-the-networkmanager" id="add-the-networkmanager"></a>
 

@@ -38,13 +38,13 @@ SendServerRpc(ShotNetAdapter.Instance, new Shot { Weapon = 2, Direction = transf
 
 ## Attribute <a href="#attributes" id="attributes"></a>
 
-| Attribute                                            | Đặt trên            | Ý nghĩa                                                                               |
-| ---------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------- |
-| `[Network]`                                          | Class               | Class là một model                                                                    |
-| `[Codec("name")]`                                    | Class               | Model có một codec mang tên này. Một class có thể khai báo nhiều codec.               |
-| `[Network("type")]`                                  | Property hoặc field | Member là một field với wire type này                                                 |
-| `[Codec("name")]`                                    | Property hoặc field | Member thuộc về codec này. `[Codec("net", "compact")]` khai báo nhiều codec cùng lúc. |
-| `[NetworkChannel("codec", Channel.ReliableOrdered)]` | Class               | Channel của một codec của model; xem [channel](channels.md)                           |
+| Attribute | Đặt trên | Ý nghĩa |
+|---|---|---|
+| `[Network]` | Class | Class là một model |
+| `[Codec("name")]` | Class | Model có một codec mang tên này. Một class có thể khai báo nhiều codec. |
+| `[Network("type")]` | Property hoặc field | Member là một field với wire type này |
+| `[Codec("name")]` | Property hoặc field | Member thuộc về codec này. `[Codec("net", "compact")]` khai báo nhiều codec cùng lúc. |
+| `[NetworkChannel("codec", Channel.ReliableOrdered)]` | Class | Channel của một codec của model; xem [channel](channels.md) |
 
 `[Network]` và `[Codec]` đến từ `Fomoxa.Attributes.dll`, trong namespace `Fomoxa`, còn `[NetworkChannel]` và `Channel` nằm trong namespace `Fomoxa.Networking`.
 
@@ -52,42 +52,44 @@ Một codec chỉ mang một property khi property đó có cả `[Network("type
 
 ## Wire type <a href="#wire-types" id="wire-types"></a>
 
-| Wire type                                                                                             | Type C#                                     |
-| ----------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `bool`                                                                                                | `bool`                                      |
-| `i8`, `u8`                                                                                            | `sbyte`, `byte`                             |
-| `i16`, `u16`                                                                                          | `short`, `ushort`                           |
-| `i32`, `u32`                                                                                          | `int`, `uint`                               |
-| `i64`, `u64`                                                                                          | `long`, `ulong`                             |
-| `f32`, `f64`                                                                                          | `float`, `double`                           |
-| `string`                                                                                              | `string`                                    |
-| `bytes`                                                                                               | `ReadOnlyMemory<byte>`                      |
-| `Array<T>`                                                                                            | `List<T>` của type C# tương ứng với phần tử |
-| Tên một model khác                                                                                    | Class của model đó                          |
-| `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32`, `Rect` | Type cùng tên trong `UnityEngine`           |
+| Wire type | Type C# |
+|---|---|
+| `bool` | `bool` |
+| `i8`, `u8` | `sbyte`, `byte` |
+| `i16`, `u16` | `short`, `ushort` |
+| `i32`, `u32` | `int`, `uint` |
+| `i64`, `u64` | `long`, `ulong` |
+| `f32`, `f64` | `float`, `double` |
+| `string` | `string` |
+| `bytes` | `ReadOnlyMemory<byte>` |
+| `Array<T>` | `List<T>` của type C# tương ứng với phần tử |
+| Tên một model khác | Class của model đó |
+| `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32`, `Rect` | Type cùng tên trong `UnityEngine` |
 
-Package ghi codec cho các type của Unity vào thư mục con `UnityCodecs` của Generated Folder, và chỉ cho những type mà model của bạn thực sự dùng. Mảng của một type Unity, như `Array<Vector3>`, không biên dịch được và package cảnh báo về điều đó; hãy gửi các phần tử thành field riêng hoặc bọc mỗi phần tử trong một model. Để thêm type của riêng bạn, xem [codec tùy chỉnh](../nang-cao/custom-codecs.md).
+Package ghi codec cho các type của Unity vào thư mục con `UnityCodecs` của Generated Folder, và chỉ cho những type mà model của bạn thực sự dùng. Mảng của một type Unity, như `Array<Vector3>`, không biên dịch được và package cảnh báo về điều đó; hãy gửi các phần tử thành field riêng hoặc bọc mỗi phần tử trong một model. Để thêm type của riêng bạn, xem [codec tùy chỉnh](../advanced/custom-codecs.md).
 
 ## Tên được sinh <a href="#generated-names" id="generated-names"></a>
 
 Với model `Shot` có codec `net`:
 
-| Được sinh | Tên              | Nội dung                                                         |
-| --------- | ---------------- | ---------------------------------------------------------------- |
-| Codec     | `ShotNetCodec`   | `MessageId`, `Encode` và `Decode` dạng static, do `fomoxac` viết |
-| Adapter   | `ShotNetAdapter` | `IMessageCodec<Shot>` với một `Instance` static                  |
+| Được sinh | Tên | Nội dung |
+|---|---|---|
+| Codec | `ShotNetCodec` | `MessageId`, `Encode` và `Decode` dạng static, do `fomoxac` viết |
+| Adapter | `ShotNetAdapter` | `IMessageCodec<Shot>` với một `Instance` static |
 
 Tên codec được chuyển sang PascalCase, nên codec tên `wide` cho ra `ShotWideAdapter` và codec tên `wide_one` cho ra `ShotWideOneAdapter`. Mọi type được sinh nằm chung một namespace, mang tên thư mục cuối của đường dẫn Generated Folder, nên `Assets/Network/Generated` cho ra `Generated`.
 
 Các adapter hiện thực `IMessageCodec<T>`, interface có ba member:
 
-| Member                                              | Ý nghĩa                                                                                                                                  |
-| --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `MessageId`                                         | Message id của model và codec này                                                                                                        |
-| `Encode(T value)`                                   | Encode một giá trị. Vùng nhớ trả về được dùng lại ở lần gọi tiếp theo trên cùng adapter, nên hãy copy nếu cần giữ.                       |
+| Member | Ý nghĩa |
+|---|---|
+| `MessageId` | Message id của model và codec này |
+| `Encode(T value)` | Encode một giá trị. Vùng nhớ trả về được dùng lại ở lần gọi tiếp theo trên cùng adapter, nên hãy copy nếu cần giữ. |
 | `Decode(ReadOnlyMemory<byte> payload, ref T value)` | Decode vào một instance có sẵn và giữ nguyên các property mà codec này không mang; ném `MessageDecodeException` với dữ liệu không hợp lệ |
 
 ## Nhiều codec cho một model <a href="#several-codecs-per-model" id="several-codecs-per-model"></a>
+
+<figure><img src="../.gitbook/assets/diagrams/model-codecs.svg" alt="Một class Status có hai codec net và compact. Health, kiểu u32, thuộc cả hai codec, còn Title, kiểu string, chỉ thuộc net. fomoxac viết StatusNetCodec với Health, Title và message id A, và StatusCompactCodec với Health và message id B. Package bọc mỗi codec trong một adapter, StatusNetAdapter và StatusCompactAdapter, cả hai đều là IMessageCodec của Status."><figcaption><p>Ví dụ Status bên dưới: một class, hai codec, hai message id.</p></figcaption></figure>
 
 Một model có thể khai báo nhiều codec, mỗi codec chọn một tập field riêng:
 
@@ -118,4 +120,4 @@ Mỗi lần sinh code còn ghi `NetSchema.cs`, danh sách mọi message id và l
 
 Ngoài các model của chính package và các model nó sinh cho RPC không tham số, chỉ những class trong Models Folder mới có codec. Binary `fomoxac` chỉ đi kèm cho Editor Windows x64 và Linux x64.
 
-Model được dùng bởi [RPC](rpc.md), [state](../dong-bo/state.md) và [input](../prediction/input.md). [Messaging API](../tham-chieu/messaging.md) liệt kê các type codec, và [tích hợp Editor](../unity/editor-integration.md) mô tả bước sinh code.
+Model được dùng bởi [RPC](rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md). [Messaging API](../reference/messaging.md) liệt kê các type codec, và [tích hợp Editor](../advanced/editor-integration.md) mô tả bước sinh code.

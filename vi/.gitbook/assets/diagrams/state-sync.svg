@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="330" viewBox="0 0 920 330" role="img" aria-label="Một thay đổi state tới client thế nào">
+  <title>Một thay đổi state tới client thế nào</title>
+  <defs><marker id="arrow-2F6FEB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2F6FEB"/></marker><marker id="arrow-4B5563" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4B5563"/></marker><marker id="arrow-9CA3AF" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#9CA3AF"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="329" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <text x="30.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Server, mỗi tick</text>
+  <rect x="30.0" y="56.0" width="190.0" height="76.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
+  <text x="125.0" y="90.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">Code của bạn</text>
+  <text x="125.0" y="107.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#0F172A" text-anchor="middle">health.Current = 80</text>
+  <rect x="255.0" y="56.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="350.0" y="81.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Encode</text>
+  <text x="350.0" y="98.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">sau OnTick và</text>
+  <text x="350.0" y="116.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">OnPostTick</text>
+  <rect x="480.0" y="56.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="575.0" y="81.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">So byte</text>
+  <text x="575.0" y="98.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">với state</text>
+  <text x="575.0" y="116.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">đã gửi lần trước</text>
+  <rect x="705.0" y="56.0" width="185.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
+  <text x="797.5" y="81.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Nếu khác nhau</text>
+  <text x="797.5" y="98.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">gửi state đầy đủ hoặc delta,</text>
+  <text x="797.5" y="116.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">cái nào nhỏ hơn</text>
+  <path d="M 220.0 94.0 L 255.0 94.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <path d="M 445.0 94.0 L 480.0 94.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <path d="M 670.0 94.0 L 705.0 94.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <path d="M 575.0 132.0 L 575.0 160.0" fill="none" stroke="#9CA3AF" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-9CA3AF)"/>
+  <rect x="519.4" y="161.8" width="111.2" height="20.5" rx="10.25" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1"/>
+  <text x="575.0" y="175.8" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="10.5" font-weight="600" fill="#1F2937" text-anchor="middle">giống: không gửi gì</text>
+  <text x="30.0" y="220.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Mỗi client đang observe</text>
+  <rect x="480.0" y="236.0" width="190.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="575.0" y="267.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Decode</text>
+  <text x="575.0" y="284.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">vào instance của bạn</text>
+  <rect x="705.0" y="236.0" width="185.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="797.5" y="267.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">onChanged(previous)</text>
+  <text x="797.5" y="284.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">giá trị trước đó</text>
+  <path d="M 797.0 132.0 L 797.0 190.0 L 575.0 190.0 L 575.0 236.0" fill="none" stroke="#2F6FEB" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
+  <rect x="689.6" y="171.5" width="102.6" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="740.9" y="183.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#2F6FEB" text-anchor="middle">reliable, có thứ tự</text>
+  <path d="M 670.0 271.0 L 705.0 271.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
+  <rect x="30.0" y="236.0" width="410.0" height="70.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+  <text x="235.0" y="258.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#78350F" text-anchor="middle">Delta không áp được</text>
+  <text x="235.0" y="275.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">client bỏ nó và gửi StateResync;</text>
+  <text x="235.0" y="293.3" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">server trả lời bằng state đầy đủ</text>
+</svg>

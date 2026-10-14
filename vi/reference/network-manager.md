@@ -1,6 +1,6 @@
 # Tham chiếu NetworkManager
 
-`public sealed class NetworkManager : MonoBehaviour` trong `Fomoxa.Unity`, đánh dấu `[DisallowMultipleComponent]`. Hướng dẫn [NetworkManager](../core/network-manager.md) giải thích cách dùng nó, và các field của nó được liệt kê trong [cấu hình](configuration.md#networkmanager).
+`public sealed class NetworkManager : MonoBehaviour` trong `Fomoxa.Unity`, đánh dấu `[DisallowMultipleComponent]`. Hướng dẫn [NetworkManager](../connections/network-manager.md) giải thích cách dùng nó, và các field của nó được liệt kê trong [cấu hình](configuration.md#networkmanager).
 
 ## Mục đích <a href="#purpose" id="purpose"></a>
 

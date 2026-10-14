@@ -53,6 +53,8 @@ At the end of the tick the result is compared with the previously published set,
 
 On the owner's client the components also record the touching set of every tick. A replay restores the set of the corrected tick, updates it as the worlds step again and publishes once after the replay. An event that already fired for the original run does not fire again, and a contact that the replay removed fires an exit.
 
+<figure><img src="../.gitbook/assets/diagrams/contact-replay.svg" alt="So far the client has shown no contact at T2 and contact with B at T3 and T4, and OnEnter(B) has fired. A replay from T2 restores the empty set of T2, then finds no contact at T3 and contact with C at T4, without raising events. After the replay the component raises the difference once: OnExit(B) and OnEnter(C)."><figcaption><p>Events after a replay are the difference from what was already shown.</p></figcaption></figure>
+
 When no `NetworkManager` steps the world, for example with Simulate Physics off, the components pass Unity's own callbacks through as `OnEnter` and `OnExit`.
 
 ## Configuration

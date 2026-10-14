@@ -76,6 +76,8 @@ Gọi `TakeDamage` trên server, và `health` của các client thay đổi vào
 
 ## Cách hoạt động <a href="#how-it-works" id="how-it-works"></a>
 
+<figure><img src="../.gitbook/assets/diagrams/state-sync.svg" alt="Trên server, mỗi tick: code của bạn đổi health.Current, server encode state sau OnTick và OnPostTick rồi so các byte với state đã gửi lần trước. Nếu giống nhau thì không gửi gì. Nếu khác, server gửi state đầy đủ hoặc delta, cái nào nhỏ hơn, theo kiểu reliable và có thứ tự. Mỗi client đang observe decode nó vào instance của bạn và gọi onChanged với giá trị trước đó. Delta mà client không áp được sẽ bị bỏ, client gửi StateResync và server trả lời bằng state đầy đủ."><figcaption><p>Server chỉ gửi state khi các byte đã encode thay đổi.</p></figcaption></figure>
+
 `NetworkState.Use(codec, instance, onChanged)` đăng ký instance. Sau các event `OnTick` và `OnPostTick` của tick, server encode mọi instance state, so sánh các byte với lần gửi trước, và gửi state tới mọi observer nếu chúng khác nhau.
 
 Vì phép so sánh làm trên các byte đã encode, mọi thay đổi của một property được codec mang đều được phát hiện mà bạn không cần đánh dấu dirty. Property mà codec không mang thì không được so sánh cũng không được gửi.
@@ -113,4 +115,4 @@ Field có kích thước cố định giữ độ dài bản encode ổn định
 
 Mỗi `NetworkBehaviour` có nhiều nhất một state model, nên dữ liệu cần nhiều hơn phải chia ra nhiều behaviour. State được gửi nhiều nhất một lần mỗi tick, nên mọi thay đổi trong cùng một tick được gộp lại. Mọi observer nhận cùng một state, nên dữ liệu dành cho một client duy nhất phải gửi bằng target RPC.
 
-State được đăng ký trong một [NetworkBehaviour](../core/network-behaviour.md) và khai báo như mọi [model](../messaging/models.md) khác. [NetworkAnimator](animator.md) được xây trên cùng cơ chế này.
+State được đăng ký trong một [NetworkBehaviour](../objects/network-behaviour.md) và khai báo như mọi [model](../messaging/models.md) khác. [NetworkAnimator](animator.md) được xây trên cùng cơ chế này.

@@ -1,6 +1,6 @@
-# Tổng quan
+# Tổng quan prediction
 
-Client-side prediction cho owner của một object áp dụng input của chính mình ngay, thay vì chờ một vòng round trip tới server. Server áp dụng cùng input đó khi nó tới và gửi kết quả về, và client tự sửa nếu hai kết quả khác nhau. [Prediction](../khai-niem/prediction.md) giải thích ý tưởng, còn trang này xây từng bước một nhân vật được dự đoán.
+Client-side prediction cho owner của một object áp dụng input của chính mình ngay, thay vì chờ một vòng round trip tới server. Server áp dụng cùng input đó khi nó tới và gửi kết quả về, và client tự sửa nếu hai kết quả khác nhau. [Prediction](../concepts/prediction.md) giải thích ý tưởng, còn trang này xây từng bước một nhân vật được dự đoán.
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
@@ -70,7 +70,7 @@ public sealed class PredictedMover : NetworkBehaviour
 
     private void Awake()
     {
-        manager = FindFirstObjectByType<NetworkManager>();
+        manager = FindAnyObjectByType<NetworkManager>();
     }
 
     protected override void OnRegisterInput(NetworkInput input)
@@ -112,27 +112,27 @@ Ví dụ đọc Input Manager cũ; với package Input System, hãy đọc input
 
 ## Mỗi tick diễn ra gì <a href="#what-happens-each-tick" id="what-happens-each-tick"></a>
 
-| Ai               | Làm gì                                                                                                                                                                                                            |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Ai | Làm gì |
+|---|---|
 | Client của owner | Gọi `Gather` cho prediction tick của nó và gửi input cùng các input trước đó. Khi đã dự đoán, nó còn gọi `Apply` với input đó và ghi lại state từ `Capture`. Nó bắt đầu dự đoán khi state đầu tiên từ server tới. |
-| Server           | Khi tick của nó tới tick của input, gọi `Apply` với input đó, rồi `Capture`, và gửi state đã chụp tới owner.                                                                                                      |
-| Client của owner | Khi state của server cho một tick tới, so sánh nó với bản ghi của tick đó bằng `Matches`. Nếu không khớp, nó gọi `Restore` với state của server và gọi lại `Apply` cho mọi tick sau đó mà nó có input.            |
-| Client khác      | Không làm gì với input. Chúng thấy object qua `NetworkTransform`.                                                                                                                                                 |
+| Server | Khi tick của nó tới tick của input, gọi `Apply` với input đó, rồi `Capture`, và gửi state đã chụp tới owner. |
+| Client của owner | Khi state của server cho một tick tới, so sánh nó với bản ghi của tick đó bằng `Matches`. Nếu không khớp, nó gọi `Restore` với state của server và gọi lại `Apply` cho mọi tick sau đó mà nó có input. |
+| Client khác | Không làm gì với input. Chúng thấy object qua `NetworkTransform`. |
 
 ## Kết quả mong đợi <a href="#expected-result" id="expected-result"></a>
 
-* Nhân vật của owner di chuyển ngay trong frame phím được bấm.
-* Client khác thấy nó di chuyển, hơi chậm về quá khứ.
-* `ReconcileCount` của `PredictedMover` trên owner giữ quanh 0 khi nhân vật di chuyển tự do.
+- Nhân vật của owner di chuyển ngay trong frame phím được bấm.
+- Client khác thấy nó di chuyển, hơi chậm về quá khứ.
+- `ReconcileCount` của `PredictedMover` trên owner giữ quanh 0 khi nhân vật di chuyển tự do.
 
 ## Đọc tiếp <a href="#where-to-go-next" id="where-to-go-next"></a>
 
-| Chủ đề                             | Trang                                                  |
-| ---------------------------------- | ------------------------------------------------------ |
-| Thu thập, gửi, lặp lại và bỏ input | [Input](input.md)                                      |
-| Chụp, khôi phục, so sánh và replay | [Reconciliation](reconciliation.md)                    |
-| Nhân vật di chuyển bằng physics    | [Rollback với physics](rollback.md)                    |
-| Làm mượt các lần sửa trên màn hình | [NetworkTransform](../dong-bo/transform.md#prediction) |
+| Chủ đề | Trang |
+|---|---|
+| Thu thập, gửi, lặp lại và bỏ input | [Input](input.md) |
+| Chụp, khôi phục, so sánh và replay | [Reconciliation](reconciliation.md) |
+| Nhân vật di chuyển bằng physics | [Rollback với physics](rollback.md) |
+| Làm mượt các lần sửa trên màn hình | [NetworkTransform](../synchronization/transform.md#prediction) |
 
 ## Host mode <a href="#host-mode" id="host-mode"></a>
 

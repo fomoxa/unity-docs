@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="300" viewBox="0 0 920 300" role="img" aria-label="Predicted and proxy bodies in one client's world">
+  <title>Predicted and proxy bodies in one client's world</title>
+  <defs><marker id="arrow-0E9F6E" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0E9F6E"/></marker></defs>
+  <rect x="0.5" y="0.5" width="919" height="299" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+  <rect x="30.0" y="30.0" width="520.0" height="240.0" rx="12" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+  <text x="50.0" y="56.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="700" fill="#1F2937" text-anchor="start">Physics world on client A</text>
+  <circle cx="190.0" cy="170.0" r="34" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="2"/>
+  <text x="190.0" y="175.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#065F46" text-anchor="middle">A</text>
+  <path d="M 226.0 170.0 L 300.0 170.0" fill="none" stroke="#0E9F6E" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-0E9F6E)"/>
+  <rect x="225.5" y="150.5" width="74.9" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+  <text x="263.0" y="162.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#0E9F6E" text-anchor="middle">collides with</text>
+  <circle cx="370.0" cy="170.0" r="34" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="2"/>
+  <circle cx="370" cy="170" r="42" fill="none" stroke="#9CA3AF" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="370.0" y="175.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#6B7280" text-anchor="middle">B</text>
+  <text x="370.0" y="236.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#6B7280" text-anchor="middle">kinematic, placed at its</text>
+  <text x="370.0" y="252.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#6B7280" text-anchor="middle">NetworkTransform position</text>
+  <text x="190.0" y="236.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="600" fill="#065F46" text-anchor="middle">A's own player</text>
+  <rect x="580.0" y="40.0" width="310.0" height="104.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
+  <text x="735.0" y="70.8" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Predicted</text>
+  <text x="735.0" y="88.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">objects client A owns and predicts</text>
+  <text x="735.0" y="105.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">simulated, saved every tick,</text>
+  <text x="735.0" y="123.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">rolled back on corrections</text>
+  <rect x="580.0" y="160.0" width="310.0" height="104.0" rx="10" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="1.5"/>
+  <text x="735.0" y="190.8" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1F2937" text-anchor="middle">Proxy</text>
+  <text x="735.0" y="208.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">every other networked body</text>
+  <text x="735.0" y="225.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">kinematic, placed before each step,</text>
+  <text x="735.0" y="243.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">excluded from snapshots</text>
+</svg>

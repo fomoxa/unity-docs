@@ -4,7 +4,7 @@ Trang này liệt kê các field Inspector của mọi component và asset. Tr�
 
 ## NetworkManager <a href="#networkmanager" id="networkmanager"></a>
 
-Hướng dẫn [NetworkManager](../core/network-manager.md) giải thích tác dụng của từng field.
+Hướng dẫn [NetworkManager](../connections/network-manager.md) giải thích tác dụng của từng field.
 
 | Field | Type | Mặc định | Phạm vi |
 |---|---|---|---|
@@ -114,4 +114,4 @@ Giá trị nằm ngoài phạm vi sẽ ném exception khi manager khởi động
 | Models Folder | `string` | `Assets/Models` |
 | Generated Folder | `string` | `Assets/Generated` |
 
-Các member đứng sau những field này được liệt kê trong [tham chiếu NetworkManager](network-manager.md) và [tham chiếu component](components.md). [Tích hợp Editor](../unity/editor-integration.md) giải thích asset `FomoxaSettings`.
+Các member đứng sau những field này được liệt kê trong [tham chiếu NetworkManager](network-manager.md) và [tham chiếu component](components.md). [Tích hợp Editor](../advanced/editor-integration.md) giải thích asset `FomoxaSettings`.

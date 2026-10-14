@@ -28,15 +28,15 @@ Offline game (2b675b5)
 
 | Bước | Thay đổi gì | Trang Fomoxa |
 |---|---|---|
-| [01 Nền tảng network](step-01-network-foundation.md) | Unity 6000.5, package, sinh code, một `NetworkManager` trong `Play.unity` | [Cài đặt](../../../getting-started/installation.md), [NetworkManager](../../../core/network-manager.md) |
-| [02 Level dùng chung](step-02-shared-level.md) | Một level hữu hạn dựng từ seed mà server giữ trong một state | [State](../../../synchronization/state.md), [Spawn](../../../core/spawning.md#scene-objects) |
-| [03 Spawn người chơi](step-03-player-spawning.md) | Nhân vật trở thành network prefab; game khởi động dưới dạng server, host hoặc client | [Spawn](../../../core/spawning.md), [Server](../../../core/server.md), [Client](../../../core/client.md) |
+| [01 Nền tảng network](step-01-network-foundation.md) | Unity 6000.5, package, sinh code, một `NetworkManager` trong `Play.unity` | [Cài đặt](../../../getting-started/installation.md), [NetworkManager](../../../connections/network-manager.md) |
+| [02 Level dùng chung](step-02-shared-level.md) | Một level hữu hạn dựng từ seed mà server giữ trong một state | [State](../../../synchronization/state.md), [Spawn](../../../objects/spawning.md#scene-objects) |
+| [03 Spawn người chơi](step-03-player-spawning.md) | Nhân vật trở thành network prefab; game khởi động dưới dạng server, host hoặc client | [Spawn](../../../objects/spawning.md), [Server](../../../connections/server.md), [Client](../../../connections/client.md) |
 | [04 Input của người chơi](step-04-player-input.md) | Input model và bước tick mà server áp dụng | [Input](../../../prediction/input.md), [Authority](../../../concepts/authority.md) |
 | [05 Prediction và reconciliation](step-05-prediction-and-reconciliation.md) | Motion model, rollback physics 2D, camera theo người chơi cục bộ | [Reconciliation](../../../prediction/reconciliation.md), [Rollback với physics](../../../prediction/rollback.md) |
 | [06 Chết và hồi sinh](step-06-death-and-respawn.md) | Cái chết quyết định trên server, state của người chơi, hồi sinh bằng teleport | [State](../../../synchronization/state.md), [Teleport](../../../synchronization/transform.md#teleporting) |
 | [07 Chướng ngại di chuyển](step-07-moving-hazards.md) | Path follower được đặt theo số tick | [Tick và thời gian](../../../concepts/tick.md) |
 | [08 Hai client](step-08-two-clients.md) | Animation của nhân vật ở xa, người chơi rời đi hoặc bị crash | [NetworkTransform](../../../synchronization/transform.md), [Input](../../../prediction/input.md) |
-| [09 Game online hoàn chỉnh](step-09-final-online-game.md) | Bản build player, dedicated server, ảnh chụp màn hình | [Dedicated server](../../../server/dedicated-server.md) |
+| [09 Game online hoàn chỉnh](step-09-final-online-game.md) | Bản build player, dedicated server, ảnh chụp màn hình | [Dedicated server](../../../deploy/dedicated-server.md) |
 
 ## Commit <a href="#commits" id="commits"></a>
 
