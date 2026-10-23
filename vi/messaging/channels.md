@@ -51,6 +51,6 @@ Vì thứ tự được giữ trên mọi message reliable của một kết n�
 
 Khi flush, message được đóng vào các bundle vừa với frame budget của transport, tức 1200 byte với UDP và frame Fomoxa lớn nhất với TCP và WebSocket. Một message đơn lẻ lớn hơn budget vẫn được gửi, một mình trong bundle riêng.
 
-Giới hạn đầu tiên một message lớn gặp là queue: lệnh gửi lớn hơn Byte Capacity (mặc định 1 MiB) trả về `SendResult.TooLargeForQueue` và không được đưa vào queue. Sau đó tới transport. Với UDP, một bundle phải vừa một datagram tối đa 65507 byte, tính cả header của frame, còn với TCP và WebSocket giao thức cho phép message tới 16 MiB. Message mà transport hoàn toàn không gửi được sẽ bị bỏ, và package phát `OnSendDropped` với `SendStatus.TooLarge` và log `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
+Giới hạn đầu tiên một message lớn gặp là queue: lệnh gửi lớn hơn Byte Capacity (mặc định 1 MiB) trả về `SendResult.TooLargeForQueue` và không được đưa vào queue. Sau đó tới transport. Với UDP, một bundle phải vừa một datagram có frame tối đa 65499 byte, tính cả header của frame, còn với TCP và WebSocket giao thức cho phép message tới 16 MiB. Message mà transport hoàn toàn không gửi được sẽ bị bỏ, và package phát `OnSendDropped` với `SendStatus.TooLarge` và log `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
 
 Channel được khai báo trên [model](models.md). [Mô hình networking](../concepts/networking-model.md) cho thấy channel nằm ở đâu trên đường gửi, và [hiệu năng](../advanced/performance.md) nói về chi phí của message reliable.

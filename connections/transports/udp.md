@@ -18,7 +18,8 @@ manager.ClientManager.StartConnection("203.0.113.10", 7777);
 | Connection model | UDP has no connection. The client's transport is ready at once, and the Fomoxa handshake establishes the session. |
 | Reliability | None at the transport. The package resends `ReliableOrdered` messages; `Unreliable` messages can be lost. |
 | Ordering | None at the transport. The package orders `ReliableOrdered` messages. |
-| Frame budget | 1200 bytes. A flush packs messages into bundles up to that size. A larger single message is sent alone, up to one datagram (65507 bytes). |
+| Frame budget | 1200 bytes. A flush packs messages into bundles up to that size. A larger single message is sent alone, up to one datagram (a frame of 65499 bytes). |
+| Session identifier | Every datagram starts with an 8-byte identifier that the server assigns, so a datagram is 8 bytes longer than its frame. A client keeps its session when its source address changes, for example when a phone moves from wifi to mobile data. The identifier is not encrypted and does not authenticate the client. |
 | Addressing | A host name or an IP address, and a port. The client uses the first resolved address, IPv4 first. |
 | Server | Binds the port on all IPv4 interfaces. Port 0 picks a free port. |
 | Blocking | Never blocks. |
