@@ -55,7 +55,7 @@ flowchart TD
 
 After a connection fails or drops, the client starts again after Reconnect Interval Seconds (0.5 by default), up to Max Reconnect Retries times (by default -1, which means without limit). The retry count resets whenever a connection reaches `Started`.
 
-Some stop reasons end the connection for good. The client does not retry after `LocalStop`, which means your code called `StopConnection`, or after `HandlerException`, which means a message handler on the client threw. It also stays stopped after `PrefabMismatch` or `ObjectMismatch`, when it could not apply an object message, after `PhysicsBackendMismatch`, when the server uses another physics backend, and after `HandshakeFailed` with any failure other than `Timeout`. A host's in-process client never retries.
+Some stop reasons end the connection for good. The client does not retry after `LocalStop`, which means your code called `StopConnection`, or after `HandlerException`, which means a message handler on the client threw. It also stays stopped after `PrefabMismatch` or `ObjectMismatch`, when it could not apply an object message, after `PhysicsBackendMismatch`, when the server uses another physics backend, after `InvalidFragment`, when the server sent fragments that do not fit together, and after `HandshakeFailed` with any failure other than `Timeout`. A host's in-process client never retries.
 
 Every reconnect is a new connection. The client despawns all objects when the connection stops, and the server spawns them again once the new connection has started.
 

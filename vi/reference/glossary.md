@@ -10,6 +10,7 @@
 | Codec | Một cách encode model có tên, do `fomoxac` sinh. Một model có thể có nhiều codec. |
 | Delta | XOR giữa bản encode mới và bản encode trước của một state, với các đoạn không đổi được nén lại. |
 | Fingerprint | Hash của danh sách type `NetworkBehaviour` của một prefab hoặc scene object, được so sánh khi spawn. |
+| Fragment | Một mảnh của message `ReliableOrdered` lớn hơn frame budget. Bên nhận ghép các mảnh lại rồi mới giao message. Xem [kích thước message](../messaging/channels.md#message-size). |
 | Frame budget | Frame lớn nhất package dựng cho một transport: 1200 byte với UDP. |
 | Host | Tiến trình chạy server và client trong cùng một `NetworkManager`. Xem [host mode](../connections/host-mode.md). |
 | Input model | Model mà một behaviour đăng ký bằng `NetworkInput.Use`, được owner gửi mỗi tick. |

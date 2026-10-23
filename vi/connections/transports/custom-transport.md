@@ -20,7 +20,7 @@ Quy tắc chính là không bao giờ chặn. Package gọi mọi method từ ma
 
 Ngoài `WouldBlock`, `Receive(buffer)` trả về `ReceiveOutcome.NeedCapacity(size)` khi message tiếp theo không vừa buffer, `Ok(count)` với số byte đã copy, `Closed` sau khi phía bên kia đóng kết nối đúng cách, và `Error` khi thất bại. `Send` trả về `SendOutcome.TooLarge` với byte không bao giờ gửi được, `Closed` sau khi kết nối đã đóng, và `Error` khi thất bại.
 
-`FrameBudget` là frame lớn nhất package nên dựng. Hãy dùng kích thước mà đường truyền của bạn mang được mà không phải chia nhỏ, hoặc `FomoxaWire.MaxDataFrameSize` cho đường truyền không có giới hạn thực tế.
+`FrameBudget` là frame lớn nhất package nên dựng. Hãy dùng kích thước mà đường truyền của bạn mang được mà không phải chia nhỏ, hoặc `FomoxaWire.MaxDataFrameSize` cho đường truyền không có giới hạn thực tế. Giá trị này phải từ `BundleFormat.MinFrameBudget` (38 byte) trở lên: với frame nhỏ hơn, một mảnh của message reliable lớn không còn chỗ cho dữ liệu.
 
 ## Ví dụ: transport trong bộ nhớ <a href="#example-an-in-memory-transport" id="example-an-in-memory-transport"></a>
 

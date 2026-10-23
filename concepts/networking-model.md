@@ -39,7 +39,7 @@ A send does not write to the network at once. It adds the message to the connect
 
 <figure><img src="../.gitbook/assets/diagrams/send-queue.svg" alt="Calls such as SendServerRpc, state changes, transform updates and Send go into the send queue of one connection. The queue has limits: Message Capacity 1024 messages, Byte Capacity 1 MiB and Reliable Window 1024 unacknowledged messages. Once per tick the queue is flushed into bundles, each one transport frame of at most the frame budget: 1200 bytes over UDP, the largest Fomoxa frame over TCP and WebSocket."><figcaption><p>Messages wait in a queue per connection and leave in bundles.</p></figcaption></figure>
 
-A flush packs the queued messages into bundles. Each bundle is one transport frame and holds as many messages as fit in the transport's frame budget: 1200 bytes for UDP, and the largest Fomoxa frame for TCP and WebSocket. Several small messages therefore travel in a single datagram.
+A flush packs the queued messages into bundles. Each bundle is one transport frame and holds as many messages as fit in the transport's frame budget: 1200 bytes for UDP, and the largest Fomoxa frame for TCP and WebSocket. Several small messages therefore travel in a single datagram, and a reliable message larger than the budget is split across several bundles (see [message size](../messaging/channels.md#message-size)).
 
 The queue of each connection has limits, which you set on the `NetworkManager`:
 

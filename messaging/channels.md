@@ -49,8 +49,16 @@ Because order is kept across all reliable messages of a connection, one lost mes
 
 ## Message size
 
-A flush packs messages into bundles that fit the transport's frame budget, which is 1200 bytes for UDP and the largest Fomoxa frame for TCP and WebSocket. A single message larger than the budget is still sent, alone in its own bundle.
+A flush packs messages into bundles that fit the transport's frame budget, which is 1200 bytes for UDP and the largest Fomoxa frame for TCP and WebSocket.
 
-The first limit a large message meets is the queue: a send larger than Byte Capacity (1 MiB by default) returns `SendResult.TooLargeForQueue` and is not queued. After that comes the transport. Over UDP a bundle must fit in one datagram whose frame is at most 65499 bytes, frame header included, while over TCP and WebSocket the protocol allows messages up to 16 MiB. A message the transport cannot send at all is dropped, and the package raises `OnSendDropped` with `SendStatus.TooLarge` and logs `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
+The package splits a `ReliableOrdered` message larger than the frame budget into fragments, one per bundle. Each fragment has its own sequence number and is resent alone if it is lost, and the receiver joins the fragments and delivers the message once. Until its last fragment has left, the message stays at the head of the send queue, and no message queued after it leaves first. Over TCP and WebSocket the frame budget is the largest Fomoxa frame, and nothing is split.
+
+A reliable message that needs splitting can be at most 1 MiB (1048576 bytes). Sending a larger one returns `SendResult.TooLargeForReassembly`, and the message is not queued. Send such data over TCP or WebSocket, or divide it into several messages. The package's own object messages, such as spawns, are always queued; if one of them is too large to split, the flush drops it and raises `OnSendDropped` with `SendStatus.TooLarge`.
+
+An `Unreliable` message larger than the frame budget goes whole, alone in its own bundle. IP then fragments the datagram, and losing any IP fragment loses the message, so send large data on `ReliableOrdered`.
+
+A send larger than Byte Capacity (1 MiB by default) returns `SendResult.TooLargeForQueue` and is not queued. Over UDP a bundle that is not split must fit in one datagram whose frame is at most 65499 bytes, frame header included, while over TCP and WebSocket the protocol allows messages up to 16 MiB. A message the transport cannot send at all is dropped, and the package raises `OnSendDropped` with `SendStatus.TooLarge` and logs `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
+
+If the other side sends fragments that do not fit together, the connection stops with `StopReason.InvalidFragment` and the client does not reconnect. The package never sends such fragments, so the other side is not following the protocol.
 
 Channels are declared on [models](models.md). The [networking model](../concepts/networking-model.md) shows where they fit in the send path, and [performance](../advanced/performance.md) covers the cost of reliable messages.

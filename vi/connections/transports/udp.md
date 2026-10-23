@@ -18,7 +18,7 @@ manager.ClientManager.StartConnection("203.0.113.10", 7777);
 | Mô hình kết nối | UDP không có kết nối. Transport của client sẵn sàng ngay, và handshake Fomoxa thiết lập session. |
 | Độ tin cậy | Transport không có. Package gửi lại message `ReliableOrdered`; message `Unreliable` có thể mất. |
 | Thứ tự | Transport không có. Package sắp thứ tự message `ReliableOrdered`. |
-| Frame budget | 1200 byte. Khi flush, message được đóng vào bundle tới kích thước đó. Một message đơn lẻ lớn hơn được gửi riêng, tối đa một datagram (frame 65499 byte). |
+| Frame budget | 1200 byte. Khi flush, message được đóng vào bundle tới kích thước đó. Message `ReliableOrdered` lớn hơn được chia thành các mảnh cỡ đó, tổng tối đa 1 MiB. Message `Unreliable` lớn hơn được gửi riêng, tối đa một datagram (frame 65499 byte). Xem [kích thước message](../../messaging/channels.md#message-size). |
 | Mã phiên | Mỗi datagram bắt đầu bằng một mã 8 byte do server cấp, nên datagram dài hơn frame của nó 8 byte. Client giữ session khi địa chỉ nguồn đổi, ví dụ khi điện thoại chuyển từ wifi sang dữ liệu di động. Mã này không được mã hóa và không xác thực client. |
 | Địa chỉ | Host name hoặc địa chỉ IP, và port. Client dùng địa chỉ phân giải được đầu tiên, ưu tiên IPv4. |
 | Server | Bind port trên mọi interface IPv4. Port 0 chọn một port trống. |

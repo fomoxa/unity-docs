@@ -16,6 +16,7 @@
 | `PrefabMismatch` | Client không spawn được một object: prefab hoặc scene object không biết hoặc khác, hoặc một network scene không load được | Không |
 | `ObjectMismatch` | Client nhận một object message mà nó không áp dụng được | Không |
 | `PhysicsBackendMismatch` | Client và server dùng physics backend khác nhau | Không |
+| `InvalidFragment` | Phía bên kia gửi các mảnh của một message reliable lớn mà không ghép được với nhau | Không |
 
 ## HandshakeFailure <a href="#handshakefailure" id="handshakefailure"></a>
 
@@ -54,6 +55,7 @@
 | `Full` | Queue đang giữ Message Capacity message |
 | `BytesFull` | Queue đang giữ quá nhiều byte cho message này |
 | `TooLargeForQueue` | Message lớn hơn Byte Capacity |
+| `TooLargeForReassembly` | Message `ReliableOrdered` phải chia cho transport mà lớn hơn 1 MiB |
 | `TooLarge` | Message lớn hơn mức giao thức cho phép |
 | `NotConnected` | Không có kết nối, hoặc không có peer như vậy |
 | `NotObserver` | Target RPC tới một peer không observe object |

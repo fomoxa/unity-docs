@@ -20,7 +20,7 @@ The most important rule is never to block. The package calls every method from t
 
 Apart from `WouldBlock`, `Receive(buffer)` returns `ReceiveOutcome.NeedCapacity(size)` when the next message does not fit in the buffer, `Ok(count)` with the number of bytes copied, `Closed` after a graceful close by the other side, and `Error` on failure. `Send` returns `SendOutcome.TooLarge` for bytes it can never send, `Closed` after the connection has closed, and `Error` on failure.
 
-`FrameBudget` is the largest frame the package should build. Use the size your link carries without splitting, or `FomoxaWire.MaxDataFrameSize` for links without a practical limit.
+`FrameBudget` is the largest frame the package should build. Use the size your link carries without splitting, or `FomoxaWire.MaxDataFrameSize` for links without a practical limit. It must be at least `BundleFormat.MinFrameBudget` (38 bytes); in a smaller frame a fragment of a large reliable message has no room for data.
 
 ## Example: an in-memory transport
 

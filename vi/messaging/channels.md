@@ -49,8 +49,16 @@ Vì thứ tự được giữ trên mọi message reliable của một kết n�
 
 ## Kích thước message <a href="#message-size" id="message-size"></a>
 
-Khi flush, message được đóng vào các bundle vừa với frame budget của transport, tức 1200 byte với UDP và frame Fomoxa lớn nhất với TCP và WebSocket. Một message đơn lẻ lớn hơn budget vẫn được gửi, một mình trong bundle riêng.
+Khi flush, message được đóng vào các bundle vừa với frame budget của transport, tức 1200 byte với UDP và frame Fomoxa lớn nhất với TCP và WebSocket.
 
-Giới hạn đầu tiên một message lớn gặp là queue: lệnh gửi lớn hơn Byte Capacity (mặc định 1 MiB) trả về `SendResult.TooLargeForQueue` và không được đưa vào queue. Sau đó tới transport. Với UDP, một bundle phải vừa một datagram có frame tối đa 65499 byte, tính cả header của frame, còn với TCP và WebSocket giao thức cho phép message tới 16 MiB. Message mà transport hoàn toàn không gửi được sẽ bị bỏ, và package phát `OnSendDropped` với `SendStatus.TooLarge` và log `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
+Package chia message `ReliableOrdered` lớn hơn frame budget thành các mảnh, mỗi mảnh một bundle. Mỗi mảnh có sequence number riêng và được gửi lại riêng khi bị mất; bên nhận ghép các mảnh rồi giao message một lần. Message nằm ở đầu send queue cho tới khi mảnh cuối đã đi, và không message nào xếp sau nó được đi trước. Với TCP và WebSocket, frame budget là frame Fomoxa lớn nhất, và không message nào bị chia.
+
+Message reliable cần chia dài tối đa 1 MiB (1048576 byte). Gửi message lớn hơn sẽ trả về `SendResult.TooLargeForReassembly`, và message không được đưa vào queue. Dữ liệu như vậy hãy gửi qua TCP hoặc WebSocket, hoặc tách thành nhiều message. Các object message của chính package, như spawn, luôn được xếp hàng; nếu một message như vậy quá lớn để chia, lần flush bỏ nó và phát `OnSendDropped` với `SendStatus.TooLarge`.
+
+Message `Unreliable` lớn hơn frame budget được gửi nguyên, một mình trong bundle riêng. IP sau đó chia nhỏ datagram, và mất một mảnh IP bất kỳ là mất cả message, nên hãy gửi dữ liệu lớn qua `ReliableOrdered`.
+
+Lệnh gửi lớn hơn Byte Capacity (mặc định 1 MiB) trả về `SendResult.TooLargeForQueue` và không được đưa vào queue. Với UDP, một bundle không bị chia phải vừa một datagram có frame tối đa 65499 byte, tính cả header của frame, còn với TCP và WebSocket giao thức cho phép message tới 16 MiB. Message mà transport hoàn toàn không gửi được sẽ bị bỏ, và package phát `OnSendDropped` với `SendStatus.TooLarge` và log `Fomoxa dropped message 0x... (N bytes) to peer <id>: TooLarge`.
+
+Nếu phía bên kia gửi các mảnh không ghép được với nhau, kết nối dừng với `StopReason.InvalidFragment` và client không kết nối lại. Package không bao giờ gửi các mảnh như vậy, nên phía bên kia đang không theo giao thức.
 
 Channel được khai báo trên [model](models.md). [Mô hình networking](../concepts/networking-model.md) cho thấy channel nằm ở đâu trên đường gửi, và [hiệu năng](../advanced/performance.md) nói về chi phí của message reliable.

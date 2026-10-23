@@ -55,7 +55,7 @@ flowchart TD
 
 Sau khi kết nối thất bại hoặc bị rớt, client khởi động lại sau Reconnect Interval Seconds (mặc định 0.5), tối đa Max Reconnect Retries lần (mặc định -1, tức không giới hạn). Bộ đếm thử lại được đặt lại mỗi khi một kết nối tới `Started`.
 
-Một số lý do dừng khiến kết nối kết thúc hẳn. Client không thử lại sau `LocalStop`, nghĩa là code của bạn đã gọi `StopConnection`, hay sau `HandlerException`, nghĩa là một message handler trên client đã ném exception. Nó cũng dừng hẳn sau `PrefabMismatch` hoặc `ObjectMismatch`, khi không áp dụng được một object message, sau `PhysicsBackendMismatch`, khi server dùng physics backend khác, và sau `HandshakeFailed` với failure khác `Timeout`. Client trong tiến trình của host không bao giờ thử lại.
+Một số lý do dừng khiến kết nối kết thúc hẳn. Client không thử lại sau `LocalStop`, nghĩa là code của bạn đã gọi `StopConnection`, hay sau `HandlerException`, nghĩa là một message handler trên client đã ném exception. Nó cũng dừng hẳn sau `PrefabMismatch` hoặc `ObjectMismatch`, khi không áp dụng được một object message, sau `PhysicsBackendMismatch`, khi server dùng physics backend khác, sau `InvalidFragment`, khi server gửi các mảnh không ghép được với nhau, và sau `HandshakeFailed` với failure khác `Timeout`. Client trong tiến trình của host không bao giờ thử lại.
 
 Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi object khi kết nối dừng, và server spawn lại chúng sau khi kết nối mới đã khởi động.
 

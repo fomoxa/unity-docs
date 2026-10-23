@@ -40,6 +40,6 @@
 
 ## Kết nối lại <a href="#reconnection" id="reconnection"></a>
 
-Việc kết nối lại được cấu hình trên `NetworkManager` bằng Max Reconnect Retries và Reconnect Interval Seconds. Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, hoặc `HandshakeFailed` với failure khác `Timeout`, và không bao giờ thử lại kết nối trong tiến trình của host.
+Việc kết nối lại được cấu hình trên `NetworkManager` bằng Max Reconnect Retries và Reconnect Interval Seconds. Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, hoặc `HandshakeFailed` với failure khác `Timeout`, và không bao giờ thử lại kết nối trong tiến trình của host.
 
 Các type liên quan là [NetworkManager](network-manager.md), [ServerManager](server-manager.md) và [TimeManager](time-manager.md).

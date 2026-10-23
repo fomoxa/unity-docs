@@ -39,7 +39,7 @@ Một lệnh gửi không ghi ra mạng ngay. Nó thêm message vào hàng đợ
 
 <figure><img src="../.gitbook/assets/diagrams/send-queue.svg" alt="Các lệnh như SendServerRpc, thay đổi state, cập nhật transform và Send đi vào hàng đợi gửi của một kết nối. Hàng đợi có giới hạn: Message Capacity 1024 message, Byte Capacity 1 MiB và Reliable Window 1024 message chưa được xác nhận. Mỗi tick, hàng đợi được flush thành các bundle, mỗi bundle là một frame của transport, tối đa bằng frame budget: 1200 byte với UDP, frame lớn nhất của Fomoxa với TCP và WebSocket."><figcaption><p>Message chờ trong hàng đợi của từng kết nối và rời đi theo bundle.</p></figcaption></figure>
 
-Một lần flush đóng các message đang chờ thành bundle. Mỗi bundle là một frame của transport và chứa nhiều message nhất có thể trong frame budget của transport: 1200 byte với UDP, và frame lớn nhất của Fomoxa với TCP và WebSocket. Nhờ vậy nhiều message nhỏ đi chung trong một datagram.
+Một lần flush đóng các message đang chờ thành bundle. Mỗi bundle là một frame của transport và chứa nhiều message nhất có thể trong frame budget của transport: 1200 byte với UDP, và frame lớn nhất của Fomoxa với TCP và WebSocket. Nhờ vậy nhiều message nhỏ đi chung trong một datagram, còn message reliable lớn hơn budget được chia qua nhiều bundle (xem [kích thước message](../messaging/channels.md#message-size)).
 
 Hàng đợi của mỗi kết nối có giới hạn, bạn đặt trên `NetworkManager`:
 

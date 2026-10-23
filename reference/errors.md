@@ -16,6 +16,7 @@
 | `PrefabMismatch` | The client cannot spawn an object: unknown or different prefab or scene object, or a network scene that does not load | No |
 | `ObjectMismatch` | The client received an object message it cannot apply | No |
 | `PhysicsBackendMismatch` | The client and the server use different physics backends | No |
+| `InvalidFragment` | The other side sent fragments of a large reliable message that do not fit together | No |
 
 ## HandshakeFailure
 
@@ -54,6 +55,7 @@
 | `Full` | The queue holds Message Capacity messages |
 | `BytesFull` | The queue holds too many bytes for this message |
 | `TooLargeForQueue` | The message is larger than Byte Capacity |
+| `TooLargeForReassembly` | A `ReliableOrdered` message that has to be split for the transport is larger than 1 MiB |
 | `TooLarge` | The message is larger than the protocol allows |
 | `NotConnected` | No connection, or no such peer |
 | `NotObserver` | A target RPC to a peer that does not observe the object |
