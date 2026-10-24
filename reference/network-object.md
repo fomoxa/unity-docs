@@ -77,6 +77,10 @@ All send methods are `protected`.
 
 They throw `ArgumentNullException` for a null codec, value or name, and `InvalidOperationException` when the object is not spawned on the sending side. For a name without a generated model they also throw `InvalidOperationException`, with the message `... has no generated parameterless RPC model ...`.
 
+### State
+
+`protected void SetStateDirty()` marks the behaviour's state as changed, so the server compares and sends it after the current tick. It only has an effect on a state registered with `onlyWhenDirty`, as described in [marking changes](../synchronization/state.md#marking-changes), and does nothing otherwise.
+
 ## Registration types
 
 ### NetworkRpcs
@@ -98,7 +102,7 @@ Registering the same message id twice on one behaviour throws `HandlerRegistrati
 
 | Member | Description |
 |---|---|
-| `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null) where T : class, new()` | Registers the behaviour's state. `onChanged` receives the previous values. |
+| `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null, bool onlyWhenDirty = false) where T : class, new()` | Registers the behaviour's state. `onChanged` receives the previous values. With `onlyWhenDirty`, the server compares the state only after `SetStateDirty()`. |
 
 ### NetworkInput
 

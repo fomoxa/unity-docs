@@ -25,7 +25,7 @@ Việc tính lại observer được trải trên Observer Interval tick, nên k
 
 Một rule mà kết quả không phụ thuộc chuyển động có thể trả false từ `RebuildsPeriodically`, khi đó server bỏ qua việc tính lại theo chu kỳ. Với [nhóm](../objects/observers.md#groups), server chỉ tính lại và chỉ hỏi rule về các cặp object và peer cùng nhóm, nên phần chi phí này tăng theo kích thước nhóm.
 
-Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi.
+Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi. Behaviour đăng ký state bằng `onlyWhenDirty` chỉ được encode sau khi nó gọi `SetStateDirty()`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes).
 
 ## CPU của client <a href="#client-cpu" id="client-cpu"></a>
 

@@ -80,7 +80,27 @@ Gọi `TakeDamage` trên server, và `health` của các client thay đổi vào
 
 `NetworkState.Use(codec, instance, onChanged)` đăng ký instance. Sau các event `OnTick` và `OnPostTick` của tick, server encode mọi instance state, so sánh các byte với lần gửi trước, và gửi state tới mọi observer nếu chúng khác nhau.
 
-Vì phép so sánh làm trên các byte đã encode, mọi thay đổi của một property được codec mang đều được phát hiện mà bạn không cần đánh dấu dirty. Property mà codec không mang thì không được so sánh cũng không được gửi.
+Vì phép so sánh làm trên các byte đã encode, mọi thay đổi của một property được codec mang đều được phát hiện mà bạn không cần đánh dấu dirty. Property mà codec không mang thì không được so sánh cũng không được gửi. Một behaviour cũng có thể chọn [tự đánh dấu thay đổi](#marking-changes).
+
+## Đánh dấu thay đổi <a href="#marking-changes" id="marking-changes"></a>
+
+Encode mọi state ở mỗi tick tốn thời gian của server, kể cả với behaviour mà state hiếm khi đổi. Một behaviour có state lớn và phần lớn thời gian đứng yên có thể truyền `onlyWhenDirty: true` cho `Use`:
+
+```csharp
+state.Use(HealthNetAdapter.Instance, health, OnHealthChanged, onlyWhenDirty: true);
+```
+
+Khi đó server chỉ encode và so sánh state đó ở tick sau lần behaviour gọi `SetStateDirty()`, nên hãy gọi nó trên server sau mỗi lần thay đổi:
+
+```csharp
+public void TakeDamage(ushort amount)
+{
+    health.Current = (ushort)Mathf.Max(0, health.Current - amount);
+    SetStateDirty();
+}
+```
+
+Thay đổi không kèm `SetStateDirty()` sẽ không được gửi, và không có gì báo việc thiếu này. Client giữ state gửi lần cuối, và client bắt đầu observe sau đó cũng nhận đúng state ấy trong message spawn. State bắt lúc `Spawn` không cần gọi. Không có `onlyWhenDirty`, giá trị mặc định, thì `SetStateDirty()` không làm gì và server so sánh state ở mỗi tick.
 
 ## Hành vi trên server <a href="#server-behavior" id="server-behavior"></a>
 

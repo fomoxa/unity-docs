@@ -80,7 +80,27 @@ Call `TakeDamage` on the server, and the clients' `health` changes at the end of
 
 `NetworkState.Use(codec, instance, onChanged)` registers the instance. After the tick's `OnTick` and `OnPostTick` events, the server encodes every state instance, compares the bytes with what it sent last, and sends the state to every observer if they differ.
 
-Because the comparison works on the encoded bytes, any change of a carried property is detected without you having to mark anything dirty. A property the codec does not carry is neither compared nor sent.
+Because the comparison works on the encoded bytes, any change of a carried property is detected without you having to mark anything dirty. A property the codec does not carry is neither compared nor sent. A behaviour can instead choose to [mark its changes](#marking-changes).
+
+## Marking changes
+
+Encoding every state every tick costs server time, even for behaviours whose state rarely changes. A behaviour with a large state that stays the same most of the time can pass `onlyWhenDirty: true` to `Use`:
+
+```csharp
+state.Use(HealthNetAdapter.Instance, health, OnHealthChanged, onlyWhenDirty: true);
+```
+
+The server then encodes and compares that state only in a tick after the behaviour called `SetStateDirty()`, so call it on the server after each change:
+
+```csharp
+public void TakeDamage(ushort amount)
+{
+    health.Current = (ushort)Mathf.Max(0, health.Current - amount);
+    SetStateDirty();
+}
+```
+
+A change made without `SetStateDirty()` is not sent, and nothing reports the omission. Clients keep the last state sent, and a client that starts observing later receives that same state in its spawn message. The state captured at `Spawn` needs no call. Without `onlyWhenDirty`, which is the default, `SetStateDirty()` does nothing and the server compares the state every tick.
 
 ## Server behavior
 

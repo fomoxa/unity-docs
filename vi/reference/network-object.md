@@ -77,6 +77,10 @@ Mọi method gửi đều là `protected`.
 
 Chúng ném `ArgumentNullException` với codec, giá trị hoặc tên là null, và `InvalidOperationException` khi object chưa spawn ở phía gửi. Với tên chưa có model được sinh, chúng cũng ném `InvalidOperationException`, kèm thông báo `... has no generated parameterless RPC model ...`.
 
+### State <a href="#state" id="state"></a>
+
+`protected void SetStateDirty()` đánh dấu state của behaviour là đã thay đổi, để server so sánh và gửi nó sau tick hiện tại. Nó chỉ có tác dụng với state đăng ký bằng `onlyWhenDirty`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes), và không làm gì trong trường hợp khác.
+
 ## Type đăng ký <a href="#registration-types" id="registration-types"></a>
 
 ### NetworkRpcs <a href="#networkrpcs" id="networkrpcs"></a>
@@ -98,7 +102,7 @@ Chúng ném `ArgumentNullException` với codec, giá trị hoặc tên là null
 
 | Member | Mô tả |
 |---|---|
-| `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null) where T : class, new()` | Đăng ký state của behaviour. `onChanged` nhận giá trị trước đó. |
+| `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null, bool onlyWhenDirty = false) where T : class, new()` | Đăng ký state của behaviour. `onChanged` nhận giá trị trước đó. Với `onlyWhenDirty`, server chỉ so sánh state sau `SetStateDirty()`. |
 
 ### NetworkInput <a href="#networkinput" id="networkinput"></a>
 

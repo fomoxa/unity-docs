@@ -53,7 +53,7 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` là phiên bản package. |
 | `NetworkSettings` | `Fomoxa.Networking` | Các thiết lập mà Inspector của `NetworkManager` giữ trong Unity, dưới dạng property với cùng giá trị mặc định, và `PhysicsBackend` |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, một overload thêm `Action<string> error`, và `NetworkLog.Console` |
-| `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour` và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` |
+| `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour`, `SetStateDirty()` và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | Luật gửi của `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |
 | `ITransformSource`, `ITransformReceiver`, `TransformSample` | `Fomoxa.Networking` | `ReadLocal(out position, out rotation, out scale)` trên server; `ResetReceive()` và `Receive(in TransformSample)` trên client |
 | `INetworkEntity`, `EntityRecord` | `Fomoxa.Networking` | Interface mà manager spawn, và bản ghi của một entity đã spawn: `ObjectId`, `OwnerId`, `IsOwner`, `OnServer`, `OnClient`, `Representation` |

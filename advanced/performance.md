@@ -25,7 +25,7 @@ Observer recalculation is spread over Observer Interval ticks, so a longer inter
 
 A rule whose answer does not depend on movement can return false from `RebuildsPeriodically`, and the server then skips the periodic recalculation. With [groups](../objects/observers.md#groups), the server only recalculates and asks the rule about pairs of an object and a peer that share a group, so this part of the cost grows with the size of the groups.
 
-Every behaviour with state is encoded once per tick to detect changes, so many objects with large state models cost encoding time even when nothing has changed.
+Every behaviour with state is encoded once per tick to detect changes, so many objects with large state models cost encoding time even when nothing has changed. A behaviour that registers its state with `onlyWhenDirty` is encoded only after it calls `SetStateDirty()`, as described in [marking changes](../synchronization/state.md#marking-changes).
 
 ## Client CPU
 

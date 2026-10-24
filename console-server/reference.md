@@ -53,7 +53,7 @@ On a console client, the factory must return an entity that is not spawned.
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` is the package version. |
 | `NetworkSettings` | `Fomoxa.Networking` | The settings that the `NetworkManager` Inspector holds in Unity, as properties with the same defaults, and `PhysicsBackend` |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, an overload that adds `Action<string> error`, and `NetworkLog.Console` |
-| `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour` and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` |
+| `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour`, `SetStateDirty()` and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | The send rules of `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |
 | `ITransformSource`, `ITransformReceiver`, `TransformSample` | `Fomoxa.Networking` | `ReadLocal(out position, out rotation, out scale)` on the server; `ResetReceive()` and `Receive(in TransformSample)` on a client |
 | `INetworkEntity`, `EntityRecord` | `Fomoxa.Networking` | The interface the managers spawn, and the record of a spawned entity: `ObjectId`, `OwnerId`, `IsOwner`, `OnServer`, `OnClient`, `Representation` |
