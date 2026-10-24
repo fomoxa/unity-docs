@@ -45,7 +45,8 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 
 | Member | Description |
 |---|---|
-| `public abstract bool Observes(NetworkObject networkObject, ulong peerId)` | Whether the peer observes the object. Runs on the server. Must not spawn, despawn, change owners or rebuild observers. |
+| `public abstract bool Observes(NetworkObject networkObject, ulong peerId)` | Whether the peer observes the object. Runs on the server. Must not spawn, despawn, change owners, rebuild observers or change groups. |
+| `public virtual bool RebuildsPeriodically` | Whether the server recalculates observers every Observer Interval ticks. True unless overridden. |
 
 ### DistanceRule
 

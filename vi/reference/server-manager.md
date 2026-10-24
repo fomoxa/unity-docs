@@ -32,12 +32,28 @@
 |---|---|
 | `IObserverRule ObserverRule` | Rule cho các object có `Visibility.Rule`, thường là một asset `ObserverRule`. Đọc và ghi. |
 | `int ObserverInterval` | Số tick mà sau đó mọi object được tính lại một lần. Tối thiểu 1. |
+| `ObserverGroups Groups` | Các [nhóm](../objects/observers.md#groups) peer và object |
 | `bool IsObserver(INetworkEntity networkObject, ulong peerId)` | Peer có observe object hay không |
 | `bool RebuildObservers(INetworkEntity networkObject)` | Tính lại một object cho mọi peer |
 | `void RebuildObserversOfPeer(ulong peerId)` | Tính lại mọi object cho một peer |
 | `void RebuildObservers()` | Tính lại mọi object cho mọi peer |
 
-`NetworkObject` hiện thực `INetworkEntity`, nên bạn truyền một `NetworkObject` vào các method này. Gọi một method spawn, despawn, đổi owner hoặc dựng lại observer từ bên trong `ObserverRule.Observes` sẽ ném exception.
+`NetworkObject` hiện thực `INetworkEntity`, nên bạn truyền một `NetworkObject` vào các method này. Gọi một method spawn, despawn, đổi owner, dựng lại observer hoặc đổi nhóm từ bên trong `ObserverRule.Observes` sẽ ném exception.
+
+### ObserverGroups <a href="#observergroups" id="observergroups"></a>
+
+`public sealed class ObserverGroups`, lấy qua `ServerManager.Groups`. Id nhóm là một `uint` bất kỳ. Mỗi method đổi nhóm tính lại các cặp bị ảnh hưởng và xếp hàng spawn, despawn của chúng trước khi trả về.
+
+| Member | Mô tả |
+|---|---|
+| `void Add(uint groupId, ulong peerId)` | Thêm peer vào nhóm. Nếu peer đã khởi động, tính lại các object đã spawn của nhóm cho peer đó. |
+| `bool Remove(uint groupId, ulong peerId)` | Bỏ peer khỏi nhóm và tính lại các cặp đó. False khi peer không ở trong nhóm. |
+| `void Add(uint groupId, INetworkEntity networkObject)` | Thêm object vào nhóm. Nếu server này đã spawn nó, tính lại nó cho mọi peer. Ném `ArgumentNullException` với null. |
+| `bool Remove(uint groupId, INetworkEntity networkObject)` | Bỏ object khỏi nhóm và tính lại nó theo cùng cách. False khi object không ở trong nhóm. Ném `ArgumentNullException` với null. |
+| `bool Contains(uint groupId, ulong peerId)` | Peer có ở trong nhóm hay không |
+| `bool Contains(uint groupId, INetworkEntity networkObject)` | Object có ở trong nhóm hay không |
+
+Peer rời mọi nhóm của nó khi ngắt kết nối, object rời mọi nhóm của nó khi bị despawn, và dừng server sẽ xoá mọi nhóm.
 
 ## Scene <a href="#scenes" id="scenes"></a>
 

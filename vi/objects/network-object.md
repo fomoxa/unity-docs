@@ -28,7 +28,7 @@
 | Despawn With Owner | bật | Server despawn object khi owner ngắt kết nối. Khi tắt, object được giữ lại và chuyển sang do server sở hữu. |
 | Visibility | Rule | `Rule`: Observer Rule của `NetworkManager` quyết định. `Everyone`: mọi client observe nó. `OwnerOnly`: chỉ owner observe. Xem [observer](observers.md). |
 
-`DespawnWithOwner` và `Visibility` cũng có thể đặt từ code, và server đọc giá trị hiện tại của chúng vào lúc cần.
+`DespawnWithOwner` và `Visibility` cũng có thể đặt từ code, và server đọc giá trị hiện tại của chúng vào lúc cần. Sau khi đổi `Visibility` của một object đã spawn, hãy gọi `ServerManager.RebuildObservers(networkObject)` để áp dụng nó. Nếu không, thay đổi phải chờ lần tính lại kế tiếp của object đó, và khi không có observer rule [tính lại theo chu kỳ](observers.md#when-observers-are-recalculated) thì có thể phải chờ rất lâu.
 
 ## Property <a href="#properties" id="properties"></a>
 

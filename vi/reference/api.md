@@ -34,6 +34,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `FomoxaRegistry`, `RpcMessageIds` | Class | [Messaging API](messaging.md) |
 | `INetworkEntity` | Interface | Type của các giá trị trong `Spawned`; `NetworkObject` hiện thực nó |
 | `IObserverRule`, `ObserverContext`, `DistanceObserverRule` | Interface, class | Rule nằm sau `ObserverRule` và `DistanceRule` |
+| `ObserverGroups` | Class | [Tham chiếu ServerManager](server-manager.md#observergroups) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging <a href="#fomoxanetworkingmessaging" id="fomoxanetworkingmessaging"></a>

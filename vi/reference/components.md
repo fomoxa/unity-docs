@@ -45,7 +45,8 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 
 | Member | Mô tả |
 |---|---|
-| `public abstract bool Observes(NetworkObject networkObject, ulong peerId)` | Peer có observe object hay không. Chạy trên server. Không được spawn, despawn, đổi owner hay dựng lại observer. |
+| `public abstract bool Observes(NetworkObject networkObject, ulong peerId)` | Peer có observe object hay không. Chạy trên server. Không được spawn, despawn, đổi owner, dựng lại observer hay đổi nhóm. |
+| `public virtual bool RebuildsPeriodically` | Server có tính lại observer sau mỗi Observer Interval tick hay không. True nếu không override. |
 
 ### DistanceRule <a href="#distancerule" id="distancerule"></a>
 

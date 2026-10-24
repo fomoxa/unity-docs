@@ -14,7 +14,7 @@ Phần lớn công việc diễn ra mỗi tick một lần, gồm input, physics
 | State | Chỉ gửi khi bản encode thay đổi, và gửi dạng delta khi delta nhỏ hơn. Giữ state model nhỏ và cố định kích thước để delta áp dụng được. Tách dữ liệu ít thay đổi và dữ liệu thay đổi thường xuyên vào các behaviour khác nhau. |
 | `NetworkTransform` | Chỉ gửi phần di chuyển quá ngưỡng, và không gửi gì khi đứng yên. Tắt các phần không cần; tăng ngưỡng cho object không cần độ chính xác cao. |
 | `NetworkAnimator` | Float Step làm tròn parameter float, để thay đổi rất nhỏ không tạo message. |
-| Observer | Một [observer rule](../objects/observers.md) giữ cho mỗi client không nhận object nó không cần. Đây thường là mức tiết kiệm lớn nhất trong thế giới lớn. |
+| Observer | Một [observer rule](../objects/observers.md) giữ cho mỗi client không nhận object nó không cần. Đây thường là mức tiết kiệm lớn nhất trong thế giới lớn. Trên server có nhiều phòng, [nhóm](../objects/observers.md#groups) giữ object của mỗi phòng ở trong phòng đó. |
 | Input Redundancy | Mỗi input message mang chừng này input. Giá trị cao hơn chịu được mất gói nhiều hơn nhưng tốn nhiều byte hơn. |
 | Reconcile Interval | Server gửi reconcile state sau mỗi chừng này tick. Giá trị cao hơn gửi ít hơn và sửa muộn hơn. |
 | Channel | Message reliable mang sequence number và cần acknowledgement. Dùng channel unreliable cho dữ liệu sắp được thay thế. |
@@ -22,6 +22,8 @@ Phần lớn công việc diễn ra mỗi tick một lần, gồm input, physics
 ## CPU của server <a href="#server-cpu" id="server-cpu"></a>
 
 Việc tính lại observer được trải trên Observer Interval tick, nên khoảng dài hơn tốn ít hơn mỗi tick nhưng phản ứng chậm hơn với chuyển động. `ObserverRule.Observes` chạy cho mỗi peer và object đang được tính lại và nên rẻ; ví dụ `DistanceRule` cache vị trí các object mà mỗi peer sở hữu theo từng tick.
+
+Một rule mà kết quả không phụ thuộc chuyển động có thể trả false từ `RebuildsPeriodically`, khi đó server bỏ qua việc tính lại theo chu kỳ. Với [nhóm](../objects/observers.md#groups), server chỉ tính lại và chỉ hỏi rule về các cặp object và peer cùng nhóm, nên phần chi phí này tăng theo kích thước nhóm.
 
 Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi.
 

@@ -32,12 +32,28 @@
 |---|---|
 | `IObserverRule ObserverRule` | The rule for objects with `Visibility.Rule`, usually an `ObserverRule` asset. Get and set. |
 | `int ObserverInterval` | Ticks over which every object is recalculated once. At least 1. |
+| `ObserverGroups Groups` | The [groups](../objects/observers.md#groups) of peers and objects |
 | `bool IsObserver(INetworkEntity networkObject, ulong peerId)` | Whether the peer observes the object |
 | `bool RebuildObservers(INetworkEntity networkObject)` | Recalculates one object for every peer |
 | `void RebuildObserversOfPeer(ulong peerId)` | Recalculates every object for one peer |
 | `void RebuildObservers()` | Recalculates every object for every peer |
 
-`NetworkObject` implements `INetworkEntity`, so you pass a `NetworkObject` to these methods. Calling a spawn, despawn, owner or rebuild method from inside `ObserverRule.Observes` throws.
+`NetworkObject` implements `INetworkEntity`, so you pass a `NetworkObject` to these methods. Calling a spawn, despawn, owner, rebuild or group method from inside `ObserverRule.Observes` throws.
+
+### ObserverGroups
+
+`public sealed class ObserverGroups`, reached through `ServerManager.Groups`. A group id is any `uint`. Each method that changes a group recalculates the affected pairs and queues their spawns and despawns before it returns.
+
+| Member | Description |
+|---|---|
+| `void Add(uint groupId, ulong peerId)` | Adds the peer to the group. If the peer has started, recalculates the group's spawned objects for that peer. |
+| `bool Remove(uint groupId, ulong peerId)` | Removes the peer from the group and recalculates the same pairs. False when the peer was not in the group. |
+| `void Add(uint groupId, INetworkEntity networkObject)` | Adds the object to the group. If this server spawned it, recalculates it for every peer. Throws `ArgumentNullException` for null. |
+| `bool Remove(uint groupId, INetworkEntity networkObject)` | Removes the object from the group and recalculates it in the same way. False when the object was not in the group. Throws `ArgumentNullException` for null. |
+| `bool Contains(uint groupId, ulong peerId)` | Whether the peer is in the group |
+| `bool Contains(uint groupId, INetworkEntity networkObject)` | Whether the object is in the group |
+
+A peer leaves all its groups when it disconnects, an object leaves all its groups when it is despawned, and stopping the server clears every group.
 
 ## Scenes
 

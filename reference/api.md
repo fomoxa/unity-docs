@@ -34,6 +34,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `FomoxaRegistry`, `RpcMessageIds` | Classes | [Messaging API](messaging.md) |
 | `INetworkEntity` | Interface | The type of the values of `Spawned`; `NetworkObject` implements it |
 | `IObserverRule`, `ObserverContext`, `DistanceObserverRule` | Interface, classes | The rule behind `ObserverRule` and `DistanceRule` |
+| `ObserverGroups` | Class | [ServerManager reference](server-manager.md#observergroups) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Console backend reference](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging

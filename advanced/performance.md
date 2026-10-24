@@ -14,7 +14,7 @@ Most of the work happens once per tick, including input, physics, state and tran
 | State | Sent only when its encoding changed, and as a delta when that is smaller. Keep state models small and fixed in size so deltas apply. Split rarely and often changing data into different behaviours. |
 | `NetworkTransform` | Sends only the parts that moved more than their threshold, and nothing while still. Turn off the parts you do not need; raise thresholds for objects where precision matters less. |
 | `NetworkAnimator` | Float Step rounds float parameters, so tiny changes do not trigger a message. |
-| Observers | An [observer rule](../objects/observers.md) keeps each client from receiving objects it does not need. This is usually the largest saving in big worlds. |
+| Observers | An [observer rule](../objects/observers.md) keeps each client from receiving objects it does not need. This is usually the largest saving in big worlds. On a server with many rooms, [groups](../objects/observers.md#groups) keep each room's objects inside the room. |
 | Input Redundancy | Each input message carries this many inputs. Higher values survive more loss and cost more bytes. |
 | Reconcile Interval | The server sends reconcile states every this many ticks. Higher values send less and correct later. |
 | Channels | Reliable messages carry a sequence number and need acknowledgements. Use the unreliable channel for data that is replaced soon anyway. |
@@ -22,6 +22,8 @@ Most of the work happens once per tick, including input, physics, state and tran
 ## Server CPU
 
 Observer recalculation is spread over Observer Interval ticks, so a longer interval costs less per tick but reacts more slowly to movement. `ObserverRule.Observes` runs for each peer and object being recalculated and should be cheap; `DistanceRule`, for example, caches the positions of each peer's owned objects per tick.
+
+A rule whose answer does not depend on movement can return false from `RebuildsPeriodically`, and the server then skips the periodic recalculation. With [groups](../objects/observers.md#groups), the server only recalculates and asks the rule about pairs of an object and a peer that share a group, so this part of the cost grows with the size of the groups.
 
 Every behaviour with state is encoded once per tick to detect changes, so many objects with large state models cost encoding time even when nothing has changed.
 

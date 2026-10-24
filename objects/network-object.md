@@ -28,7 +28,7 @@ Put a `NetworkObject` on the root of every prefab that the server spawns, such a
 | Despawn With Owner | on | The server despawns the object when its owner disconnects. Off: the object stays and becomes owned by the server. |
 | Visibility | Rule | `Rule`: the `NetworkManager`'s Observer Rule decides. `Everyone`: every client observes it. `OwnerOnly`: only the owner does. See [observers](observers.md). |
 
-`DespawnWithOwner` and `Visibility` can also be set from code, and the server reads their current values at the moment it needs them.
+`DespawnWithOwner` and `Visibility` can also be set from code, and the server reads their current values at the moment it needs them. After you change `Visibility` on a spawned object, call `ServerManager.RebuildObservers(networkObject)` to apply it. Otherwise the change waits for the next recalculation of that object, and without an observer rule that [recalculates periodically](observers.md#when-observers-are-recalculated) that can take a long time.
 
 ## Properties
 
