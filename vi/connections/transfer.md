@@ -2,7 +2,7 @@
 
 Game chạy trên nhiều server, như một lobby với các server trận đấu của nó, hay mỗi vùng một server, chuyển người chơi từ server này sang server khác bằng `ServerManager.Transfer`. Server cũ báo cho client nơi cần tới và đưa nó một vé, rồi đóng kết nối. Client tự kết nối tới server mới và đưa vé cho [authenticator](authentication.md) của server mới, nơi quyết định có cho nó vào hay không.
 
-Chuyển server là một kết nối mới. Client despawn mọi object của server cũ, còn server mới spawn object của nó sau khi client đã `Started` ở đó. Không có gì đang sống trên server cũ đi theo, trừ những gì bạn đặt vào vé.
+Client tới server mới bằng một kết nối mới. Nó despawn mọi object của server cũ, còn server mới spawn object của nó sau khi client đã `Started` ở đó. Từ server cũ, chỉ những gì bạn đặt vào vé đi theo client.
 
 ```mermaid
 sequenceDiagram
@@ -31,7 +31,7 @@ bool started = manager.ServerManager.Transfer(peerId, "arena-2.example.com", 777
 
 `Transfer` trả về false với peer không tồn tại, peer đang bị đóng, và peer chưa tới `Started`. Nó ném `ArgumentNullException` khi `address` là null, và `InvalidOperationException` với peer của client chính host, vì [host mode](host-mode.md) không chuyển được client của nó sang server khác.
 
-Server không chờ client đồng ý. Client làm ngơ lệnh chuyển vẫn bị ngắt kết nối.
+Server đóng kết nối dù client có theo lệnh chuyển hay không.
 
 ## Trên client <a href="#on-the-client" id="on-the-client"></a>
 
@@ -54,9 +54,9 @@ manager.ClientManager.OnClientConnectionState += args =>
 };
 ```
 
-Client kết nối ngay tới địa chỉ mới, như khi bạn gọi `StartConnection` với nó. Khi kết nối đó thất bại hay rớt, client thử lại theo các luật [kết nối lại](client.md#reconnection) thông thường, luôn tới địa chỉ mới. Nó không bao giờ quay về server cũ. Nếu server mới từ chối vé, client dừng với `ServerClosed` và `CloseReason` là `AuthenticationFailed`, và không thử lại.
+Client kết nối ngay tới địa chỉ mới, như khi bạn gọi `StartConnection` với nó. Khi kết nối đó thất bại hay rớt, client thử lại theo các luật [kết nối lại](client.md#reconnection) thông thường, tới địa chỉ mới và không bao giờ quay về server cũ. Nếu server mới từ chối vé, client dừng với `ServerClosed` và `CloseReason` là `AuthenticationFailed`, và không thử lại.
 
-Muốn từ chối lệnh chuyển, gọi `StopConnection()` trong `OnTransferring` hoặc trong handler của `Stopped`. Client khi đó giữ trạng thái dừng.
+Muốn từ chối lệnh chuyển, gọi `StopConnection()` trong `OnTransferring` hoặc trong handler của `Stopped`; client sẽ giữ trạng thái dừng.
 
 ## Vé <a href="#the-ticket" id="the-ticket"></a>
 
@@ -64,7 +64,7 @@ Trên client, `ClientAuthenticationContext.Ticket` giữ vé của lần chuyể
 
 Nếu server mới không có authenticator, vé không đi đâu cả và server cho client vào như mọi client khác.
 
-Đặt vào vé dữ liệu server mới cần từ server cũ, như id hay điểm của người chơi. Chỉ vé được ký, nên server mới không tin được bất cứ điều gì khác client nói về nơi nó tới từ.
+Đặt vào vé dữ liệu server mới cần từ server cũ, như id hay điểm của người chơi. Chỉ vé được ký, nên server mới không tin được điều gì khác client tự khai về server nó vừa rời.
 
 ## TransferTickets <a href="#transfertickets" id="transfertickets"></a>
 

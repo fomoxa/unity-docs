@@ -2,7 +2,7 @@
 
 A game that runs on several servers, such as a lobby and its match servers, or one server per zone, moves a player from one server to another with `ServerManager.Transfer`. The old server tells the client where to go and hands it a ticket, then closes the connection. The client connects to the new server by itself and offers the ticket to the new server's [authenticator](authentication.md), which decides whether to let it in.
 
-A transfer is a new connection. The client despawns every object of the old server, and the new server spawns its own once the client has started there. Nothing that was alive on the old server carries over, except what you put in the ticket.
+The client reaches the new server over a new connection. It despawns every object of the old server, and the new server spawns its own once the client has started there. Only what you put in the ticket carries over from the old server.
 
 ```mermaid
 sequenceDiagram
@@ -31,7 +31,7 @@ bool started = manager.ServerManager.Transfer(peerId, "arena-2.example.com", 777
 
 `Transfer` returns false for an unknown peer, for a peer that is already being closed, and for a peer that has not reached `Started`. It throws `ArgumentNullException` when `address` is null, and `InvalidOperationException` for the peer of a host's own client, since [host mode](host-mode.md) cannot move its client to another server.
 
-The server does not wait for the client to agree. A client that ignores the transfer is still disconnected.
+The server closes the connection whether or not the client follows the transfer.
 
 ## On the client
 
@@ -54,9 +54,9 @@ manager.ClientManager.OnClientConnectionState += args =>
 };
 ```
 
-The client connects to the new address at once, as if you had called `StartConnection` with it. When that connection fails or drops, the client retries it under the usual [reconnection](client.md#reconnection) rules, always at the new address. It never goes back to the old server. If the new server rejects the ticket, the client stops with `ServerClosed` and a `CloseReason` of `AuthenticationFailed`, and it does not retry.
+The client connects to the new address at once, as if you had called `StartConnection` with it. When that connection fails or drops, the client retries it under the usual [reconnection](client.md#reconnection) rules, at the new address and never at the old server. If the new server rejects the ticket, the client stops with `ServerClosed` and a `CloseReason` of `AuthenticationFailed`, and it does not retry.
 
-To refuse a transfer, call `StopConnection()` in `OnTransferring` or in the `Stopped` handler. The client then stays stopped.
+To refuse a transfer, call `StopConnection()` in `OnTransferring` or in the `Stopped` handler, and the client stays stopped.
 
 ## The ticket
 
