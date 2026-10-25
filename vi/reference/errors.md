@@ -21,6 +21,7 @@
 | `UnauthenticatedMessage` | Trong lúc kết nối đang `Authenticating`, phía kia gửi một message mà [bước xác thực](../connections/authentication.md#messages-outside-the-authentication) không cho phép | Không |
 | `AuthenticationFailed` | Trên server: authenticator đã từ chối peer. Client dừng với `ServerClosed` | |
 | `AuthenticationTimeout` | Trên server: peer không được chấp nhận trong Authentication Timeout Seconds. Client dừng với `ServerClosed` | |
+| `Transferred` | Server chuyển client sang server khác bằng `ServerManager.Transfer`; cả peer lẫn client dừng với lý do này. Xem [chuyển server](../connections/transfer.md) | Có, ngay lập tức và tới server mới |
 
 ## SessionCloseReason
 
@@ -33,6 +34,7 @@
 | `Kicked` (2) | Server đã gọi `ServerManager.Kick` |
 | `AuthenticationFailed` (3) | Authenticator của server đã từ chối client |
 | `AuthenticationTimeout` (4) | Client không được chấp nhận trong Authentication Timeout Seconds của server |
+| `Transferred` (5) | Server chuyển client sang server khác. Server gửi nó sau lệnh chuyển, và client của package dừng với `Transferred` khi lệnh chuyển tới, nên không thấy giá trị này |
 
 Server bản mới hơn có thể gửi một giá trị không có trong danh sách này. Client giữ nguyên giá trị nhận được, và vẫn không thử lại.
 
@@ -91,12 +93,17 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `InvalidOperationException` | `ServerManager.Authenticator`, `ClientManager.Authenticator` | Đặt khi phía đó đang chạy |
 | `InvalidOperationException` | `Send`, `Accept`, `Reject` của một context xác thực | Lần xác thực đã được chấp nhận |
 | `InvalidOperationException` | `Spawn`, các method về scene | Server chưa khởi động |
+| `InvalidOperationException` | `ServerManager.Transfer` | Peer là client chính của host |
+| `InvalidOperationException` | Constructor của `TransferTickets` | Registry không có codec của `TransferTicket` |
 | `InvalidOperationException` | Các method gửi RPC | Object chưa spawn ở phía gửi, hoặc RPC không tham số chưa có model được sinh |
 | `InvalidOperationException` | Các method thay đổi collection | Gọi trên client với object đã spawn |
 | `ArgumentException` | `Spawn` | Asset prefab, đã spawn, prefab id chưa đăng ký, scene object không hợp lệ, owner chưa khởi động |
 | `ArgumentException` | `PrefabRegistry.Register`, `SceneRegistry.Register` | Id 0, id đã đăng ký cho thứ khác, hierarchy prefab không hợp lệ |
 | `HandlerRegistrationException` | Các hook đăng ký, `MessageDispatcher.Register` | Đăng ký state, collection, input hoặc RPC không hợp lệ; id không có trong schema; handler bị trùng |
 | `ArgumentNullException` | Các method thêm hoặc gán phần tử collection | Phần tử, value hoặc key là `null` |
+| `ArgumentNullException` | `ServerManager.Transfer`, `TransferTickets` | Địa chỉ, registry, khoá hoặc target là `null` |
+| `ArgumentException` | Constructor của `TransferTickets` | Khoá rỗng |
+| `ArgumentOutOfRangeException` | `TransferTickets.Lifetime` | Bằng 0 hoặc nhỏ hơn |
 | `PlatformNotSupportedException` | Transport, `ServerManager.StartConnection` | UDP hoặc TCP trong trình duyệt; server trong trình duyệt |
 | `NotSupportedException` | Client WebSocket trên desktop | Một URL `wss://` |
 | `MessageDecodeException` | Adapter | Payload không decode được |

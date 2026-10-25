@@ -89,6 +89,8 @@ Các model của chính package nằm trong `Fomoxa.Networking.Messaging`. Chún
 | `ReliableAck` | Acknowledgement cho message reliable | Unreliable |
 | `PeerLeave` | Một client rời đi | Unreliable |
 | `LocalPeer` | Peer id của client, tick rate và physics backend | Reliable ordered |
+| `PeerTransfer` | Server mà client được chuyển tới, và vé của nó | Reliable ordered |
+| `TransferTicket` | Nội dung của một vé từ `TransferTickets` | Không gửi riêng |
 | `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange` | Vòng đời object | Reliable ordered |
 | `StateDelta`, `StateResync` | Delta của state, và yêu cầu state đầy đủ từ client | Reliable ordered |
 | `CollectionChanges` | Các thao tác gọi trên một collection trong một tick | Reliable ordered |

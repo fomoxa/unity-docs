@@ -21,6 +21,7 @@
 | `UnauthenticatedMessage` | While the connection was `Authenticating`, the other side sent a message that the [authentication](../connections/authentication.md#messages-outside-the-authentication) does not allow | No |
 | `AuthenticationFailed` | On the server: the authenticator rejected the peer. The client stops with `ServerClosed` | |
 | `AuthenticationTimeout` | On the server: the peer was not accepted within Authentication Timeout Seconds. The client stops with `ServerClosed` | |
+| `Transferred` | The server moved the client to another server with `ServerManager.Transfer`; the peer and the client both stop with this reason. See [server transfer](../connections/transfer.md) | Yes, at once and to the new server |
 
 ## SessionCloseReason
 
@@ -33,6 +34,7 @@
 | `Kicked` (2) | The server called `ServerManager.Kick` |
 | `AuthenticationFailed` (3) | The server's authenticator rejected the client |
 | `AuthenticationTimeout` (4) | The client was not accepted within the server's Authentication Timeout Seconds |
+| `Transferred` (5) | The server moved the client to another server. The server sends it after the transfer, and a client of this package stops with `Transferred` when the transfer arrives, so it does not see this value |
 
 A newer server may send a value this list does not have. The client keeps the value as it arrived, and it still does not retry.
 
@@ -91,12 +93,17 @@ A newer server may send a value this list does not have. The client keeps the va
 | `InvalidOperationException` | `ServerManager.Authenticator`, `ClientManager.Authenticator` | Set while that side is running |
 | `InvalidOperationException` | `Send`, `Accept`, `Reject` of an authentication context | The authentication was already accepted |
 | `InvalidOperationException` | `Spawn`, scene methods | The server is not started |
+| `InvalidOperationException` | `ServerManager.Transfer` | The peer is a host's own client |
+| `InvalidOperationException` | `TransferTickets` constructor | The registry has no `TransferTicket` codec |
 | `InvalidOperationException` | Send RPC methods | The object is not spawned on the sending side, or a parameterless RPC has no generated model |
 | `InvalidOperationException` | Methods that change a collection | Called on a client for a spawned object |
 | `ArgumentException` | `Spawn` | Prefab asset, already spawned, unregistered prefab id, invalid scene object, owner not started |
 | `ArgumentException` | `PrefabRegistry.Register`, `SceneRegistry.Register` | Id 0, id registered to something else, invalid prefab hierarchy |
 | `HandlerRegistrationException` | Registration hooks, `MessageDispatcher.Register` | Invalid state, collection, input or RPC registration; id not in the schema; duplicate handler |
 | `ArgumentNullException` | Methods that add or set a collection element | A `null` element, value or key |
+| `ArgumentNullException` | `ServerManager.Transfer`, `TransferTickets` | A `null` address, registry, key or target |
+| `ArgumentException` | `TransferTickets` constructor | An empty key |
+| `ArgumentOutOfRangeException` | `TransferTickets.Lifetime` | Zero or less |
 | `PlatformNotSupportedException` | Transports, `ServerManager.StartConnection` | UDP or TCP in a browser; a server in a browser |
 | `NotSupportedException` | Desktop WebSocket client | A `wss://` URL |
 | `MessageDecodeException` | Adapters | A payload that does not decode |

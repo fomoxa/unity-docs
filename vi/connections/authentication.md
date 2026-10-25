@@ -103,6 +103,7 @@ Lần xác thực của mỗi kết nối có context riêng. Server truyền co
 | `Accept()` | Server | Cho peer vào; trả về true |
 | `Reject()` | Server | Đóng kết nối của peer kèm lý do; trả về true |
 | `CancellationToken` | Cả hai | Bị huỷ khi lần xác thực này kết thúc, vì bất kỳ lý do nào |
+| `Ticket` | Client | Vé của một lần [chuyển server](transfer.md#the-ticket); rỗng khi kết nối không phải một lần chuyển |
 
 ## Gắn vào NetworkManager <a href="#add-it-to-the-networkmanager" id="add-it-to-the-networkmanager"></a>
 

@@ -51,7 +51,7 @@ stateDiagram-v2
     Stopped --> [*]: WillRetry là false, hoặc StopConnection()
 ```
 
-`OnClientConnectionState` báo từng thay đổi. Khi client tới `Started`, các scene object trong các scene nó đã load bị tắt cho tới khi server spawn chúng. Sau đó các object được spawn, thay đổi và despawn. Khi kết nối dừng, mọi object trên client bị despawn, và `ConnectionStateArgs.WillRetry` cho biết client có khởi động lại sau khoảng reconnect interval hay không.
+`OnClientConnectionState` báo từng thay đổi. Khi client tới `Started`, các scene object trong các scene nó đã load bị tắt cho tới khi server spawn chúng. Sau đó các object được spawn, thay đổi và despawn. Khi kết nối dừng, mọi object trên client bị despawn trước khi `OnClientConnectionState` báo `Stopped`, và `ConnectionStateArgs.WillRetry` cho biết client có khởi động lại sau khoảng reconnect interval hay không. Một lần [chuyển](../connections/transfer.md) sang server khác phát `OnTransferring` trước, lúc các object vẫn còn, rồi client khởi động lại ngay tại địa chỉ mới.
 
 ## Network object <a href="#network-objects" id="network-objects"></a>
 

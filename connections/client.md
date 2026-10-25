@@ -28,7 +28,7 @@ After the handshake, the client is `Authenticating` until the server lets it in,
 | `Reason` | Why the connection stopped; `None` in the other states |
 | `Failure` | The handshake failure when `Reason` is `HandshakeFailed` |
 | `DiscardedMessages` | Messages still queued that were dropped when the connection stopped |
-| `WillRetry` | True when the client will start again after the reconnect interval |
+| `WillRetry` | True when the client will start again after the reconnect interval, or at once after a [transfer](transfer.md) |
 
 ```csharp
 manager.ClientManager.OnClientConnectionState += args =>
@@ -59,7 +59,9 @@ After a connection fails or drops, the client starts again after Reconnect Inter
 
 Some stop reasons end the connection for good. The client does not retry after `LocalStop`, which means your code called `StopConnection`, or after `HandlerException`, which means a message handler on the client threw. It also stays stopped after `PrefabMismatch` or `ObjectMismatch`, when it could not apply an object message, after `PhysicsBackendMismatch`, when the server uses another physics backend, after `InvalidFragment`, when the server sent fragments that do not fit together, after `ServerClosed`, when the server closed the connection on purpose and said why in `CloseReason`, after `UnauthenticatedMessage`, when the server broke the rules of [authentication](authentication.md#messages-outside-the-authentication), and after `HandshakeFailed` with any failure other than `Timeout`. A host's in-process client never retries.
 
-Every reconnect is a new connection. The client despawns all objects when the connection stops, and the server spawns them again once the new connection has started.
+Every reconnect is a new connection. The client despawns all objects when the connection stops, before it reports `Stopped`, and the server spawns them again once the new connection has started.
+
+A client that the server moves to another server with `ServerManager.Transfer` stops with `Transferred` and connects to the new server at once. Its retries then go to the new address. [Server transfer](transfer.md) describes the whole sequence.
 
 ## Objects and timing
 

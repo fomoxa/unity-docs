@@ -17,6 +17,8 @@ Vì server của manager đang chạy, client kết nối qua một kết nối 
 
 Client của host nhận peer id như mọi client khác, và server spawn object cho nó trong `OnRemoteConnectionState` như thường lệ.
 
+Client của host không chuyển được sang server khác: [`ServerManager.Transfer`](transfer.md) ném `InvalidOperationException` với peer của nó.
+
 ## Mỗi object một instance <a href="#one-instance-per-object" id="one-instance-per-object"></a>
 
 Host không tạo bản copy thứ hai của mỗi object cho client của mình; instance của server cũng là instance của client. Do đó cùng một component nhận `OnStartServer` khi server spawn object và `OnStartClient` khi client của host nhận nó, và `NetworkObject.IsOwner` là true với các object thuộc peer id của host.

@@ -9,8 +9,9 @@ Every event and callback is raised on Unity's main thread, either from the `Netw
 | `OnServerConnectionState` | `ServerManager` | `ServerConnectionStateArgs` | The server's `ServerState` changes |
 | `OnRemoteConnectionState` | `ServerManager` | `ConnectionStateArgs` | A client connection's state changes |
 | `OnClientConnectionState` | `ClientManager` | `ConnectionStateArgs` | The client's state changes |
+| `OnTransferring` | `ClientManager` | `TransferringArgs` | The server moved the client to another server; raised before the client's objects despawn and before `Stopped` |
 
-`ServerConnectionStateArgs` has a single member, `ServerState State`. `ConnectionStateArgs` has these members:
+`ServerConnectionStateArgs` has a single member, `ServerState State`. `TransferringArgs` has `string Address` and `ushort Port`, the server the client moves to. `ConnectionStateArgs` has these members:
 
 | Member | Type | Description |
 |---|---|---|
@@ -63,7 +64,7 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 | `OnOwnerChangedClient(previousOwnerId)` | Observing clients | After the owner change arrived |
 | `OnHostVisibility(visible)` | Host | When the host's client stops or starts observing; exceptions are logged |
 | `OnReconciled(tick)` | Owner's client | After a correction |
-| `OnStopClient` | Client | Before the object disappears; on a host, before `OnStopServer` |
+| `OnStopClient` | Client | Before the object disappears; on a host, before `OnStopServer`. When the client stops, before `OnClientConnectionState` reports `Stopped` |
 | `OnStopServer` | Server | Before the despawn message |
 
 ## Other callbacks

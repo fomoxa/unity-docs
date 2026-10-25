@@ -38,6 +38,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `IObserverRule`, `ObserverContext`, `DistanceObserverRule` | Interface, classes | The rule behind `ObserverRule` and `DistanceRule` |
 | `ObserverGroups` | Class | [ServerManager reference](server-manager.md#observergroups) |
 | `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interfaces, classes | [Authentication](../connections/authentication.md) |
+| `TransferTickets`, `IUsedTicketStore`, `MemoryUsedTicketStore` | Class, interface, class | [Server transfer](../connections/transfer.md#transfertickets) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Console backend reference](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging
@@ -46,7 +47,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 |---|---|---|
 | `IMessageCodec<T>`, `MessageDecodeException` | Interface, exception | [Messaging API](messaging.md) |
 | `MessageDispatcher`, `PayloadHandler`, `ObjectPayloadHandler`, `HandlerRegistrationException`, `MessageChannels` | Classes, delegates | [Messaging API](messaging.md) |
-| `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle`, `CollectionChanges`, `CollectionContent`, `CollectionContents`, `CollectionResync` | The package's system models | [Messaging API](messaging.md#system-models) |
+| `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle`, `CollectionChanges`, `CollectionContent`, `CollectionContents`, `CollectionResync`, `PeerTransfer`, `TransferTicket` | The package's system models | [Messaging API](messaging.md#system-models) |
 | `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | One-field system models that carry primitive collection elements | [Messaging API](messaging.md#system-models) |
 | `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System models of the scene file | [Editor integration](../advanced/editor-integration.md#scene-files) |
 | `BundleFormat`, `BundleReader`, `BundleWriter`, `ObjectHeader`, `SeqHeader`, `OutgoingEntry`, `OutgoingKind`, `OutgoingQueue`, `QueuedMessage`, `EnqueueResult`, `MessageSender`, `ReliableChannel`, `ReliableVerdict`, `SessionProtocol`, `ZeroRuns` | Building blocks | |
@@ -56,7 +57,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | Type | Kind | Page |
 |---|---|---|
 | `ConnectionState`, `ServerState`, `StopReason`, `SendResult` | Enums | [Errors and stop reasons](errors.md) |
-| `ConnectionStateArgs`, `ServerConnectionStateArgs`, `SendDroppedArgs`, `ReceiveDroppedArgs`, `HandlerExceptionArgs` | Event arguments | [Events and callbacks](callbacks.md) |
+| `ConnectionStateArgs`, `ServerConnectionStateArgs`, `SendDroppedArgs`, `ReceiveDroppedArgs`, `HandlerExceptionArgs`, `TransferringArgs` | Event arguments | [Events and callbacks](callbacks.md) |
 | `SessionLimits`, `ReconnectPolicy` | Settings | [Configuration](configuration.md) |
 | `ClientSession`, `ServerSession`, `ClientReconnector`, `SessionInbox`, `SessionOutbox`, `FlushPolicy`, `SendResults` | Building blocks | |
 

@@ -51,7 +51,7 @@ stateDiagram-v2
     Stopped --> [*]: WillRetry is false, or StopConnection()
 ```
 
-`OnClientConnectionState` reports each change. When the client reaches `Started`, the scene objects in its loaded scenes are deactivated until the server spawns them. Objects then spawn, change and despawn. When the connection stops, every object is despawned on the client, and `ConnectionStateArgs.WillRetry` tells whether the client starts again after the reconnect interval.
+`OnClientConnectionState` reports each change. When the client reaches `Started`, the scene objects in its loaded scenes are deactivated until the server spawns them. Objects then spawn, change and despawn. When the connection stops, every object is despawned on the client before `OnClientConnectionState` reports `Stopped`, and `ConnectionStateArgs.WillRetry` tells whether the client starts again after the reconnect interval. A [transfer](../connections/transfer.md) to another server raises `OnTransferring` first, while the objects still exist, and the client then starts again at once at the new address.
 
 ## Network objects
 

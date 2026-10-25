@@ -42,4 +42,6 @@
 | State model | Model mà một behaviour đăng ký bằng `NetworkState.Use`, được server giữ đồng bộ. |
 | System model | Một trong các model của chính package, như `ObjectSpawn`. |
 | Tick | Một bước cố định của mô phỏng network. Xem [tick và thời gian](../concepts/tick.md). |
+| Ticket (vé) | Các byte server đưa cho client nó chuyển đi, để authenticator của server mới kiểm tra. Xem [chuyển server](../connections/transfer.md#the-ticket). |
+| Transfer | Chuyển client từ server này sang server khác bằng `ServerManager.Transfer`. Xem [chuyển server](../connections/transfer.md). |
 | World | Một physics scene của Unity, 3D hoặc 2D, nhìn qua `IPhysicsWorld` hoặc `IPhysicsWorld2D`. |

@@ -14,6 +14,7 @@
 | `ConnectionState PeerState(ulong peerId)` | Trạng thái của một peer; `Stopped` khi không biết |
 | `void Disconnect(ulong peerId)` | Đóng kết nối của một peer ngay lập tức với `StopReason.LocalStop` |
 | `bool Kick(ulong peerId)` | Gửi các message đã xếp và một thông báo cho client, rồi đóng kết nối; client dừng với `ServerClosed` và không kết nối lại. Trả false khi peer không tồn tại hoặc đang bị đóng. |
+| `bool Transfer(ulong peerId, string address, ushort port, ReadOnlyMemory<byte> ticket)` | Gửi các message đã xếp, rồi địa chỉ, port và vé của server khác, rồi đóng kết nối như `Kick`; peer dừng với `Transferred`. Trả false khi peer không tồn tại, đang bị đóng hoặc chưa `Started`. Ném `ArgumentNullException` khi địa chỉ là null và `InvalidOperationException` với client chính của host. Xem [chuyển server](../connections/transfer.md). |
 | `bool HasRtt(ulong peerId)`, `TimeSpan RttOf(ulong peerId)` | Round-trip time mà các clock ping của peer báo; `TimeSpan.Zero` khi chưa có |
 | `int DroppedInputsOf(ulong peerId)` | Số input từ peer đã bị bỏ |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget của transport của peer; 0 khi không biết |

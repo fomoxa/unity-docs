@@ -17,6 +17,8 @@ Because the manager's server is running, the client connects through an in-proce
 
 The host's client gets a peer id like any other client, and the server spawns objects for it in `OnRemoteConnectionState` as usual.
 
+The host's client cannot be moved to another server: [`ServerManager.Transfer`](transfer.md) throws `InvalidOperationException` for its peer.
+
 ## One instance per object
 
 A host does not create a second copy of each object for its client; the server's instance is also the client's instance. The same component therefore gets `OnStartServer` when the server spawns the object and `OnStartClient` when the host's client receives it, and `NetworkObject.IsOwner` is true for the objects owned by the host's peer id.

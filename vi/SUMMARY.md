@@ -30,6 +30,7 @@
 * [Client](connections/client.md)
 * [Xác thực](connections/authentication.md)
 * [Host mode](connections/host-mode.md)
+* [Chuyển server](connections/transfer.md)
 * [Transport](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)
   * [TCP](connections/transports/tcp.md)

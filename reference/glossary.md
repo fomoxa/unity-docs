@@ -42,4 +42,6 @@
 | State model | The model a behaviour registers with `NetworkState.Use`, kept in sync by the server. |
 | System model | One of the package's own models, such as `ObjectSpawn`. |
 | Tick | One fixed step of the network simulation. See [ticks and timing](../concepts/tick.md). |
+| Ticket | The bytes a server gives a client it transfers, which the new server's authenticator checks. See [server transfer](../connections/transfer.md#the-ticket). |
+| Transfer | Moving a client from one server to another with `ServerManager.Transfer`. See [server transfer](../connections/transfer.md). |
 | World | One Unity physics scene, 3D or 2D, seen through `IPhysicsWorld` or `IPhysicsWorld2D`. |

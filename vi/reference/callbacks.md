@@ -9,8 +9,9 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 | `OnServerConnectionState` | `ServerManager` | `ServerConnectionStateArgs` | `ServerState` của server thay đổi |
 | `OnRemoteConnectionState` | `ServerManager` | `ConnectionStateArgs` | Trạng thái kết nối của một client thay đổi |
 | `OnClientConnectionState` | `ClientManager` | `ConnectionStateArgs` | Trạng thái của client thay đổi |
+| `OnTransferring` | `ClientManager` | `TransferringArgs` | Server chuyển client sang server khác; phát trước khi object của client despawn và trước `Stopped` |
 
-`ServerConnectionStateArgs` có một member duy nhất, `ServerState State`. `ConnectionStateArgs` có các member sau:
+`ServerConnectionStateArgs` có một member duy nhất, `ServerState State`. `TransferringArgs` có `string Address` và `ushort Port`, server mà client chuyển tới. `ConnectionStateArgs` có các member sau:
 
 | Member | Type | Mô tả |
 |---|---|---|
@@ -63,7 +64,7 @@ Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `O
 | `OnOwnerChangedClient(previousOwnerId)` | Client đang observe | Sau khi thông báo đổi owner tới |
 | `OnHostVisibility(visible)` | Host | Khi client của host thôi hoặc bắt đầu observe; exception được log |
 | `OnReconciled(tick)` | Client của owner | Sau một lần sửa |
-| `OnStopClient` | Client | Trước khi object biến mất; trên host, trước `OnStopServer` |
+| `OnStopClient` | Client | Trước khi object biến mất; trên host, trước `OnStopServer`. Khi client dừng, trước khi `OnClientConnectionState` báo `Stopped` |
 | `OnStopServer` | Server | Trước message despawn |
 
 ## Callback khác <a href="#other-callbacks" id="other-callbacks"></a>

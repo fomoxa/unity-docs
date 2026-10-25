@@ -36,11 +36,12 @@
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
 | `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes |
 | `OnObjectMismatch` | `ObjectMismatchArgs`; logged when nobody subscribes |
+| `OnTransferring` | `TransferringArgs`; the server moved the client to another server. See [server transfer](../connections/transfer.md). |
 
 [Events and callbacks](callbacks.md) describes the event arguments.
 
 ## Reconnection
 
-Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection.
+Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection. After `Transferred` it connects at once to the server it was moved to, and later retries go there too.
 
 The related types are [NetworkManager](network-manager.md), [ServerManager](server-manager.md) and [TimeManager](time-manager.md).

@@ -28,7 +28,7 @@ Sau handshake, client ở `Authenticating` cho tới khi server cho nó vào, vi
 | `Reason` | Lý do kết nối dừng; `None` ở các trạng thái khác |
 | `Failure` | Lỗi handshake khi `Reason` là `HandshakeFailed` |
 | `DiscardedMessages` | Số message còn trong queue bị bỏ khi kết nối dừng |
-| `WillRetry` | True khi client sẽ khởi động lại sau khoảng chờ kết nối lại |
+| `WillRetry` | True khi client sẽ khởi động lại sau khoảng chờ kết nối lại, hoặc ngay lập tức sau một lần [chuyển server](transfer.md) |
 
 ```csharp
 manager.ClientManager.OnClientConnectionState += args =>
@@ -59,7 +59,9 @@ Sau khi kết nối thất bại hoặc bị rớt, client khởi động lại 
 
 Một số lý do dừng khiến kết nối kết thúc hẳn. Client không thử lại sau `LocalStop`, nghĩa là code của bạn đã gọi `StopConnection`, hay sau `HandlerException`, nghĩa là một message handler trên client đã ném exception. Nó cũng dừng hẳn sau `PrefabMismatch` hoặc `ObjectMismatch`, khi không áp dụng được một object message, sau `PhysicsBackendMismatch`, khi server dùng physics backend khác, sau `InvalidFragment`, khi server gửi các mảnh không ghép được với nhau, sau `ServerClosed`, khi server chủ động đóng kết nối và cho biết lý do trong `CloseReason`, sau `UnauthenticatedMessage`, khi server vi phạm luật của [bước xác thực](authentication.md#messages-outside-the-authentication), và sau `HandshakeFailed` với failure khác `Timeout`. Client trong tiến trình của host không bao giờ thử lại.
 
-Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi object khi kết nối dừng, và server spawn lại chúng sau khi kết nối mới đã khởi động.
+Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi object khi kết nối dừng, trước khi báo `Stopped`, và server spawn lại chúng sau khi kết nối mới đã khởi động.
+
+Client được server chuyển sang server khác bằng `ServerManager.Transfer` dừng với `Transferred` và kết nối ngay tới server mới. Các lần thử lại sau đó đi tới địa chỉ mới. [Chuyển server](transfer.md) mô tả toàn bộ trình tự.
 
 ## Object và thời gian <a href="#objects-and-timing" id="objects-and-timing"></a>
 

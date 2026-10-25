@@ -30,6 +30,7 @@
 * [Client](connections/client.md)
 * [Authentication](connections/authentication.md)
 * [Host mode](connections/host-mode.md)
+* [Server transfer](connections/transfer.md)
 * [Transports](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)
   * [TCP](connections/transports/tcp.md)
