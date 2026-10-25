@@ -26,6 +26,7 @@ sequenceDiagram
     Note over SM: ServerState Stopped → Starting → Started<br/>spawns every scene object in the loaded scenes
     Peer->>SM: transport connects
     SM-->>Code: OnRemoteConnectionState: Starting (handshake runs)
+    SM-->>Code: OnRemoteConnectionState: Authenticating (the authenticator runs)
     SM-->>Code: OnRemoteConnectionState: Started
     Note over SM,Peer: the client receives the objects it observes
     Peer->>SM: leaves, times out or fails
@@ -41,9 +42,11 @@ sequenceDiagram
 stateDiagram-v2
     direction LR
     [*] --> Starting: StartConnection(address, port)
-    Starting --> Started: handshake succeeded
+    Starting --> Authenticating: handshake succeeded
+    Authenticating --> Started: server accepted
     Started --> Stopped: connection ends
     Starting --> Stopped: connection fails
+    Authenticating --> Stopped: rejected or fails
     Stopped --> Starting: WillRetry, after the reconnect interval
     Stopped --> [*]: WillRetry is false, or StopConnection()
 ```

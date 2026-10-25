@@ -18,6 +18,9 @@
 | `PhysicsBackendMismatch` | Client và server dùng physics backend khác nhau | Không |
 | `InvalidFragment` | Phía bên kia gửi các mảnh của một message reliable lớn mà không ghép được với nhau | Không |
 | `ServerClosed` | Server chủ động đóng kết nối và gửi kèm lý do, nằm trong `CloseReason` | Không |
+| `UnauthenticatedMessage` | Trong lúc kết nối đang `Authenticating`, phía kia gửi một message mà [bước xác thực](../connections/authentication.md#messages-outside-the-authentication) không cho phép | Không |
+| `AuthenticationFailed` | Trên server: authenticator đã từ chối peer. Client dừng với `ServerClosed` | |
+| `AuthenticationTimeout` | Trên server: peer không được chấp nhận trong Authentication Timeout Seconds. Client dừng với `ServerClosed` | |
 
 ## SessionCloseReason
 
@@ -28,6 +31,8 @@
 | `Unspecified` (0) | Không có lý do. Package không bao giờ tự gửi giá trị này |
 | `HandlerException` (1) | Một message handler trên server ném exception khi xử lý message của client này |
 | `Kicked` (2) | Server đã gọi `ServerManager.Kick` |
+| `AuthenticationFailed` (3) | Authenticator của server đã từ chối client |
+| `AuthenticationTimeout` (4) | Client không được chấp nhận trong Authentication Timeout Seconds của server |
 
 Server bản mới hơn có thể gửi một giá trị không có trong danh sách này. Client giữ nguyên giá trị nhận được, và vẫn không thử lại.
 
@@ -70,7 +75,7 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `TooLargeForQueue` | Message lớn hơn Byte Capacity |
 | `TooLargeForReassembly` | Message `ReliableOrdered` phải chia cho transport mà lớn hơn 1 MiB |
 | `TooLarge` | Message lớn hơn mức giao thức cho phép |
-| `NotConnected` | Không có kết nối, hoặc không có peer như vậy |
+| `NotConnected` | Không có kết nối, hoặc không có peer như vậy. Từ một context xác thực: lần xác thực đó đã kết thúc |
 | `NotObserver` | Target RPC tới một peer không observe object |
 
 ## SendStatus <a href="#sendstatus" id="sendstatus"></a>
@@ -83,6 +88,8 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 |---|---|---|
 | `InvalidOperationException` | `NetworkManager.Awake` | Phần đăng ký sinh ra chưa chạy |
 | `InvalidOperationException` | `StartConnection` | Đang chạy rồi |
+| `InvalidOperationException` | `ServerManager.Authenticator`, `ClientManager.Authenticator` | Đặt khi phía đó đang chạy |
+| `InvalidOperationException` | `Send`, `Accept`, `Reject` của một context xác thực | Lần xác thực đã được chấp nhận |
 | `InvalidOperationException` | `Spawn`, các method về scene | Server chưa khởi động |
 | `InvalidOperationException` | Các method gửi RPC | Object chưa spawn ở phía gửi, hoặc RPC không tham số chưa có model được sinh |
 | `ArgumentException` | `Spawn` | Asset prefab, đã spawn, prefab id chưa đăng ký, scene object không hợp lệ, owner chưa khởi động |

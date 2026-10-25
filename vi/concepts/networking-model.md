@@ -53,19 +53,21 @@ Một lệnh gửi vượt một trong hai giới hạn đầu sẽ không đư�
 
 ## Kết nối <a href="#connections" id="connections"></a>
 
-Một kết nối đi qua ba trạng thái, do `ConnectionState` báo:
+Một kết nối đi qua bốn trạng thái, do `ConnectionState` báo:
 
 ```mermaid
 stateDiagram-v2
     direction LR
     [*] --> Stopped
     Stopped --> Starting: StartConnection, hoặc một client kết nối tới
-    Starting --> Started: handshake thành công
+    Starting --> Authenticating: handshake thành công
     Starting --> Stopped: thất bại
+    Authenticating --> Started: server chấp nhận
+    Authenticating --> Stopped: bị từ chối, hết hạn hoặc thất bại
     Started --> Stopped: dừng, rời đi hoặc hết thời gian chờ
 ```
 
-`Starting` bao gồm kết nối transport và handshake của Fomoxa. `Started` nghĩa là hai bên đã thống nhất schema và message đi được. Bản thân server có một trạng thái riêng, `ServerState`, đi từ `Stopped` qua `Starting`, `Started` và `Stopping` rồi về `Stopped`.
+`Starting` bao gồm kết nối transport và handshake của Fomoxa. Ở `Authenticating`, [authenticator](../connections/authentication.md) của server quyết định có cho client vào hay không, và chỉ message của authenticator đi được; không có authenticator thì server cho client vào ngay. `Started` nghĩa là message đi được. Bản thân server có một trạng thái riêng, `ServerState`, đi từ `Stopped` qua `Starting`, `Started` và `Stopping` rồi về `Stopped`.
 
 ### Kết nối im lặng <a href="#silent-connections" id="silent-connections"></a>
 

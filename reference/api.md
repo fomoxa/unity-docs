@@ -13,6 +13,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `NetworkTransform`, `NetworkAnimator` | Components | [Components](components.md) |
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Components, interfaces | [Components](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Asset types, component | [Components](components.md#observers) |
+| `NetworkAuthenticator` | Abstract component | [Authentication](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Classes, interface, extension methods | [NetworkManager reference](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Generated asset types | [Editor integration](../advanced/editor-integration.md) |
 | `NetworkTransport`, `UdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
@@ -35,6 +36,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `INetworkEntity` | Interface | The type of the values of `Spawned`; `NetworkObject` implements it |
 | `IObserverRule`, `ObserverContext`, `DistanceObserverRule` | Interface, classes | The rule behind `ObserverRule` and `DistanceRule` |
 | `ObserverGroups` | Class | [ServerManager reference](server-manager.md#observergroups) |
+| `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interfaces, classes | [Authentication](../connections/authentication.md) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Console backend reference](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging

@@ -103,7 +103,7 @@ sequenceDiagram
 | `ServerManager.Send(peerId, messageId, payload)` | One peer |
 | `ServerManager.Broadcast(messageId, payload)` | Every peer in the `Started` state; returns how many it was queued for |
 
-The payload is copied into the send queue during the call, and the message travels on the model's channel. `Send` returns a `SendResult`, where `NotConnected` means the connection or the peer does not exist.
+The payload is copied into the send queue during the call, and the message travels on the model's channel. `Send` returns a `SendResult`, where `NotConnected` means the connection or the peer does not exist. A message sent while the connection is `Starting` or `Authenticating` waits in the queue and goes out once the connection has started.
 
 `ClientManager.SendToObject` and `ServerManager.SendToObject` send a message addressed to one behaviour of one object, the way RPCs do. RPCs are built on top of them, and game code should prefer RPCs.
 

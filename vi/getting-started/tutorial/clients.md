@@ -10,7 +10,7 @@ Nút **Client** của launcher gọi:
 manager.ClientManager.StartConnection(address, port);
 ```
 
-Địa chỉ có thể là host name hoặc địa chỉ IP. Client phân giải địa chỉ, mở transport và chạy handshake của Fomoxa, còn `ClientManager.OnClientConnectionState` báo tiến trình: `Starting` khi đang kết nối, `Started` khi message đã đi được, và `Stopped` khi kết nối kết thúc.
+Địa chỉ có thể là host name hoặc địa chỉ IP. Client phân giải địa chỉ, mở transport và chạy handshake của Fomoxa, còn `ClientManager.OnClientConnectionState` báo tiến trình: `Starting` khi đang kết nối, `Authenticating` cho tới khi server cho nó vào, `Started` khi message đã đi được, và `Stopped` khi kết nối kết thúc.
 
 Nếu kết nối thất bại hoặc bị rớt, client thử lại sau mỗi 0.5 giây, mặc định không giới hạn số lần. Ở event `Stopped`, `ConnectionStateArgs.Reason` cho biết vì sao kết nối dừng, và `ConnectionStateArgs.WillRetry` cho biết còn lần thử tiếp theo hay không. [Client](../../connections/client.md) giải thích việc kết nối lại và các thiết lập của nó.
 
@@ -23,11 +23,11 @@ Khi client tới `Started`, server spawn một player cho nó, và client tạo 
 
 Bạn sẽ thấy:
 
-- Console hiện `client: Starting None`, rồi `client: Started None`.
+- Console hiện `client: Starting None`, `client: Authenticating None`, rồi `client: Started None`.
 - Một capsule xuất hiện ở tọa độ x bằng hai lần peer id của client.
 - Console hiện `player <id> spawned, owner <peer id>, mine: True, jumps: 0`.
 - Một nút **Jump** hiện bên dưới dòng trạng thái, vì client này sở hữu capsule đó.
-- Với dedicated server, `server.log` hiện `peer <id>: Starting None` và `peer <id>: Started None`.
+- Với dedicated server, `server.log` hiện `peer <id>: Starting None`, `peer <id>: Authenticating None` và `peer <id>: Started None`.
 
 ## 2. Gọi RPC <a href="#2-call-the-rpc" id="2-call-the-rpc"></a>
 

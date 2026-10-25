@@ -39,6 +39,9 @@ manager.ServerManager.OnRemoteConnectionState += args =>
         case ConnectionState.Starting:
             Debug.Log($"peer {args.PeerId} is connecting");
             break;
+        case ConnectionState.Authenticating:
+            Debug.Log($"peer {args.PeerId} is authenticating");
+            break;
         case ConnectionState.Started:
             Debug.Log($"peer {args.PeerId} joined");
             break;
@@ -49,11 +52,11 @@ manager.ServerManager.OnRemoteConnectionState += args =>
 };
 ```
 
-A peer is `Starting` while the handshake runs and `Started` once it succeeds. Spawn a peer's objects at that point, since it cannot receive them earlier. The server does not expose a list of peer ids, so if you need one, keep your own set from these events. [Lifecycle](../concepts/lifecycle.md#server) shows the whole sequence for one client.
+A peer is `Starting` while the handshake runs, `Authenticating` while your [authenticator](authentication.md) checks it, and `Started` once it is let in. Without an authenticator, a peer passes `Authenticating` and reaches `Started` in the same update. Spawn a peer's objects at `Started`, since it cannot receive them earlier. The server does not expose a list of peer ids, so if you need one, keep your own set from these events. [Lifecycle](../concepts/lifecycle.md#server) shows the whole sequence for one client.
 
 | Member | Purpose |
 |---|---|
-| `PeerCount` | Connected peers, including those still in the handshake |
+| `PeerCount` | Connected peers, including those that have not started yet |
 | `PeerState(peerId)` | A peer's `ConnectionState`; `Stopped` for an unknown peer |
 | `Disconnect(peerId)` | Closes a peer's connection at once; it stops with `LocalStop`, and the client sees the connection drop and reconnects |
 | `Kick(peerId)` | Tells the client it was kicked, then closes the connection; the peer stops with `LocalStop`, and the client stops with `ServerClosed` and does not reconnect |
@@ -61,7 +64,7 @@ A peer is `Starting` while the handshake runs and `Started` once it succeeds. Sp
 | `DroppedInputsOf(peerId)` | Inputs from the peer that the server could not use |
 | `FrameBudgetOf(peerId)` | The frame budget of the transport the peer connected through |
 
-`Kick` sends whatever is already queued for the peer, then the kick, then closes the connection. From the call on, sends to that peer return `NotConnected` and its messages are no longer handled. If the queue cannot be sent within Close Timeout Seconds (1 by default), for example because the client stopped reading, the server closes the connection anyway. To tell the player why, such as a ban or a full room, send your own message before calling `Kick`; it arrives first. `Kick` returns false for an unknown peer and for one that is already being closed. A peer still in the handshake cannot receive messages yet, so it is closed at once without the notice.
+`Kick` sends whatever is already queued for the peer, then the kick, then closes the connection. From the call on, sends to that peer return `NotConnected` and its messages are no longer handled. If the queue cannot be sent within Close Timeout Seconds (1 by default), for example because the client stopped reading, the server closes the connection anyway. To tell the player why, such as a ban or a full room, send your own message before calling `Kick`; it arrives first. `Kick` returns false for an unknown peer and for one that is already being closed. A peer still in the handshake cannot receive messages yet, so it is closed at once without the notice. A peer that is `Authenticating` does get the notice.
 
 When a peer stops, the server despawns the objects it owned. Objects whose `NetworkObject` has Despawn With Owner turned off stay and become server-owned instead; see [ownership](../objects/ownership.md).
 

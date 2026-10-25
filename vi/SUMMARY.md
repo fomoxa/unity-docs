@@ -28,6 +28,7 @@
 * [NetworkManager](connections/network-manager.md)
 * [Server](connections/server.md)
 * [Client](connections/client.md)
+* [Xác thực](connections/authentication.md)
 * [Host mode](connections/host-mode.md)
 * [Transport](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)

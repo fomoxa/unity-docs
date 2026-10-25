@@ -16,6 +16,8 @@ The [NetworkManager](../connections/network-manager.md) guide explains what each
 | Byte Capacity | `int` | 1048576 | at least 1 |
 | Reliable Window | `int` | 1024 | 1 to 16384 |
 | Close Timeout Seconds | `float` | 1 | |
+| Authentication Timeout Seconds | `float` | 30 | 0 or less: no limit |
+| Authenticator | `NetworkAuthenticator` | none | |
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
 | Max Reconnect Retries | `int` | -1 (no limit) | |

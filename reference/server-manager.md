@@ -10,13 +10,14 @@
 | `void StopConnection()` | Disconnects every peer, despawns every object, unloads the network scenes |
 | `ServerState State` | `Stopped`, `Starting`, `Started` or `Stopping` |
 | `ushort Port` | The bound port; 0 while stopped |
-| `int PeerCount` | Connected peers, including those in the handshake |
+| `int PeerCount` | Connected peers, including those not started yet |
 | `ConnectionState PeerState(ulong peerId)` | A peer's state; `Stopped` when unknown |
 | `void Disconnect(ulong peerId)` | Closes a peer's connection at once with `StopReason.LocalStop` |
 | `bool Kick(ulong peerId)` | Sends the queued messages and a notice to the client, then closes the connection; the client stops with `ServerClosed` and does not reconnect. False when the peer is unknown or already closing. |
 | `bool HasRtt(ulong peerId)`, `TimeSpan RttOf(ulong peerId)` | Round-trip time reported by the peer's clock pings; `TimeSpan.Zero` when none |
 | `int DroppedInputsOf(ulong peerId)` | Inputs from the peer that were dropped |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget of the peer's transport; 0 when unknown |
+| `IServerAuthenticator Authenticator` | The server side of the [authentication](../connections/authentication.md). Get and set; setting it while the server is running throws `InvalidOperationException`. |
 
 ## Objects
 

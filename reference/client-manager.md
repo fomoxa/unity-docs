@@ -8,7 +8,8 @@
 |---|---|
 | `void StartConnection(string address, ushort port)` | Connects to a server. When the same manager runs a server, connects through the in-process connection and ignores both arguments. Throws `InvalidOperationException` when already running. |
 | `void StopConnection()` | Sends a leave message, closes the connection, despawns the client's objects and cancels pending retries |
-| `ConnectionState State` | `Stopped`, `Starting` or `Started` |
+| `ConnectionState State` | `Stopped`, `Starting`, `Authenticating` or `Started` |
+| `IClientAuthenticator Authenticator` | The client side of the [authentication](../connections/authentication.md). Get and set; setting it while the client is running throws `InvalidOperationException`. |
 | `TimeSpan Rtt` | Smoothed round-trip time to the server; zero for a host's client and before the first clock answer |
 
 ## Objects and prediction
@@ -22,7 +23,7 @@
 
 | Member | Description |
 |---|---|
-| `SendResult Send(uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for the server; `NotConnected` while stopped |
+| `SendResult Send(uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for the server; `NotConnected` while stopped. Before `Started`, the message waits in the queue. |
 | `SendResult SendToObject(uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Queues an object message for the server |
 | `MessageDispatcher Dispatcher` | Handlers for incoming messages |
 

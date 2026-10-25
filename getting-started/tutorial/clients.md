@@ -10,7 +10,7 @@ The launcher's **Client** button calls:
 manager.ClientManager.StartConnection(address, port);
 ```
 
-The address can be a host name or an IP address. The client resolves it, opens the transport and runs the Fomoxa handshake, and `ClientManager.OnClientConnectionState` reports its progress: `Starting` while it connects, `Started` once messages can flow, and `Stopped` when the connection ends.
+The address can be a host name or an IP address. The client resolves it, opens the transport and runs the Fomoxa handshake, and `ClientManager.OnClientConnectionState` reports its progress: `Starting` while it connects, `Authenticating` until the server lets it in, `Started` once messages can flow, and `Stopped` when the connection ends.
 
 If the connection fails or drops, the client tries again every 0.5 seconds, without limit by default. On a `Stopped` event, `ConnectionStateArgs.Reason` tells why the connection stopped, and `ConnectionStateArgs.WillRetry` tells whether another attempt follows. [Client](../../connections/client.md) explains reconnection and its settings.
 
@@ -23,11 +23,11 @@ Once the client reaches `Started`, the server spawns a player for it, and the cl
 
 What you should see:
 
-- The Console shows `client: Starting None`, then `client: Started None`.
+- The Console shows `client: Starting None`, `client: Authenticating None`, then `client: Started None`.
 - A capsule appears at an x position of twice the client's peer id.
 - The Console shows `player <id> spawned, owner <peer id>, mine: True, jumps: 0`.
 - A **Jump** button appears below the status line, because this client owns the capsule.
-- On a dedicated server, `server.log` shows `peer <id>: Starting None` and `peer <id>: Started None`.
+- On a dedicated server, `server.log` shows `peer <id>: Starting None`, `peer <id>: Authenticating None` and `peer <id>: Started None`.
 
 ## 2. Call the RPC
 

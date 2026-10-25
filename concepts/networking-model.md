@@ -53,19 +53,21 @@ A send that would exceed one of the first two limits is not queued, and returns 
 
 ## Connections
 
-A connection goes through three states, which `ConnectionState` reports:
+A connection goes through four states, which `ConnectionState` reports:
 
 ```mermaid
 stateDiagram-v2
     direction LR
     [*] --> Stopped
     Stopped --> Starting: StartConnection, or a client connects
-    Starting --> Started: handshake succeeded
+    Starting --> Authenticating: handshake succeeded
     Starting --> Stopped: failed
+    Authenticating --> Started: server accepted
+    Authenticating --> Stopped: rejected, timed out or failed
     Started --> Stopped: stopped, left or timed out
 ```
 
-`Starting` covers the transport connection and the Fomoxa handshake. `Started` means both sides have agreed on the schema and messages flow. The server itself has a separate state, `ServerState`, which goes from `Stopped` through `Starting`, `Started` and `Stopping` back to `Stopped`.
+`Starting` covers the transport connection and the Fomoxa handshake. In `Authenticating`, the server's [authenticator](../connections/authentication.md) decides whether to let the client in, and only the authenticator's messages flow; without an authenticator the server lets the client in at once. `Started` means messages flow. The server itself has a separate state, `ServerState`, which goes from `Stopped` through `Starting`, `Started` and `Stopping` back to `Stopped`.
 
 ### Silent connections
 

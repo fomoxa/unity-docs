@@ -39,6 +39,9 @@ manager.ServerManager.OnRemoteConnectionState += args =>
         case ConnectionState.Starting:
             Debug.Log($"peer {args.PeerId} is connecting");
             break;
+        case ConnectionState.Authenticating:
+            Debug.Log($"peer {args.PeerId} is authenticating");
+            break;
         case ConnectionState.Started:
             Debug.Log($"peer {args.PeerId} joined");
             break;
@@ -49,11 +52,11 @@ manager.ServerManager.OnRemoteConnectionState += args =>
 };
 ```
 
-Một peer ở `Starting` trong lúc handshake chạy và tới `Started` khi handshake thành công. Hãy spawn object của peer ở thời điểm đó, vì trước đó nó chưa nhận được chúng. Server không cung cấp danh sách peer id, nên nếu cần, hãy tự giữ một tập từ các event này. [Vòng đời](../concepts/lifecycle.md#server) đưa ra toàn bộ trình tự cho một client.
+Một peer ở `Starting` trong lúc handshake chạy, ở `Authenticating` trong lúc [authenticator](authentication.md) của bạn kiểm tra nó, và tới `Started` khi được cho vào. Khi không có authenticator, peer đi qua `Authenticating` và tới `Started` trong cùng một lần cập nhật. Hãy spawn object của peer ở `Started`, vì trước đó nó chưa nhận được chúng. Server không cung cấp danh sách peer id, nên nếu cần, hãy tự giữ một tập từ các event này. [Vòng đời](../concepts/lifecycle.md#server) đưa ra toàn bộ trình tự cho một client.
 
 | Member | Mục đích |
 |---|---|
-| `PeerCount` | Số peer đã kết nối, kể cả peer còn đang handshake |
+| `PeerCount` | Số peer đã kết nối, kể cả peer chưa khởi động xong |
 | `PeerState(peerId)` | `ConnectionState` của một peer; `Stopped` với peer không biết |
 | `Disconnect(peerId)` | Đóng kết nối của một peer ngay lập tức; nó dừng với `LocalStop`, còn client thấy kết nối rớt và kết nối lại |
 | `Kick(peerId)` | Báo cho client rằng nó bị kick, rồi đóng kết nối; peer dừng với `LocalStop`, còn client dừng với `ServerClosed` và không kết nối lại |
@@ -61,7 +64,7 @@ Một peer ở `Starting` trong lúc handshake chạy và tới `Started` khi ha
 | `DroppedInputsOf(peerId)` | Số input từ peer mà server không dùng được |
 | `FrameBudgetOf(peerId)` | Frame budget của transport mà peer kết nối qua |
 
-`Kick` gửi những gì đã xếp cho peer, rồi tới thông báo kick, rồi đóng kết nối. Từ lúc gọi, lệnh gửi tới peer đó trả `NotConnected` và message của nó không còn được xử lý. Nếu hàng đợi không gửi hết được trong Close Timeout Seconds (mặc định 1), ví dụ vì client đã ngừng đọc, server vẫn đóng kết nối. Muốn báo cho người chơi lý do, như bị cấm hay phòng đã đầy, hãy gửi message của bạn trước khi gọi `Kick`; nó sẽ tới trước. `Kick` trả false với peer không tồn tại và với peer đang bị đóng. Peer còn trong handshake chưa nhận được message, nên nó bị đóng ngay mà không có thông báo.
+`Kick` gửi những gì đã xếp cho peer, rồi tới thông báo kick, rồi đóng kết nối. Từ lúc gọi, lệnh gửi tới peer đó trả `NotConnected` và message của nó không còn được xử lý. Nếu hàng đợi không gửi hết được trong Close Timeout Seconds (mặc định 1), ví dụ vì client đã ngừng đọc, server vẫn đóng kết nối. Muốn báo cho người chơi lý do, như bị cấm hay phòng đã đầy, hãy gửi message của bạn trước khi gọi `Kick`; nó sẽ tới trước. `Kick` trả false với peer không tồn tại và với peer đang bị đóng. Peer còn trong handshake chưa nhận được message, nên nó bị đóng ngay mà không có thông báo. Peer đang `Authenticating` thì vẫn nhận được thông báo.
 
 Khi một peer dừng, server despawn các object nó sở hữu. Object có `NetworkObject` tắt Despawn With Owner thì được giữ lại và chuyển sang do server sở hữu; xem [ownership](../objects/ownership.md).
 

@@ -80,6 +80,13 @@ The manager reads these fields once, in `Awake`. Changing them in Play Mode has 
 | Heartbeat Interval Seconds | 5 | Silence after which a connection sends a probe |
 | Heartbeat Timeout Seconds | 15 | Time a probe may stay unanswered before the connection stops with `Timeout` |
 
+### Authentication
+
+| Field | Default | Meaning |
+|---|---|---|
+| Authentication Timeout Seconds | 30 | Time the server waits for a client to be accepted before it closes the connection with `AuthenticationTimeout`. 0 waits without limit. |
+| Authenticator | none | A [`NetworkAuthenticator`](authentication.md) component. Without one, the server lets every client in after the handshake. |
+
 ### Prefabs and scenes
 
 | Field | Default | Meaning |

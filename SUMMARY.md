@@ -28,6 +28,7 @@
 * [NetworkManager](connections/network-manager.md)
 * [Server](connections/server.md)
 * [Client](connections/client.md)
+* [Authentication](connections/authentication.md)
 * [Host mode](connections/host-mode.md)
 * [Transports](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)

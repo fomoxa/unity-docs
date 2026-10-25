@@ -18,12 +18,14 @@ If the same `NetworkManager` is running a server, `StartConnection` ignores the 
 
 ## Connection states
 
-`State` is a `ConnectionState`, one of `Stopped`, `Starting` and `Started`, and `OnClientConnectionState` reports each change with a `ConnectionStateArgs`:
+After the handshake, the client is `Authenticating` until the server lets it in, which happens at once when the server has no [authenticator](authentication.md).
+
+`State` is a `ConnectionState`, one of `Stopped`, `Starting`, `Authenticating` and `Started`, and `OnClientConnectionState` reports each change with a `ConnectionStateArgs`:
 
 | Field | Meaning |
 |---|---|
 | `State` | The new state |
-| `Reason` | Why the connection stopped; `None` while starting or started |
+| `Reason` | Why the connection stopped; `None` in the other states |
 | `Failure` | The handshake failure when `Reason` is `HandshakeFailed` |
 | `DiscardedMessages` | Messages still queued that were dropped when the connection stopped |
 | `WillRetry` | True when the client will start again after the reconnect interval |
@@ -50,12 +52,12 @@ flowchart TD
     left -- no --> done
     left -- yes --> wait["Waits Reconnect Interval Seconds<br/>WillRetry = true"]
     wait --> start["Starting again"]
-    start -- handshake succeeds --> started["Started<br/>retry count back to 0"]
+    start -- handshake succeeds,<br/>server accepts --> started["Started<br/>retry count back to 0"]
 ```
 
 After a connection fails or drops, the client starts again after Reconnect Interval Seconds (0.5 by default), up to Max Reconnect Retries times (by default -1, which means without limit). The retry count resets whenever a connection reaches `Started`.
 
-Some stop reasons end the connection for good. The client does not retry after `LocalStop`, which means your code called `StopConnection`, or after `HandlerException`, which means a message handler on the client threw. It also stays stopped after `PrefabMismatch` or `ObjectMismatch`, when it could not apply an object message, after `PhysicsBackendMismatch`, when the server uses another physics backend, after `InvalidFragment`, when the server sent fragments that do not fit together, after `ServerClosed`, when the server closed the connection on purpose and said why in `CloseReason`, and after `HandshakeFailed` with any failure other than `Timeout`. A host's in-process client never retries.
+Some stop reasons end the connection for good. The client does not retry after `LocalStop`, which means your code called `StopConnection`, or after `HandlerException`, which means a message handler on the client threw. It also stays stopped after `PrefabMismatch` or `ObjectMismatch`, when it could not apply an object message, after `PhysicsBackendMismatch`, when the server uses another physics backend, after `InvalidFragment`, when the server sent fragments that do not fit together, after `ServerClosed`, when the server closed the connection on purpose and said why in `CloseReason`, after `UnauthenticatedMessage`, when the server broke the rules of [authentication](authentication.md#messages-outside-the-authentication), and after `HandshakeFailed` with any failure other than `Timeout`. A host's in-process client never retries.
 
 Every reconnect is a new connection. The client despawns all objects when the connection stops, and the server spawns them again once the new connection has started.
 

@@ -80,6 +80,13 @@ Manager đọc các field này một lần, trong `Awake`. Thay đổi chúng tr
 | Heartbeat Interval Seconds | 5 | Khoảng im lặng mà sau đó kết nối gửi một probe |
 | Heartbeat Timeout Seconds | 15 | Thời gian một probe được phép không có trả lời trước khi kết nối dừng với `Timeout` |
 
+### Xác thực <a href="#authentication" id="authentication"></a>
+
+| Field | Mặc định | Ý nghĩa |
+|---|---|---|
+| Authentication Timeout Seconds | 30 | Thời gian server chờ một client được chấp nhận trước khi đóng kết nối với `AuthenticationTimeout`. 0 là chờ không giới hạn. |
+| Authenticator | không có | Một component [`NetworkAuthenticator`](authentication.md). Khi không có, server cho mọi client vào sau handshake. |
+
 ### Prefab và scene <a href="#prefabs-and-scenes" id="prefabs-and-scenes"></a>
 
 | Field | Mặc định | Ý nghĩa |

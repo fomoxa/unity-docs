@@ -18,6 +18,9 @@
 | `PhysicsBackendMismatch` | The client and the server use different physics backends | No |
 | `InvalidFragment` | The other side sent fragments of a large reliable message that do not fit together | No |
 | `ServerClosed` | The server closed the connection on purpose and sent its reason, which is in `CloseReason` | No |
+| `UnauthenticatedMessage` | While the connection was `Authenticating`, the other side sent a message that the [authentication](../connections/authentication.md#messages-outside-the-authentication) does not allow | No |
+| `AuthenticationFailed` | On the server: the authenticator rejected the peer. The client stops with `ServerClosed` | |
+| `AuthenticationTimeout` | On the server: the peer was not accepted within Authentication Timeout Seconds. The client stops with `ServerClosed` | |
 
 ## SessionCloseReason
 
@@ -28,6 +31,8 @@
 | `Unspecified` (0) | No reason was given. The package itself never sends this value |
 | `HandlerException` (1) | A message handler on the server threw while handling this client's message |
 | `Kicked` (2) | The server called `ServerManager.Kick` |
+| `AuthenticationFailed` (3) | The server's authenticator rejected the client |
+| `AuthenticationTimeout` (4) | The client was not accepted within the server's Authentication Timeout Seconds |
 
 A newer server may send a value this list does not have. The client keeps the value as it arrived, and it still does not retry.
 
@@ -70,7 +75,7 @@ A newer server may send a value this list does not have. The client keeps the va
 | `TooLargeForQueue` | The message is larger than Byte Capacity |
 | `TooLargeForReassembly` | A `ReliableOrdered` message that has to be split for the transport is larger than 1 MiB |
 | `TooLarge` | The message is larger than the protocol allows |
-| `NotConnected` | No connection, or no such peer |
+| `NotConnected` | No connection, or no such peer. From an authentication context: that authentication has ended |
 | `NotObserver` | A target RPC to a peer that does not observe the object |
 
 ## SendStatus
@@ -83,6 +88,8 @@ A newer server may send a value this list does not have. The client keeps the va
 |---|---|---|
 | `InvalidOperationException` | `NetworkManager.Awake` | The generated registration did not run |
 | `InvalidOperationException` | `StartConnection` | Already running |
+| `InvalidOperationException` | `ServerManager.Authenticator`, `ClientManager.Authenticator` | Set while that side is running |
+| `InvalidOperationException` | `Send`, `Accept`, `Reject` of an authentication context | The authentication was already accepted |
 | `InvalidOperationException` | `Spawn`, scene methods | The server is not started |
 | `InvalidOperationException` | Send RPC methods | The object is not spawned on the sending side, or a parameterless RPC has no generated model |
 | `ArgumentException` | `Spawn` | Prefab asset, already spawned, unregistered prefab id, invalid scene object, owner not started |

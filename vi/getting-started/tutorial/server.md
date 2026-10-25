@@ -116,19 +116,20 @@ Launcher đăng ký event kết nối trong `Start` thay vì `Awake`, vì `Netwo
 
 `ServerManager.StartConnection(port)` mở listener của transport trên port đó. Port 0 yêu cầu hệ điều hành chọn một port trống, và `ServerManager.Port` luôn cho biết port đang dùng.
 
-Mỗi client kết nối tới được cấp một peer id, `args.PeerId`, và `ServerManager.OnRemoteConnectionState` báo mọi thay đổi trong kết nối của client đó. Một client đi qua ba trạng thái:
+Mỗi client kết nối tới được cấp một peer id, `args.PeerId`, và `ServerManager.OnRemoteConnectionState` báo mọi thay đổi trong kết nối của client đó. Một client đi qua bốn trạng thái:
 
 ```mermaid
 stateDiagram-v2
     direction LR
     [*] --> Starting: transport đã kết nối
-    Starting --> Started: handshake Fomoxa thành công
+    Starting --> Authenticating: handshake Fomoxa thành công
+    Authenticating --> Started: được cho vào
     Starting --> Stopped: handshake thất bại
     Started --> Stopped: client rời đi hoặc hết thời gian chờ
     Stopped --> [*]
 ```
 
-`Starting` bao gồm handshake của Fomoxa, trong đó client và server kiểm tra rằng cả hai được build từ cùng một bộ model. Message chỉ đi được khi client tới `Started`, nên launcher spawn player ở đúng thời điểm đó:
+`Starting` bao gồm handshake của Fomoxa, trong đó client và server kiểm tra rằng cả hai được build từ cùng một bộ model. `Authenticating` là lúc một [authenticator](../../connections/authentication.md) kiểm tra client; tutorial này không có authenticator, nên server cho mọi client vào ngay. Message chỉ đi được khi client tới `Started`, nên launcher spawn player ở đúng thời điểm đó:
 
 ```mermaid
 sequenceDiagram

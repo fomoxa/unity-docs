@@ -103,7 +103,7 @@ sequenceDiagram
 | `ServerManager.Send(peerId, messageId, payload)` | Một peer |
 | `ServerManager.Broadcast(messageId, payload)` | Mọi peer ở trạng thái `Started`; trả về số peer đã được đưa vào queue |
 
-Payload được copy vào send queue trong lúc gọi, và message đi trên channel của model. `Send` trả về một `SendResult`, trong đó `NotConnected` nghĩa là kết nối hoặc peer không tồn tại.
+Payload được copy vào send queue trong lúc gọi, và message đi trên channel của model. `Send` trả về một `SendResult`, trong đó `NotConnected` nghĩa là kết nối hoặc peer không tồn tại. Message gửi khi kết nối đang `Starting` hoặc `Authenticating` chờ trong queue và đi khi kết nối đã khởi động.
 
 `ClientManager.SendToObject` và `ServerManager.SendToObject` gửi một message tới một behaviour của một object, giống cách RPC làm. RPC được xây trên hai method này, và code game nên dùng RPC.
 

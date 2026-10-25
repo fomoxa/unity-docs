@@ -13,6 +13,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `NetworkTransform`, `NetworkAnimator` | Component | [Component](components.md) |
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Component, interface | [Component](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Type asset, component | [Component](components.md#observers) |
+| `NetworkAuthenticator` | Component trừu tượng | [Xác thực](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Class, interface, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../advanced/editor-integration.md) |
 | `NetworkTransport`, `UdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
@@ -35,6 +36,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `INetworkEntity` | Interface | Type của các giá trị trong `Spawned`; `NetworkObject` hiện thực nó |
 | `IObserverRule`, `ObserverContext`, `DistanceObserverRule` | Interface, class | Rule nằm sau `ObserverRule` và `DistanceRule` |
 | `ObserverGroups` | Class | [Tham chiếu ServerManager](server-manager.md#observergroups) |
+| `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interface, class | [Xác thực](../connections/authentication.md) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging <a href="#fomoxanetworkingmessaging" id="fomoxanetworkingmessaging"></a>

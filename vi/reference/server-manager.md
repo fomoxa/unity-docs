@@ -10,13 +10,14 @@
 | `void StopConnection()` | Ngắt mọi peer, despawn mọi object, unload các network scene |
 | `ServerState State` | `Stopped`, `Starting`, `Started` hoặc `Stopping` |
 | `ushort Port` | Port đã bind; 0 khi đã dừng |
-| `int PeerCount` | Số peer đã kết nối, kể cả peer đang handshake |
+| `int PeerCount` | Số peer đã kết nối, kể cả peer chưa khởi động xong |
 | `ConnectionState PeerState(ulong peerId)` | Trạng thái của một peer; `Stopped` khi không biết |
 | `void Disconnect(ulong peerId)` | Đóng kết nối của một peer ngay lập tức với `StopReason.LocalStop` |
 | `bool Kick(ulong peerId)` | Gửi các message đã xếp và một thông báo cho client, rồi đóng kết nối; client dừng với `ServerClosed` và không kết nối lại. Trả false khi peer không tồn tại hoặc đang bị đóng. |
 | `bool HasRtt(ulong peerId)`, `TimeSpan RttOf(ulong peerId)` | Round-trip time mà các clock ping của peer báo; `TimeSpan.Zero` khi chưa có |
 | `int DroppedInputsOf(ulong peerId)` | Số input từ peer đã bị bỏ |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget của transport của peer; 0 khi không biết |
+| `IServerAuthenticator Authenticator` | Phía server của [bước xác thực](../connections/authentication.md). Đọc và ghi; đặt khi server đang chạy sẽ ném `InvalidOperationException`. |
 
 ## Object <a href="#objects" id="objects"></a>
 

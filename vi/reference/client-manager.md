@@ -8,7 +8,8 @@
 |---|---|
 | `void StartConnection(string address, ushort port)` | Kết nối tới server. Khi cùng manager đang chạy server, kết nối qua kết nối trong tiến trình và bỏ qua cả hai tham số. Ném `InvalidOperationException` khi đang chạy. |
 | `void StopConnection()` | Gửi message rời đi, đóng kết nối, despawn các object của client và hủy các lần thử lại đang chờ |
-| `ConnectionState State` | `Stopped`, `Starting` hoặc `Started` |
+| `ConnectionState State` | `Stopped`, `Starting`, `Authenticating` hoặc `Started` |
+| `IClientAuthenticator Authenticator` | Phía client của [bước xác thực](../connections/authentication.md). Đọc và ghi; đặt khi client đang chạy sẽ ném `InvalidOperationException`. |
 | `TimeSpan Rtt` | Round-trip time đã làm mượt tới server; bằng 0 với client của host và trước câu trả lời clock đầu tiên |
 
 ## Object và prediction <a href="#objects-and-prediction" id="objects-and-prediction"></a>
@@ -22,7 +23,7 @@
 
 | Member | Mô tả |
 |---|---|
-| `SendResult Send(uint messageId, ReadOnlySpan<byte> payload)` | Đưa một message gửi tới server vào queue; `NotConnected` khi đã dừng |
+| `SendResult Send(uint messageId, ReadOnlySpan<byte> payload)` | Đưa một message gửi tới server vào queue; `NotConnected` khi đã dừng. Trước `Started`, message chờ trong queue. |
 | `SendResult SendToObject(uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Đưa một object message gửi tới server vào queue |
 | `MessageDispatcher Dispatcher` | Handler cho message tới |
 

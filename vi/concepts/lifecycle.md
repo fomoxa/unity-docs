@@ -26,6 +26,7 @@ sequenceDiagram
     Note over SM: ServerState Stopped → Starting → Started<br/>spawn mọi scene object trong các scene đã load
     Peer->>SM: transport kết nối
     SM-->>Code: OnRemoteConnectionState: Starting (handshake đang chạy)
+    SM-->>Code: OnRemoteConnectionState: Authenticating (authenticator đang chạy)
     SM-->>Code: OnRemoteConnectionState: Started
     Note over SM,Peer: client nhận các object nó observe
     Peer->>SM: rời đi, hết thời gian chờ hoặc thất bại
@@ -41,9 +42,11 @@ sequenceDiagram
 stateDiagram-v2
     direction LR
     [*] --> Starting: StartConnection(address, port)
-    Starting --> Started: handshake thành công
+    Starting --> Authenticating: handshake thành công
+    Authenticating --> Started: server chấp nhận
     Started --> Stopped: kết nối kết thúc
     Starting --> Stopped: kết nối thất bại
+    Authenticating --> Stopped: bị từ chối hoặc thất bại
     Stopped --> Starting: WillRetry, sau khoảng reconnect interval
     Stopped --> [*]: WillRetry là false, hoặc StopConnection()
 ```

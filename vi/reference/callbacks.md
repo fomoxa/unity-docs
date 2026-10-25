@@ -15,7 +15,7 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 | Member | Type | Mô tả |
 |---|---|---|
 | `PeerId` | `ulong` | Peer id của client trên server; 0 trên client |
-| `State` | `ConnectionState` | `Stopped`, `Starting` hoặc `Started` |
+| `State` | `ConnectionState` | `Stopped`, `Starting`, `Authenticating` hoặc `Started` |
 | `Reason` | `StopReason` | Lý do dừng; `None` trong các trường hợp khác |
 | `Failure` | `HandshakeFailure` | Lỗi handshake khi `Reason` là `HandshakeFailed` |
 | `DiscardedMessages` | `int` | Số message trong queue bị bỏ khi kết nối dừng |
@@ -35,7 +35,7 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 |---|---|
 | `SendDroppedArgs` | `ulong PeerId`, `uint MessageId`, `int PayloadLength`, `SendStatus Reason` |
 | `ReceiveDroppedArgs` | `ulong PeerId`, `int FrameLength` |
-| `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception` |
+| `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`; `MessageId` là 0 khi `OnServerAuthenticating`, `OnClientAuthenticating` hoặc một callback trên cancellation token của lần xác thực ném exception |
 | `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `uint SceneId` |
 
 Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `OnHandlerException` log exception và `OnObjectMismatch` log một lỗi, nhưng chỉ khi không có handler nào subscribe.
@@ -75,6 +75,7 @@ Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `O
 | `gather`, `apply` | `NetworkInput.Use` | Xem [input](../prediction/input.md#apply) |
 | `capture`, `restore`, `matches` | `NetworkInput.Reconcile` | Xem [reconciliation](../prediction/reconciliation.md) |
 | `ObserverRule.Observes` | Field Observer Rule | Trên server, khi observer được tính lại |
+| `OnServerAuthenticating`, `OnClientAuthenticating` và các handler của authenticator | Field Authenticator | Xem [xác thực](../connections/authentication.md) |
 | `ISceneLoader.Load`, `Unload` | `SceneRegistry.Register` | Khi một network scene được load hoặc unload |
 | `create`, `release` của prefab factory | `PrefabRegistry.Register` | Trên client, khi một object của prefab id đó spawn hoặc despawn |
 

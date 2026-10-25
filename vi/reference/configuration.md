@@ -16,6 +16,8 @@ Hướng dẫn [NetworkManager](../connections/network-manager.md) giải thích
 | Byte Capacity | `int` | 1048576 | tối thiểu 1 |
 | Reliable Window | `int` | 1024 | 1 tới 16384 |
 | Close Timeout Seconds | `float` | 1 | |
+| Authentication Timeout Seconds | `float` | 30 | 0 hoặc nhỏ hơn: không giới hạn |
+| Authenticator | `NetworkAuthenticator` | không có | |
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
 | Max Reconnect Retries | `int` | -1 (không giới hạn) | |

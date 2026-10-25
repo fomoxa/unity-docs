@@ -18,12 +18,14 @@ Nếu cùng `NetworkManager` đang chạy server, `StartConnection` bỏ qua đ�
 
 ## Trạng thái kết nối <a href="#connection-states" id="connection-states"></a>
 
-`State` là một `ConnectionState`, một trong `Stopped`, `Starting` và `Started`, và `OnClientConnectionState` báo mỗi lần thay đổi kèm một `ConnectionStateArgs`:
+Sau handshake, client ở `Authenticating` cho tới khi server cho nó vào, việc này xảy ra ngay nếu server không có [authenticator](authentication.md).
+
+`State` là một `ConnectionState`, một trong `Stopped`, `Starting`, `Authenticating` và `Started`, và `OnClientConnectionState` báo mỗi lần thay đổi kèm một `ConnectionStateArgs`:
 
 | Field | Ý nghĩa |
 |---|---|
 | `State` | Trạng thái mới |
-| `Reason` | Lý do kết nối dừng; `None` khi đang khởi động hoặc đã khởi động |
+| `Reason` | Lý do kết nối dừng; `None` ở các trạng thái khác |
 | `Failure` | Lỗi handshake khi `Reason` là `HandshakeFailed` |
 | `DiscardedMessages` | Số message còn trong queue bị bỏ khi kết nối dừng |
 | `WillRetry` | True khi client sẽ khởi động lại sau khoảng chờ kết nối lại |
@@ -50,12 +52,12 @@ flowchart TD
     left -- không --> done
     left -- có --> wait["Chờ Reconnect Interval Seconds<br/>WillRetry = true"]
     wait --> start["Starting lại"]
-    start -- handshake thành công --> started["Started<br/>bộ đếm thử lại về 0"]
+    start -- handshake thành công,<br/>server chấp nhận --> started["Started<br/>bộ đếm thử lại về 0"]
 ```
 
 Sau khi kết nối thất bại hoặc bị rớt, client khởi động lại sau Reconnect Interval Seconds (mặc định 0.5), tối đa Max Reconnect Retries lần (mặc định -1, tức không giới hạn). Bộ đếm thử lại được đặt lại mỗi khi một kết nối tới `Started`.
 
-Một số lý do dừng khiến kết nối kết thúc hẳn. Client không thử lại sau `LocalStop`, nghĩa là code của bạn đã gọi `StopConnection`, hay sau `HandlerException`, nghĩa là một message handler trên client đã ném exception. Nó cũng dừng hẳn sau `PrefabMismatch` hoặc `ObjectMismatch`, khi không áp dụng được một object message, sau `PhysicsBackendMismatch`, khi server dùng physics backend khác, sau `InvalidFragment`, khi server gửi các mảnh không ghép được với nhau, sau `ServerClosed`, khi server chủ động đóng kết nối và cho biết lý do trong `CloseReason`, và sau `HandshakeFailed` với failure khác `Timeout`. Client trong tiến trình của host không bao giờ thử lại.
+Một số lý do dừng khiến kết nối kết thúc hẳn. Client không thử lại sau `LocalStop`, nghĩa là code của bạn đã gọi `StopConnection`, hay sau `HandlerException`, nghĩa là một message handler trên client đã ném exception. Nó cũng dừng hẳn sau `PrefabMismatch` hoặc `ObjectMismatch`, khi không áp dụng được một object message, sau `PhysicsBackendMismatch`, khi server dùng physics backend khác, sau `InvalidFragment`, khi server gửi các mảnh không ghép được với nhau, sau `ServerClosed`, khi server chủ động đóng kết nối và cho biết lý do trong `CloseReason`, sau `UnauthenticatedMessage`, khi server vi phạm luật của [bước xác thực](authentication.md#messages-outside-the-authentication), và sau `HandshakeFailed` với failure khác `Timeout`. Client trong tiến trình của host không bao giờ thử lại.
 
 Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi object khi kết nối dừng, và server spawn lại chúng sau khi kết nối mới đã khởi động.
 
