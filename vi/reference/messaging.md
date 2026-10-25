@@ -77,7 +77,7 @@ public delegate void ObjectPayloadHandler(ulong peerId, uint objectId, byte beha
 | Exception | Namespace | Ném khi |
 |---|---|---|
 | `MessageDecodeException` | `Fomoxa.Networking.Messaging` | Adapter không decode được payload |
-| `HandlerRegistrationException` | `Fomoxa.Networking.Messaging` | Việc đăng ký handler, RPC, state hoặc input không hợp lệ |
+| `HandlerRegistrationException` | `Fomoxa.Networking.Messaging` | Việc đăng ký handler, RPC, state, collection hoặc input không hợp lệ |
 
 ## System model <a href="#system-models" id="system-models"></a>
 
@@ -91,6 +91,10 @@ Các model của chính package nằm trong `Fomoxa.Networking.Messaging`. Chún
 | `LocalPeer` | Peer id của client, tick rate và physics backend | Reliable ordered |
 | `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange` | Vòng đời object | Reliable ordered |
 | `StateDelta`, `StateResync` | Delta của state, và yêu cầu state đầy đủ từ client | Reliable ordered |
+| `CollectionChanges` | Các thao tác gọi trên một collection trong một tick | Reliable ordered |
+| `CollectionContent`, `CollectionResync` | Toàn bộ nội dung của một collection, và yêu cầu nội dung đó từ client | Reliable ordered |
+| `CollectionContents` | Các collection của một behaviour bên trong message spawn | Không gửi riêng |
+| `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | Một phần tử collection kiểu nguyên thuỷ | Không gửi riêng |
 | `TransformUpdate` | Transform khi đang di chuyển | Unreliable |
 | `TransformSettle` | Transform cuối cùng | Reliable ordered |
 | `AnimatorState` | State của `NetworkAnimator` | Reliable ordered |

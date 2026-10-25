@@ -77,7 +77,7 @@ public delegate void ObjectPayloadHandler(ulong peerId, uint objectId, byte beha
 | Exception | Namespace | Thrown when |
 |---|---|---|
 | `MessageDecodeException` | `Fomoxa.Networking.Messaging` | An adapter cannot decode a payload |
-| `HandlerRegistrationException` | `Fomoxa.Networking.Messaging` | A handler, RPC, state or input registration is invalid |
+| `HandlerRegistrationException` | `Fomoxa.Networking.Messaging` | A handler, RPC, state, collection or input registration is invalid |
 
 ## System models
 
@@ -91,6 +91,10 @@ The package's own models live in `Fomoxa.Networking.Messaging`. They are generat
 | `LocalPeer` | The client's peer id, the tick rate and the physics backend | Reliable ordered |
 | `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange` | Object lifecycle | Reliable ordered |
 | `StateDelta`, `StateResync` | State deltas, and a client's request for a full state | Reliable ordered |
+| `CollectionChanges` | The operations called on one collection in one tick | Reliable ordered |
+| `CollectionContent`, `CollectionResync` | The full content of one collection, and a client's request for it | Reliable ordered |
+| `CollectionContents` | The collections of one behaviour inside a spawn message | Not sent on its own |
+| `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | A primitive collection element | Not sent on its own |
 | `TransformUpdate` | Transform while moving | Unreliable |
 | `TransformSettle` | Final transform | Reliable ordered |
 | `AnimatorState` | `NetworkAnimator` state | Reliable ordered |

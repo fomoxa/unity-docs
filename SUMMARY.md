@@ -57,6 +57,7 @@
 ## Synchronization
 
 * [State](synchronization/state.md)
+* [Collections](synchronization/collections.md)
 * [NetworkTransform](synchronization/transform.md)
 * [NetworkAnimator](synchronization/animator.md)
 

@@ -12,6 +12,7 @@ Phần lớn công việc diễn ra mỗi tick một lần, gồm input, physics
 |---|---|
 | Bundling | Các message vào queue trong một tick đi cùng nhau, đóng vào các frame theo frame budget của transport (1200 byte với UDP). Nhiều message nhỏ tốn ít gói tin. |
 | State | Chỉ gửi khi bản encode thay đổi, và gửi dạng delta khi delta nhỏ hơn. Giữ state model nhỏ và cố định kích thước để delta áp dụng được. Tách dữ liệu ít thay đổi và dữ liệu thay đổi thường xuyên vào các behaviour khác nhau. |
+| Collection | Gửi các thao tác bạn gọi, không gửi cả collection. Observer mới nhận toàn bộ collection trong message spawn của nó, nên collection rất lớn làm spawn lớn theo. |
 | `NetworkTransform` | Chỉ gửi phần di chuyển quá ngưỡng, và không gửi gì khi đứng yên. Tắt các phần không cần; tăng ngưỡng cho object không cần độ chính xác cao. |
 | `NetworkAnimator` | Float Step làm tròn parameter float, để thay đổi rất nhỏ không tạo message. |
 | Observer | Một [observer rule](../objects/observers.md) giữ cho mỗi client không nhận object nó không cần. Đây thường là mức tiết kiệm lớn nhất trong thế giới lớn. Trên server có nhiều phòng, [nhóm](../objects/observers.md#groups) giữ object của mỗi phòng ở trong phòng đó. |
@@ -25,7 +26,7 @@ Việc tính lại observer được trải trên Observer Interval tick, nên k
 
 Một rule mà kết quả không phụ thuộc chuyển động có thể trả false từ `RebuildsPeriodically`, khi đó server bỏ qua việc tính lại theo chu kỳ. Với [nhóm](../objects/observers.md#groups), server chỉ tính lại và chỉ hỏi rule về các cặp object và peer cùng nhóm, nên phần chi phí này tăng theo kích thước nhóm.
 
-Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi. Behaviour đăng ký state bằng `onlyWhenDirty` chỉ được encode sau khi nó gọi `SetStateDirty()`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes).
+Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi. Behaviour đăng ký state bằng `onlyWhenDirty` chỉ được encode sau khi nó gọi `SetStateDirty()`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes). [Collection](../synchronization/collections.md) không tốn gì ở tick mà nó không đổi: mỗi thao tác được encode một lần, lúc bạn gọi nó.
 
 Transform được đọc sau mỗi tick, trừ khi server biết lúc nào chúng đổi. `NetworkTransform` trên object do [Rapier](../rapier/overview.md) mô phỏng, và entity console đồng bộ bằng `SyncTransform(sync, receiver)`, chỉ được đọc khi di chuyển, nên object đứng yên không thêm lần đọc nào. [NetworkTransform](../synchronization/transform.md#server-behavior) liệt kê những transform được đọc sau mỗi tick.
 

@@ -92,9 +92,11 @@ A newer server may send a value this list does not have. The client keeps the va
 | `InvalidOperationException` | `Send`, `Accept`, `Reject` of an authentication context | The authentication was already accepted |
 | `InvalidOperationException` | `Spawn`, scene methods | The server is not started |
 | `InvalidOperationException` | Send RPC methods | The object is not spawned on the sending side, or a parameterless RPC has no generated model |
+| `InvalidOperationException` | Methods that change a collection | Called on a client for a spawned object |
 | `ArgumentException` | `Spawn` | Prefab asset, already spawned, unregistered prefab id, invalid scene object, owner not started |
 | `ArgumentException` | `PrefabRegistry.Register`, `SceneRegistry.Register` | Id 0, id registered to something else, invalid prefab hierarchy |
-| `HandlerRegistrationException` | Registration hooks, `MessageDispatcher.Register` | Invalid state, input or RPC registration; id not in the schema; duplicate handler |
+| `HandlerRegistrationException` | Registration hooks, `MessageDispatcher.Register` | Invalid state, collection, input or RPC registration; id not in the schema; duplicate handler |
+| `ArgumentNullException` | Methods that add or set a collection element | A `null` element, value or key |
 | `PlatformNotSupportedException` | Transports, `ServerManager.StartConnection` | UDP or TCP in a browser; a server in a browser |
 | `NotSupportedException` | Desktop WebSocket client | A `wss://` URL |
 | `MessageDecodeException` | Adapters | A payload that does not decode |

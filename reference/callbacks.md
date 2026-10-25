@@ -72,6 +72,7 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 |---|---|---|
 | RPC handlers | Attributes or `NetworkRpcs` | When the RPC arrives |
 | State `onChanged(previous)` | `NetworkState.Use` | On clients, after each state change |
+| Collection `onChanged(operation, index or key, old, new)` | `NetworkState.Use` | On clients, after each operation; once with `Reset` after a [recovery](../synchronization/collections.md#recovery) |
 | `gather`, `apply` | `NetworkInput.Use` | See [input](../prediction/input.md#apply) |
 | `capture`, `restore`, `matches` | `NetworkInput.Reconcile` | See [reconciliation](../prediction/reconciliation.md) |
 | `ObserverRule.Observes` | Observer Rule field | On the server, when observers are recalculated |

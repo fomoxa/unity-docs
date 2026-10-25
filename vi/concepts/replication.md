@@ -27,8 +27,9 @@ Mũi tên liền là tin cậy và có thứ tự; mũi tên đứt là không t
 
 | Sự kiện trên server | Message gửi tới observer | Channel |
 |---|---|---|
-| `ServerManager.Spawn` | Message spawn: object id, prefab id hoặc scene object id, fingerprint của prefab, owner, vị trí, góc xoay và tỉ lệ, state ban đầu của mọi behaviour, và network scene | Tin cậy, có thứ tự |
+| `ServerManager.Spawn` | Message spawn: object id, prefab id hoặc scene object id, fingerprint của prefab, owner, vị trí, góc xoay và tỉ lệ, state và collection ban đầu của mọi behaviour, và network scene | Tin cậy, có thứ tự |
 | Một state model thay đổi | State mới, dạng bản đầy đủ hoặc delta | Tin cậy, có thứ tự |
+| Một collection thay đổi | Các thao tác gọi trên nó từ tick trước | Tin cậy, có thứ tự |
 | Một `NetworkTransform` di chuyển | Một cập nhật transform kèm tick | Không tin cậy |
 | Một `NetworkTransform` dừng lại, được spawn hoặc teleport | Một message settle mang transform cuối cùng | Tin cậy, có thứ tự |
 | Parameter của `NetworkAnimator` thay đổi | State của animator, qua cơ chế state | Tin cậy, có thứ tự |

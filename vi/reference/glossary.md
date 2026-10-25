@@ -8,6 +8,7 @@
 | Bundle | Một frame của transport chứa nhiều message. |
 | Channel | `Unreliable` hoặc `ReliableOrdered`; đặt theo từng message id. Xem [channel](../messaging/channels.md). |
 | Codec | Một cách encode model có tên, do `fomoxac` sinh. Một model có thể có nhiều codec. |
+| Collection | Một `NetworkList`, `NetworkDictionary` hoặc `NetworkSet` đăng ký bằng `NetworkState.Use`; server gửi các thao tác gọi trên nó. Xem [collection](../synchronization/collections.md). |
 | Delta | XOR giữa bản encode mới và bản encode trước của một state, với các đoạn không đổi được nén lại. |
 | Fingerprint | Hash của danh sách type `NetworkBehaviour` của một prefab hoặc scene object, được so sánh khi spawn. |
 | Fragment | Một mảnh của message `ReliableOrdered` lớn hơn frame budget. Bên nhận ghép các mảnh lại rồi mới giao message. Xem [kích thước message](../messaging/channels.md#message-size). |

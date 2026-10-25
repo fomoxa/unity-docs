@@ -30,6 +30,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `NetworkScenes` | Class | [ServerManager reference](server-manager.md#scenes) |
 | `NetworkVisibility` | Enum | [NetworkObject reference](network-object.md) |
 | `NetworkRpcs`, `NetworkState`, `NetworkInput`, `InputContext` | Registration types | [Reference](network-object.md#registration-types) |
+| `NetworkList<T>`, `NetworkDictionary<TKey, TValue>`, `NetworkSet<T>`, `NetworkCollections`, `NetworkListOperation`, `NetworkDictionaryOperation`, `NetworkSetOperation`, `NetworkListChanged<T>`, `NetworkDictionaryChanged<TKey, TValue>`, `NetworkSetChanged<T>` | Collection types | [Collections](../synchronization/collections.md) |
 | `ServerRpcAttribute`, `ClientRpcAttribute`, `NetworkRpcAttribute`, `NetworkChannelAttribute`, `MessageAdapterAttribute` | Attributes | [Attributes](attributes.md) |
 | `Channel` | Enum | [Channels](../messaging/channels.md) |
 | `FomoxaRegistry`, `RpcMessageIds` | Classes | [Messaging API](messaging.md) |
@@ -45,7 +46,8 @@ This page lists the public types of the package by namespace. Types marked "buil
 |---|---|---|
 | `IMessageCodec<T>`, `MessageDecodeException` | Interface, exception | [Messaging API](messaging.md) |
 | `MessageDispatcher`, `PayloadHandler`, `ObjectPayloadHandler`, `HandlerRegistrationException`, `MessageChannels` | Classes, delegates | [Messaging API](messaging.md) |
-| `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle` | The package's system models | [Messaging API](messaging.md#system-models) |
+| `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle`, `CollectionChanges`, `CollectionContent`, `CollectionContents`, `CollectionResync` | The package's system models | [Messaging API](messaging.md#system-models) |
+| `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | One-field system models that carry primitive collection elements | [Messaging API](messaging.md#system-models) |
 | `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System models of the scene file | [Editor integration](../advanced/editor-integration.md#scene-files) |
 | `BundleFormat`, `BundleReader`, `BundleWriter`, `ObjectHeader`, `SeqHeader`, `OutgoingEntry`, `OutgoingKind`, `OutgoingQueue`, `QueuedMessage`, `EnqueueResult`, `MessageSender`, `ReliableChannel`, `ReliableVerdict`, `SessionProtocol`, `ZeroRuns` | Building blocks | |
 
@@ -64,7 +66,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 |---|---|---|
 | `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObserverAddedArgs`, `SpawnResult` | Enums, event arguments | [Errors](errors.md), [Callbacks](callbacks.md) |
 | `IServerEntityBackend`, `IClientEntityBackend`, `IServerSceneHost`, `ISceneHost`, `SceneFileFormat`, `SceneFileGeometry` | Backend contract | [Console backend reference](../console-server/reference.md) |
-| `ServerObjects`, `ClientObjects`, `ServerScenes`, `ObjectTable`, `ObjectRow`, `SpawnedObject`, `SpawnData`, `SpawnSource`, `IObjectSpawner`, `ObjectProtocol`, `StateProtocol`, `TransformProtocol`, `SceneProtocol`, `SpawnTransform` | Building blocks | |
+| `ServerObjects`, `ClientObjects`, `ServerScenes`, `ObjectTable`, `ObjectRow`, `SpawnedObject`, `SpawnData`, `SpawnSource`, `IObjectSpawner`, `ObjectProtocol`, `StateProtocol`, `CollectionProtocol`, `TransformProtocol`, `SceneProtocol`, `SpawnTransform` | Building blocks | |
 
 ## Fomoxa.Networking.Timing and Fomoxa.Networking.Prediction
 

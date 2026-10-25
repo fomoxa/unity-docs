@@ -8,7 +8,7 @@ The package is server-authoritative. The server holds the real game state and is
 
 Only the server spawns and despawns network objects and changes their owners. Calling `ServerManager.Spawn` on a process that is not running a server throws `the server is not started`.
 
-State models change on the server and flow to clients, never the other way. The same holds for movement: `NetworkTransform` sends the server's transform to clients and does not send a client's transform changes, and only the server's `NetworkAnimator` parameters reach other players.
+State models and [collections](../synchronization/collections.md) change on the server and flow to clients, never the other way. Changing a spawned collection on a client throws. The same holds for movement: `NetworkTransform` sends the server's transform to clients and does not send a client's transform changes, and only the server's `NetworkAnimator` parameters reach other players.
 
 The server also loads and unloads network scenes, and decides which clients observe which objects.
 

@@ -57,6 +57,7 @@
 ## Đồng bộ
 
 * [State](synchronization/state.md)
+* [Collection](synchronization/collections.md)
 * [NetworkTransform](synchronization/transform.md)
 * [NetworkAnimator](synchronization/animator.md)
 

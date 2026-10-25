@@ -72,6 +72,7 @@ Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `O
 |---|---|---|
 | RPC handler | Attribute hoặc `NetworkRpcs` | Khi RPC tới |
 | `onChanged(previous)` của state | `NetworkState.Use` | Trên client, sau mỗi thay đổi state |
+| `onChanged(operation, index hoặc key, old, new)` của collection | `NetworkState.Use` | Trên client, sau mỗi thao tác; một lần với `Reset` sau khi [khôi phục](../synchronization/collections.md#recovery) |
 | `gather`, `apply` | `NetworkInput.Use` | Xem [input](../prediction/input.md#apply) |
 | `capture`, `restore`, `matches` | `NetworkInput.Reconcile` | Xem [reconciliation](../prediction/reconciliation.md) |
 | `ObserverRule.Observes` | Field Observer Rule | Trên server, khi observer được tính lại |

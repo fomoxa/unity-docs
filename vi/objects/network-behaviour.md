@@ -92,6 +92,6 @@ Các method này là `protected`. Khi object chưa spawn ở phía gửi, chúng
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Một behaviour đăng ký được một state model và một input model; object cần nhiều hơn thì dùng nhiều behaviour. Ở mỗi phía, một message id thuộc về một type behaviour, nên dùng cùng một model làm server RPC của hai type behaviour, hoặc vừa làm RPC vừa làm state model, sẽ ném `HandlerRegistrationException` khi object thứ hai spawn. Vì các hook đăng ký chạy một lần cho mỗi instance component, scene object bị despawn rồi spawn lại vẫn giữ lần đăng ký đầu tiên.
+Một behaviour đăng ký được một state model, tối đa 256 [collection](../synchronization/collections.md) và một input model; object cần nhiều hơn thì dùng nhiều behaviour. Ở mỗi phía, một message id thuộc về một type behaviour, nên dùng cùng một model làm server RPC của hai type behaviour, hoặc vừa làm RPC vừa làm state model, sẽ ném `HandlerRegistrationException` khi object thứ hai spawn. Vì các hook đăng ký chạy một lần cho mỗi instance component, scene object bị despawn rồi spawn lại vẫn giữ lần đăng ký đầu tiên.
 
 Behaviour thuộc về một [NetworkObject](network-object.md). Các hướng dẫn về [RPC](../messaging/rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md) giải thích cần đăng ký gì trong mỗi hook, và [tham chiếu NetworkBehaviour](../reference/network-object.md#networkbehaviour) liệt kê mọi member.

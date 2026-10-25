@@ -92,6 +92,6 @@ These methods are `protected`. When the object is not spawned on the sending sid
 
 ## Limitations
 
-A behaviour can register one state model and one input model; an object that needs more uses several behaviours. On each side a message id belongs to one behaviour type, so using the same model as a server RPC of two behaviour types, or as both an RPC and a state model, throws `HandlerRegistrationException` when the second object spawns. Because the registration hooks run once per component instance, a scene object that is despawned and spawned again keeps its first registration.
+A behaviour can register one state model, up to 256 [collections](../synchronization/collections.md) and one input model; an object that needs more uses several behaviours. On each side a message id belongs to one behaviour type, so using the same model as a server RPC of two behaviour types, or as both an RPC and a state model, throws `HandlerRegistrationException` when the second object spawns. Because the registration hooks run once per component instance, a scene object that is despawned and spawned again keeps its first registration.
 
 The behaviour belongs to a [NetworkObject](network-object.md). The guides on [RPCs](../messaging/rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md) explain what to register in each hook, and the [NetworkBehaviour reference](../reference/network-object.md#networkbehaviour) lists every member.

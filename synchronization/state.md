@@ -4,7 +4,7 @@ A state model holds data of a `NetworkBehaviour` that the server keeps in sync o
 
 ## When to use it
 
-State suits values that clients must always know, including clients that join later. One-off events are better sent as an [RPC](../messaging/rpc.md), and movement is handled by [`NetworkTransform`](transform.md).
+State suits values that clients must always know, including clients that join later. One-off events are better sent as an [RPC](../messaging/rpc.md), and movement is handled by [`NetworkTransform`](transform.md). Data that grows and shrinks, such as an inventory, fits a [collection](collections.md) better: a state with an `Array` field is sent in full whenever the array changes length.
 
 ## Basic usage
 
@@ -133,6 +133,6 @@ Fixed-size fields keep the encoding length stable, which lets deltas apply. A ch
 
 ## Limitations
 
-Each `NetworkBehaviour` has at most one state model, so data that needs more is split across several behaviours. State is sent at most once per tick, which merges all changes made within one tick. Every observer receives the same state, so data meant for a single client goes in a target RPC instead.
+Each `NetworkBehaviour` has at most one state model, so data that needs more is split across several behaviours or kept in [collections](collections.md) next to the state model. State is sent at most once per tick, which merges all changes made within one tick. Every observer receives the same state, so data meant for a single client goes in a target RPC instead.
 
 State is registered in a [NetworkBehaviour](../objects/network-behaviour.md) and declared like any other [model](../messaging/models.md). [NetworkAnimator](animator.md) is built on the same mechanism.

@@ -92,9 +92,11 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `InvalidOperationException` | `Send`, `Accept`, `Reject` của một context xác thực | Lần xác thực đã được chấp nhận |
 | `InvalidOperationException` | `Spawn`, các method về scene | Server chưa khởi động |
 | `InvalidOperationException` | Các method gửi RPC | Object chưa spawn ở phía gửi, hoặc RPC không tham số chưa có model được sinh |
+| `InvalidOperationException` | Các method thay đổi collection | Gọi trên client với object đã spawn |
 | `ArgumentException` | `Spawn` | Asset prefab, đã spawn, prefab id chưa đăng ký, scene object không hợp lệ, owner chưa khởi động |
 | `ArgumentException` | `PrefabRegistry.Register`, `SceneRegistry.Register` | Id 0, id đã đăng ký cho thứ khác, hierarchy prefab không hợp lệ |
-| `HandlerRegistrationException` | Các hook đăng ký, `MessageDispatcher.Register` | Đăng ký state, input hoặc RPC không hợp lệ; id không có trong schema; handler bị trùng |
+| `HandlerRegistrationException` | Các hook đăng ký, `MessageDispatcher.Register` | Đăng ký state, collection, input hoặc RPC không hợp lệ; id không có trong schema; handler bị trùng |
+| `ArgumentNullException` | Các method thêm hoặc gán phần tử collection | Phần tử, value hoặc key là `null` |
 | `PlatformNotSupportedException` | Transport, `ServerManager.StartConnection` | UDP hoặc TCP trong trình duyệt; server trong trình duyệt |
 | `NotSupportedException` | Client WebSocket trên desktop | Một URL `wss://` |
 | `MessageDecodeException` | Adapter | Payload không decode được |

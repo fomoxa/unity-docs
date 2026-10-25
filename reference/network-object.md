@@ -103,6 +103,24 @@ Registering the same message id twice on one behaviour throws `HandlerRegistrati
 | Member | Description |
 |---|---|
 | `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null, bool onlyWhenDirty = false) where T : class, new()` | Registers the behaviour's state. `onChanged` receives the previous values. With `onlyWhenDirty`, the server compares the state only after `SetStateDirty()`. |
+| `Use<T>(byte index, NetworkList<T> list, IMessageCodec<T> codec, NetworkListChanged<T> onChanged = null) where T : class, new()` | Registers a list of models under `index`, as described in [collections](../synchronization/collections.md). |
+| `Use<T>(byte index, NetworkList<T> list, NetworkListChanged<T> onChanged = null)` | Registers a list of a primitive type. |
+| `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, IMessageCodec<TValue> codec, NetworkDictionaryChanged<TKey, TValue> onChanged = null) where TValue : class, new()` | Registers a dictionary whose values are models. |
+| `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, NetworkDictionaryChanged<TKey, TValue> onChanged = null)` | Registers a dictionary whose values are a primitive type. |
+| `Use<T>(byte index, NetworkSet<T> set, NetworkSetChanged<T> onChanged = null)` | Registers a set of a primitive type. |
+
+### Collections
+
+The collection types are in `Fomoxa.Networking`. Their operations and callbacks are described in [collections](../synchronization/collections.md).
+
+| Type | Description |
+|---|---|
+| `NetworkList<T>` | A list; implements `IReadOnlyList<T>` |
+| `NetworkDictionary<TKey, TValue>` | A dictionary; implements `IReadOnlyDictionary<TKey, TValue>` |
+| `NetworkSet<T>` | A set; implements `IReadOnlyCollection<T>` |
+| `NetworkListOperation`, `NetworkDictionaryOperation`, `NetworkSetOperation` | The operation passed to a callback |
+| `NetworkListChanged<T>`, `NetworkDictionaryChanged<TKey, TValue>`, `NetworkSetChanged<T>` | The callback types |
+| `NetworkCollections` | The `Modify` extension methods for lists and dictionaries of models |
 
 ### NetworkInput
 

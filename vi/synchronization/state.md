@@ -4,7 +4,7 @@ State model giữ dữ liệu của một `NetworkBehaviour` mà server giữ đ
 
 ## Khi nào dùng <a href="#when-to-use-it" id="when-to-use-it"></a>
 
-State phù hợp với giá trị mà client phải luôn biết, kể cả client vào muộn. Sự kiện một lần nên gửi bằng [RPC](../messaging/rpc.md), còn chuyển động do [`NetworkTransform`](transform.md) lo.
+State phù hợp với giá trị mà client phải luôn biết, kể cả client vào muộn. Sự kiện một lần nên gửi bằng [RPC](../messaging/rpc.md), còn chuyển động do [`NetworkTransform`](transform.md) lo. Dữ liệu lớn lên và nhỏ đi, như túi đồ, hợp với [collection](collections.md) hơn: state có field `Array` được gửi nguyên vẹn mỗi khi mảng đổi độ dài.
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
@@ -133,6 +133,6 @@ Field có kích thước cố định giữ độ dài bản encode ổn định
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Mỗi `NetworkBehaviour` có nhiều nhất một state model, nên dữ liệu cần nhiều hơn phải chia ra nhiều behaviour. State được gửi nhiều nhất một lần mỗi tick, nên mọi thay đổi trong cùng một tick được gộp lại. Mọi observer nhận cùng một state, nên dữ liệu dành cho một client duy nhất phải gửi bằng target RPC.
+Mỗi `NetworkBehaviour` có nhiều nhất một state model, nên dữ liệu cần nhiều hơn phải chia ra nhiều behaviour hoặc giữ trong [collection](collections.md) bên cạnh state model. State được gửi nhiều nhất một lần mỗi tick, nên mọi thay đổi trong cùng một tick được gộp lại. Mọi observer nhận cùng một state, nên dữ liệu dành cho một client duy nhất phải gửi bằng target RPC.
 
 State được đăng ký trong một [NetworkBehaviour](../objects/network-behaviour.md) và khai báo như mọi [model](../messaging/models.md) khác. [NetworkAnimator](animator.md) được xây trên cùng cơ chế này.

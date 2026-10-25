@@ -27,8 +27,9 @@ Solid arrows are reliable and ordered; the dashed arrow is unreliable.
 
 | Event on the server | Message to observers | Channel |
 |---|---|---|
-| `ServerManager.Spawn` | A spawn message: object id, prefab id or scene object id, prefab fingerprint, owner, position, rotation and scale, the initial state of every behaviour, and the network scene | Reliable ordered |
+| `ServerManager.Spawn` | A spawn message: object id, prefab id or scene object id, prefab fingerprint, owner, position, rotation and scale, the initial state and collections of every behaviour, and the network scene | Reliable ordered |
 | A state model changes | The new state, as a full copy or as a delta | Reliable ordered |
+| A collection changes | The operations called on it since the last tick | Reliable ordered |
 | A `NetworkTransform` moves | A transform update with the tick | Unreliable |
 | A `NetworkTransform` stops, spawns or teleports | A settle message with the final transform | Reliable ordered |
 | `NetworkAnimator` parameters change | The animator state, through the state mechanism | Reliable ordered |

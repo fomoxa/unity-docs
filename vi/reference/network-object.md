@@ -103,6 +103,24 @@ Chúng ném `ArgumentNullException` với codec, giá trị hoặc tên là null
 | Member | Mô tả |
 |---|---|
 | `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null, bool onlyWhenDirty = false) where T : class, new()` | Đăng ký state của behaviour. `onChanged` nhận giá trị trước đó. Với `onlyWhenDirty`, server chỉ so sánh state sau `SetStateDirty()`. |
+| `Use<T>(byte index, NetworkList<T> list, IMessageCodec<T> codec, NetworkListChanged<T> onChanged = null) where T : class, new()` | Đăng ký một list model dưới `index`, như mô tả trong [collection](../synchronization/collections.md). |
+| `Use<T>(byte index, NetworkList<T> list, NetworkListChanged<T> onChanged = null)` | Đăng ký một list kiểu nguyên thuỷ. |
+| `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, IMessageCodec<TValue> codec, NetworkDictionaryChanged<TKey, TValue> onChanged = null) where TValue : class, new()` | Đăng ký một dictionary có value là model. |
+| `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, NetworkDictionaryChanged<TKey, TValue> onChanged = null)` | Đăng ký một dictionary có value kiểu nguyên thuỷ. |
+| `Use<T>(byte index, NetworkSet<T> set, NetworkSetChanged<T> onChanged = null)` | Đăng ký một set kiểu nguyên thuỷ. |
+
+### Collection <a href="#collections" id="collections"></a>
+
+Các type collection nằm trong `Fomoxa.Networking`. Thao tác và callback của chúng được mô tả trong [collection](../synchronization/collections.md).
+
+| Type | Mô tả |
+|---|---|
+| `NetworkList<T>` | Một list; hiện thực `IReadOnlyList<T>` |
+| `NetworkDictionary<TKey, TValue>` | Một dictionary; hiện thực `IReadOnlyDictionary<TKey, TValue>` |
+| `NetworkSet<T>` | Một set; hiện thực `IReadOnlyCollection<T>` |
+| `NetworkListOperation`, `NetworkDictionaryOperation`, `NetworkSetOperation` | Thao tác truyền vào callback |
+| `NetworkListChanged<T>`, `NetworkDictionaryChanged<TKey, TValue>`, `NetworkSetChanged<T>` | Các type callback |
+| `NetworkCollections` | Các extension method `Modify` cho list và dictionary chứa model |
 
 ### NetworkInput <a href="#networkinput" id="networkinput"></a>
 

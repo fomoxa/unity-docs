@@ -8,7 +8,7 @@ Package theo mô hình server-authoritative. Server giữ game state thật và 
 
 Chỉ server spawn, despawn network object và đổi owner của chúng. Gọi `ServerManager.Spawn` trên một tiến trình không chạy server sẽ ném `the server is not started`.
 
-State model thay đổi trên server rồi đi xuống client, không bao giờ theo chiều ngược lại. Chuyển động cũng vậy: `NetworkTransform` gửi transform của server xuống client và không gửi thay đổi transform của client lên, và chỉ parameter `NetworkAnimator` của server tới được người chơi khác.
+State model và [collection](../synchronization/collections.md) thay đổi trên server rồi đi xuống client, không bao giờ theo chiều ngược lại. Thay đổi một collection đã spawn trên client sẽ ném exception. Chuyển động cũng vậy: `NetworkTransform` gửi transform của server xuống client và không gửi thay đổi transform của client lên, và chỉ parameter `NetworkAnimator` của server tới được người chơi khác.
 
 Server cũng load và unload network scene, và quyết định client nào observe object nào.
 

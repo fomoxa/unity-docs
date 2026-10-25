@@ -12,6 +12,7 @@ Most of the work happens once per tick, including input, physics, state and tran
 |---|---|
 | Bundling | Messages queued in one tick leave together, packed into frames of the transport's frame budget (1200 bytes for UDP). Many small messages cost few packets. |
 | State | Sent only when its encoding changed, and as a delta when that is smaller. Keep state models small and fixed in size so deltas apply. Split rarely and often changing data into different behaviours. |
+| Collections | Send the operations you call, not the whole collection. A new observer receives the whole collection in its spawn message, so very large collections make spawns large. |
 | `NetworkTransform` | Sends only the parts that moved more than their threshold, and nothing while still. Turn off the parts you do not need; raise thresholds for objects where precision matters less. |
 | `NetworkAnimator` | Float Step rounds float parameters, so tiny changes do not trigger a message. |
 | Observers | An [observer rule](../objects/observers.md) keeps each client from receiving objects it does not need. This is usually the largest saving in big worlds. On a server with many rooms, [groups](../objects/observers.md#groups) keep each room's objects inside the room. |
@@ -25,7 +26,7 @@ Observer recalculation is spread over Observer Interval ticks, so a longer inter
 
 A rule whose answer does not depend on movement can return false from `RebuildsPeriodically`, and the server then skips the periodic recalculation. With [groups](../objects/observers.md#groups), the server only recalculates and asks the rule about pairs of an object and a peer that share a group, so this part of the cost grows with the size of the groups.
 
-Every behaviour with state is encoded once per tick to detect changes, so many objects with large state models cost encoding time even when nothing has changed. A behaviour that registers its state with `onlyWhenDirty` is encoded only after it calls `SetStateDirty()`, as described in [marking changes](../synchronization/state.md#marking-changes).
+Every behaviour with state is encoded once per tick to detect changes, so many objects with large state models cost encoding time even when nothing has changed. A behaviour that registers its state with `onlyWhenDirty` is encoded only after it calls `SetStateDirty()`, as described in [marking changes](../synchronization/state.md#marking-changes). [Collections](../synchronization/collections.md) cost nothing in a tick in which they do not change: each operation is encoded once, when you call it.
 
 Transforms are read after every tick unless the server knows when they change. A `NetworkTransform` on an object that [Rapier](../rapier/overview.md) simulates, and a console entity synced with `SyncTransform(sync, receiver)`, are read only while they move, so resting objects add no reads. [NetworkTransform](../synchronization/transform.md#server-behavior) lists which transforms are read after every tick.
 
