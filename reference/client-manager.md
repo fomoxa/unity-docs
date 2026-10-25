@@ -40,6 +40,6 @@
 
 ## Reconnection
 
-Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection.
+Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection.
 
 The related types are [NetworkManager](network-manager.md), [ServerManager](server-manager.md) and [TimeManager](time-manager.md).

@@ -117,6 +117,6 @@ manager.ServerManager.Dispatcher.Register(messageId, (peerId, payload) => { });
 
 The message id must be in the generated schema, and each id can have only one handler per dispatcher. Otherwise `Register` throws `HandlerRegistrationException` with `message id 0x... is not declared in the schema` or `already has a handler`. Register after the `NetworkManager` has run `Awake`, for example in `Start`, and before the messages arrive.
 
-On a client, `peerId` is always 0. `payload` is only valid during the call, so decode or copy it before returning. A handler that throws disconnects the peer on the server, or stops the client, with `StopReason.HandlerException`, whereas a `MessageDecodeException` from `Decode` only drops the message.
+On a client, `peerId` is always 0. `payload` is only valid during the call, so decode or copy it before returning. A handler that throws on the server closes that peer's connection: the peer stops with `StopReason.HandlerException`, and the client stops with `ServerClosed` and a `CloseReason` of `HandlerException`. One that throws on a client stops the client with `HandlerException`. By contrast, a `MessageDecodeException` from `Decode` only drops the message.
 
 Raw messages are [models](models.md) on their [channel](channels.md), just like [RPCs](rpc.md). The [messaging API](../reference/messaging.md) lists the dispatcher and send members.

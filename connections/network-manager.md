@@ -66,6 +66,7 @@ The manager reads these fields once, in `Awake`. Changing them in Play Mode has 
 | Message Capacity | 1024 | Messages one connection's queue holds before a send returns `Full` |
 | Byte Capacity | 1048576 | Bytes one connection's queue holds before a send returns `BytesFull` |
 | Reliable Window | 1024 | Reliable messages in flight without acknowledgement, per connection |
+| Close Timeout Seconds | 1 | Time the server spends sending a kicked peer's queue before it closes the connection anyway |
 | Log Send Dropped | on | Logs a warning when a queued message could not be sent |
 | Log Receive Dropped | on | Logs a warning when a received bundle could not be read |
 

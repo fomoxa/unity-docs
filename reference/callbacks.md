@@ -20,6 +20,7 @@ Every event and callback is raised on Unity's main thread, either from the `Netw
 | `Failure` | `HandshakeFailure` | The handshake failure when `Reason` is `HandshakeFailed` |
 | `DiscardedMessages` | `int` | Queued messages dropped when the connection stopped |
 | `WillRetry` | `bool` | On a client, whether a new attempt follows |
+| `CloseReason` | `SessionCloseReason` | On a client stopped with `ServerClosed`, the reason the server sent; `Unspecified` otherwise |
 
 ## Message events
 
@@ -27,7 +28,7 @@ Every event and callback is raised on Unity's main thread, either from the `Netw
 |---|---|---|---|
 | `OnSendDropped` | both managers | `SendDroppedArgs` | A queued message could not be sent |
 | `OnReceiveDropped` | both managers | `ReceiveDroppedArgs` | A received bundle, or a model in it, could not be read |
-| `OnHandlerException` | both managers | `HandlerExceptionArgs` | A message handler threw; the peer is disconnected or the client stops |
+| `OnHandlerException` | both managers | `HandlerExceptionArgs` | A message handler threw; the server closes that peer's connection, or the client stops |
 | `OnObjectMismatch` | `ClientManager` | `ObjectMismatchArgs` | The client could not apply an object message and stops |
 
 | Argument | Members |

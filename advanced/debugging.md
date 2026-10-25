@@ -14,7 +14,7 @@ To log or count problems in your own format, subscribe to these events:
 | `OnServerConnectionState`, `OnRemoteConnectionState` | `ServerManager` | The server or a client connection changes state |
 | `OnSendDropped` | both | A queued message could not be sent, for example `TooLarge` |
 | `OnReceiveDropped` | both | A received bundle or model could not be read |
-| `OnHandlerException` | both | A message handler threw; the peer is disconnected or the client stops |
+| `OnHandlerException` | both | A message handler threw; the server closes that peer's connection, or the client stops |
 | `OnObjectMismatch` | `ClientManager` | The client could not apply an object message and stops |
 
 The package logs `OnSendDropped` and `OnReceiveDropped` by default, which you can turn off with Log Send Dropped and Log Receive Dropped on the `NetworkManager`. It logs `OnHandlerException` and `OnObjectMismatch` only while nothing is subscribed to them.

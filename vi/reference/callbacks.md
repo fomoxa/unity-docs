@@ -20,6 +20,7 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 | `Failure` | `HandshakeFailure` | Lỗi handshake khi `Reason` là `HandshakeFailed` |
 | `DiscardedMessages` | `int` | Số message trong queue bị bỏ khi kết nối dừng |
 | `WillRetry` | `bool` | Trên client, có lần thử mới tiếp theo hay không |
+| `CloseReason` | `SessionCloseReason` | Trên client dừng với `ServerClosed`, lý do server đã gửi; ngoài trường hợp đó là `Unspecified` |
 
 ## Event message <a href="#message-events" id="message-events"></a>
 
@@ -27,7 +28,7 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 |---|---|---|---|
 | `OnSendDropped` | cả hai manager | `SendDroppedArgs` | Một message trong queue không gửi được |
 | `OnReceiveDropped` | cả hai manager | `ReceiveDroppedArgs` | Một bundle nhận được, hoặc một model trong đó, không đọc được |
-| `OnHandlerException` | cả hai manager | `HandlerExceptionArgs` | Một message handler ném exception; peer bị ngắt kết nối hoặc client dừng |
+| `OnHandlerException` | cả hai manager | `HandlerExceptionArgs` | Một message handler ném exception; server đóng kết nối của peer đó, hoặc client dừng |
 | `OnObjectMismatch` | `ClientManager` | `ObjectMismatchArgs` | Client không áp dụng được một object message và dừng |
 
 | Tham số | Member |

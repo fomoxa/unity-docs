@@ -55,10 +55,13 @@ Một peer ở `Starting` trong lúc handshake chạy và tới `Started` khi ha
 |---|---|
 | `PeerCount` | Số peer đã kết nối, kể cả peer còn đang handshake |
 | `PeerState(peerId)` | `ConnectionState` của một peer; `Stopped` với peer không biết |
-| `Disconnect(peerId)` | Đóng kết nối của một peer; nó dừng với `LocalStop` |
+| `Disconnect(peerId)` | Đóng kết nối của một peer ngay lập tức; nó dừng với `LocalStop`, còn client thấy kết nối rớt và kết nối lại |
+| `Kick(peerId)` | Báo cho client rằng nó bị kick, rồi đóng kết nối; peer dừng với `LocalStop`, còn client dừng với `ServerClosed` và không kết nối lại |
 | `HasRtt(peerId)`, `RttOf(peerId)` | Round-trip time mà client của peer báo qua các clock ping |
 | `DroppedInputsOf(peerId)` | Số input từ peer mà server không dùng được |
 | `FrameBudgetOf(peerId)` | Frame budget của transport mà peer kết nối qua |
+
+`Kick` gửi những gì đã xếp cho peer, rồi tới thông báo kick, rồi đóng kết nối. Từ lúc gọi, lệnh gửi tới peer đó trả `NotConnected` và message của nó không còn được xử lý. Nếu hàng đợi không gửi hết được trong Close Timeout Seconds (mặc định 1), ví dụ vì client đã ngừng đọc, server vẫn đóng kết nối. Muốn báo cho người chơi lý do, như bị cấm hay phòng đã đầy, hãy gửi message của bạn trước khi gọi `Kick`; nó sẽ tới trước. `Kick` trả false với peer không tồn tại và với peer đang bị đóng. Peer còn trong handshake chưa nhận được message, nên nó bị đóng ngay mà không có thông báo.
 
 Khi một peer dừng, server despawn các object nó sở hữu. Object có `NetworkObject` tắt Despawn With Owner thì được giữ lại và chuyển sang do server sở hữu; xem [ownership](../objects/ownership.md).
 
@@ -78,7 +81,7 @@ Khi một peer dừng, server despawn các object nó sở hữu. Object có `Ne
 
 ## Lỗi trong handler <a href="#errors-in-handlers" id="errors-in-handlers"></a>
 
-Khi một handler ném exception lúc server xử lý message của một peer, ví dụ một server RPC, server ngắt kết nối peer đó với `StopReason.HandlerException` và phát `OnHandlerException` kèm peer id, message id và exception. Nếu không có ai subscribe event này, package tự log exception. Message không decode được thì không làm ngắt kết nối peer; nó bị bỏ và phát `OnReceiveDropped`.
+Khi một handler ném exception lúc server xử lý message của một peer, ví dụ một server RPC, server phát `OnHandlerException` kèm peer id, message id và exception, rồi đóng kết nối của peer đó giống như `Kick`. Peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`, nên nó không kết nối lại rồi gặp lại đúng lỗi đó. Nếu không có ai subscribe event này, package tự log exception. Message không decode được thì không làm ngắt kết nối peer; nó bị bỏ và phát `OnReceiveDropped`.
 
 Exception ném ra trong `apply` của input model hoặc trong một `ObserverRule` được log và không ngắt kết nối ai.
 

@@ -7,16 +7,29 @@
 | Giá trị | Ý nghĩa | Client thử lại |
 |---|---|---|
 | `None` | Kết nối chưa dừng | |
-| `LocalStop` | Phía này đã gọi `StopConnection` hoặc `Disconnect` | Không |
+| `LocalStop` | Phía này đã gọi `StopConnection`, `Disconnect` hoặc `Kick` | Không |
 | `PeerClosed` | Phía bên kia đã đóng kết nối, hoặc client đã gửi message rời đi | Có |
 | `TransportError` | Transport thất bại: kết nối bị từ chối, không phân giải được host, lỗi socket | Có |
 | `Timeout` | Heartbeat probe không được trả lời kịp | Có |
 | `HandshakeFailed` | Handshake Fomoxa thất bại; xem `Failure` | Chỉ với `Timeout` |
-| `HandlerException` | Một message handler ném exception | Không |
+| `HandlerException` | Một message handler ở phía này ném exception. Khi handler trên server ném exception với message của một client, peer trên server dừng với lý do này còn client dừng với `ServerClosed` | Không |
 | `PrefabMismatch` | Client không spawn được một object: prefab hoặc scene object không biết hoặc khác, hoặc một network scene không load được | Không |
 | `ObjectMismatch` | Client nhận một object message mà nó không áp dụng được | Không |
 | `PhysicsBackendMismatch` | Client và server dùng physics backend khác nhau | Không |
 | `InvalidFragment` | Phía bên kia gửi các mảnh của một message reliable lớn mà không ghép được với nhau | Không |
+| `ServerClosed` | Server chủ động đóng kết nối và gửi kèm lý do, nằm trong `CloseReason` | Không |
+
+## SessionCloseReason
+
+`Fomoxa.Networking.Sessions.SessionCloseReason` xuất hiện trong `ConnectionStateArgs.CloseReason` khi client dừng với `ServerClosed`. Server gửi nó ngay trước khi đóng kết nối.
+
+| Giá trị | Ý nghĩa |
+|---|---|
+| `Unspecified` (0) | Không có lý do. Package không bao giờ tự gửi giá trị này |
+| `HandlerException` (1) | Một message handler trên server ném exception khi xử lý message của client này |
+| `Kicked` (2) | Server đã gọi `ServerManager.Kick` |
+
+Server bản mới hơn có thể gửi một giá trị không có trong danh sách này. Client giữ nguyên giá trị nhận được, và vẫn không thử lại.
 
 ## HandshakeFailure <a href="#handshakefailure" id="handshakefailure"></a>
 

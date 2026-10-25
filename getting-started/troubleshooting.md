@@ -40,7 +40,7 @@ The client's `OnClientConnectionState` reports `Stopped` with a `Reason`, and `W
    - `Timeout` means the handshake did not finish within Handshake Timeout Seconds. Over UDP an unreachable server can also show up this way, because UDP has no connection step before the handshake.
 7. A `Reason` of `TransportError` means the transport itself failed, for example on a refused TCP connection or a host name that does not resolve. The logs say which.
 
-The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, or a `HandshakeFailed` other than `Timeout`. A `PhysicsBackendMismatch` means the server's and the client's `NetworkManager` use different physics backends in their Physics field.
+The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`. `ServerClosed` means the server ended the connection on purpose, and `CloseReason` tells you why: `Kicked` if the server called `Kick`, `HandlerException` if a server handler threw on one of this client's messages. A `PhysicsBackendMismatch` means the server's and the client's `NetworkManager` use different physics backends in their Physics field.
 
 ## Client connects, then stops with PrefabMismatch or ObjectMismatch
 

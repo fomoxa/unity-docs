@@ -7,16 +7,29 @@
 | Value | Meaning | Client retries |
 |---|---|---|
 | `None` | The connection has not stopped | |
-| `LocalStop` | This side called `StopConnection` or `Disconnect` | No |
+| `LocalStop` | This side called `StopConnection`, `Disconnect` or `Kick` | No |
 | `PeerClosed` | The other side closed the connection, or the client sent a leave message | Yes |
 | `TransportError` | The transport failed: refused connection, unresolved host, socket error | Yes |
 | `Timeout` | The heartbeat probe was not answered in time | Yes |
 | `HandshakeFailed` | The Fomoxa handshake failed; see `Failure` | Only for `Timeout` |
-| `HandlerException` | A message handler threw | No |
+| `HandlerException` | A message handler on this side threw. When a server handler throws on a client's message, the server's peer stops with this reason and the client stops with `ServerClosed` | No |
 | `PrefabMismatch` | The client cannot spawn an object: unknown or different prefab or scene object, or a network scene that does not load | No |
 | `ObjectMismatch` | The client received an object message it cannot apply | No |
 | `PhysicsBackendMismatch` | The client and the server use different physics backends | No |
 | `InvalidFragment` | The other side sent fragments of a large reliable message that do not fit together | No |
+| `ServerClosed` | The server closed the connection on purpose and sent its reason, which is in `CloseReason` | No |
+
+## SessionCloseReason
+
+`Fomoxa.Networking.Sessions.SessionCloseReason` appears in `ConnectionStateArgs.CloseReason` when a client stops with `ServerClosed`. The server sends it just before it closes the connection.
+
+| Value | Meaning |
+|---|---|
+| `Unspecified` (0) | No reason was given. The package itself never sends this value |
+| `HandlerException` (1) | A message handler on the server threw while handling this client's message |
+| `Kicked` (2) | The server called `ServerManager.Kick` |
+
+A newer server may send a value this list does not have. The client keeps the value as it arrived, and it still does not retry.
 
 ## HandshakeFailure
 

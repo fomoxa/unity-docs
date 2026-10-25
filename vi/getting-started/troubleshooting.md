@@ -40,7 +40,7 @@ Exception có nội dung `no Fomoxa schema is registered; FomoxaAdapters.Registe
    - `Timeout` nghĩa là handshake không xong trong Handshake Timeout Seconds. Với UDP, server không tới được cũng có thể biểu hiện như vậy, vì UDP không có bước kết nối trước handshake.
 7. `Reason` là `TransportError` nghĩa là chính transport thất bại, ví dụ kết nối TCP bị từ chối hoặc host name không phân giải được. Log sẽ cho biết là trường hợp nào.
 
-Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, hoặc `HandshakeFailed` với failure khác `Timeout`. `PhysicsBackendMismatch` nghĩa là `NetworkManager` của server và của client dùng physics backend khác nhau trong field Physics.
+Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, hoặc `HandshakeFailed` với failure khác `Timeout`. `ServerClosed` nghĩa là server chủ động kết thúc kết nối, và `CloseReason` cho biết vì sao: `Kicked` nếu server đã gọi `Kick`, `HandlerException` nếu một handler trên server ném exception khi xử lý message của client này. `PhysicsBackendMismatch` nghĩa là `NetworkManager` của server và của client dùng physics backend khác nhau trong field Physics.
 
 ## Client kết nối được rồi dừng với PrefabMismatch hoặc ObjectMismatch <a href="#client-connects-then-stops-with-prefabmismatch-or-objectmismatch" id="client-connects-then-stops-with-prefabmismatch-or-objectmismatch"></a>
 

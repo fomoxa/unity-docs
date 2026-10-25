@@ -15,6 +15,7 @@ The [NetworkManager](../connections/network-manager.md) guide explains what each
 | Message Capacity | `int` | 1024 | at least 1 |
 | Byte Capacity | `int` | 1048576 | at least 1 |
 | Reliable Window | `int` | 1024 | 1 to 16384 |
+| Close Timeout Seconds | `float` | 1 | |
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
 | Max Reconnect Retries | `int` | -1 (no limit) | |

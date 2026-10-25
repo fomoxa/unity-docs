@@ -66,6 +66,7 @@ Manager đọc các field này một lần, trong `Awake`. Thay đổi chúng tr
 | Message Capacity | 1024 | Số message queue của một kết nối giữ được trước khi lệnh gửi trả về `Full` |
 | Byte Capacity | 1048576 | Số byte queue của một kết nối giữ được trước khi lệnh gửi trả về `BytesFull` |
 | Reliable Window | 1024 | Số message reliable đang bay chưa được acknowledge, theo từng kết nối |
+| Close Timeout Seconds | 1 | Thời gian server dành để gửi nốt hàng đợi của một peer bị kick trước khi vẫn đóng kết nối |
 | Log Send Dropped | bật | Log cảnh báo khi một message trong queue không gửi được |
 | Log Receive Dropped | bật | Log cảnh báo khi một bundle nhận được không đọc được |
 

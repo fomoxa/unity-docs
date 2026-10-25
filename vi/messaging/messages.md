@@ -117,6 +117,6 @@ manager.ServerManager.Dispatcher.Register(messageId, (peerId, payload) => { });
 
 Message id phải có trong schema đã sinh, và mỗi id chỉ có một handler trên mỗi dispatcher. Nếu không, `Register` ném `HandlerRegistrationException` với `message id 0x... is not declared in the schema` hoặc `already has a handler`. Hãy đăng ký sau khi `NetworkManager` đã chạy `Awake`, ví dụ trong `Start`, và trước khi message tới.
 
-Trên client, `peerId` luôn là 0. `payload` chỉ hợp lệ trong lúc gọi, nên hãy decode hoặc copy nó trước khi return. Handler ném exception sẽ ngắt kết nối peer trên server, hoặc dừng client, với `StopReason.HandlerException`, còn `MessageDecodeException` từ `Decode` chỉ làm message bị bỏ.
+Trên client, `peerId` luôn là 0. `payload` chỉ hợp lệ trong lúc gọi, nên hãy decode hoặc copy nó trước khi return. Handler ném exception trên server sẽ đóng kết nối của peer đó: peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`. Handler ném exception trên client sẽ dừng client với `HandlerException`. Ngược lại, `MessageDecodeException` từ `Decode` chỉ làm message bị bỏ.
 
 Raw message là [model](models.md) đi trên [channel](channels.md) của nó, giống như [RPC](rpc.md). [Messaging API](../reference/messaging.md) liệt kê các member của dispatcher và các method gửi.

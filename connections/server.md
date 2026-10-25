@@ -55,10 +55,13 @@ A peer is `Starting` while the handshake runs and `Started` once it succeeds. Sp
 |---|---|
 | `PeerCount` | Connected peers, including those still in the handshake |
 | `PeerState(peerId)` | A peer's `ConnectionState`; `Stopped` for an unknown peer |
-| `Disconnect(peerId)` | Closes a peer's connection; it stops with `LocalStop` |
+| `Disconnect(peerId)` | Closes a peer's connection at once; it stops with `LocalStop`, and the client sees the connection drop and reconnects |
+| `Kick(peerId)` | Tells the client it was kicked, then closes the connection; the peer stops with `LocalStop`, and the client stops with `ServerClosed` and does not reconnect |
 | `HasRtt(peerId)`, `RttOf(peerId)` | The round-trip time the peer's client reported with its clock pings |
 | `DroppedInputsOf(peerId)` | Inputs from the peer that the server could not use |
 | `FrameBudgetOf(peerId)` | The frame budget of the transport the peer connected through |
+
+`Kick` sends whatever is already queued for the peer, then the kick, then closes the connection. From the call on, sends to that peer return `NotConnected` and its messages are no longer handled. If the queue cannot be sent within Close Timeout Seconds (1 by default), for example because the client stopped reading, the server closes the connection anyway. To tell the player why, such as a ban or a full room, send your own message before calling `Kick`; it arrives first. `Kick` returns false for an unknown peer and for one that is already being closed. A peer still in the handshake cannot receive messages yet, so it is closed at once without the notice.
 
 When a peer stops, the server despawns the objects it owned. Objects whose `NetworkObject` has Despawn With Owner turned off stay and become server-owned instead; see [ownership](../objects/ownership.md).
 
@@ -78,7 +81,7 @@ When a peer stops, the server despawns the objects it owned. Objects whose `Netw
 
 ## Errors in handlers
 
-When a handler throws while the server processes a peer's message, such as a server RPC, the server disconnects that peer with `StopReason.HandlerException` and raises `OnHandlerException` with the peer id, the message id and the exception. If nothing subscribes to the event, the package logs the exception. A message that fails to decode does not disconnect the peer; it is dropped and raises `OnReceiveDropped`.
+When a handler throws while the server processes a peer's message, such as a server RPC, the server raises `OnHandlerException` with the peer id, the message id and the exception, then closes that peer's connection the way `Kick` does. The peer stops with `StopReason.HandlerException`, and the client stops with `ServerClosed` and a `CloseReason` of `HandlerException`, so it does not reconnect into the same error. If nothing subscribes to the event, the package logs the exception. A message that fails to decode does not disconnect the peer; it is dropped and raises `OnReceiveDropped`.
 
 Exceptions thrown in `apply` of an input model or in an `ObserverRule` are logged and do not disconnect anyone.
 

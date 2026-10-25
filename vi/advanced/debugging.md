@@ -14,7 +14,7 @@ Package log với hai tiền tố. Message từ các bước Editor, như sinh c
 | `OnServerConnectionState`, `OnRemoteConnectionState` | `ServerManager` | Server hoặc một kết nối client đổi trạng thái |
 | `OnSendDropped` | cả hai | Một message trong queue không gửi được, ví dụ `TooLarge` |
 | `OnReceiveDropped` | cả hai | Một bundle hoặc model nhận được không đọc được |
-| `OnHandlerException` | cả hai | Một message handler ném exception; peer bị ngắt kết nối hoặc client dừng |
+| `OnHandlerException` | cả hai | Một message handler ném exception; server đóng kết nối của peer đó, hoặc client dừng |
 | `OnObjectMismatch` | `ClientManager` | Client không áp dụng được một object message và dừng |
 
 Package log `OnSendDropped` và `OnReceiveDropped` theo mặc định, có thể tắt bằng Log Send Dropped và Log Receive Dropped trên `NetworkManager`. Nó chỉ log `OnHandlerException` và `OnObjectMismatch` khi không có ai subscribe chúng.
