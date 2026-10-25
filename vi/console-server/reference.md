@@ -53,7 +53,7 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` là phiên bản package. |
 | `NetworkSettings` | `Fomoxa.Networking` | Các thiết lập mà Inspector của `NetworkManager` giữ trong Unity, dưới dạng property với cùng giá trị mặc định, và `PhysicsBackend` |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, một overload thêm `Action<string> error`, và `NetworkLog.Console` |
-| `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour`, `SetStateDirty()` và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` |
+| `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` cho tư thế của entity và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` cho nguồn khác |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | Luật gửi của `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |
 | `ITransformSource`, `ITransformReceiver`, `TransformSample` | `Fomoxa.Networking` | `ReadLocal(out position, out rotation, out scale)` trên server; `ResetReceive()` và `Receive(in TransformSample)` trên client |
 | `INetworkEntity`, `EntityRecord` | `Fomoxa.Networking` | Interface mà manager spawn, và bản ghi của một entity đã spawn: `ObjectId`, `OwnerId`, `IsOwner`, `OnServer`, `OnClient`, `Representation` |
@@ -69,6 +69,6 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Tạo entity cho các lần spawn, đặt scene object, kết thúc entity và ẩn hoặc hiện chúng trên host |
 | `ISceneHost` | `Fomoxa.Networking.Objects` | Load và unload scene trên client |
 | `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | Các world và history của entity được dự đoán, proxy, và lúc bắt đầu, kết thúc một lần sửa |
-| `IPhysicsWorlds`, `IPhysicsScenes` | `Fomoxa.Networking.Simulation` | Physics cho vòng tick, và physics theo scene id cho backend console |
+| `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics cho vòng tick, physics theo scene id cho backend console, và phần báo entity vừa di chuyển (không bắt buộc) để server bỏ qua transform đứng yên |
 
 Constructor là `NetworkRuntime(FomoxaRegistry registry, NetworkSettings settings, ITransportFactory transport, NetworkBackends backends, Func<TimeSpan> clock, NetworkLog log)`.

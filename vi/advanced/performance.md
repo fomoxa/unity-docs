@@ -27,6 +27,8 @@ Một rule mà kết quả không phụ thuộc chuyển động có thể trả
 
 Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi. Behaviour đăng ký state bằng `onlyWhenDirty` chỉ được encode sau khi nó gọi `SetStateDirty()`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes).
 
+Transform được đọc sau mỗi tick, trừ khi server biết lúc nào chúng đổi. `NetworkTransform` trên object do [Rapier](../rapier/overview.md) mô phỏng, và entity console đồng bộ bằng `SyncTransform(sync, receiver)`, chỉ được đọc khi di chuyển, nên object đứng yên không thêm lần đọc nào. [NetworkTransform](../synchronization/transform.md#server-behavior) liệt kê những transform được đọc sau mỗi tick.
+
 ## CPU của client <a href="#client-cpu" id="client-cpu"></a>
 
 Một lần sửa replay mọi tick kể từ tick được sửa, và khi có physics thì còn step mọi world của rollback group một lần cho mỗi tick được replay. Hãy giữ Prediction History và số world được dự đoán nhỏ nhất mà game cho phép, và giữ cho việc sửa hiếm khi xảy ra, như mô tả trong [reconciliation](../prediction/reconciliation.md#diagnosing-frequent-corrections). Max Ticks Per Frame giới hạn mức client đuổi theo sau một frame chậm, và bỏ các tick vượt quá.

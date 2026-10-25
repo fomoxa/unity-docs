@@ -27,25 +27,15 @@ namespace MyGame.Network
         private PlayerEntity(PlayerTransform transform, Player player)
             : base(FomoxaPrefabs.PlayerId, new EntityBehaviour[] { transform, player })
         {
-            transform.Entity = this;
             player.Entity = this;
         }
     }
 
-    public sealed class PlayerTransform : EntityBehaviour, ITransformSource, ITransformReceiver
+    public sealed class PlayerTransform : EntityBehaviour, ITransformReceiver
     {
         public PlayerTransform()
         {
-            SyncTransform(new TransformSync(new TransformSyncSettings(true, true, false, 0.01f, 0.1f, 0.01f)), this, this);
-        }
-
-        public StandaloneEntity Entity { get; set; }
-
-        public void ReadLocal(out Vector3 localPosition, out Quaternion localRotation, out Vector3 localScale)
-        {
-            localPosition = Entity.Position;
-            localRotation = Entity.Rotation;
-            localScale = Entity.Scale;
+            SyncTransform(new TransformSync(new TransformSyncSettings(true, true, false, 0.01f, 0.1f, 0.01f)), this);
         }
 
         public void ResetReceive()
@@ -82,7 +72,14 @@ namespace MyGame.Network
 }
 ```
 
-`PlayerTransform` thay chỗ `NetworkTransform`. `SyncTransform` cho behaviour một `TransformSync`, và server đọc tư thế của entity qua `ITransformSource.ReadLocal` ở cuối mỗi tick rồi gửi phần thay đổi, với cùng luật như `NetworkTransform`. Hãy dùng thiết lập của `NetworkTransform` trên prefab: có đồng bộ vị trí, góc xoay và scale hay không, rồi ba ngưỡng. `ITransformReceiver` được gọi trên client console; server để trống. `TransformSync.Teleport()` làm việc giống `NetworkTransform.Teleport()`.
+`PlayerTransform` thay chỗ `NetworkTransform`. `SyncTransform(sync, receiver)` cho behaviour một `TransformSync` và gửi tư thế của entity mang nó, với cùng luật như `NetworkTransform`. Hãy dùng thiết lập của `NetworkTransform` trên prefab: có đồng bộ vị trí, góc xoay và scale hay không, rồi ba ngưỡng. `ITransformReceiver` được gọi trên client console; server để trống. `TransformSync.Teleport()` làm việc giống `NetworkTransform.Teleport()`.
+
+Server chỉ đọc `Position`, `Rotation` và `Scale` của entity sau khi một trong các setter của chúng được gọi, trong lúc [body Rapier](physics.md) của entity di chuyển, và sau `Teleport()`. Sau đó server đọc tiếp sau mỗi tick tới khi đã gửi bản settle. Entity đứng yên không bị đọc lần nào. Hai loại entity được đọc sau mỗi tick:
+
+- class override getter của `Position`, `Rotation` hoặc `Scale`, vì khi đó giá trị có thể đổi mà không qua setter;
+- entity có body của một physics backend khác Rapier.
+
+Để gửi một tư thế không phải của entity, hãy truyền `ITransformSource` của bạn vào `SyncTransform(sync, source, receiver)`. Server gọi `ReadLocal` của nó sau mỗi tick.
 
 `EntityBehaviour` không giữ tham chiếu tới entity của nó, nên entity tự truyền chính nó cho các behaviour, như trên.
 

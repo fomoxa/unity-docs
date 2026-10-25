@@ -28,6 +28,10 @@ Bản cập nhật chỉ chứa những phần đã thay đổi, và client khô
 
 Server chỉ đọc transform, nên bạn có thể di chuyển nó bằng bất cứ cách nào, từ code, từ physics hay từ animation.
 
+Server đọc thường xuyên tới đâu là tuỳ physics backend. Với [Rapier](../rapier/overview.md), `NetworkTransform` trên GameObject của `NetworkObject` chỉ được đọc khi có gì đó làm nó đổi: Rapier báo body của object đang di chuyển, parent của nó di chuyển hoặc đổi sang parent khác, z của object 2D đổi, hoặc `Teleport()` được gọi. Khi không còn gì đổi, server đọc tiếp sau mỗi tick tới khi đã gửi bản settle, rồi thôi đọc. Mọi `NetworkTransform` khác được đọc sau mỗi tick: với `RigidbodyPhysics`, trên GameObject con, trên object không có body, và trên mọi object bật Sync Scale, vì body không quyết định scale.
+
+Khi Rapier mô phỏng một object, hãy di chuyển nó qua [PhysicsBody](../physics/physics-body.md) của nó. Rapier ghi pose của body vào `Transform` sau mỗi bước, nên vị trí chỉ đặt trên `Transform` sẽ bị ghi đè.
+
 ## Hành vi trên client <a href="#client-behavior" id="client-behavior"></a>
 
 Client giữ một danh sách ngắn các snapshot đã nhận và hiển thị object chậm tối đa Interpolation Ticks (mặc định 2) so với snapshot mới nhất, nội suy tuyến tính vị trí và tỉ lệ và nội suy cầu góc xoay. Một settle thay thế danh sách và đặt object vào giá trị của nó ngay lập tức.

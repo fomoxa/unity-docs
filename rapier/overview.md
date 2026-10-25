@@ -20,6 +20,8 @@ A Rapier snapshot holds the whole world, contacts included, so a replay after `L
 - Corrections only happen when the server's input or state really differs from the client's prediction.
 - A [console server](../console-server/overview.md) that runs without Unity can simulate the same physics as the Unity clients, because both build their worlds from the same scene file and the same body descriptions.
 
+Rapier also reports which bodies moved in each step. The server reads the transform of a network object only when it changed, so objects at rest cost the server no transform reads. With `RigidbodyPhysics`, every `NetworkTransform` is read after every tick, as described in [NetworkTransform](../synchronization/transform.md#server-behavior).
+
 ## How it fits in
 
 <figure><img src="../.gitbook/assets/diagrams/rapier-stack.svg" alt="In a Unity client or server, game code with apply, capture, restore and OnTick uses PhysicsBody and PhysicsBody2D, which are unchanged, and those use RapierPhysics, with one world per network scene and dimension. In a console server without Unity, your console program with EntityBehaviour classes and the same models uses RapierScenes, which builds the same worlds from the same scene file. Both sit on the native library fomoxa_rapier, built from rapier3d and rapier2d 0.36.0 with enhanced-determinism. A snapshot holds the whole Rapier world, contacts included, so a replay gives the same ticks as the first run."><figcaption><p>Game code stays the same; only the layers under PhysicsBody change.</p></figcaption></figure>
@@ -33,6 +35,7 @@ Game code keeps using `PhysicsBody` and `PhysicsBody2D`, input and reconcile mod
 | Static geometry | The colliders in the Unity scene | The scene file of the network scene, plus groups added at runtime |
 | Snapshot | Dynamic bodies only, without contacts | The whole world, contacts included |
 | `Rigidbody` and `Rigidbody2D` | Simulated by Unity | Switched to kinematic; Rapier writes the pose back to the `Transform` after every tick |
+| Transforms read by the server | Every `NetworkTransform`, after every tick | A `NetworkTransform` on the object with the body only when it changed, unless Sync Scale is on |
 | Simulation on | When Simulate Physics is checked | Always |
 | Console server | Not possible | Same worlds through `RapierScenes` |
 

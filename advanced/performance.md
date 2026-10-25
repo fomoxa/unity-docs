@@ -27,6 +27,8 @@ A rule whose answer does not depend on movement can return false from `RebuildsP
 
 Every behaviour with state is encoded once per tick to detect changes, so many objects with large state models cost encoding time even when nothing has changed. A behaviour that registers its state with `onlyWhenDirty` is encoded only after it calls `SetStateDirty()`, as described in [marking changes](../synchronization/state.md#marking-changes).
 
+Transforms are read after every tick unless the server knows when they change. A `NetworkTransform` on an object that [Rapier](../rapier/overview.md) simulates, and a console entity synced with `SyncTransform(sync, receiver)`, are read only while they move, so resting objects add no reads. [NetworkTransform](../synchronization/transform.md#server-behavior) lists which transforms are read after every tick.
+
 ## Client CPU
 
 A correction replays every tick since the corrected one, and with physics it also steps every world of the rollback group once per replayed tick. Keep Prediction History and the number of predicted worlds as small as the game allows, and keep corrections rare, as described in [reconciliation](../prediction/reconciliation.md#diagnosing-frequent-corrections). Max Ticks Per Frame limits how much a client catches up after a slow frame, and drops the ticks beyond it.

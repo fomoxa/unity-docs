@@ -53,7 +53,7 @@ On a console client, the factory must return an entity that is not spawned.
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` is the package version. |
 | `NetworkSettings` | `Fomoxa.Networking` | The settings that the `NetworkManager` Inspector holds in Unity, as properties with the same defaults, and `PhysicsBackend` |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, an overload that adds `Action<string> error`, and `NetworkLog.Console` |
-| `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour`, `SetStateDirty()` and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` |
+| `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` for the pose of the entity and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` for another source |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | The send rules of `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |
 | `ITransformSource`, `ITransformReceiver`, `TransformSample` | `Fomoxa.Networking` | `ReadLocal(out position, out rotation, out scale)` on the server; `ResetReceive()` and `Receive(in TransformSample)` on a client |
 | `INetworkEntity`, `EntityRecord` | `Fomoxa.Networking` | The interface the managers spawn, and the record of a spawned entity: `ObjectId`, `OwnerId`, `IsOwner`, `OnServer`, `OnClient`, `Representation` |
@@ -69,6 +69,6 @@ On a console client, the factory must return an entity that is not spawned.
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Creates entities for spawns, places scene objects, ends entities and hides or shows them on a host |
 | `ISceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scenes on a client |
 | `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | The worlds and histories of predicted entities, proxies, and the start and end of a correction |
-| `IPhysicsWorlds`, `IPhysicsScenes` | `Fomoxa.Networking.Simulation` | Physics for the tick loop, and physics by scene id for the console backend |
+| `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics for the tick loop, physics by scene id for the console backend, and the optional report of moved entities that lets the server skip resting transforms |
 
 `NetworkRuntime(FomoxaRegistry registry, NetworkSettings settings, ITransportFactory transport, NetworkBackends backends, Func<TimeSpan> clock, NetworkLog log)` is the constructor.

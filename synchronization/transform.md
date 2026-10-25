@@ -28,6 +28,10 @@ An update contains only the parts that changed, and the client never applies a p
 
 The server only reads the transform, so you can move it any way you like, whether from code, from physics or from an animation.
 
+How often it reads depends on the physics backend. With [Rapier](../rapier/overview.md), a `NetworkTransform` on the GameObject of the `NetworkObject` is read only when something changed it: Rapier reports the object's body moving, its parent moved or changed, the z of a 2D object changed, or `Teleport()` was called. Once nothing changes any more, the server keeps reading it after every tick until it has sent the settle, then stops reading it. Every other `NetworkTransform` is read after every tick: with `RigidbodyPhysics`, on a child GameObject, on an object without a body, and on any object with Sync Scale on, because the body does not decide the scale.
+
+When Rapier simulates an object, move it through its [PhysicsBody](../physics/physics-body.md). Rapier writes the body's pose to the `Transform` after every step, so a position set on the `Transform` alone is overwritten.
+
 ## Client behavior
 
 Clients keep a short list of received snapshots and show the object up to Interpolation Ticks (2 by default) behind the newest one, interpolating position and scale linearly and rotation spherically. A settle replaces the list and puts the object at its values at once.

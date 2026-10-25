@@ -27,25 +27,15 @@ namespace MyGame.Network
         private PlayerEntity(PlayerTransform transform, Player player)
             : base(FomoxaPrefabs.PlayerId, new EntityBehaviour[] { transform, player })
         {
-            transform.Entity = this;
             player.Entity = this;
         }
     }
 
-    public sealed class PlayerTransform : EntityBehaviour, ITransformSource, ITransformReceiver
+    public sealed class PlayerTransform : EntityBehaviour, ITransformReceiver
     {
         public PlayerTransform()
         {
-            SyncTransform(new TransformSync(new TransformSyncSettings(true, true, false, 0.01f, 0.1f, 0.01f)), this, this);
-        }
-
-        public StandaloneEntity Entity { get; set; }
-
-        public void ReadLocal(out Vector3 localPosition, out Quaternion localRotation, out Vector3 localScale)
-        {
-            localPosition = Entity.Position;
-            localRotation = Entity.Rotation;
-            localScale = Entity.Scale;
+            SyncTransform(new TransformSync(new TransformSyncSettings(true, true, false, 0.01f, 0.1f, 0.01f)), this);
         }
 
         public void ResetReceive()
@@ -82,7 +72,14 @@ namespace MyGame.Network
 }
 ```
 
-`PlayerTransform` takes the place of `NetworkTransform`. `SyncTransform` gives the behaviour a `TransformSync`, and the server reads the entity's pose through `ITransformSource.ReadLocal` at the end of every tick and sends what changed, with the same rules as `NetworkTransform`. Use the settings of the prefab's `NetworkTransform`: sync position, rotation and scale, then the three thresholds. `ITransformReceiver` is called on a console client; a server leaves it empty. `TransformSync.Teleport()` does what `NetworkTransform.Teleport()` does.
+`PlayerTransform` takes the place of `NetworkTransform`. `SyncTransform(sync, receiver)` gives the behaviour a `TransformSync` and sends the pose of its entity, with the same rules as `NetworkTransform`. Use the settings of the prefab's `NetworkTransform`: sync position, rotation and scale, then the three thresholds. `ITransformReceiver` is called on a console client; a server leaves it empty. `TransformSync.Teleport()` does what `NetworkTransform.Teleport()` does.
+
+The server reads the entity's `Position`, `Rotation` and `Scale` only after one of their setters is called, while the entity's [Rapier body](physics.md) moves, and after `Teleport()`. It then keeps reading after every tick until it has sent the settle. An entity that stands still is not read at all. Two kinds of entity are read after every tick instead:
+
+- a class that overrides the getter of `Position`, `Rotation` or `Scale`, because its value can then change without a setter;
+- an entity whose body comes from a physics backend other than Rapier.
+
+To send a pose that is not the entity's, pass your own `ITransformSource` to `SyncTransform(sync, source, receiver)`. The server calls its `ReadLocal` after every tick.
 
 `EntityBehaviour` has no reference to its entity, so the entity passes itself to its behaviours, as above.
 
