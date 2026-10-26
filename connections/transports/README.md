@@ -20,9 +20,9 @@ Whatever the transport, a host's own client always uses the in-process [loopback
 | Reliability of the transport | None | Reliable | Reliable |
 | Ordering of the transport | None | Ordered | Ordered |
 | Frame budget for bundles | 1200 bytes | Largest Fomoxa frame | Largest Fomoxa frame |
-| Addressing | Host name or IP, and port | Host name or IP, and port | Host name, IP, or `ws://` URL, and port |
+| Addressing | Host name or IP, and port | Host name or IP, and port | Host name, IP, or `ws://` or `wss://` URL, and port |
 | Server listens on | All IPv4 interfaces | All IPv4 interfaces | All IPv4 interfaces |
-| Encryption | None; [encrypted UDP](encrypted-udp.md) adds it | None | None in the package; `wss://` through a proxy for browsers |
+| Encryption | None; [encrypted UDP](encrypted-udp.md) adds it | [Client TLS](tls.md) with Use Tls, through a proxy | [Client TLS](tls.md) for `wss://` URLs, through a proxy |
 
 Encrypted UDP behaves like UDP, with a frame budget of 1175 bytes.
 

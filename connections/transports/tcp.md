@@ -4,7 +4,11 @@
 
 ## Basic usage
 
-Add `TcpNetworkTransport` to the GameObject of the `NetworkManager` and assign it to the Transport field. The component has no settings of its own, and the server and the clients must all use TCP.
+Add `TcpNetworkTransport` to the GameObject of the `NetworkManager` and assign it to the Transport field. The server and the clients must all use TCP.
+
+## TLS
+
+The component's Inspector setting, Use Tls, makes a client open TLS before the Fomoxa handshake. Use it when the client connects through a proxy or an ingress that terminates TLS in front of the server. The server ignores the setting. [Client TLS](tls.md) covers the certificate check, the `Tls` property and the failures.
 
 ## Behavior
 
@@ -20,7 +24,7 @@ Add `TcpNetworkTransport` to the GameObject of the `NetworkManager` and assign i
 
 ## Lifecycle
 
-A refused or failed connection stops the client with `StopReason.TransportError`, after which it retries. When an established connection closes, the session stops with `PeerClosed` or `TransportError`, depending on how it closed.
+A refused or failed connection stops the client with `StopReason.TransportError`, after which it retries. With Use Tls, a server certificate the client refuses, or a TLS alert from the server, stops it with `TlsRejected` instead, and it does not retry. When an established connection closes, the session stops with `PeerClosed` or `TransportError`, depending on how it closed.
 
 ## Platform limitations
 

@@ -9,6 +9,8 @@ This page adds the package to a Unity project and sets up code generation. When 
 
 The package depends on the built-in Physics, Physics 2D and Animation modules. It declares them as dependencies, so Package Manager enables them for you.
 
+Unity runs scripts on Mono today, and the package works around three gaps in it. `AesGcm` does not work under Mono, so [encrypted UDP](../connections/transports/encrypted-udp.md) uses BouncyCastle, which ships in the package. Mono's `X509Chain` has no root store, so [client TLS](../connections/transports/tls.md) checks certificates with BouncyCastle against the package's own roots. On Windows, `Socket.Send` on a non-blocking socket blocks when the send buffer is full, so each TCP and WebSocket send first checks that the socket can take more data. Unity replaces Mono with CoreCLR from Unity 6.8, and a later version of the package for Unity on CoreCLR will use .NET's `AesGcm`, `X509Chain` and `Socket.Send` instead.
+
 ## Add the package
 
 ### From a Git URL

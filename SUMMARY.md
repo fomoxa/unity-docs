@@ -36,6 +36,7 @@
   * [Encrypted UDP](connections/transports/encrypted-udp.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
+  * [Client TLS](connections/transports/tls.md)
   * [Multiple transports](connections/transports/multi-transport.md)
   * [Loopback](connections/transports/loopback.md)
   * [Custom transport](connections/transports/custom-transport.md)

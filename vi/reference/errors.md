@@ -22,6 +22,7 @@
 | `AuthenticationFailed` | Trên server: authenticator đã từ chối peer. Client dừng với `ServerClosed` | |
 | `AuthenticationTimeout` | Trên server: peer không được chấp nhận trong Authentication Timeout Seconds. Client dừng với `ServerClosed` | |
 | `Transferred` | Server chuyển client sang server khác bằng `ServerManager.Transfer`; cả peer lẫn client dừng với lý do này. Xem [chuyển server](../connections/transfer.md) | Có, ngay lập tức và tới server mới, trừ khi vé kết nối của lần chuyển không hợp với transport của client |
+| `TlsRejected` | Ở client: client từ chối chứng chỉ TLS của server, hoặc server kết thúc bước bắt tay TLS bằng một cảnh báo. Xem [TLS phía client](../connections/transports/tls.md) | Không |
 
 ## SessionCloseReason
 
@@ -112,7 +113,7 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `ArgumentException` | Constructor của `ConnectTokens` | Khoá không đúng 32 byte |
 | `ArgumentOutOfRangeException` | `ConnectTokens.Issue`, `ConnectTokens.Lifetime` | Mã phiên 0; thời hạn bằng 0 hoặc nhỏ hơn |
 | `PlatformNotSupportedException` | Transport, `ServerManager.StartConnection` | UDP, UDP mã hóa hoặc TCP trong trình duyệt; server trong trình duyệt |
-| `NotSupportedException` | Client WebSocket trên desktop | Một URL `wss://` |
+| `ArgumentException` | `TlsRoots.FromPem` | Văn bản không có chứng chỉ, hoặc có chứng chỉ không đọc được |
 | `MessageDecodeException` | Adapter | Payload không decode được |
 
 ## Log message lúc chạy <a href="#run-time-log-messages" id="run-time-log-messages"></a>
@@ -124,6 +125,8 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `Fomoxa dropped server RPC 0x... to object N from peer N, which does not own the object` | Server RPC có `RequireOwnership` được gọi từ peer không phải owner |
 | `Fomoxa dropped input to object N from peer N, which does not own the object` | Input từ peer không phải owner |
 | `Fomoxa stopped the client: object mismatch <kind>, object N, prefab 0x..., scene object 0x...` | `OnObjectMismatch` không có subscriber |
+| `Fomoxa stopped the client: the TLS server <host> was rejected: <reason>` | Client từ chối chứng chỉ TLS của server |
+| `Fomoxa stopped the client: the TLS server <host> ended the handshake with alert <alert>` | Server kết thúc bước bắt tay TLS bằng một cảnh báo |
 | `Fomoxa: object N (prefab 0x...) was destroyed on the client without a despawn from the server` | Một GameObject đã spawn bị hủy trên client |
 | `Fomoxa: <name> received Animator state with layout 0x..., but its Animator has layout 0x...` | Animator controller khác nhau giữa server và client |
 

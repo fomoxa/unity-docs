@@ -43,6 +43,6 @@
 
 ## Reconnection
 
-Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection. After `Transferred` it connects at once to the server it was moved to, and later retries go there too, unless the transfer's grant does not fit the transport, in which case `WillRetry` is false.
+Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, `TlsRejected`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection. After `Transferred` it connects at once to the server it was moved to, and later retries go there too, unless the transfer's grant does not fit the transport, in which case `WillRetry` is false.
 
 The related types are [NetworkManager](network-manager.md), [ServerManager](server-manager.md) and [TimeManager](time-manager.md).

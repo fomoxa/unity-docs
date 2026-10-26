@@ -22,6 +22,7 @@
 | `AuthenticationFailed` | On the server: the authenticator rejected the peer. The client stops with `ServerClosed` | |
 | `AuthenticationTimeout` | On the server: the peer was not accepted within Authentication Timeout Seconds. The client stops with `ServerClosed` | |
 | `Transferred` | The server moved the client to another server with `ServerManager.Transfer`; the peer and the client both stop with this reason. See [server transfer](../connections/transfer.md) | Yes, at once and to the new server, except when the transfer's grant does not fit the client's transport |
+| `TlsRejected` | On the client: it refused the server's TLS certificate, or the server ended the TLS handshake with an alert. See [client TLS](../connections/transports/tls.md) | No |
 
 ## SessionCloseReason
 
@@ -112,7 +113,7 @@ A newer server may send a value this list does not have. The client keeps the va
 | `ArgumentException` | `ConnectTokens` constructor | A key that is not 32 bytes |
 | `ArgumentOutOfRangeException` | `ConnectTokens.Issue`, `ConnectTokens.Lifetime` | Session id 0; a lifetime of zero or less |
 | `PlatformNotSupportedException` | Transports, `ServerManager.StartConnection` | UDP, encrypted UDP or TCP in a browser; a server in a browser |
-| `NotSupportedException` | Desktop WebSocket client | A `wss://` URL |
+| `ArgumentException` | `TlsRoots.FromPem` | Text without a certificate, or a certificate that cannot be read |
 | `MessageDecodeException` | Adapters | A payload that does not decode |
 
 ## Run-time log messages
@@ -124,6 +125,8 @@ A newer server may send a value this list does not have. The client keeps the va
 | `Fomoxa dropped server RPC 0x... to object N from peer N, which does not own the object` | A server RPC with `RequireOwnership` from a non-owner |
 | `Fomoxa dropped input to object N from peer N, which does not own the object` | Input from a non-owner |
 | `Fomoxa stopped the client: object mismatch <kind>, object N, prefab 0x..., scene object 0x...` | `OnObjectMismatch` without a subscriber |
+| `Fomoxa stopped the client: the TLS server <host> was rejected: <reason>` | The client refused the server's TLS certificate |
+| `Fomoxa stopped the client: the TLS server <host> ended the handshake with alert <alert>` | The server ended the TLS handshake with an alert |
 | `Fomoxa: object N (prefab 0x...) was destroyed on the client without a despawn from the server` | A spawned GameObject was destroyed on a client |
 | `Fomoxa: <name> received Animator state with layout 0x..., but its Animator has layout 0x...` | The Animator controllers differ between server and client |
 

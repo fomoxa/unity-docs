@@ -170,3 +170,5 @@ Encrypted UDP is not available in WebGL builds. Creating the factory in a browse
 With a [`MultiNetworkTransport`](multi-transport.md), a client connects through the first entry, so it needs a grant when that entry is encrypted.
 
 The encryption keeps frames secret and detects any change to them. The session id and the size and timing of datagrams stay visible, and a flood of datagrams still reaches the server.
+
+The encryption runs on BouncyCastle because `AesGcm` does not work under Unity's Mono. Unity moves to CoreCLR from Unity 6.8, and the version of the package for Unity on CoreCLR will use .NET's `AesGcm` ([requirements](../../getting-started/installation.md#requirements)).

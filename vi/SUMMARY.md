@@ -36,6 +36,7 @@
   * [UDP mã hóa](connections/transports/encrypted-udp.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
+  * [TLS phía client](connections/transports/tls.md)
   * [Nhiều transport](connections/transports/multi-transport.md)
   * [Loopback](connections/transports/loopback.md)
   * [Transport tùy chỉnh](connections/transports/custom-transport.md)

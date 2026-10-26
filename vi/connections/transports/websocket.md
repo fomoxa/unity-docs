@@ -21,7 +21,7 @@ Với host và port, client kết nối tới `ws://<host>:<port><Path>`. Với 
 |---|---|---|
 | Path | `/` | Path mà server chấp nhận và client yêu cầu khi không có URL. Nó bắt đầu bằng `/` và không chứa dấu cách, `?` hay `#`. |
 | Max Handshake Bytes | 8192 | Kích thước lớn nhất của HTTP upgrade request mà server đọc; tối thiểu 256 |
-| Handshake Timeout Seconds | 5 | Thời gian cho phép của HTTP upgrade: server chờ request, client desktop chờ response, client trình duyệt chờ socket mở |
+| Handshake Timeout Seconds | 5 | Thời gian cho phép của HTTP upgrade: server chờ request, client desktop chờ response, client trình duyệt chờ socket mở. Với URL `wss://` trên client desktop, thời gian này tính cả bước bắt tay TLS trước upgrade. |
 | Allowed Origins | trống | Khi không trống, server từ chối request có header `Origin` không nằm trong danh sách. Request không có header `Origin` được chấp nhận. |
 | Max Buffered Bytes | 1048576 | Trong trình duyệt, lượng dữ liệu chưa gửi mà vượt quá thì transport ngừng gửi cho tới khi trình duyệt bắt kịp |
 
@@ -38,13 +38,15 @@ Với host và port, client kết nối tới `ws://<host>:<port><Path>`. Với 
 
 ## TLS và wss:// <a href="#tls-and-wss" id="tls-and-wss"></a>
 
-Code WebSocket của package không làm TLS, nên client desktop nhận URL `wss://` sẽ ném `NotSupportedException`. Client trình duyệt có thể dùng URL `wss://`, vì ở đó trình duyệt lo TLS:
+Client kết nối qua TLS khi bạn đưa nó một URL `wss://`, và URL `wss://` không ghi port thì dùng port 443:
 
 ```csharp
 manager.ClientManager.StartConnection("wss://game.example.com/play", 0);
 ```
 
-Trang được phục vụ qua HTTPS chỉ mở được kết nối `wss://`. Để phục vụ chúng, hãy đặt một reverse proxy kết thúc TLS phía trước server và để nó chuyển tiếp kết nối đã upgrade tới port `ws://` của server.
+Trên client desktop, package tự làm bước bắt tay TLS và kiểm chứng chỉ của server, như [TLS phía client](tls.md) mô tả. Property `Tls` của component giữ các thiết lập đó. Trong trình duyệt, trình duyệt làm TLS.
+
+Server không làm TLS. Hãy đặt một reverse proxy kết thúc TLS phía trước server và để nó chuyển tiếp kết nối đã upgrade tới port `ws://` của server. Trang được phục vụ qua HTTPS chỉ mở được kết nối `wss://`, nên client trình duyệt luôn cần proxy đó.
 
 ## Kiểm tra origin <a href="#origin-checks" id="origin-checks"></a>
 

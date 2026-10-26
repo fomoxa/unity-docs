@@ -8,7 +8,7 @@ Transport tùy chỉnh nối package với một cách chuyển byte khác, như
 |---|---|---|
 | `NetworkTransport` | `Fomoxa.Unity` | Component trên `NetworkManager`; `CreateFactory()` trả về factory |
 | `ITransportFactory` | `Fomoxa.Networking.Transports` | `FrameBudget`, `CreateListener(port, out boundPort)`, `CreateConnector(address, port)` |
-| `ITransportConnector` | `Fomoxa.Networking.Transports` | Một lần thử kết nối. `Poll(out ITransport)` trả về `Pending`, `Connected` hoặc `Failed`; `Dispose()` hủy nó |
+| `ITransportConnector` | `Fomoxa.Networking.Transports` | Một lần thử kết nối. `Poll(out ITransport)` trả về `Pending`, `Connected`, `Failed` hoặc `TlsRejected`; `Dispose()` hủy nó |
 | `IListenerTransport` | `Fomoxa.Net.Transports` | Phía server. `Accept()` trả về một `AcceptOutcome`; `Dispose()` đóng nó |
 | `ITransport` | `Fomoxa.Net.Transports` | Một kết nối: `Kind`, `Send`, `Receive`, `CloseGracefully`, `Dispose` |
 

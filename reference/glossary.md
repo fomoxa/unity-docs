@@ -36,6 +36,7 @@
 | Replay | Applying recorded input again after a correction. Not a match recording. |
 | Rollback | Restoring an earlier state, of a behaviour or of physics worlds, before a replay. |
 | Rollback group | The physics worlds that are rolled back together. See [rollback](../prediction/rollback.md#rollback-groups). |
+| Root set | The certificates a client trusts when it checks a TLS server: by default Mozilla's list, bundled with the package. See [client TLS](../connections/transports/tls.md). |
 | Scene id | The 32-bit id of a scene, derived from its asset GUID. |
 | Scene object | A `NetworkObject` placed in a scene, identified by a scene object id. |
 | Schema | The list of every message id and its layout, generated as `NetSchema`; compared during the handshake. |

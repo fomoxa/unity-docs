@@ -19,6 +19,8 @@ Servers bind all IPv4 interfaces, so clients must reach the server over IPv4.
 
 A page served over HTTPS can only open `wss://` connections, so run a reverse proxy that terminates TLS and forwards WebSocket upgrades to the server's `ws://` port. The server's WebSocket Path must match the path the proxy forwards to. Set Allowed Origins on the `WebSocketNetworkTransport` to the origins that serve your game. [WebSocket](../connections/transports/websocket.md) describes these settings.
 
+Desktop and mobile clients can use the same proxy with `wss://`, or TLS over TCP through a proxy that forwards TCP. The client checks the proxy's certificate against Mozilla's roots, so a certificate from a public authority works as it is. [Client TLS](../connections/transports/tls.md) covers private authorities.
+
 ## Versions
 
 A client can only connect to a server built from the same models, because the handshake compares schemas and refuses any other with `SchemaConflict`. Prefabs and scene objects must match as well, or clients stop with `PrefabMismatch` when objects spawn. When you release a new version, update the server and the clients together, or run the old and the new server side by side on different ports.

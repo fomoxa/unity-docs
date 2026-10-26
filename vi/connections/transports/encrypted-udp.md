@@ -170,3 +170,5 @@ UDP mã hóa không có trong bản build WebGL. Tạo factory trong trình duy�
 Với [`MultiNetworkTransport`](multi-transport.md), client kết nối qua mục đầu tiên, nên nó cần vé khi mục đó là transport mã hóa.
 
 Mã hóa giữ bí mật frame và phát hiện mọi thay đổi trên frame. Mã phiên, kích thước và thời điểm của datagram vẫn nhìn thấy được, và datagram gửi ồ ạt vẫn tới được server.
+
+Phần mã hóa chạy trên BouncyCastle vì `AesGcm` không chạy được trên Mono của Unity. Unity chuyển sang CoreCLR từ Unity 6.8, và phiên bản của package dành cho Unity chạy trên CoreCLR sẽ dùng `AesGcm` của .NET ([yêu cầu](../../getting-started/installation.md#requirements)).

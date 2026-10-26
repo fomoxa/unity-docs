@@ -36,6 +36,7 @@
 | Replay | Áp dụng lại input đã ghi sau một lần sửa. Không phải bản ghi trận đấu. |
 | Rollback | Khôi phục một state trước đó, của một behaviour hoặc của các physics world, trước khi replay. |
 | Rollback group | Các physics world được rollback cùng nhau. Xem [rollback](../prediction/rollback.md#rollback-groups). |
+| Root set (bộ gốc) | Các chứng chỉ mà client tin khi kiểm một server TLS: mặc định là danh sách của Mozilla, đi kèm package. Xem [TLS phía client](../connections/transports/tls.md). |
 | Scene id | Id 32 bit của một scene, suy ra từ asset GUID của nó. |
 | Scene object | Một `NetworkObject` đặt trong scene, nhận diện bằng scene object id. |
 | Schema | Danh sách mọi message id và layout của chúng, được sinh thành `NetSchema`; được so sánh trong lúc handshake. |

@@ -4,7 +4,11 @@
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
-Thêm `TcpNetworkTransport` vào GameObject của `NetworkManager` và gán nó vào field Transport. Component không có thiết lập riêng, và server cùng mọi client đều phải dùng TCP.
+Thêm `TcpNetworkTransport` vào GameObject của `NetworkManager` và gán nó vào field Transport. Server và mọi client đều phải dùng TCP.
+
+## TLS <a href="#tls" id="tls"></a>
+
+Thiết lập trong Inspector của component, Use Tls, cho client mở TLS trước handshake Fomoxa. Dùng nó khi client kết nối qua một proxy hoặc ingress kết thúc TLS phía trước server. Server bỏ qua thiết lập này. [TLS phía client](tls.md) mô tả cách kiểm chứng chỉ, property `Tls` và các lỗi.
 
 ## Hành vi <a href="#behavior" id="behavior"></a>
 
@@ -20,7 +24,7 @@ Thêm `TcpNetworkTransport` vào GameObject của `NetworkManager` và gán nó 
 
 ## Vòng đời <a href="#lifecycle" id="lifecycle"></a>
 
-Kết nối bị từ chối hoặc thất bại sẽ dừng client với `StopReason.TransportError`, sau đó nó thử lại. Khi một kết nối đã thiết lập bị đóng, session dừng với `PeerClosed` hoặc `TransportError`, tùy cách kết nối bị đóng.
+Kết nối bị từ chối hoặc thất bại sẽ dừng client với `StopReason.TransportError`, sau đó nó thử lại. Khi bật Use Tls, chứng chỉ server bị client từ chối, hoặc một cảnh báo TLS từ server, sẽ dừng client với `TlsRejected`, và client không thử lại. Khi một kết nối đã thiết lập bị đóng, session dừng với `PeerClosed` hoặc `TransportError`, tùy cách kết nối bị đóng.
 
 ## Giới hạn theo nền tảng <a href="#platform-limitations" id="platform-limitations"></a>
 

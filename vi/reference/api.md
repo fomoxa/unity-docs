@@ -90,9 +90,10 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 
 | Type | Loại | Trang |
 |---|---|---|
-| `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interface, enum | [Transport tùy chỉnh](../connections/transports/custom-transport.md) |
+| `ITransportFactory`, `ITransportConnector`, `ConnectStatus`, `ITlsRejection` | Interface, enum | [Transport tùy chỉnh](../connections/transports/custom-transport.md) |
 | `IConnectionTransportFactory`, `IConnectionData` | Interface | [Tổng quan transport](../connections/transports/README.md#how-a-transport-plugs-in) |
 | `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
+| `TlsSettings`, `TlsRoots`, `ITlsCertificateCheck`, `TlsCertificateCheck` | TLS phía client | [TLS phía client](../connections/transports/tls.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transport | [Loopback](../connections/transports/loopback.md) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Phân giải tên | [Tổng quan transport](../connections/transports/README.md#non-blocking-operation) |
 

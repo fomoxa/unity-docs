@@ -90,9 +90,10 @@ This page lists the public types of the package by namespace. Types marked "buil
 
 | Type | Kind | Page |
 |---|---|---|
-| `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interfaces, enum | [Custom transport](../connections/transports/custom-transport.md) |
+| `ITransportFactory`, `ITransportConnector`, `ConnectStatus`, `ITlsRejection` | Interfaces, enum | [Custom transport](../connections/transports/custom-transport.md) |
 | `IConnectionTransportFactory`, `IConnectionData` | Interfaces | [Transports overview](../connections/transports/README.md#how-a-transport-plugs-in) |
 | `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
+| `TlsSettings`, `TlsRoots`, `ITlsCertificateCheck`, `TlsCertificateCheck` | Client TLS | [Client TLS](../connections/transports/tls.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transports | [Loopback](../connections/transports/loopback.md) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Name resolution | [Transports overview](../connections/transports/README.md#non-blocking-operation) |
 

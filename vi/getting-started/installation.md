@@ -9,6 +9,8 @@ Trang này thêm package vào một project Unity và thiết lập việc sinh 
 
 Package phụ thuộc vào các module có sẵn Physics, Physics 2D và Animation. Package khai báo chúng là dependency, nên Package Manager tự bật chúng.
 
+Hiện Unity chạy script trên Mono, và package lách ba chỗ thiếu của Mono. `AesGcm` không chạy được trên Mono, nên [UDP mã hóa](../connections/transports/encrypted-udp.md) dùng BouncyCastle, thư viện đi kèm package. `X509Chain` của Mono không có kho chứng chỉ gốc, nên [TLS phía client](../connections/transports/tls.md) kiểm chứng chỉ bằng BouncyCastle với bộ gốc riêng của package. Trên Windows, `Socket.Send` trên socket không chặn lại chặn khi bộ đệm gửi đầy, nên mỗi lần gửi qua TCP và WebSocket đều kiểm trước xem socket còn nhận thêm được không. Unity thay Mono bằng CoreCLR từ Unity 6.8, và một phiên bản sau của package dành cho Unity chạy trên CoreCLR sẽ dùng `AesGcm`, `X509Chain` và `Socket.Send` của .NET thay cho các cách trên.
+
 ## Thêm package <a href="#add-the-package" id="add-the-package"></a>
 
 ### Từ Git URL <a href="#from-a-git-url" id="from-a-git-url"></a>

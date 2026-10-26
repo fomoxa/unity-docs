@@ -51,7 +51,7 @@ Khi một object đã được spawn, các script `NetworkBehaviour` của nó c
 
 Package không có mô phỏng lockstep, và không ghi lại được cả một trận đấu để phát lại sau. Package cũng không có bộ sinh số ngẫu nhiên tất định và không có state hashing.
 
-Matchmaking, relay server, lobby và NAT traversal nằm ngoài package. Package mã hóa UDP khi bạn gán [UDP mã hóa](../connections/transports/encrypted-udp.md), với vé kết nối do dịch vụ đăng nhập của bạn cấp. Client WebSocket trong trình duyệt có thể tới server qua TLS thông qua một proxy, như mô tả trong [WebSocket](../connections/transports/websocket.md).
+Matchmaking, relay server, lobby và NAT traversal nằm ngoài package. Package mã hóa UDP khi bạn gán [UDP mã hóa](../connections/transports/encrypted-udp.md), với vé kết nối do dịch vụ đăng nhập của bạn cấp. Qua TCP và WebSocket, client có thể kết nối bằng TLS tới một proxy đặt phía trước server, như mô tả trong [TLS phía client](../connections/transports/tls.md).
 
 ## Bước tiếp theo <a href="#next-steps" id="next-steps"></a>
 

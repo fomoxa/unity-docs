@@ -8,7 +8,7 @@ A custom transport connects the package to another way of moving bytes, such as 
 |---|---|---|
 | `NetworkTransport` | `Fomoxa.Unity` | The component on the `NetworkManager`; `CreateFactory()` returns the factory |
 | `ITransportFactory` | `Fomoxa.Networking.Transports` | `FrameBudget`, `CreateListener(port, out boundPort)`, `CreateConnector(address, port)` |
-| `ITransportConnector` | `Fomoxa.Networking.Transports` | A connection attempt. `Poll(out ITransport)` returns `Pending`, `Connected` or `Failed`; `Dispose()` cancels it |
+| `ITransportConnector` | `Fomoxa.Networking.Transports` | A connection attempt. `Poll(out ITransport)` returns `Pending`, `Connected`, `Failed` or `TlsRejected`; `Dispose()` cancels it |
 | `IListenerTransport` | `Fomoxa.Net.Transports` | The server side. `Accept()` returns an `AcceptOutcome`; `Dispose()` closes it |
 | `ITransport` | `Fomoxa.Net.Transports` | One connection: `Kind`, `Send`, `Receive`, `CloseGracefully`, `Dispose` |
 

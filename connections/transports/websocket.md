@@ -21,7 +21,7 @@ With a host and a port, the client connects to `ws://<host>:<port><Path>`. With 
 |---|---|---|
 | Path | `/` | The path the server accepts and the client requests when no URL is given. It starts with `/` and has no space, `?` or `#`. |
 | Max Handshake Bytes | 8192 | Largest HTTP upgrade request the server reads; at least 256 |
-| Handshake Timeout Seconds | 5 | Time allowed for the HTTP upgrade: the server waiting for the request, a desktop client waiting for the response, a browser client waiting for the socket to open |
+| Handshake Timeout Seconds | 5 | Time allowed for the HTTP upgrade: the server waiting for the request, a desktop client waiting for the response, a browser client waiting for the socket to open. For a `wss://` URL on a desktop client, the time also covers the TLS handshake before the upgrade. |
 | Allowed Origins | empty | When not empty, the server refuses a request whose `Origin` header is not in the list. Requests without an `Origin` header are accepted. |
 | Max Buffered Bytes | 1048576 | In a browser, the amount of unsent data above which the transport stops sending until the browser catches up |
 
@@ -38,13 +38,15 @@ With a host and a port, the client connects to `ws://<host>:<port><Path>`. With 
 
 ## TLS and wss://
 
-The package's own WebSocket code does not do TLS, so a desktop client given a `wss://` URL throws `NotSupportedException`. A browser client may use a `wss://` URL, because there the browser handles TLS:
+A client connects over TLS when you give it a `wss://` URL, and a `wss://` URL without a port uses port 443:
 
 ```csharp
 manager.ClientManager.StartConnection("wss://game.example.com/play", 0);
 ```
 
-Pages served over HTTPS can only open `wss://` connections. To serve them, put a reverse proxy that terminates TLS in front of the server and have it forward the upgraded connection to the server's `ws://` port.
+On a desktop client the package does the TLS handshake itself and checks the server's certificate, as [client TLS](tls.md) describes. The component's `Tls` property holds those settings. In a browser, the browser does TLS.
+
+The server does not do TLS. Put a reverse proxy that terminates TLS in front of it and have it forward the upgraded connection to the server's `ws://` port. Pages served over HTTPS can only open `wss://` connections, so browser clients always need that proxy.
 
 ## Origin checks
 

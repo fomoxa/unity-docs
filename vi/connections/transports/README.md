@@ -20,9 +20,9 @@ Dù dùng transport nào, client của chính host luôn dùng kết nối [loop
 | Độ tin cậy của transport | Không | Reliable | Reliable |
 | Thứ tự của transport | Không | Có thứ tự | Có thứ tự |
 | Frame budget cho bundle | 1200 byte | Frame Fomoxa lớn nhất | Frame Fomoxa lớn nhất |
-| Địa chỉ | Host name hoặc IP, và port | Host name hoặc IP, và port | Host name, IP, hoặc URL `ws://`, và port |
+| Địa chỉ | Host name hoặc IP, và port | Host name hoặc IP, và port | Host name, IP, hoặc URL `ws://` hay `wss://`, và port |
 | Server lắng nghe trên | Mọi interface IPv4 | Mọi interface IPv4 | Mọi interface IPv4 |
-| Mã hóa | Không; [UDP mã hóa](encrypted-udp.md) thêm mã hóa | Không | Không có trong package; `wss://` qua proxy cho trình duyệt |
+| Mã hóa | Không; [UDP mã hóa](encrypted-udp.md) thêm mã hóa | [TLS phía client](tls.md) với Use Tls, qua proxy | [TLS phía client](tls.md) cho URL `wss://`, qua proxy |
 
 UDP mã hóa hoạt động như UDP, với frame budget 1175 byte.
 
