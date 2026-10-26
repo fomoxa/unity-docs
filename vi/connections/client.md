@@ -12,6 +12,8 @@ manager.ClientManager.StopConnection();
 
 `StartConnection(address, port)` nhận host name hoặc địa chỉ IP. Host name được phân giải mà không chặn main thread, và địa chỉ IPv4 được thử trước. Với transport WebSocket, địa chỉ cũng có thể là một URL `ws://`, như mô tả trong [WebSocket](transports/websocket.md). Gọi `StartConnection` trên client đang chạy sẽ ném `the client is already running`.
 
+Trên transport [UDP mã hóa](transports/encrypted-udp.md), client kết nối bằng vé kết nối do dịch vụ đăng nhập của bạn cấp, qua `StartConnection(address, port, grant)`. Khi đó `StartConnection(address, port)` ném `InvalidOperationException`, và vé trên transport không mã hóa ném `ArgumentException`.
+
 Nếu cùng `NetworkManager` đang chạy server, `StartConnection` bỏ qua địa chỉ và port và kết nối qua kết nối trong tiến trình. Đây là [host mode](host-mode.md).
 
 `StopConnection()` gửi message rời đi tới server, đóng kết nối, despawn mọi object trên client và hủy mọi lần kết nối lại đang chờ.
@@ -61,7 +63,9 @@ Một số lý do dừng khiến kết nối kết thúc hẳn. Client không th
 
 Mỗi lần kết nối lại là một kết nối mới. Client despawn mọi object khi kết nối dừng, trước khi báo `Stopped`, và server spawn lại chúng sau khi kết nối mới đã khởi động.
 
-Client được server chuyển sang server khác bằng `ServerManager.Transfer` dừng với `Transferred` và kết nối ngay tới server mới. Các lần thử lại sau đó đi tới địa chỉ mới. [Chuyển server](transfer.md) mô tả toàn bộ trình tự.
+Client được server chuyển sang server khác bằng `ServerManager.Transfer` dừng với `Transferred` và kết nối ngay tới server mới. Các lần thử lại sau đó đi tới địa chỉ mới. Khi lệnh chuyển không mang vé kết nối mà transport của client cần, client ghi một lỗi và dừng với `Transferred` và `WillRetry` false. [Chuyển server](transfer.md) mô tả toàn bộ trình tự.
+
+Trên transport mã hóa, mọi lần thử lại dùng lại vé kết nối của lần `StartConnection` hoặc lần chuyển gần nhất. Sau khi vé hết hạn, server bỏ qua client, nên hãy lấy vé mới và gọi lại `StartConnection`.
 
 ## Object và thời gian <a href="#objects-and-timing" id="objects-and-timing"></a>
 

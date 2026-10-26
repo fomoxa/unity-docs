@@ -21,7 +21,7 @@
 | `UnauthenticatedMessage` | Trong lúc kết nối đang `Authenticating`, phía kia gửi một message mà [bước xác thực](../connections/authentication.md#messages-outside-the-authentication) không cho phép | Không |
 | `AuthenticationFailed` | Trên server: authenticator đã từ chối peer. Client dừng với `ServerClosed` | |
 | `AuthenticationTimeout` | Trên server: peer không được chấp nhận trong Authentication Timeout Seconds. Client dừng với `ServerClosed` | |
-| `Transferred` | Server chuyển client sang server khác bằng `ServerManager.Transfer`; cả peer lẫn client dừng với lý do này. Xem [chuyển server](../connections/transfer.md) | Có, ngay lập tức và tới server mới |
+| `Transferred` | Server chuyển client sang server khác bằng `ServerManager.Transfer`; cả peer lẫn client dừng với lý do này. Xem [chuyển server](../connections/transfer.md) | Có, ngay lập tức và tới server mới, trừ khi vé kết nối của lần chuyển không hợp với transport của client |
 
 ## SessionCloseReason
 
@@ -95,6 +95,9 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `InvalidOperationException` | `Spawn`, các method về scene | Server chưa khởi động |
 | `InvalidOperationException` | `ServerManager.Transfer` | Peer là client chính của host |
 | `InvalidOperationException` | Constructor của `TransferTickets` | Registry không có codec của `TransferTicket` |
+| `InvalidOperationException` | `ClientManager.StartConnection(address, port)` | Transport cần vé kết nối, như [UDP mã hóa](../connections/transports/encrypted-udp.md) |
+| `InvalidOperationException` | `ServerManager.StartConnection` với UDP mã hóa | Transport không có `ConnectTokens` |
+| `InvalidOperationException` | Constructor của `ConnectTokens`, của `EncryptedUdpTransportFactory` | Registry không có codec của các model vé kết nối |
 | `InvalidOperationException` | Các method gửi RPC | Object chưa spawn ở phía gửi, hoặc RPC không tham số chưa có model được sinh |
 | `InvalidOperationException` | Các method thay đổi collection | Gọi trên client với object đã spawn |
 | `ArgumentException` | `Spawn` | Asset prefab, đã spawn, prefab id chưa đăng ký, scene object không hợp lệ, owner chưa khởi động |
@@ -104,7 +107,11 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `ArgumentNullException` | `ServerManager.Transfer`, `TransferTickets` | Địa chỉ, registry, khoá hoặc target là `null` |
 | `ArgumentException` | Constructor của `TransferTickets` | Khoá rỗng |
 | `ArgumentOutOfRangeException` | `TransferTickets.Lifetime` | Bằng 0 hoặc nhỏ hơn |
-| `PlatformNotSupportedException` | Transport, `ServerManager.StartConnection` | UDP hoặc TCP trong trình duyệt; server trong trình duyệt |
+| `ArgumentException` | `ClientManager.StartConnection(address, port, connection)` | Transport không nhận vé kết nối, hoặc các byte không phải là vé |
+| `ArgumentNullException` | `ConnectTokens` | Registry, khoá hoặc target là `null` |
+| `ArgumentException` | Constructor của `ConnectTokens` | Khoá không đúng 32 byte |
+| `ArgumentOutOfRangeException` | `ConnectTokens.Issue`, `ConnectTokens.Lifetime` | Mã phiên 0; thời hạn bằng 0 hoặc nhỏ hơn |
+| `PlatformNotSupportedException` | Transport, `ServerManager.StartConnection` | UDP, UDP mã hóa hoặc TCP trong trình duyệt; server trong trình duyệt |
 | `NotSupportedException` | Client WebSocket trên desktop | Một URL `wss://` |
 | `MessageDecodeException` | Adapter | Payload không decode được |
 

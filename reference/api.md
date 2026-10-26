@@ -16,7 +16,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `NetworkAuthenticator` | Abstract component | [Authentication](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Classes, interface, extension methods | [NetworkManager reference](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Generated asset types | [Editor integration](../advanced/editor-integration.md) |
-| `NetworkTransport`, `UdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
+| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Components | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics worlds, helper | [Physics API](physics.md#unity-worlds) |
 
@@ -39,6 +39,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `ObserverGroups` | Class | [ServerManager reference](server-manager.md#observergroups) |
 | `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interfaces, classes | [Authentication](../connections/authentication.md) |
 | `TransferTickets`, `IUsedTicketStore`, `MemoryUsedTicketStore` | Class, interface, class | [Server transfer](../connections/transfer.md#transfertickets) |
+| `ConnectTokens` | Class | [Encrypted UDP](../connections/transports/encrypted-udp.md#issuing-grants) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Console backend reference](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging
@@ -90,7 +91,8 @@ This page lists the public types of the package by namespace. Types marked "buil
 | Type | Kind | Page |
 |---|---|---|
 | `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interfaces, enum | [Custom transport](../connections/transports/custom-transport.md) |
-| `UdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
+| `IConnectionTransportFactory`, `IConnectionData` | Interfaces | [Transports overview](../connections/transports/README.md#how-a-transport-plugs-in) |
+| `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transports | [Loopback](../connections/transports/loopback.md) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Name resolution | [Transports overview](../connections/transports/README.md#non-blocking-operation) |
 

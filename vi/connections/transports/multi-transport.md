@@ -25,7 +25,7 @@ Mục đầu tiên lắng nghe trên port truyền vào `ServerManager.StartConn
 
 ## Client <a href="#clients" id="clients"></a>
 
-Client có `MultiNetworkTransport` kết nối qua mục đầu tiên. Trong bản build WebGL, các mục không chạy được trong trình duyệt bị bỏ qua, nên một danh sách UDP rồi WebSocket cho bản build desktop dùng UDP và bản build WebGL dùng WebSocket từ cùng một scene. Client WebGL kết nối tới port bạn truyền vào `StartConnection`, nên hãy truyền port của mục WebSocket vào đó.
+Client có `MultiNetworkTransport` kết nối qua mục đầu tiên. Trong bản build WebGL, các mục không chạy được trong trình duyệt bị bỏ qua, nên một danh sách UDP rồi WebSocket cho bản build desktop dùng UDP và bản build WebGL dùng WebSocket từ cùng một scene. Client WebGL kết nối tới port bạn truyền vào `StartConnection`, nên hãy truyền port của mục WebSocket vào đó. Khi mục đầu tiên là [UDP mã hóa](encrypted-udp.md), client kết nối bằng `StartConnection(address, port, grant)`.
 
 Nếu không mục nào chạy được, việc tạo factory ném `<name> has no transports`, hoặc trong trình duyệt là `<name> cannot run in a browser; ...`.
 

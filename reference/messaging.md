@@ -89,8 +89,9 @@ The package's own models live in `Fomoxa.Networking.Messaging`. They are generat
 | `ReliableAck` | Acknowledgement of reliable messages | Unreliable |
 | `PeerLeave` | A client leaving | Unreliable |
 | `LocalPeer` | The client's peer id, the tick rate and the physics backend | Reliable ordered |
-| `PeerTransfer` | The server a client is moved to, and its ticket | Reliable ordered |
+| `PeerTransfer` | The server a client is moved to, its ticket, and its grant for [encrypted UDP](../connections/transports/encrypted-udp.md#server-transfers) | Reliable ordered |
 | `TransferTicket` | The content of a ticket from `TransferTickets` | Not sent on its own |
+| `ConnectToken`, `ConnectTokenSecret`, `ConnectionGrant` | A token from `ConnectTokens`, its sealed part, and the grant that carries it with the session keys | Not sent on its own |
 | `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange` | Object lifecycle | Reliable ordered |
 | `StateDelta`, `StateResync` | State deltas, and a client's request for a full state | Reliable ordered |
 | `CollectionChanges` | The operations called on one collection in one tick | Reliable ordered |

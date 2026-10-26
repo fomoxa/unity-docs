@@ -13,6 +13,7 @@
 | Fingerprint | Hash của danh sách type `NetworkBehaviour` của một prefab hoặc scene object, được so sánh khi spawn. |
 | Fragment | Một mảnh của message `ReliableOrdered` lớn hơn frame budget. Bên nhận ghép các mảnh lại rồi mới giao message. Xem [kích thước message](../messaging/channels.md#message-size). |
 | Frame budget | Frame lớn nhất package dựng cho một transport: 1200 byte với UDP. |
+| Grant (vé kết nối) | Các byte từ `ConnectTokens.Issue` cho phép client kết nối qua [UDP mã hóa](../connections/transports/encrypted-udp.md): một token và các khoá phiên của client. |
 | Host | Tiến trình chạy server và client trong cùng một `NetworkManager`. Xem [host mode](../connections/host-mode.md). |
 | Input model | Model mà một behaviour đăng ký bằng `NetworkInput.Use`, được owner gửi mỗi tick. |
 | Interpolation | Hiển thị một object ở xa nằm giữa các transform đã nhận, chậm vài tick so với hiện tại. |

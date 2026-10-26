@@ -16,7 +16,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `NetworkAuthenticator` | Component trừu tượng | [Xác thực](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Class, interface, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../advanced/editor-integration.md) |
-| `NetworkTransport`, `UdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
+| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Component | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics world, helper | [Physics API](physics.md#unity-worlds) |
 
@@ -39,6 +39,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `ObserverGroups` | Class | [Tham chiếu ServerManager](server-manager.md#observergroups) |
 | `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interface, class | [Xác thực](../connections/authentication.md) |
 | `TransferTickets`, `IUsedTicketStore`, `MemoryUsedTicketStore` | Class, interface, class | [Chuyển server](../connections/transfer.md#transfertickets) |
+| `ConnectTokens` | Class | [UDP mã hóa](../connections/transports/encrypted-udp.md#issuing-grants) |
 | `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging <a href="#fomoxanetworkingmessaging" id="fomoxanetworkingmessaging"></a>
@@ -90,7 +91,8 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | Type | Loại | Trang |
 |---|---|---|
 | `ITransportFactory`, `ITransportConnector`, `ConnectStatus` | Interface, enum | [Transport tùy chỉnh](../connections/transports/custom-transport.md) |
-| `UdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
+| `IConnectionTransportFactory`, `IConnectionData` | Interface | [Tổng quan transport](../connections/transports/README.md#how-a-transport-plugs-in) |
+| `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transport | [Loopback](../connections/transports/loopback.md) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Phân giải tên | [Tổng quan transport](../connections/transports/README.md#non-blocking-operation) |
 

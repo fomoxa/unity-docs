@@ -5,6 +5,7 @@ A transport moves bytes between a client and a server. The package's protocol, r
 | Component | Protocol | Server | Client | Browser (WebGL) client |
 |---|---|---|---|---|
 | [`UdpNetworkTransport`](udp.md) | UDP datagrams | Yes | Yes | No |
+| [`EncryptedUdpNetworkTransport`](encrypted-udp.md) | UDP datagrams encrypted with ChaCha20-Poly1305 | Yes | Yes, with a grant from your login service | No |
 | [`TcpNetworkTransport`](tcp.md) | TCP stream | Yes | Yes | No |
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) over TCP | Yes | Yes | Yes |
 | [`MultiNetworkTransport`](multi-transport.md) | Several of the above on one server | Yes | Yes, through its first transport | Yes, through its WebSocket entry |
@@ -21,7 +22,9 @@ Whatever the transport, a host's own client always uses the in-process [loopback
 | Frame budget for bundles | 1200 bytes | Largest Fomoxa frame | Largest Fomoxa frame |
 | Addressing | Host name or IP, and port | Host name or IP, and port | Host name, IP, or `ws://` URL, and port |
 | Server listens on | All IPv4 interfaces | All IPv4 interfaces | All IPv4 interfaces |
-| Encryption | None | None | None in the package; `wss://` through a proxy for browsers |
+| Encryption | None; [encrypted UDP](encrypted-udp.md) adds it | None | None in the package; `wss://` through a proxy for browsers |
+
+Encrypted UDP behaves like UDP, with a frame budget of 1175 bytes.
 
 The package's own channels behave the same on every transport, with `ReliableOrdered` messages acknowledged and resent and `Unreliable` messages not. Over a reliable transport, unreliable messages are not lost in practice, but the package does not rely on that.
 
@@ -59,6 +62,6 @@ The `NetworkManager` calls it once in `Awake`. The returned `ITransportFactory`,
 | `CreateListener(ushort port, out ushort boundPort)` | Opens a listener and reports the port it bound |
 | `CreateConnector(string address, ushort port)` | Starts a connection; the client polls it until it connects or fails |
 
-[Custom transport](custom-transport.md) shows how to write your own.
+A transport that needs a grant to connect, such as encrypted UDP, also implements `IConnectionTransportFactory`, which adds `RequiresConnection`, `CanUseConnection(connection)` and `CreateConnector(address, port, connection)`. [Custom transport](custom-transport.md) shows how to write your own.
 
 The transport is used by the [client](../client.md) and the [server](../server.md), [lifecycle](../../concepts/lifecycle.md) gives the order of connection events, and [deployment](../../deploy/deployment.md) covers ports and firewalls on a real server.

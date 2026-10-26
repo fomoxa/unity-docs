@@ -5,6 +5,7 @@ Transport chuyển byte giữa client và server. Giao thức, độ tin cậy v
 | Component | Giao thức | Server | Client | Client trình duyệt (WebGL) |
 |---|---|---|---|---|
 | [`UdpNetworkTransport`](udp.md) | Datagram UDP | Có | Có | Không |
+| [`EncryptedUdpNetworkTransport`](encrypted-udp.md) | Datagram UDP mã hóa bằng ChaCha20-Poly1305 | Có | Có, với vé kết nối từ dịch vụ đăng nhập của bạn | Không |
 | [`TcpNetworkTransport`](tcp.md) | Stream TCP | Có | Có | Không |
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) qua TCP | Có | Có | Có |
 | [`MultiNetworkTransport`](multi-transport.md) | Nhiều transport ở trên cho một server | Có | Có, qua transport đầu tiên | Có, qua mục WebSocket |
@@ -21,7 +22,9 @@ Dù dùng transport nào, client của chính host luôn dùng kết nối [loop
 | Frame budget cho bundle | 1200 byte | Frame Fomoxa lớn nhất | Frame Fomoxa lớn nhất |
 | Địa chỉ | Host name hoặc IP, và port | Host name hoặc IP, và port | Host name, IP, hoặc URL `ws://`, và port |
 | Server lắng nghe trên | Mọi interface IPv4 | Mọi interface IPv4 | Mọi interface IPv4 |
-| Mã hóa | Không | Không | Không có trong package; `wss://` qua proxy cho trình duyệt |
+| Mã hóa | Không; [UDP mã hóa](encrypted-udp.md) thêm mã hóa | Không | Không có trong package; `wss://` qua proxy cho trình duyệt |
+
+UDP mã hóa hoạt động như UDP, với frame budget 1175 byte.
 
 Các channel của package hoạt động như nhau trên mọi transport: message `ReliableOrdered` được acknowledge và gửi lại, message `Unreliable` thì không. Qua một transport reliable, message unreliable trên thực tế không bị mất, nhưng package không dựa vào điều đó.
 
@@ -59,6 +62,6 @@ public abstract ITransportFactory CreateFactory();
 | `CreateListener(ushort port, out ushort boundPort)` | Mở một listener và báo port nó đã bind |
 | `CreateConnector(string address, ushort port)` | Bắt đầu một kết nối; client poll nó cho tới khi kết nối được hoặc thất bại |
 
-[Transport tùy chỉnh](custom-transport.md) hướng dẫn cách viết transport riêng.
+Transport cần vé kết nối, như UDP mã hóa, cài thêm `IConnectionTransportFactory`, gồm `RequiresConnection`, `CanUseConnection(connection)` và `CreateConnector(address, port, connection)`. [Transport tùy chỉnh](custom-transport.md) hướng dẫn cách viết transport riêng.
 
 Transport được [client](../client.md) và [server](../server.md) sử dụng, [vòng đời](../../concepts/lifecycle.md) đưa ra thứ tự các event kết nối, và [triển khai](../../deploy/deployment.md) nói về port và firewall trên một server thật.

@@ -6,7 +6,8 @@
 
 | Member | Mô tả |
 |---|---|
-| `void StartConnection(string address, ushort port)` | Kết nối tới server. Khi cùng manager đang chạy server, kết nối qua kết nối trong tiến trình và bỏ qua cả hai tham số. Ném `InvalidOperationException` khi đang chạy. |
+| `void StartConnection(string address, ushort port)` | Kết nối tới server. Khi cùng manager đang chạy server, kết nối qua kết nối trong tiến trình và bỏ qua cả hai tham số. Ném `InvalidOperationException` khi đang chạy, và trên transport cần vé kết nối. |
+| `void StartConnection(string address, ushort port, ReadOnlyMemory<byte> connection)` | Kết nối bằng vé kết nối từ `ConnectTokens.Issue` trên [UDP mã hóa](../connections/transports/encrypted-udp.md#on-the-client); các lần thử lại dùng lại vé. Client chính của host bỏ qua nó. Ném `ArgumentException` khi transport không nhận vé hoặc các byte không phải là vé. |
 | `void StopConnection()` | Gửi message rời đi, đóng kết nối, despawn các object của client và hủy các lần thử lại đang chờ |
 | `ConnectionState State` | `Stopped`, `Starting`, `Authenticating` hoặc `Started` |
 | `IClientAuthenticator Authenticator` | Phía client của [bước xác thực](../connections/authentication.md). Đọc và ghi; đặt khi client đang chạy sẽ ném `InvalidOperationException`. |
@@ -42,6 +43,6 @@
 
 ## Kết nối lại <a href="#reconnection" id="reconnection"></a>
 
-Việc kết nối lại được cấu hình trên `NetworkManager` bằng Max Reconnect Retries và Reconnect Interval Seconds. Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, hoặc `HandshakeFailed` với failure khác `Timeout`, và không bao giờ thử lại kết nối trong tiến trình của host. Sau `Transferred`, nó kết nối ngay tới server được chuyển tới, và các lần thử lại sau đó cũng đi tới đó.
+Việc kết nối lại được cấu hình trên `NetworkManager` bằng Max Reconnect Retries và Reconnect Interval Seconds. Client không thử lại sau `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, hoặc `HandshakeFailed` với failure khác `Timeout`, và không bao giờ thử lại kết nối trong tiến trình của host. Sau `Transferred`, nó kết nối ngay tới server được chuyển tới, và các lần thử lại sau đó cũng đi tới đó, trừ khi vé kết nối của lần chuyển không hợp với transport; khi đó `WillRetry` là false.
 
 Các type liên quan là [NetworkManager](network-manager.md), [ServerManager](server-manager.md) và [TimeManager](time-manager.md).

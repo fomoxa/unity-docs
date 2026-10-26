@@ -70,6 +70,7 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 |---|---|
 | `NetworkTransport` | `public abstract class NetworkTransport : MonoBehaviour` with `public abstract ITransportFactory CreateFactory()` |
 | `UdpNetworkTransport` | UDP; no fields |
+| `EncryptedUdpNetworkTransport` | UDP encrypted with ChaCha20-Poly1305; field Target, properties `Tokens` and `Registry`. See [encrypted UDP](../connections/transports/encrypted-udp.md) |
 | `TcpNetworkTransport` | TCP; no fields |
 | `WebSocketNetworkTransport` | WebSocket; native code on desktop, the browser in WebGL |
 | `MultiNetworkTransport` | Several transports, each with a port, on one server |

@@ -51,7 +51,7 @@ Once an object is spawned, its `NetworkBehaviour` scripts can call RPCs, keep a 
 
 The package has no lockstep simulation, and it cannot record a whole match and replay it later. It also has no deterministic random number generator and no state hashing.
 
-Matchmaking, relay servers, lobbies and NAT traversal are outside the package, and so are encryption and authentication of connections. A WebSocket client in a browser can still reach a server over TLS through a proxy, as described in [WebSocket](../connections/transports/websocket.md).
+Matchmaking, relay servers, lobbies and NAT traversal are outside the package. The package encrypts UDP when you assign [encrypted UDP](../connections/transports/encrypted-udp.md), with grants your own login service issues. A WebSocket client in a browser can reach a server over TLS through a proxy, as described in [WebSocket](../connections/transports/websocket.md).
 
 ## Next steps
 

@@ -33,6 +33,7 @@
 * [Server transfer](connections/transfer.md)
 * [Transports](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)
+  * [Encrypted UDP](connections/transports/encrypted-udp.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
   * [Multiple transports](connections/transports/multi-transport.md)

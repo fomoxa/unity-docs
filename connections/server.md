@@ -61,6 +61,7 @@ A peer is `Starting` while the handshake runs, `Authenticating` while your [auth
 | `Disconnect(peerId)` | Closes a peer's connection at once; it stops with `LocalStop`, and the client sees the connection drop and reconnects |
 | `Kick(peerId)` | Tells the client it was kicked, then closes the connection; the peer stops with `LocalStop`, and the client stops with `ServerClosed` and does not reconnect |
 | `Transfer(peerId, address, port, ticket)` | Sends the client to another server, then closes the connection the way `Kick` does; the peer stops with `Transferred`. See [server transfer](transfer.md). |
+| `Transfer(peerId, address, port, ticket, connection)` | The same, with the grant the client needs for a new server on [encrypted UDP](transports/encrypted-udp.md#server-transfers) |
 | `HasRtt(peerId)`, `RttOf(peerId)` | The round-trip time the peer's client reported with its clock pings |
 | `DroppedInputsOf(peerId)` | Inputs from the peer that the server could not use |
 | `FrameBudgetOf(peerId)` | The frame budget of the transport the peer connected through |

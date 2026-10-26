@@ -25,7 +25,7 @@ The first entry listens on the port passed to `ServerManager.StartConnection`, w
 
 ## Clients
 
-A client with a `MultiNetworkTransport` connects through the first entry. In a WebGL build the entries that cannot run in a browser are skipped, so a list of UDP followed by WebSocket gives desktop builds UDP and WebGL builds WebSocket from the same scene. The WebGL client connects to the port you pass to `StartConnection`, so pass the WebSocket entry's port there.
+A client with a `MultiNetworkTransport` connects through the first entry. In a WebGL build the entries that cannot run in a browser are skipped, so a list of UDP followed by WebSocket gives desktop builds UDP and WebGL builds WebSocket from the same scene. The WebGL client connects to the port you pass to `StartConnection`, so pass the WebSocket entry's port there. When the first entry is [encrypted UDP](encrypted-udp.md), the client connects with `StartConnection(address, port, grant)`.
 
 If no entry can run, creating the factory throws `<name> has no transports`, or in a browser `<name> cannot run in a browser; ...`.
 

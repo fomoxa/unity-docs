@@ -61,6 +61,7 @@ Một peer ở `Starting` trong lúc handshake chạy, ở `Authenticating` tron
 | `Disconnect(peerId)` | Đóng kết nối của một peer ngay lập tức; nó dừng với `LocalStop`, còn client thấy kết nối rớt và kết nối lại |
 | `Kick(peerId)` | Báo cho client rằng nó bị kick, rồi đóng kết nối; peer dừng với `LocalStop`, còn client dừng với `ServerClosed` và không kết nối lại |
 | `Transfer(peerId, address, port, ticket)` | Chuyển client sang server khác, rồi đóng kết nối như `Kick`; peer dừng với `Transferred`. Xem [chuyển server](transfer.md). |
+| `Transfer(peerId, address, port, ticket, connection)` | Như trên, kèm vé kết nối mà client cần cho server mới dùng [UDP mã hóa](transports/encrypted-udp.md#server-transfers) |
 | `HasRtt(peerId)`, `RttOf(peerId)` | Round-trip time mà client của peer báo qua các clock ping |
 | `DroppedInputsOf(peerId)` | Số input từ peer mà server không dùng được |
 | `FrameBudgetOf(peerId)` | Frame budget của transport mà peer kết nối qua |

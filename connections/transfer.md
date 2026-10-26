@@ -29,6 +29,8 @@ bool started = manager.ServerManager.Transfer(peerId, "arena-2.example.com", 777
 
 `address` and `port` mean what they mean in the client's `StartConnection`: a host name, an IP address, or a `ws://` URL with a [WebSocket](transports/websocket.md) transport. The package does not read the ticket; it carries the bytes to the client as they are.
 
+When the new server uses [encrypted UDP](transports/encrypted-udp.md#server-transfers), pass the grant for it as well, with `Transfer(peerId, address, port, ticket, connection)`. The client connects with that grant, and keeps the ticket for its authenticator as usual.
+
 `Transfer` returns false for an unknown peer, for a peer that is already being closed, and for a peer that has not reached `Started`. It throws `ArgumentNullException` when `address` is null, and `InvalidOperationException` for the peer of a host's own client, since [host mode](host-mode.md) cannot move its client to another server.
 
 The server closes the connection whether or not the client follows the transfer.
@@ -57,6 +59,8 @@ manager.ClientManager.OnClientConnectionState += args =>
 The client connects to the new address at once, as if you had called `StartConnection` with it. When that connection fails or drops, the client retries it under the usual [reconnection](client.md#reconnection) rules, at the new address and never at the old server. If the new server rejects the ticket, the client stops with `ServerClosed` and a `CloseReason` of `AuthenticationFailed`, and it does not retry.
 
 To refuse a transfer, call `StopConnection()` in `OnTransferring` or in the `Stopped` handler, and the client stays stopped.
+
+The client does not follow a transfer whose grant does not fit its transport: an encrypted client that gets no grant, or a plain client that gets one. It still raises `OnTransferring`, then logs an error and stops with `Transferred` and `WillRetry` false.
 
 ## The ticket
 

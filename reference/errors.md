@@ -21,7 +21,7 @@
 | `UnauthenticatedMessage` | While the connection was `Authenticating`, the other side sent a message that the [authentication](../connections/authentication.md#messages-outside-the-authentication) does not allow | No |
 | `AuthenticationFailed` | On the server: the authenticator rejected the peer. The client stops with `ServerClosed` | |
 | `AuthenticationTimeout` | On the server: the peer was not accepted within Authentication Timeout Seconds. The client stops with `ServerClosed` | |
-| `Transferred` | The server moved the client to another server with `ServerManager.Transfer`; the peer and the client both stop with this reason. See [server transfer](../connections/transfer.md) | Yes, at once and to the new server |
+| `Transferred` | The server moved the client to another server with `ServerManager.Transfer`; the peer and the client both stop with this reason. See [server transfer](../connections/transfer.md) | Yes, at once and to the new server, except when the transfer's grant does not fit the client's transport |
 
 ## SessionCloseReason
 
@@ -95,6 +95,9 @@ A newer server may send a value this list does not have. The client keeps the va
 | `InvalidOperationException` | `Spawn`, scene methods | The server is not started |
 | `InvalidOperationException` | `ServerManager.Transfer` | The peer is a host's own client |
 | `InvalidOperationException` | `TransferTickets` constructor | The registry has no `TransferTicket` codec |
+| `InvalidOperationException` | `ClientManager.StartConnection(address, port)` | The transport needs a grant, such as [encrypted UDP](../connections/transports/encrypted-udp.md) |
+| `InvalidOperationException` | `ServerManager.StartConnection` with encrypted UDP | The transport has no `ConnectTokens` |
+| `InvalidOperationException` | `ConnectTokens` constructor, `EncryptedUdpTransportFactory` constructor | The registry has no codec for the connect token models |
 | `InvalidOperationException` | Send RPC methods | The object is not spawned on the sending side, or a parameterless RPC has no generated model |
 | `InvalidOperationException` | Methods that change a collection | Called on a client for a spawned object |
 | `ArgumentException` | `Spawn` | Prefab asset, already spawned, unregistered prefab id, invalid scene object, owner not started |
@@ -104,7 +107,11 @@ A newer server may send a value this list does not have. The client keeps the va
 | `ArgumentNullException` | `ServerManager.Transfer`, `TransferTickets` | A `null` address, registry, key or target |
 | `ArgumentException` | `TransferTickets` constructor | An empty key |
 | `ArgumentOutOfRangeException` | `TransferTickets.Lifetime` | Zero or less |
-| `PlatformNotSupportedException` | Transports, `ServerManager.StartConnection` | UDP or TCP in a browser; a server in a browser |
+| `ArgumentException` | `ClientManager.StartConnection(address, port, connection)` | The transport does not take a grant, or the bytes are not a grant |
+| `ArgumentNullException` | `ConnectTokens` | A `null` registry, key or target |
+| `ArgumentException` | `ConnectTokens` constructor | A key that is not 32 bytes |
+| `ArgumentOutOfRangeException` | `ConnectTokens.Issue`, `ConnectTokens.Lifetime` | Session id 0; a lifetime of zero or less |
+| `PlatformNotSupportedException` | Transports, `ServerManager.StartConnection` | UDP, encrypted UDP or TCP in a browser; a server in a browser |
 | `NotSupportedException` | Desktop WebSocket client | A `wss://` URL |
 | `MessageDecodeException` | Adapters | A payload that does not decode |
 

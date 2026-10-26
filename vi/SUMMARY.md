@@ -33,6 +33,7 @@
 * [Chuyển server](connections/transfer.md)
 * [Transport](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)
+  * [UDP mã hóa](connections/transports/encrypted-udp.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
   * [Nhiều transport](connections/transports/multi-transport.md)

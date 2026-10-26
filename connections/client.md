@@ -12,6 +12,8 @@ manager.ClientManager.StopConnection();
 
 `StartConnection(address, port)` accepts a host name or an IP address. Host names are resolved without blocking the main thread, and IPv4 addresses are tried first. With a WebSocket transport the address may also be a `ws://` URL, as described in [WebSocket](transports/websocket.md). Calling `StartConnection` on a running client throws `the client is already running`.
 
+On an [encrypted UDP](transports/encrypted-udp.md) transport, the client connects with the grant your login service issued, through `StartConnection(address, port, grant)`. `StartConnection(address, port)` then throws `InvalidOperationException`, and a grant on a transport that does not encrypt throws `ArgumentException`.
+
 If the same `NetworkManager` is running a server, `StartConnection` ignores the address and port and connects through the in-process connection instead. This is [host mode](host-mode.md).
 
 `StopConnection()` sends a leave message to the server, closes the connection, despawns every object on the client and cancels any pending reconnect.
@@ -61,7 +63,9 @@ Some stop reasons end the connection for good. The client does not retry after `
 
 Every reconnect is a new connection. The client despawns all objects when the connection stops, before it reports `Stopped`, and the server spawns them again once the new connection has started.
 
-A client that the server moves to another server with `ServerManager.Transfer` stops with `Transferred` and connects to the new server at once. Its retries then go to the new address. [Server transfer](transfer.md) describes the whole sequence.
+A client that the server moves to another server with `ServerManager.Transfer` stops with `Transferred` and connects to the new server at once. Its retries then go to the new address. When the transfer does not carry the grant that the client's transport needs, the client logs an error and stops with `Transferred` and `WillRetry` false. [Server transfer](transfer.md) describes the whole sequence.
+
+On an encrypted transport, every retry reuses the grant of the last `StartConnection` or transfer. After the grant expires, the server ignores the client, so get a new grant and call `StartConnection` again.
 
 ## Objects and timing
 

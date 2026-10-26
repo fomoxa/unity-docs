@@ -103,6 +103,7 @@ Each connection's authentication has its own context. The server passes the peer
 | `Accept()` | Server | Lets the peer in; returns true |
 | `Reject()` | Server | Closes the peer's connection with a reason; returns true |
 | `CancellationToken` | Both | Cancelled when this authentication ends, for any reason |
+| `ConnectionData` | Server | The data of the client's grant on [encrypted UDP](transports/encrypted-udp.md#in-the-authenticator); empty on other transports |
 | `Ticket` | Client | The ticket of a [server transfer](transfer.md#the-ticket); empty when the connection is not a transfer |
 
 ## Add it to the NetworkManager

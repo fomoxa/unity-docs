@@ -29,6 +29,8 @@ bool started = manager.ServerManager.Transfer(peerId, "arena-2.example.com", 777
 
 `address` và `port` mang đúng nghĩa của chúng trong `StartConnection` của client: host name, địa chỉ IP, hoặc một URL `ws://` với transport [WebSocket](transports/websocket.md). Package không đọc vé; nó chuyển nguyên các byte tới client.
 
+Khi server mới dùng [UDP mã hóa](transports/encrypted-udp.md#server-transfers), truyền thêm vé kết nối cho server đó, bằng `Transfer(peerId, address, port, ticket, connection)`. Client kết nối bằng vé kết nối đó, và vẫn giữ vé chuyển cho authenticator như thường.
+
 `Transfer` trả về false với peer không tồn tại, peer đang bị đóng, và peer chưa tới `Started`. Nó ném `ArgumentNullException` khi `address` là null, và `InvalidOperationException` với peer của client chính host, vì [host mode](host-mode.md) không chuyển được client của nó sang server khác.
 
 Server đóng kết nối dù client có theo lệnh chuyển hay không.
@@ -57,6 +59,8 @@ manager.ClientManager.OnClientConnectionState += args =>
 Client kết nối ngay tới địa chỉ mới, như khi bạn gọi `StartConnection` với nó. Khi kết nối đó thất bại hay rớt, client thử lại theo các luật [kết nối lại](client.md#reconnection) thông thường, tới địa chỉ mới và không bao giờ quay về server cũ. Nếu server mới từ chối vé, client dừng với `ServerClosed` và `CloseReason` là `AuthenticationFailed`, và không thử lại.
 
 Muốn từ chối lệnh chuyển, gọi `StopConnection()` trong `OnTransferring` hoặc trong handler của `Stopped`; client sẽ giữ trạng thái dừng.
+
+Client không theo lệnh chuyển có vé kết nối không hợp với transport của nó: client mã hóa không nhận được vé, hoặc client thường nhận được vé. Nó vẫn phát `OnTransferring`, rồi ghi một lỗi và dừng với `Transferred` và `WillRetry` false.
 
 ## Vé <a href="#the-ticket" id="the-ticket"></a>
 

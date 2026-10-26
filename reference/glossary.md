@@ -13,6 +13,7 @@
 | Fingerprint | A hash of a prefab's or scene object's list of `NetworkBehaviour` types, compared at spawn. |
 | Fragment | One piece of a `ReliableOrdered` message larger than the frame budget. The receiver joins the fragments before it delivers the message. See [message size](../messaging/channels.md#message-size). |
 | Frame budget | The largest frame the package builds for a transport: 1200 bytes for UDP. |
+| Grant | The bytes from `ConnectTokens.Issue` that let a client connect over [encrypted UDP](../connections/transports/encrypted-udp.md): a token and the client's session keys. |
 | Host | A process that runs a server and a client in the same `NetworkManager`. See [host mode](../connections/host-mode.md). |
 | Input model | The model a behaviour registers with `NetworkInput.Use`, sent each tick by the owner. |
 | Interpolation | Showing a remote object between received transforms, a few ticks in the past. |

@@ -72,6 +72,7 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 |---|---|
 | `NetworkTransport` | `public abstract class NetworkTransport : MonoBehaviour` với `public abstract ITransportFactory CreateFactory()` |
 | `UdpNetworkTransport` | UDP; không có field |
+| `EncryptedUdpNetworkTransport` | UDP mã hóa bằng ChaCha20-Poly1305; field Target, property `Tokens` và `Registry`. Xem [UDP mã hóa](../connections/transports/encrypted-udp.md) |
 | `TcpNetworkTransport` | TCP; không có field |
 | `WebSocketNetworkTransport` | WebSocket; code native trên desktop, trình duyệt trong WebGL |
 | `MultiNetworkTransport` | Nhiều transport, mỗi transport một port, trên một server |

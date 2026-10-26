@@ -6,7 +6,8 @@
 
 | Member | Description |
 |---|---|
-| `void StartConnection(string address, ushort port)` | Connects to a server. When the same manager runs a server, connects through the in-process connection and ignores both arguments. Throws `InvalidOperationException` when already running. |
+| `void StartConnection(string address, ushort port)` | Connects to a server. When the same manager runs a server, connects through the in-process connection and ignores both arguments. Throws `InvalidOperationException` when already running, and on a transport that needs a grant. |
+| `void StartConnection(string address, ushort port, ReadOnlyMemory<byte> connection)` | Connects with a grant from `ConnectTokens.Issue` on [encrypted UDP](../connections/transports/encrypted-udp.md#on-the-client); retries reuse the grant. A host's own client ignores it. Throws `ArgumentException` when the transport does not take a grant or the bytes are not one. |
 | `void StopConnection()` | Sends a leave message, closes the connection, despawns the client's objects and cancels pending retries |
 | `ConnectionState State` | `Stopped`, `Starting`, `Authenticating` or `Started` |
 | `IClientAuthenticator Authenticator` | The client side of the [authentication](../connections/authentication.md). Get and set; setting it while the client is running throws `InvalidOperationException`. |
@@ -42,6 +43,6 @@
 
 ## Reconnection
 
-Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection. After `Transferred` it connects at once to the server it was moved to, and later retries go there too.
+Reconnection is configured on the `NetworkManager` with Max Reconnect Retries and Reconnect Interval Seconds. The client does not retry after `LocalStop`, `HandlerException`, `PrefabMismatch`, `ObjectMismatch`, `PhysicsBackendMismatch`, `InvalidFragment`, `ServerClosed`, or a `HandshakeFailed` other than `Timeout`, and never retries a host's in-process connection. After `Transferred` it connects at once to the server it was moved to, and later retries go there too, unless the transfer's grant does not fit the transport, in which case `WillRetry` is false.
 
 The related types are [NetworkManager](network-manager.md), [ServerManager](server-manager.md) and [TimeManager](time-manager.md).
