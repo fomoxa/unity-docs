@@ -17,7 +17,7 @@ sequenceDiagram
     Note over Client,Server: mọi datagram sau: mã phiên, rồi frame đã mã hóa
 ```
 
-## Khoá chung
+## Khoá chung <a href="#the-shared-key" id="the-shared-key"></a>
 
 Dịch vụ cấp vé và mọi server nhận vé dùng chung một khoá 32 byte. Mỗi bên tạo một `ConnectTokens` với khoá đó:
 
@@ -27,7 +27,7 @@ var tokens = new ConnectTokens(FomoxaRegistry.Default, key);
 
 Giữ khoá trên máy của bạn, trong kho bí mật hoặc biến môi trường, không bao giờ đưa vào bản build của client. Ai có khoá đều cấp được vé mà server của bạn chấp nhận.
 
-## Trên server
+## Trên server <a href="#on-the-server" id="on-the-server"></a>
 
 Thêm `EncryptedUdpNetworkTransport` vào GameObject của `NetworkManager` và gán nó vào field Transport. Trước `ServerManager.StartConnection`, đưa cho component `ConnectTokens` của nó và đặt Target là tên của server này:
 
@@ -63,7 +63,7 @@ Component đọc `Tokens` và Target lúc server bắt đầu lắng nghe, nên 
 
 Tên server do bạn chọn. Khi mỗi tiến trình server có một tên riêng, vé cấp cho server này bị mọi server khác từ chối, dù tất cả dùng chung khoá.
 
-## Cấp vé
+## Cấp vé <a href="#issuing-grants" id="issuing-grants"></a>
 
 Dịch vụ của bạn cấp vé cho server mà client cần vào:
 
@@ -104,7 +104,7 @@ manager.ClientManager.StartConnection(address, port, grant);
 
 Client dùng lại vé cho mọi lần thử lại của cùng một `StartConnection`, và mỗi lần thử chọn khoá phiên mới, nên lần thử lại sau khi mất câu trả lời vẫn kết nối bình thường. Khi token đã hết hạn, server bỏ qua client, và các lần thử lại thất bại như khi server không tới được. Hãy lấy vé mới và gọi lại `StartConnection`.
 
-## Trong authenticator
+## Trong authenticator <a href="#in-the-authenticator" id="in-the-authenticator"></a>
 
 `ServerAuthenticationContext.ConnectionData` chứa `data` trong vé của client. Nó rỗng trên transport thường và với client chính của host.
 
@@ -137,7 +137,7 @@ public sealed class PlayerIdAuthenticator : NetworkAuthenticator
 
 Dữ liệu được niêm phong bằng khoá chung, nên client không đọc được và cũng không sửa được nó.
 
-## Chuyển server
+## Chuyển server <a href="#server-transfers" id="server-transfers"></a>
 
 Để chuyển client sang một server mã hóa khác, cấp vé cho server đó và truyền nó vào `Transfer`:
 
@@ -179,7 +179,7 @@ Directory trao cho client địa chỉ của gateway khi cấu hình của nó g
 
 Cùng pod đó cũng phục vụ client tới gateway qua WebSocket bằng [WebSocket mã hóa](encrypted-websocket.md). Đầu của các client này mang địa chỉ kết nối WebSocket và một dấu do gateway đặt, và `ServerManager.ArrivedOverWebSocket(peerId)` cho biết client nào tới bằng đường đó.
 
-## Hành vi
+## Hành vi <a href="#behavior" id="behavior"></a>
 
 | | |
 |---|---|
@@ -194,7 +194,7 @@ Cùng pod đó cũng phục vụ client tới gateway qua WebSocket bằng [WebS
 
 Server ghi nhớ mỗi lần thử trong `UsedAttempts` cho tới khi token của nó hết hạn. Kho mặc định giữ chúng trong bộ nhớ của một tiến trình, đủ khi mỗi tiến trình có Target riêng. Nhiều tiến trình dùng chung Target cần một kho chung; [chuyển server](../transfer.md#used-nonces) mô tả `IUsedTicketStore`.
 
-## Giới hạn nền tảng
+## Giới hạn nền tảng <a href="#platform-limitations" id="platform-limitations"></a>
 
 UDP mã hóa không có trong bản build WebGL. Tạo factory trong trình duyệt ném `EncryptedUdpNetworkTransport cannot run in a browser; assign a WebSocketNetworkTransport or a MultiNetworkTransport to the NetworkManager for WebGL builds`. Client WebGL vào pod mã hóa qua gateway bằng [WebSocket mã hóa](encrypted-websocket.md).
 

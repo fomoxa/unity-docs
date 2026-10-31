@@ -24,7 +24,7 @@
 | `Transferred` | Server chuyển client sang server khác bằng `ServerManager.Transfer`; cả peer lẫn client dừng với lý do này. Xem [chuyển server](../connections/transfer.md) | Có, ngay lập tức và tới server mới, trừ khi vé kết nối của lần chuyển không hợp với transport của client |
 | `TlsRejected` | Ở client: client từ chối chứng chỉ TLS của server, hoặc server kết thúc bước bắt tay TLS bằng một cảnh báo. Xem [TLS phía client](../connections/transports/tls.md) | Không |
 
-## SessionCloseReason
+## SessionCloseReason <a href="#sessionclosereason" id="sessionclosereason"></a>
 
 `Fomoxa.Networking.Sessions.SessionCloseReason` xuất hiện trong `ConnectionStateArgs.CloseReason` khi client dừng với `ServerClosed`. Server gửi nó ngay trước khi đóng kết nối.
 

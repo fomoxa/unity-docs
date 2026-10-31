@@ -11,7 +11,7 @@ https://github.com/fomoxa/com.fomoxa.networking.git
 https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier
 ```
 
-The backend checks the version of `com.fomoxa.networking` when it creates its worlds and throws `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.1.0; the project has ...` if the project has another one.
+The backend checks the version of `com.fomoxa.networking` when it creates its worlds and throws `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.2.0; the project has ...` if the project has another one.
 
 The package carries the native library for Windows x64 and Linux x64 under `Runtime/Plugins`, and Unity copies the right one into player builds. The Linux library needs glibc 2.34 or newer, which Ubuntu 22.04, Debian 12 and later have.
 

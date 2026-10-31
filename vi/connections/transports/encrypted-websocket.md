@@ -18,7 +18,7 @@ sequenceDiagram
     Gateway->>Browser: message nhị phân: câu trả lời đã mã hóa
 ```
 
-## Trên client
+## Trên client <a href="#on-the-client" id="on-the-client"></a>
 
 Thêm `EncryptedWebSocketNetworkTransport` vào GameObject của `NetworkManager` và gán nó vào field Transport. Kết nối bằng URL WebSocket của gateway và một vé:
 
@@ -58,7 +58,7 @@ var factory = new EncryptedWebSocketTransportFactory(registry, new WebSocketSett
 
 Vé, thử lại, hết hạn và `ConnectionData` của authenticator chạy như ở [UDP mã hóa](encrypted-udp.md#on-the-client).
 
-## Trên pod
+## Trên pod <a href="#on-the-pod" id="on-the-pod"></a>
 
 Pod chạy `EncryptedUdpNetworkTransport` với Behind Gateway bật, như mục [Sau gateway](encrypted-udp.md#behind-a-gateway). Gateway đánh dấu datagram của client WebSocket, và server cho biết mỗi client tới bằng đường nào:
 
@@ -85,7 +85,7 @@ else
 }
 ```
 
-## Hành vi
+## Hành vi <a href="#behavior" id="behavior"></a>
 
 | | |
 |---|---|

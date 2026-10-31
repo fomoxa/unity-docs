@@ -11,6 +11,7 @@
   * [2. Start a server](getting-started/tutorial/server.md)
   * [3. Connect clients](getting-started/tutorial/clients.md)
 * [Troubleshooting](getting-started/troubleshooting.md)
+* [Release notes](release-notes.md)
 
 ## Learn the basics
 
@@ -84,6 +85,7 @@
 * [Dedicated server](deploy/dedicated-server.md)
 * [Deployment](deploy/deployment.md)
 * [Game backend](deploy/backend.md)
+* [Cluster](deploy/cluster.md)
 * [WebGL](deploy/webgl.md)
 
 ## Advanced

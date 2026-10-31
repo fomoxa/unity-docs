@@ -11,7 +11,7 @@ https://github.com/fomoxa/com.fomoxa.networking.git
 https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier
 ```
 
-Backend kiểm tra phiên bản của `com.fomoxa.networking` khi tạo world và ném `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.1.0; the project has ...` nếu project có phiên bản khác.
+Backend kiểm tra phiên bản của `com.fomoxa.networking` khi tạo world và ném `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.2.0; the project has ...` nếu project có phiên bản khác.
 
 Package mang thư viện native cho Windows x64 và Linux x64 trong `Runtime/Plugins`, và Unity copy đúng thư viện vào bản build player. Thư viện Linux cần glibc 2.34 trở lên, tức Ubuntu 22.04, Debian 12 và các bản mới hơn.
 

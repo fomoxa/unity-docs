@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking.rapier` 0.1.0 |
-| Yêu cầu | `com.fomoxa.networking` 0.1.0 |
+| Package | `com.fomoxa.networking.rapier` 0.1.1 |
+| Yêu cầu | `com.fomoxa.networking` 0.2.0 |
 | Unity | 6000.5 trở lên |
 | Nền tảng | Windows x64 và Linux x64: Editor, bản build player và server console |
 | Rapier | `rapier3d` và `rapier2d` 0.36.0, build với `enhanced-determinism` |

@@ -11,6 +11,7 @@
   * [2. Khởi động server](getting-started/tutorial/server.md)
   * [3. Kết nối client](getting-started/tutorial/clients.md)
 * [Xử lý sự cố](getting-started/troubleshooting.md)
+* [Ghi chú phát hành](release-notes.md)
 
 ## Kiến thức nền
 
@@ -84,6 +85,7 @@
 * [Dedicated server](deploy/dedicated-server.md)
 * [Đưa server lên môi trường thật](deploy/deployment.md)
 * [Backend của game](deploy/backend.md)
+* [Cụm server](deploy/cluster.md)
 * [WebGL](deploy/webgl.md)
 
 ## Nâng cao

@@ -6,7 +6,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking` 0.1.0 |
+| Package | `com.fomoxa.networking` 0.2.0 |
 | Unity | 6000.5 trở lên |
 | Giấy phép | Apache-2.0 |
 | Trình sinh code đi kèm | `fomoxac` v0.2.2, Windows x64 và Linux x64 |
@@ -23,10 +23,12 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 | Đưa một game có sẵn lên online | [Ví dụ Red Runner](examples/redrunner/README.md), chuyển một game platformer một người chơi lên online qua chín bước |
 | Tra một type hoặc một member | [Tham chiếu](reference/api.md) |
 | Sửa một chỗ không chạy | [Xử lý sự cố](getting-started/troubleshooting.md) |
+| Nâng cấp từ 0.1.0 | [Ghi chú phát hành](release-notes.md) |
+| Chạy nhiều server sau một địa chỉ | [Cụm server](deploy/cluster.md) |
 
 ## Package làm được gì <a href="#what-the-package-covers" id="what-the-package-covers"></a>
 
-Package kết nối các peer qua UDP, TCP hoặc WebSocket, và một server có thể lắng nghe trên nhiều transport cùng lúc. Host mode nối client của người chơi host vào server qua một kết nối trong cùng tiến trình thay vì qua socket.
+Package kết nối các peer qua UDP, TCP hoặc WebSocket, và một server có thể lắng nghe trên nhiều transport cùng lúc. UDP có thể được mã hoá, client WebGL gửi được cùng các datagram mã hoá đó qua WebSocket, và client native dùng được TLS trên TCP và WebSocket. Server có thể xác thực peer trước khi peer bắt đầu, kick peer kèm lý do, hoặc chuyển peer sang server khác. Host mode nối client của người chơi host vào server qua một kết nối trong cùng tiến trình thay vì qua socket.
 
 Network object được spawn từ prefab hoặc đặt sẵn trong scene. Mỗi object có thể có một owner, và mức hiển thị khác nhau với từng peer. Client gọi server và server gọi client qua RPC khai báo bằng attribute. Mỗi behaviour có thể giữ một state được gửi bằng delta encoding, `NetworkTransform` gửi transform có interpolation và teleport, còn `NetworkAnimator` gửi các parameter của Animator. Network scene có thể được load cho mọi người hoặc chỉ cho một số peer.
 

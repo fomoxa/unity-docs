@@ -6,7 +6,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking` 0.1.0 |
+| Package | `com.fomoxa.networking` 0.2.0 |
 | Unity | 6000.5 or later |
 | License | Apache-2.0 |
 | Bundled code generator | `fomoxac` v0.2.2, Windows x64 and Linux x64 |
@@ -23,10 +23,12 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 | Take an existing game online | The [Red Runner example](examples/redrunner/README.md), which ports a single-player platformer in nine steps |
 | Look up one type or member | The [reference](reference/api.md) |
 | Fix something that does not work | [Troubleshooting](getting-started/troubleshooting.md) |
+| Upgrade from 0.1.0 | [Release notes](release-notes.md) |
+| Run many servers behind one address | [Cluster](deploy/cluster.md) |
 
 ## What the package covers
 
-The package connects peers over UDP, TCP or WebSocket, and one server can listen on several transports at once. Host mode joins the host player's client to the server through an in-process connection instead of a socket.
+The package connects peers over UDP, TCP or WebSocket, and one server can listen on several transports at once. UDP can be encrypted, WebGL clients can send the same encrypted datagrams over WebSocket, and native clients can use TLS on TCP and WebSocket. A server can authenticate a peer before it starts, kick it with a reason, or transfer it to another server. Host mode joins the host player's client to the server through an in-process connection instead of a socket.
 
 Network objects are spawned from prefabs or placed in scenes. Each one can have an owner, and a visibility that differs per peer. Clients call the server and the server calls clients through RPCs declared with attributes. Each behaviour can keep a state that is sent with delta encoding, `NetworkTransform` sends transforms with interpolation and teleport, and `NetworkAnimator` sends the Animator's parameters. Network scenes can be loaded for everyone or for selected peers.
 

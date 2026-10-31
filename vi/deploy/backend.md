@@ -6,14 +6,14 @@ Bạn tự viết backend, bắt đầu từ template `fomoxa-backend`. Template
 
 > **Kết quả:** client Unity đăng nhập vào backend của bạn, nhận vé kết nối cho một phòng, rồi kết nối tới pod đang giữ phòng đó.
 
-## Cần có trước
+## Cần có trước <a href="#prerequisites" id="prerequisites"></a>
 
 - .NET 8 SDK trên máy build backend.
 - Một `fomoxa-directory` đang chạy, địa chỉ của nó, và khoá của vai `backend` trên directory.
 - Các pod đăng ký với directory qua `DirectoryPod` và nghe bằng [UDP mã hóa](../connections/transports/encrypted-udp.md). README của `com.fomoxa.rpc` mô tả phía pod ở mục "Running as a pod".
 - Một project Unity có `com.fomoxa.networking` và `com.fomoxa.rpc`.
 
-## Bạn sẽ dựng gì
+## Bạn sẽ dựng gì <a href="#what-you-will-build" id="what-you-will-build"></a>
 
 ```mermaid
 sequenceDiagram
@@ -31,7 +31,7 @@ sequenceDiagram
 
 Backend có hai loại cổng. Người chơi tới các cổng công khai, một cổng TCP và một cổng WebSocket, và đăng nhập bằng `Players.Login`. Pod tới cổng nội bộ và đăng nhập bằng `Pods.Login`, mang khoá của pod. `TransferPlayer` chỉ có ở cổng nội bộ, nên người chơi đã đăng nhập không xin được vé tới phòng của người khác.
 
-## 1. Tạo backend
+## 1. Tạo backend <a href="#1-create-the-backend" id="1-create-the-backend"></a>
 
 Chạy các lệnh sau trong terminal, ở thư mục bạn muốn đặt backend:
 
@@ -55,7 +55,7 @@ dotnet build
 
 **Kiểm tra:** build thành công. Build chạy `fomoxac generate` trước, và `Generated/` giữ nguyên cho tới khi bạn đổi một model. Trên macOS không có `fomoxac` đi kèm, nên build in một thông báo và dùng thư mục `Generated/` đã commit.
 
-## 2. Trỏ backend tới directory
+## 2. Trỏ backend tới directory <a href="#2-point-it-at-the-directory" id="2-point-it-at-the-directory"></a>
 
 Mở `MyGame.Backend/appsettings.json`:
 
@@ -103,7 +103,7 @@ backend: players on tcp 0.0.0.0:9600, websocket 0.0.0.0:9601; pods on tcp 0.0.0.
 
 Cấu hình sai thì backend in lý do, ví dụ `backend: Directory:Key: the environment variable BACKEND_KEY is not set`, và process thoát với mã 1. Backend nối tới directory ở lời gọi `JoinRoom` đầu tiên, không phải lúc khởi động, nên địa chỉ hoặc khoá directory sai hiện ra thành lỗi của lời gọi đó.
 
-## 3. Viết phần đăng nhập
+## 3. Viết phần đăng nhập <a href="#3-write-the-login" id="3-write-the-login"></a>
 
 `MyGame.Backend/Players.cs` chứa phần đăng nhập. Template nhận mọi tên người chơi khác rỗng và không kiểm gì khác:
 
@@ -123,7 +123,7 @@ public (Identity Identity, PlayerWelcome Response) Authenticate(CallContext cont
 
 `PlayerLogin` có field `Secret` kiểu `bytes` cho những gì phép kiểm của bạn cần, và bạn đổi được model này. Giá trị đầu của danh tính là tên mà `JoinRoom` gửi cho directory. Tên đó tới [authenticator](../connections/authentication.md) của pod trong `context.ConnectionData`, dạng byte UTF-8.
 
-## 4. Dùng chung model với project Unity
+## 4. Dùng chung model với project Unity <a href="#4-share-the-models-with-the-unity-project" id="4-share-the-models-with-the-unity-project"></a>
 
 Client và backend phải khai cùng các model. Chép các tệp sau vào project Unity:
 
@@ -136,7 +136,7 @@ Unity chạy `fomoxac` và source generator của fRPC; generator sinh `PlayersC
 
 **Kiểm tra:** Unity biên dịch không lỗi, và `LobbyClient` dùng được trong script của bạn.
 
-## 5. Xin phòng từ client
+## 5. Xin phòng từ client <a href="#5-ask-for-a-room-from-the-client" id="5-ask-for-a-room-from-the-client"></a>
 
 Client nói chuyện với backend qua một component transport khác với transport của `NetworkManager`. Thêm một `TcpNetworkTransport` thứ hai vào một GameObject khác cho bản build native, hoặc một `WebSocketNetworkTransport` cho WebGL, và không gán nó cho `NetworkManager`. Cấu hình của nó, như Use Tls, áp cho kết nối tới backend.
 
@@ -241,7 +241,7 @@ Vé còn mang `WebSocketUrl`, có giá trị khi directory đặt `public_websoc
 
 **Kiểm tra:** gọi `Join("ana", "arena:1")` khi có một pod cùng phiên bản đã đăng ký. Client tới `Started` trên pod, và authenticator của pod thấy `ana` trong `context.ConnectionData`. Hai người chơi vào cùng một khoá phòng nhận vé cho cùng một pod.
 
-## 6. Chuyển người chơi từ pod
+## 6. Chuyển người chơi từ pod <a href="#6-move-a-player-from-a-pod" id="6-move-a-player-from-a-pod"></a>
 
 Khi game chuyển một người chơi sang phòng khác, pod xin backend vé kết nối ở cổng nội bộ. Pod mở kết nối riêng, như ở bước 5, với khoá pod và registry của pod:
 
@@ -268,7 +268,7 @@ Khi `ServerManager.ArrivedOverWebSocket(peerId)` trả true, người chơi đi 
 
 **Kiểm tra:** người chơi dừng trên pod cũ với `StopReason.Transferred` và tới `Started` trên pod giữ `arena:2`.
 
-## 7. Triển khai
+## 7. Triển khai <a href="#7-deploy" id="7-deploy"></a>
 
 Build image từ thư mục backend:
 
@@ -294,7 +294,7 @@ dotnet /app/health/fomoxa-rpc-health.dll 127.0.0.1:9600
 
 Lệnh in `SERVING` và thoát với mã 0 khi backend trả lời. Backend dừng gọn khi nhận SIGTERM.
 
-## Kiểm tra kết quả
+## Kiểm tra kết quả <a href="#verify-the-result" id="verify-the-result"></a>
 
 - [ ] `dotnet build` thành công và `Generated/` không đổi.
 - [ ] Backend in các cổng và địa chỉ directory lúc khởi động.
@@ -303,7 +303,7 @@ Lệnh in `SERVING` và thoát với mã 0 khi backend trả lời. Backend dừ
 - [ ] Client của phiên bản không pod nào chạy nhận `NoRoomForVersion`.
 - [ ] Từ ngoài cụm không tới được cổng 9602.
 
-## Lỗi thường gặp
+## Lỗi thường gặp <a href="#common-mistakes" id="common-mistakes"></a>
 
 - **Mọi `JoinRoom` lỗi `UNAVAILABLE`:** địa chỉ directory sai, directory không chạy, hoặc `Directory:Key` không phải khoá `backend` của directory. Lời của status nói rõ trường hợp nào.
 - **Backend thoát lúc khởi động với "needs exactly one of File and Env":** một biến thêm `Env` trong khi `appsettings.json` vẫn khai `File`. Xoá `Fomoxa__Directory__Key__File` như ở bước 2.
@@ -311,7 +311,7 @@ Lệnh in `SERVING` và thoát với mã 0 khi backend trả lời. Backend dừ
 - **Health check lỗi dù backend đang chạy:** cổng 9600 đã tắt hoặc đổi, còn Dockerfile vẫn hỏi cổng đó.
 - **`TransferPlayer` của pod bị từ chối:** pod gọi cổng công khai, nơi không có `TransferPlayer`, hoặc khoá của pod không phải `Pods:Key`.
 
-## Bước tiếp theo
+## Bước tiếp theo <a href="#next-steps" id="next-steps"></a>
 
 - [UDP mã hóa](../connections/transports/encrypted-udp.md): vé kết nối trên pod và trong authenticator của nó.
 - [Chuyển server](../connections/transfer.md): vé chuyển đã ký giữa các pod.
