@@ -66,7 +66,7 @@ Pod nhận khoá vé của mình từ directory khi đăng ký, và dùng nó đ
 |---|---|
 | Directory và gateway | Build cả hai từ [fomoxa/gateway](https://github.com/fomoxa/gateway) ở tag `0.2.0` bằng `cargo build --release -p fomoxa-directory -p fomoxa-gateway`. Binary nằm ở `target/release/`. README của repo mô tả cấu hình của chúng. |
 | Backend | `dotnet run`, hoặc `Dockerfile` mà template tạo ra |
-| Pod | Bản build server của game, là Unity player hoặc [console server](../console-server/overview.md) |
+| Pod | Bản build server của game, là Unity player hoặc [console server](../console-server/overview.md); trên Kubernetes có thể chạy thành fleet của Agones, xem [Agones](agones.md) |
 
 Các kết nối cần thông:
 

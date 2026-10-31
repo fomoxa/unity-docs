@@ -86,6 +86,7 @@
 * [Đưa server lên môi trường thật](deploy/deployment.md)
 * [Backend của game](deploy/backend.md)
 * [Cụm server](deploy/cluster.md)
+* [Agones](deploy/agones.md)
 * [WebGL](deploy/webgl.md)
 
 ## Nâng cao

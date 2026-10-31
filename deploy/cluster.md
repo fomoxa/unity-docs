@@ -66,7 +66,7 @@ A pod gets its ticket key from the directory when it registers, and uses it to o
 |---|---|
 | Directory and gateway | Build both from [fomoxa/gateway](https://github.com/fomoxa/gateway) at tag `0.2.0` with `cargo build --release -p fomoxa-directory -p fomoxa-gateway`. The binaries are in `target/release/`. The repository's README describes their settings. |
 | Backend | `dotnet run`, or the `Dockerfile` the template creates |
-| Pods | Your game's server build, a Unity player or a [console server](../console-server/overview.md) |
+| Pods | Your game's server build, a Unity player or a [console server](../console-server/overview.md); on Kubernetes, optionally as an Agones fleet, see [Agones](agones.md) |
 
 These must reach each other:
 

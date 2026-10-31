@@ -86,6 +86,7 @@
 * [Deployment](deploy/deployment.md)
 * [Game backend](deploy/backend.md)
 * [Cluster](deploy/cluster.md)
+* [Agones](deploy/agones.md)
 * [WebGL](deploy/webgl.md)
 
 ## Advanced
