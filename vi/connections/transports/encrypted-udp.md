@@ -92,7 +92,7 @@ Registry, khoá hoặc target null ném `ArgumentNullException`, khoá không đ
 
 Hạn lấy theo đồng hồ của dịch vụ cấp token, còn server so với đồng hồ của chính nó, nên hãy giữ đồng hồ của chúng khớp nhau.
 
-## Trên client
+## Trên client <a href="#on-the-client" id="on-the-client"></a>
 
 Client dùng cùng component, không có `Tokens`, và kết nối bằng vé:
 
@@ -148,7 +148,7 @@ manager.ServerManager.Transfer(peerId, "pod-7.example.com", 7777, ReadOnlyMemory
 
 Client kết nối tới server mới bằng vé đó. Vé đi tới client bên trong session cũ, nên chỉ giữ được bí mật khi server cũ cũng mã hóa. Khi vé và transport của client không khớp, client dừng với `Transferred` và `WillRetry` false, không kết nối: client mã hóa nhận lệnh chuyển không có vé, hoặc client thường nhận lệnh chuyển có vé. Sau đó nó ghi một lỗi có địa chỉ. [Chuyển server](../transfer.md) mô tả phần còn lại của trình tự.
 
-## Sau gateway
+## Sau gateway <a href="#behind-a-gateway" id="behind-a-gateway"></a>
 
 Trong một cụm Fomoxa, client có thể tới pod qua `fomoxa-gateway` thay vì kết nối thẳng. Gateway đọc id pod từ mã phiên của mỗi datagram và chuyển datagram tới pod đó, kèm một đầu 20 byte chứa địa chỉ IP và port của client. Pod gửi câu trả lời về gateway với cùng loại đầu đó, và gateway chuyển tiếp chúng tới client từ địa chỉ công khai của nó.
 
@@ -177,6 +177,8 @@ Directory trao cho client địa chỉ của gateway khi cấu hình của nó g
 
 Đầu này chỉ đi giữa gateway và pod. Datagram giữa client và gateway giữ các kích thước trong bảng dưới.
 
+Cùng pod đó cũng phục vụ client tới gateway qua WebSocket bằng [WebSocket mã hóa](encrypted-websocket.md). Đầu của các client này mang địa chỉ kết nối WebSocket và một dấu do gateway đặt, và `ServerManager.ArrivedOverWebSocket(peerId)` cho biết client nào tới bằng đường đó.
+
 ## Hành vi
 
 | | |
@@ -194,7 +196,7 @@ Server ghi nhớ mỗi lần thử trong `UsedAttempts` cho tới khi token củ
 
 ## Giới hạn nền tảng
 
-UDP mã hóa không có trong bản build WebGL. Tạo factory trong trình duyệt ném `EncryptedUdpNetworkTransport cannot run in a browser; assign a WebSocketNetworkTransport or a MultiNetworkTransport to the NetworkManager for WebGL builds`.
+UDP mã hóa không có trong bản build WebGL. Tạo factory trong trình duyệt ném `EncryptedUdpNetworkTransport cannot run in a browser; assign a WebSocketNetworkTransport or a MultiNetworkTransport to the NetworkManager for WebGL builds`. Client WebGL vào pod mã hóa qua gateway bằng [WebSocket mã hóa](encrypted-websocket.md).
 
 Với [`MultiNetworkTransport`](multi-transport.md), client kết nối qua mục đầu tiên, nên nó cần vé khi mục đó là transport mã hóa.
 

@@ -73,6 +73,7 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `EncryptedUdpNetworkTransport` | UDP encrypted with ChaCha20-Poly1305; fields Target and Behind Gateway, properties `Tokens` and `Registry`. See [encrypted UDP](../connections/transports/encrypted-udp.md) |
 | `TcpNetworkTransport` | TCP; field Use Tls, properties `UseTls` and `Tls`. See [client TLS](../connections/transports/tls.md) |
 | `WebSocketNetworkTransport` | WebSocket; native code on desktop, the browser in WebGL; property `Tls` for `wss://` URLs on desktop |
+| `EncryptedWebSocketNetworkTransport` | Client only: encrypted UDP datagrams as WebSocket messages to `fomoxa-gateway`; properties `Tls` and `Registry`. See [encrypted WebSocket](../connections/transports/encrypted-websocket.md) |
 | `MultiNetworkTransport` | Several transports, each with a port, on one server |
 
 The [transports overview](../connections/transports/README.md) explains each transport.

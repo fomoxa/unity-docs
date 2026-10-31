@@ -16,7 +16,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `NetworkAuthenticator` | Component trừu tượng | [Xác thực](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Class, interface, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../advanced/editor-integration.md) |
-| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
+| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Component | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics world, helper | [Physics API](physics.md#unity-worlds) |
 
@@ -92,7 +92,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 |---|---|---|
 | `ITransportFactory`, `ITransportConnector`, `ConnectStatus`, `ITlsRejection` | Interface, enum | [Transport tùy chỉnh](../connections/transports/custom-transport.md) |
 | `IConnectionTransportFactory`, `IConnectionData` | Interface | [Tổng quan transport](../connections/transports/README.md#how-a-transport-plugs-in) |
-| `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
+| `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `EncryptedWebSocketTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
 | `TlsSettings`, `TlsRoots`, `ITlsCertificateCheck`, `TlsCertificateCheck` | TLS phía client | [TLS phía client](../connections/transports/tls.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transport | [Loopback](../connections/transports/loopback.md) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Phân giải tên | [Tổng quan transport](../connections/transports/README.md#non-blocking-operation) |

@@ -75,6 +75,7 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `EncryptedUdpNetworkTransport` | UDP mã hóa bằng ChaCha20-Poly1305; field Target và Behind Gateway, property `Tokens` và `Registry`. Xem [UDP mã hóa](../connections/transports/encrypted-udp.md) |
 | `TcpNetworkTransport` | TCP; field Use Tls, property `UseTls` và `Tls`. Xem [TLS phía client](../connections/transports/tls.md) |
 | `WebSocketNetworkTransport` | WebSocket; code native trên desktop, trình duyệt trong WebGL; property `Tls` cho URL `wss://` trên desktop |
+| `EncryptedWebSocketNetworkTransport` | Chỉ phía client: datagram UDP mã hóa thành message WebSocket tới `fomoxa-gateway`; property `Tls` và `Registry`. Xem [WebSocket mã hóa](../connections/transports/encrypted-websocket.md) |
 | `MultiNetworkTransport` | Nhiều transport, mỗi transport một port, trên một server |
 
 [Tổng quan transport](../connections/transports/README.md) giải thích từng transport.

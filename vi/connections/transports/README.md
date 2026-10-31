@@ -6,6 +6,7 @@ Transport chuyển byte giữa client và server. Giao thức, độ tin cậy v
 |---|---|---|---|---|
 | [`UdpNetworkTransport`](udp.md) | Datagram UDP | Có | Có | Không |
 | [`EncryptedUdpNetworkTransport`](encrypted-udp.md) | Datagram UDP mã hóa bằng ChaCha20-Poly1305 | Có | Có, với vé kết nối từ dịch vụ đăng nhập của bạn | Không |
+| [`EncryptedWebSocketNetworkTransport`](encrypted-websocket.md) | Datagram UDP mã hóa thành message WebSocket, qua `fomoxa-gateway` | Không; pod chạy UDP mã hóa sau gateway | Có, với vé kết nối | Có |
 | [`TcpNetworkTransport`](tcp.md) | Stream TCP | Có | Có | Không |
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) qua TCP | Có | Có | Có |
 | [`MultiNetworkTransport`](multi-transport.md) | Nhiều transport ở trên cho một server | Có | Có, qua transport đầu tiên | Có, qua mục WebSocket |

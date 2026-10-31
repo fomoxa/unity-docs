@@ -34,6 +34,7 @@
 * [Transports](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)
   * [Encrypted UDP](connections/transports/encrypted-udp.md)
+  * [Encrypted WebSocket](connections/transports/encrypted-websocket.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
   * [Client TLS](connections/transports/tls.md)

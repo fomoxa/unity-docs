@@ -34,6 +34,7 @@
 * [Transport](connections/transports/README.md)
   * [UDP](connections/transports/udp.md)
   * [UDP mã hóa](connections/transports/encrypted-udp.md)
+  * [WebSocket mã hóa](connections/transports/encrypted-websocket.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
   * [TLS phía client](connections/transports/tls.md)

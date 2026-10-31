@@ -177,6 +177,8 @@ The directory hands clients the gateway's address when its settings name it in `
 
 The header only travels between the gateway and the pod. Datagrams between the client and the gateway keep the sizes in the table below.
 
+The same pod also serves clients that reach the gateway over WebSocket with [encrypted WebSocket](encrypted-websocket.md). Their header carries the address of their WebSocket connection and a mark that the gateway sets, and `ServerManager.ArrivedOverWebSocket(peerId)` tells you which clients came that way.
+
 ## Behavior
 
 | | |
@@ -194,7 +196,7 @@ The server remembers each attempt in `UsedAttempts` until its token expires. The
 
 ## Platform limitations
 
-Encrypted UDP is not available in WebGL builds. Creating the factory in a browser throws `EncryptedUdpNetworkTransport cannot run in a browser; assign a WebSocketNetworkTransport or a MultiNetworkTransport to the NetworkManager for WebGL builds`.
+Encrypted UDP is not available in WebGL builds. Creating the factory in a browser throws `EncryptedUdpNetworkTransport cannot run in a browser; assign a WebSocketNetworkTransport or a MultiNetworkTransport to the NetworkManager for WebGL builds`. A WebGL client reaches an encrypted pod through the gateway with [encrypted WebSocket](encrypted-websocket.md).
 
 With a [`MultiNetworkTransport`](multi-transport.md), a client connects through the first entry, so it needs a grant when that entry is encrypted.
 

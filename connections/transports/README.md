@@ -6,6 +6,7 @@ A transport moves bytes between a client and a server. The package's protocol, r
 |---|---|---|---|---|
 | [`UdpNetworkTransport`](udp.md) | UDP datagrams | Yes | Yes | No |
 | [`EncryptedUdpNetworkTransport`](encrypted-udp.md) | UDP datagrams encrypted with ChaCha20-Poly1305 | Yes | Yes, with a grant from your login service | No |
+| [`EncryptedWebSocketNetworkTransport`](encrypted-websocket.md) | Encrypted UDP datagrams as WebSocket messages, through `fomoxa-gateway` | No; the pod runs encrypted UDP behind the gateway | Yes, with a grant | Yes |
 | [`TcpNetworkTransport`](tcp.md) | TCP stream | Yes | Yes | No |
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) over TCP | Yes | Yes | Yes |
 | [`MultiNetworkTransport`](multi-transport.md) | Several of the above on one server | Yes | Yes, through its first transport | Yes, through its WebSocket entry |

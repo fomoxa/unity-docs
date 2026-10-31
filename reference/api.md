@@ -16,7 +16,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `NetworkAuthenticator` | Abstract component | [Authentication](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Classes, interface, extension methods | [NetworkManager reference](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Generated asset types | [Editor integration](../advanced/editor-integration.md) |
-| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
+| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Components | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics worlds, helper | [Physics API](physics.md#unity-worlds) |
 
@@ -92,7 +92,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 |---|---|---|
 | `ITransportFactory`, `ITransportConnector`, `ConnectStatus`, `ITlsRejection` | Interfaces, enum | [Custom transport](../connections/transports/custom-transport.md) |
 | `IConnectionTransportFactory`, `IConnectionData` | Interfaces | [Transports overview](../connections/transports/README.md#how-a-transport-plugs-in) |
-| `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
+| `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `EncryptedWebSocketTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
 | `TlsSettings`, `TlsRoots`, `ITlsCertificateCheck`, `TlsCertificateCheck` | Client TLS | [Client TLS](../connections/transports/tls.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transports | [Loopback](../connections/transports/loopback.md) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Name resolution | [Transports overview](../connections/transports/README.md#non-blocking-operation) |
