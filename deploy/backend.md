@@ -228,6 +228,8 @@ public sealed class RoomJoiner : MonoBehaviour
 
 This code was checked against the package source; it has not been run in a game yet.
 
+The ticket also carries `WebSocketUrl`, filled when the directory sets `public_websocket` for a gateway that takes WebSocket clients. A WebGL build on [encrypted WebSocket](../connections/transports/encrypted-websocket.md) connects with `StartConnection(ticket.WebSocketUrl, 0, ticket.Connection)` instead.
+
 `JoinRoom` fails in these ways:
 
 | Status | When |
@@ -259,6 +261,8 @@ RoomTicket ticket = await new PodGateClient(gate).TransferPlayerAsync(new Transf
 });
 manager.ServerManager.Transfer(peerId, ticket.Address, ticket.Port, ReadOnlyMemory<byte>.Empty, ticket.Connection);
 ```
+
+When `ServerManager.ArrivedOverWebSocket(peerId)` is true, the player came through the gateway over WebSocket; pass `ticket.WebSocketUrl` and port 0 to `Transfer` instead of the address and port.
 
 `podKey` is the key you set as `Pods:Key`, read from your secret store on the pod. Like the client, the pod ticks `gate` every frame. `Transfer` with a grant is described under [server transfers](../connections/transports/encrypted-udp.md#server-transfers); pass a signed ticket instead of `ReadOnlyMemory<byte>.Empty` when the new pod needs data from the old one, as [server transfer](../connections/transfer.md) explains. `TransferPlayer` fails like `JoinRoom`.
 

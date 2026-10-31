@@ -228,6 +228,8 @@ public sealed class RoomJoiner : MonoBehaviour
 
 Code này đã được đối chiếu với mã nguồn của package; chưa chạy trong một game.
 
+Vé còn mang `WebSocketUrl`, có giá trị khi directory đặt `public_websocket` cho một gateway nhận client WebSocket. Bản build WebGL chạy [WebSocket mã hóa](../connections/transports/encrypted-websocket.md) thì kết nối bằng `StartConnection(ticket.WebSocketUrl, 0, ticket.Connection)`.
+
 `JoinRoom` lỗi theo các cách sau:
 
 | Status | Khi nào |
@@ -259,6 +261,8 @@ RoomTicket ticket = await new PodGateClient(gate).TransferPlayerAsync(new Transf
 });
 manager.ServerManager.Transfer(peerId, ticket.Address, ticket.Port, ReadOnlyMemory<byte>.Empty, ticket.Connection);
 ```
+
+Khi `ServerManager.ArrivedOverWebSocket(peerId)` trả true, người chơi đi qua gateway bằng WebSocket; truyền `ticket.WebSocketUrl` và port 0 cho `Transfer` thay cho địa chỉ và port.
 
 `podKey` là khoá bạn đặt ở `Pods:Key`, pod đọc từ kho bí mật của bạn. Như client, pod tick `gate` mỗi frame. `Transfer` kèm vé kết nối được mô tả ở [chuyển server](../connections/transports/encrypted-udp.md#server-transfers); truyền vé chuyển đã ký thay cho `ReadOnlyMemory<byte>.Empty` khi pod mới cần dữ liệu từ pod cũ, như [chuyển server](../connections/transfer.md) giải thích. `TransferPlayer` lỗi giống `JoinRoom`.
 
