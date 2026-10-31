@@ -10,7 +10,7 @@ Trang này mô tả cấu trúc của package và cách chạy test của nó t�
 | `Runtime/Core/SystemModels` | Các model của chính package, được copy vào project để sinh code |
 | `Runtime/Core/Generators` | Source generator cho RPC, build thành DLL |
 | `Runtime/Unity` | Tầng 2, assembly `Fomoxa.Unity`, và `FomoxaWebSocket.jslib` |
-| `Runtime/Plugins` | `Fomoxa.Net.dll` và `Fomoxa.Attributes.dll` |
+| `Runtime/Plugins` | `Fomoxa.Net.dll`, `Fomoxa.Net.WebSockets.dll`, `Fomoxa.Attributes.dll` và `BouncyCastle.Cryptography.dll` |
 | `Editor` | Assembly `Fomoxa.Unity.Editor`: sinh code, gán id, scene file, kiểm tra khi build |
 | `Standalone~` | Mã nguồn của [backend console](../console-server/overview.md), Unity không import |
 | `Tests/Core`, `Tests/Unity`, `Tests/Fixtures` | Các assembly test, chỉ được biên dịch khi project bao gồm test của package |

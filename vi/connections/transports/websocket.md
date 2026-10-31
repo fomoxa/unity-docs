@@ -1,6 +1,6 @@
 # WebSocket
 
-`WebSocketNetworkTransport` mang frame Fomoxa dưới dạng message WebSocket nhị phân, và là transport mà client WebGL cần. Với server và client desktop, package tự hiện thực giao thức WebSocket (RFC 6455), còn bản build WebGL dùng object `WebSocket` của trình duyệt.
+`WebSocketNetworkTransport` mang frame Fomoxa dưới dạng message WebSocket nhị phân, và là transport mà client WebGL cần. Server và client desktop dùng `Fomoxa.Net.WebSockets`, thư viện đi kèm package, hiện thực giao thức WebSocket (RFC 6455). Bản build WebGL dùng object `WebSocket` của trình duyệt.
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 

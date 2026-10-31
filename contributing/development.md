@@ -10,7 +10,7 @@ This page describes the layout of the package and how to run its tests from a Un
 | `Runtime/Core/SystemModels` | The package's own models, copied into projects for code generation |
 | `Runtime/Core/Generators` | The RPC source generator, built as a DLL |
 | `Runtime/Unity` | Layer 2, assembly `Fomoxa.Unity`, and `FomoxaWebSocket.jslib` |
-| `Runtime/Plugins` | `Fomoxa.Net.dll` and `Fomoxa.Attributes.dll` |
+| `Runtime/Plugins` | `Fomoxa.Net.dll`, `Fomoxa.Net.WebSockets.dll`, `Fomoxa.Attributes.dll` and `BouncyCastle.Cryptography.dll` |
 | `Editor` | Assembly `Fomoxa.Unity.Editor`: code generation, ids, scene files, build checks |
 | `Standalone~` | The source of the [console backend](../console-server/overview.md), which Unity does not import |
 | `Tests/Core`, `Tests/Unity`, `Tests/Fixtures` | Test assemblies, compiled only when the project includes the package's tests |

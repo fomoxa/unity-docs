@@ -1,6 +1,6 @@
 # WebSocket
 
-`WebSocketNetworkTransport` carries Fomoxa frames as binary WebSocket messages, and it is the transport a WebGL client needs. For servers and desktop clients the package implements the WebSocket protocol (RFC 6455) itself, while WebGL builds use the browser's `WebSocket` object.
+`WebSocketNetworkTransport` carries Fomoxa frames as binary WebSocket messages, and it is the transport a WebGL client needs. Servers and desktop clients use `Fomoxa.Net.WebSockets`, a library bundled with the package that implements the WebSocket protocol (RFC 6455). WebGL builds use the browser's `WebSocket` object.
 
 ## Basic usage
 

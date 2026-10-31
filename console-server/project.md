@@ -52,6 +52,10 @@ A folder whose name ends in `~` is ignored by Unity, so `Server~` inside the Uni
     <Reference Include="Fomoxa.Net">
       <HintPath>$(Core)/Runtime/Plugins/Fomoxa.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Fomoxa.Net.WebSockets">
+      <HintPath>$(Core)/Runtime/Plugins/Fomoxa.Net.WebSockets.dll</HintPath>
+    </Reference>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
   </ItemGroup>
 
 </Project>
@@ -64,7 +68,8 @@ A folder whose name ends in `~` is ignored by Unity, so `Server~` inside the Uni
 | `Runtime/Core/**` and `Standalone~/**` | Layer 1 and the console backend, as source |
 | Models and Generated | Your models and the generated codecs, adapters, `FomoxaPrefabs` and `FomoxaScenes` constants |
 | `*.fomoxascene` | The scene files, copied to a `Scenes` folder next to the executable |
-| `Fomoxa.Attributes`, `Fomoxa.Net` | The bundled DLLs, referenced from the package |
+| `Fomoxa.Attributes`, `Fomoxa.Net`, `Fomoxa.Net.WebSockets` | The bundled DLLs, referenced from the package |
+| `BouncyCastle.Cryptography` | The NuGet package of the BouncyCastle DLL in `Runtime/Plugins`, at the same version; encrypted UDP and client TLS use it |
 
 The generated `FomoxaUnityRegistration.cs` compiles to nothing outside Unity, so the console program calls `FomoxaAdapters.RegisterAll` itself, as the next page shows. Models that use Unity types such as `UnityEngine.Vector3`, and their codecs in `UnityCodecs/`, cannot compile without Unity. Give the models that the console server needs plain fields instead.
 

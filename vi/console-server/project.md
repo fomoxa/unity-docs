@@ -52,6 +52,10 @@ Unity bỏ qua thư mục có tên kết thúc bằng `~`, nên `Server~` bên t
     <Reference Include="Fomoxa.Net">
       <HintPath>$(Core)/Runtime/Plugins/Fomoxa.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Fomoxa.Net.WebSockets">
+      <HintPath>$(Core)/Runtime/Plugins/Fomoxa.Net.WebSockets.dll</HintPath>
+    </Reference>
+    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
   </ItemGroup>
 
 </Project>
@@ -64,7 +68,8 @@ Unity bỏ qua thư mục có tên kết thúc bằng `~`, nên `Server~` bên t
 | `Runtime/Core/**` và `Standalone~/**` | Tầng 1 và backend console, dưới dạng mã nguồn |
 | Models và Generated | Model của bạn và codec, adapter, hằng số `FomoxaPrefabs` và `FomoxaScenes` được sinh ra |
 | `*.fomoxascene` | Các scene file, copy vào thư mục `Scenes` cạnh file chạy |
-| `Fomoxa.Attributes`, `Fomoxa.Net` | Các DLL đi kèm, tham chiếu từ package |
+| `Fomoxa.Attributes`, `Fomoxa.Net`, `Fomoxa.Net.WebSockets` | Các DLL đi kèm, tham chiếu từ package |
+| `BouncyCastle.Cryptography` | Gói NuGet của DLL BouncyCastle trong `Runtime/Plugins`, cùng phiên bản; UDP mã hoá và TLS phía client dùng nó |
 
 File `FomoxaUnityRegistration.cs` được sinh ra sẽ biên dịch thành rỗng bên ngoài Unity, nên chương trình console tự gọi `FomoxaAdapters.RegisterAll`, như trang sau cho thấy. Model dùng type của Unity như `UnityEngine.Vector3`, cùng codec của chúng trong `UnityCodecs/`, không biên dịch được khi không có Unity. Hãy cho các model mà server console cần dùng field thông thường.
 
