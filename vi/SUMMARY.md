@@ -82,6 +82,7 @@
 
 * [Dedicated server](deploy/dedicated-server.md)
 * [Đưa server lên môi trường thật](deploy/deployment.md)
+* [Backend của game](deploy/backend.md)
 * [WebGL](deploy/webgl.md)
 
 ## Nâng cao

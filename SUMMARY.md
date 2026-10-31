@@ -82,6 +82,7 @@
 
 * [Dedicated server](deploy/dedicated-server.md)
 * [Deployment](deploy/deployment.md)
+* [Game backend](deploy/backend.md)
 * [WebGL](deploy/webgl.md)
 
 ## Advanced
