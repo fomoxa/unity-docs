@@ -148,6 +148,35 @@ manager.ServerManager.Transfer(peerId, "pod-7.example.com", 7777, ReadOnlyMemory
 
 Client kết nối tới server mới bằng vé đó. Vé đi tới client bên trong session cũ, nên chỉ giữ được bí mật khi server cũ cũng mã hóa. Khi vé và transport của client không khớp, client dừng với `Transferred` và `WillRetry` false, không kết nối: client mã hóa nhận lệnh chuyển không có vé, hoặc client thường nhận lệnh chuyển có vé. Sau đó nó ghi một lỗi có địa chỉ. [Chuyển server](../transfer.md) mô tả phần còn lại của trình tự.
 
+## Sau gateway
+
+Trong một cụm Fomoxa, client có thể tới pod qua `fomoxa-gateway` thay vì kết nối thẳng. Gateway đọc id pod từ mã phiên của mỗi datagram và chuyển datagram tới pod đó, kèm một đầu 20 byte chứa địa chỉ IP và port của client. Pod gửi câu trả lời về gateway với cùng loại đầu đó, và gateway chuyển tiếp chúng tới client từ địa chỉ công khai của nó.
+
+Bật Behind Gateway trên `EncryptedUdpNetworkTransport` của pod, hoặc đặt `BehindGateway` trong code trước `StartConnection`:
+
+```csharp
+transport.BehindGateway = true;
+```
+
+Console server truyền cờ này vào factory:
+
+```csharp
+new EncryptedUdpTransportFactory(registry, tokens, target, behindGateway: true)
+```
+
+| Thành viên | Mục đích |
+|---|---|
+| Behind Gateway (Inspector), `bool BehindGateway` | Server chỉ nhận datagram mang đầu của gateway, và trả lời qua gateway. Mặc định tắt. |
+| `EncryptedUdpTransportFactory(FomoxaRegistry registry, ConnectTokens tokens, string target, bool behindGateway)` | Factory phía server với cùng cờ đó; constructor ba tham số để cờ tắt |
+
+Khi bật cờ, server bỏ mọi datagram không có đầu hợp lệ, nên client gửi thẳng tới địa chỉ riêng của pod không mở được session. Client không đổi gì: nó kết nối tới địa chỉ của gateway bằng vé của mình và không bao giờ thấy đầu này.
+
+Server gửi mỗi câu trả lời tới gateway đã mang datagram mở được gần nhất của session đó, và đầu ghi địa chỉ client lấy từ datagram ấy. Đầu giả mạo trên một datagram không mở được không đổi địa chỉ nào. Gateway không giữ trạng thái theo session, nên câu trả lời vẫn tới nơi khi load balancer đưa các datagram tiếp theo của client sang gateway khác.
+
+Directory trao cho client địa chỉ của gateway khi cấu hình của nó ghi địa chỉ đó ở `public_address`; pod vẫn đăng ký địa chỉ riêng của mình, là địa chỉ gateway dùng để tới pod. README của `com.fomoxa.rpc` mô tả phía pod ở mục "Behind a gateway".
+
+Đầu này chỉ đi giữa gateway và pod. Datagram giữa client và gateway giữ các kích thước trong bảng dưới.
+
 ## Hành vi
 
 | | |

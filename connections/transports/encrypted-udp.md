@@ -148,6 +148,35 @@ manager.ServerManager.Transfer(peerId, "pod-7.example.com", 7777, ReadOnlyMemory
 
 The client connects to the new server with that grant. It travels to the client inside the old session, so it stays secret only when the old server is encrypted as well. The client stops with `Transferred` and `WillRetry` false, without connecting, when the grant and its transport do not match: an encrypted client that receives a transfer without a grant, or a plain client that receives one. It then logs an error that names the address. [Server transfer](../transfer.md) describes the rest of the sequence.
 
+## Behind a gateway
+
+In a Fomoxa cluster, clients can reach the pods through `fomoxa-gateway` instead of connecting to them directly. The gateway reads the pod id from the session id of each datagram and forwards the datagram to that pod. It adds a 20-byte header that holds the client's IP address and port. The pod sends its replies back to the gateway with the same header, and the gateway passes them on to the client from its public address.
+
+Tick Behind Gateway on the pod's `EncryptedUdpNetworkTransport`, or set `BehindGateway` from code before `StartConnection`:
+
+```csharp
+transport.BehindGateway = true;
+```
+
+A console server passes the flag to the factory:
+
+```csharp
+new EncryptedUdpTransportFactory(registry, tokens, target, behindGateway: true)
+```
+
+| Member | Purpose |
+|---|---|
+| Behind Gateway (Inspector), `bool BehindGateway` | The server only accepts datagrams that carry the gateway's header, and replies through the gateway. Off by default. |
+| `EncryptedUdpTransportFactory(FomoxaRegistry registry, ConnectTokens tokens, string target, bool behindGateway)` | The server factory with the same flag; the three-argument constructor leaves it off |
+
+With the flag on, the server drops every datagram without a valid header, so a client that sends to the pod's own address gets no session. Clients are unchanged: they connect to the gateway's address with their grant and never see the header.
+
+The server sends each reply to the gateway that carried the latest datagram of that session that decrypted, and the header names the client address from that datagram. A forged header on a datagram that fails to decrypt changes neither address. The gateway keeps no state per session, so a reply also gets through when a load balancer sends the client's next datagrams to another gateway.
+
+The directory hands clients the gateway's address when its settings name it in `public_address`; the pod still registers its own address, which the gateway uses to reach it. The `com.fomoxa.rpc` README covers the pod side under "Behind a gateway".
+
+The header only travels between the gateway and the pod. Datagrams between the client and the gateway keep the sizes in the table below.
+
 ## Behavior
 
 | | |
