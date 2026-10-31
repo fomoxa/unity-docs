@@ -151,6 +151,7 @@ using Fomoxa.Networking.Transports;
 using Fomoxa.Rpc;
 using Fomoxa.Rpc.Net;
 using Fomoxa.Unity;
+using Generated;
 using MyGame.Backend;
 using MyGame.Backend.Models;
 using UnityEngine;
@@ -224,9 +225,9 @@ public sealed class RoomJoiner : MonoBehaviour
 }
 ```
 
-`NetSchema` là lớp mà `fomoxac` sinh vào Generated Folder của bạn. Kết nối chạy trên main thread: `Update` poll connector và tick kết nối, và mọi `await` ở trên chạy tiếp bên trong lần tick đó. Kết nối đăng nhập một lần, khi mở, nên các lời gọi sau trên nó không cần credential. Đăng nhập bị từ chối làm `connection.Opened` lỗi với `ConnectException` có `Status` là `UNAUTHENTICATED`.
+`NetSchema` là lớp mà `fomoxac` sinh vào Generated Folder của bạn, trong namespace `Generated`. Kết nối chạy trên main thread: `Update` poll connector và tick kết nối, và mọi `await` ở trên chạy tiếp bên trong lần tick đó. Kết nối đăng nhập một lần, khi mở, nên các lời gọi sau trên nó không cần credential. Đăng nhập bị từ chối làm `connection.Opened` lỗi với `ConnectException` có `Status` là `UNAUTHENTICATED`.
 
-Code này đã được đối chiếu với mã nguồn của package; chưa chạy trong một game.
+Code này đã chạy ngoài Unity với backend, directory và pod thật, trong đó `TcpTransportFactory` thay cho component transport và một vòng lặp thay cho `Update`; người chơi tới được pod của phòng, và người chơi gửi phiên bản không pod nào chạy rơi vào nhánh `NoRoomForVersion`.
 
 Vé còn mang `WebSocketUrl`, có giá trị khi directory đặt `public_websocket` cho một gateway nhận client WebSocket. Bản build WebGL chạy [WebSocket mã hóa](../connections/transports/encrypted-websocket.md) thì kết nối bằng `StartConnection(ticket.WebSocketUrl, 0, ticket.Connection)`.
 

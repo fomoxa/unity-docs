@@ -151,6 +151,7 @@ using Fomoxa.Networking.Transports;
 using Fomoxa.Rpc;
 using Fomoxa.Rpc.Net;
 using Fomoxa.Unity;
+using Generated;
 using MyGame.Backend;
 using MyGame.Backend.Models;
 using UnityEngine;
@@ -224,9 +225,9 @@ public sealed class RoomJoiner : MonoBehaviour
 }
 ```
 
-`NetSchema` is the class that `fomoxac` writes into your Generated Folder. The connection runs on the main thread: `Update` polls the connector and ticks the connection, and every `await` above resumes inside that tick. The connection logs in once, when it opens, so later calls on it need no credential. A refused login fails `connection.Opened` with a `ConnectException` whose `Status` is `UNAUTHENTICATED`.
+`NetSchema` is the class that `fomoxac` writes into your Generated Folder, in the namespace `Generated`. The connection runs on the main thread: `Update` polls the connector and ticks the connection, and every `await` above resumes inside that tick. The connection logs in once, when it opens, so later calls on it need no credential. A refused login fails `connection.Opened` with a `ConnectException` whose `Status` is `UNAUTHENTICATED`.
 
-This code was checked against the package source; it has not been run in a game yet.
+This code has run outside Unity against a real backend, directory and pod, with `TcpTransportFactory` in place of the transport component and a loop in place of `Update`. The player reached the pod of its room, and a player that sent a version no pod runs took the `NoRoomForVersion` branch.
 
 The ticket also carries `WebSocketUrl`, filled when the directory sets `public_websocket` for a gateway that takes WebSocket clients. A WebGL build on [encrypted WebSocket](../connections/transports/encrypted-websocket.md) connects with `StartConnection(ticket.WebSocketUrl, 0, ticket.Connection)` instead.
 
