@@ -7,16 +7,26 @@ Rapier cho cùng một kết quả với cùng một world và cùng một chu�
 - Chỉ thay đổi body trong callback prediction (`apply`, `restore`) và tick event, theo một thứ tự cố định, từ input và số tick. Lực, xung lực và việc ghi state là thao tác trên world, và thứ tự khác cho kết quả khác.
 - Không để phép toán thư viện đi vào các giá trị tới được mô phỏng. `Mathf.Sin`, `MathF.Cos` và các hàm thư viện khác có thể khác nhau ở bit cuối giữa Mono, IL2CPP và .NET. Hãy dùng bảng tra, phép toán số nguyên hoặc giá trị đến từ input.
 - Không đọc thời gian, giá trị phụ thuộc frame hay bộ sinh số ngẫu nhiên seed từ đồng hồ trong code mô phỏng. Bộ sinh seed từ một giá trị server gửi, với phép toán của riêng nó, cho cùng một dãy số ở mọi nơi.
-- Dựng geometry lúc chạy theo cùng thứ tự trên mọi peer. Số thứ tự của `AddStatic`, `AddBody` và thứ tự body trong world đi theo thứ tự các lời gọi.
+- Dựng geometry lúc chạy theo cùng thứ tự trên mọi peer. Số thứ tự của `AddStatic`, `AddBody` và thứ tự body trong world đi theo thứ tự các lời gọi, joint và effector tạo từ code cũng vậy.
 
 `System.Random` không được bảo đảm cho cùng một dãy số dưới Mono và .NET, nên nó không hợp cho một level mà client Unity và server console cùng dựng từ một seed.
 
 ## Kiểm tra một lần chạy <a href="#checking-a-run" id="checking-a-run"></a>
 
-`RapierWorld.StateHash` và `RapierWorld2D.StateHash` băm toàn bộ state của một world. So hash của cùng một tick trên hai máy, hoặc trên server và một client, cho biết hai mô phỏng có còn giống nhau không. Bản thân package không gửi hay so hash.
+`RapierWorld.StateHash` và `RapierWorld2D.StateHash` băm id, loại, vị trí, góc xoay và vận tốc của mọi body trong một world. Joint, effector và tiếp xúc không được băm trực tiếp, nhưng chúng đổi hash qua các body mà chúng làm di chuyển. So hash của cùng một tick trên hai máy, hoặc trên server và một client, cho biết hai mô phỏng có còn giống nhau không. Bản thân package không gửi hay so hash.
 
 ## Những gì vẫn gần đúng <a href="#what-is-still-approximate" id="what-is-still-approximate"></a>
 
 Prediction vẫn sửa khi input của server khác với dự đoán của client, ví dụ khi input của người chơi khác đến muộn hoặc một body ở xa di chuyển khác với proxy đã hiển thị. Tính tất định loại bỏ những lần sửa do physics engine gây ra. Những lần sửa do client thiếu thông tin vẫn còn.
 
-Bản build player IL2CPP chưa được kiểm tra tính tất định so với Mono và .NET.
+## Nền tảng đã kiểm <a href="#checked-platforms" id="checked-platforms"></a>
+
+Thư viện native chạy một kịch bản cố định, gồm body, truy vấn, lực, tiếp xúc, joint, di chuyển nhân vật và effector, và hash của nó được so với một danh sách chuẩn trên mọi nền tảng mà workflow build chạy được: Windows, Linux và macOS trên x64 và arm64, iOS simulator, Android trên emulator x86-64, và Web trên Node. Một project player Unity chạy cùng kịch bản qua API C#, và cho cùng hash trong các player sau:
+
+| Player | Scripting backend |
+|---|---|
+| Windows x64 | Mono và IL2CPP |
+| Web | IL2CPP, trong Microsoft Edge |
+| Android `arm64-v8a` và `armeabi-v7a` | IL2CPP, trên điện thoại |
+
+Player trên Linux, macOS và iOS chưa được chạy với phép kiểm này. Player Windows arm64 mới chỉ được build.

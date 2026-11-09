@@ -41,10 +41,11 @@ Cả hai interface đều kế thừa `IPhysicsSimulation`. Chúng tách riêng 
 | Đọc | `GetBody` trả về `BodyState`, `GetKind`, `GetMass` | `GetBody` trả về `BodyState2D`, `GetKind`, `GetMass` |
 | Ghi | `SetBody(BodyHandle, in BodyState)` | `SetBody(BodyHandle, in BodyState2D)` |
 | Loại khỏi snapshot | `SetRewindable(BodyHandle, bool)` | như trên |
-| Lực | `AddForce`, `AddImpulse` với `Vector3` | với `Vector2` |
-| Truy vấn | `Raycast(origin, direction, maxDistance, out RayHit)`, `Overlap(center, radius, BodyHandle[])` | `Raycast(..., out RayHit2D)`, `Overlap(Vector2, float, BodyHandle[])` |
+| Lực | `AddForce`, `AddImpulse`, `AddTorque`, `AddTorqueImpulse`, `AddForceAtPoint`, `AddImpulseAtPoint` với `Vector3` | với `Vector2`, và mô-men kiểu `float` |
+| Truy vấn | `Raycast`, `ShapeCast` và `Overlap` với `QueryFilter` | như vậy, với `RayHit2D` |
+| Điểm tiếp xúc | `GetContactPoints(body, other, filter, List<ContactPointInfo>)` | với `ContactPointInfo2D` |
 
-Các interface dùng một tập nhỏ type dữ liệu. `BodyHandle` là một id mờ có `IsValid` là false với giá trị mặc định. `BodyKind` là một trong `Dynamic`, `Kinematic` và `Static`. Các hình dạng là `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) và `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). Một `ColliderDesc` hoặc `ColliderDesc2D` đặt một hình dạng kèm `ColliderMaterial`, layer và cờ trigger, còn `BodyDesc` và `BodyDesc2D` mô tả một body mới theo loại, các collider, vị trí, góc xoay, khối lượng và một `BodyMotion` hoặc `BodyMotion2D` (khóa trục, trọng lực, damping). Các type còn lại là `BodyState` và `BodyState2D`, và `RayHit` và `RayHit2D`. [Tham chiếu physics API](../reference/physics.md) liệt kê member của chúng.
+Các interface dùng một tập nhỏ type dữ liệu. `BodyHandle` là một id mờ có `IsValid` là false với giá trị mặc định. `BodyKind` là một trong `Dynamic`, `Kinematic` và `Static`. Các hình dạng là `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) và `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). Một `ColliderDesc` hoặc `ColliderDesc2D` đặt một hình dạng kèm `ColliderMaterial`, layer và cờ trigger, còn `BodyDesc` và `BodyDesc2D` mô tả một body mới theo loại, các collider, vị trí, góc xoay, khối lượng và một `BodyMotion` hoặc `BodyMotion2D` (khóa trục, trọng lực, damping, va chạm liên tục). Các type còn lại là `BodyState` và `BodyState2D`, `RayHit` và `RayHit2D`, `QueryFilter`, cùng `ContactPointInfo` và `ContactPointInfo2D`. [Truy vấn physics](queries.md) mô tả các quy tắc mà mọi backend theo cho truy vấn và điểm tiếp xúc. [Tham chiếu physics API](../reference/physics.md) liệt kê member của chúng.
 
 `PhysicsBody` và `PhysicsBody2D` bọc một world và một handle, nên code game không phải làm việc với handle.
 

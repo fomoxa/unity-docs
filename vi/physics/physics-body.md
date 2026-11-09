@@ -16,6 +16,8 @@ Cả hai là struct nhỏ, nên hãy lấy mới mỗi khi cần thay vì giữ 
 
 `IsValid` là true khi hai điều kiện cùng đúng: object có `Rigidbody` (với `Body`) hoặc `Rigidbody2D` (với `Body2D`) trên cùng GameObject với `NetworkObject`, và object đã spawn ở phía này. Đọc hoặc ghi một body không hợp lệ sẽ ném exception.
 
+`Body` và `Body2D` là body trên GameObject của `NetworkObject`. Object có nhiều body liệt kê tất cả trong `NetworkObject.Bodies` và `Bodies2D`, như mục [nhiều body](overview.md#several-bodies) mô tả.
+
 ## PhysicsBody (3D) <a href="#physicsbody-3d" id="physicsbody-3d"></a>
 
 | Member | Type | Ý nghĩa |
@@ -29,6 +31,11 @@ Cả hai là struct nhỏ, nên hãy lấy mới mỗi khi cần thay vì giữ 
 | `State` | `BodyState` | Vị trí, góc xoay, vận tốc và vận tốc góc cùng lúc |
 | `AddForce(Vector3 force)` | | Một lực, tác dụng trong bước tiếp theo |
 | `AddImpulse(Vector3 impulse)` | | Thay đổi vận tốc tức thời bằng `impulse / Mass`; bị bỏ qua với body kinematic |
+| `AddTorque(Vector3 torque)` | | Mô-men theo các trục thế giới, tác dụng trong bước tiếp theo |
+| `AddTorqueImpulse(Vector3 torqueImpulse)` | | Thay đổi vận tốc góc tức thời qua quán tính của body |
+| `AddForceAtPoint(Vector3 force, Vector3 point)` | | Lực tại một điểm thế giới: lực cộng mô-men nó gây ra quanh khối tâm, trong bước tiếp theo |
+| `AddImpulseAtPoint(Vector3 impulse, Vector3 point)` | | Xung lực tại một điểm thế giới, đổi vận tốc và vận tốc góc ngay lập tức |
+| `GetContactPoints(BodyHandle other, List<ContactPointInfo> into)` | `int` | Chỗ body chạm `other` sau bước mô phỏng gần nhất; xem [điểm tiếp xúc](queries.md#contact-points) |
 
 ## PhysicsBody2D <a href="#physicsbody2d" id="physicsbody2d"></a>
 
@@ -43,6 +50,10 @@ Cả hai là struct nhỏ, nên hãy lấy mới mỗi khi cần thay vì giữ 
 | `State` | `BodyState2D` | Vị trí, góc xoay, vận tốc và vận tốc góc cùng lúc |
 | `AddForce(Vector2 force)` | | Một lực, tác dụng trong bước tiếp theo |
 | `AddImpulse(Vector2 impulse)` | | Thay đổi vận tốc tức thời bằng `impulse / Mass`; bị bỏ qua với body không phải dynamic |
+| `AddTorque(float torque)` | | Mô-men, dương là ngược chiều kim đồng hồ, tác dụng trong bước tiếp theo |
+| `AddTorqueImpulse(float torqueImpulse)` | | Thay đổi vận tốc góc tức thời |
+| `AddForceAtPoint(Vector2 force, Vector2 point)`, `AddImpulseAtPoint(Vector2 impulse, Vector2 point)` | | Như ở 3D |
+| `GetContactPoints(BodyHandle other, List<ContactPointInfo2D> into)` | `int` | Chỗ body chạm `other` sau bước mô phỏng gần nhất |
 
 `Vector2`, `Vector3` và `Quaternion` ở đây là các type `System.Numerics`.
 
@@ -74,7 +85,26 @@ private void Apply(MoveInput input, InputContext context)
 }
 ```
 
-Lực thay đổi vận tốc trong bước physics tiếp theo, bước mà `NetworkManager` chạy trong cùng tick sau input, còn xung lực thay đổi vận tốc ngay lập tức.
+Lực thay đổi vận tốc trong bước physics tiếp theo, bước mà `NetworkManager` chạy trong cùng tick sau input, còn xung lực thay đổi vận tốc ngay lập tức. Mô-men theo cùng quy tắc: `AddTorque` và `AddForceAtPoint` tác dụng trong bước tiếp theo, `AddTorqueImpulse` và `AddImpulseAtPoint` tác dụng ngay. Cả bốn không làm gì với body kinematic, đánh thức body đang ngủ, và ném `ArgumentException` với body không có trong world.
+
+```csharp
+PhysicsBody body = NetworkObject.Body;
+body.AddForceAtPoint(new System.Numerics.Vector3(0f, 0f, thrust), body.Position + new System.Numerics.Vector3(wingOffset, 0f, 0f));
+```
+
+Trên trục bị khoá, backend Rapier bỏ xung lực ngay lúc gọi, còn PhysX và Box2D bỏ nó chậm nhất trong bước tiếp theo. Sau bước đó hai backend như nhau.
+
+## Va chạm liên tục <a href="#continuous-collision" id="continuous-collision"></a>
+
+Body chạy nhanh có thể xuyên qua collider mỏng giữa hai bước mô phỏng. `BodyMotion.ContinuousCollision` và `BodyMotion2D.ContinuousCollision` yêu cầu backend dùng cách dò va chạm liên tục mạnh nhất nó có cho body. `BodyDescriptions` đặt cờ này từ trường Collision Detection: mọi chế độ khác Discrete trên `Rigidbody`, và Continuous trên `Rigidbody2D`.
+
+| Backend | Tắt | Bật |
+|---|---|---|
+| `RigidbodyPhysics` 3D | `Discrete` | `ContinuousDynamic` với body dynamic, `ContinuousSpeculative` với body kinematic |
+| `RigidbodyPhysics` 2D | `Discrete` | `Continuous` |
+| Rapier | Body dynamic chạy nhanh vẫn quét với collider tĩnh, nhưng có thể xuyên body kinematic và body dynamic | Quét thêm với body kinematic và body dynamic, trừ body khác cũng bật cờ |
+
+Vì vậy, khi tắt cờ, body chạy nhanh dừng ở bức tường tĩnh mỏng dưới Rapier và có thể xuyên qua nó dưới `RigidbodyPhysics`. Server và các client dùng cùng backend, nên điều này không gây sửa lệch.
 
 ## Teleport <a href="#teleporting" id="teleporting"></a>
 

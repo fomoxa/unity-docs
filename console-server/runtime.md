@@ -213,6 +213,14 @@ behaviours.Register("MyGame.Network.Door", () => new Door());
 
 A type name without a factory throws `behaviour type ... is not registered with StandaloneBehaviours` when the scene loads.
 
+When the GameObject of a behaviour carries one of the scene object's [child bodies](physics.md#several-bodies), the factory can receive it. The overload with a `BehaviourSite` passes the body of the behaviour's GameObject, and `TryGetBody` returns false for a behaviour whose GameObject has no body of its own:
+
+```csharp
+behaviours.Register("MyGame.Network.Wheel", site => site.TryGetBody(out ChildBody body) ? new Wheel(body) : new Wheel(default));
+```
+
+`Wheel` can then pass `body` to `SyncTransform` or find the body in `Bodies2D`. The two overloads can be mixed for different type names.
+
 A network scene that the server loads with `ServerManager.Scenes` reads its file when it loads. The scene that clients open before they connect, such as the game scene of the tutorial, is not loaded through the network. Pass its scene id in `bootScenes` when it has scene objects or physics geometry: the backend reads its file in `Create`, spawns its scene objects when the server starts, and loads its geometry into the physics worlds. Clients match those objects against the scene they already have open, as with a Unity server. Entities of a boot scene set `SceneId` to that scene's id so that they share its physics worlds, and the server still sends them as objects outside any network scene.
 
 The [physics](physics.md) page adds a physics backend, and the [reference](reference.md) lists the console types and the backend contract.

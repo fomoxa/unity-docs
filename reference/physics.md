@@ -19,10 +19,15 @@ Unless stated otherwise, the types on this page are in the namespace `Fomoxa.Net
 | `State` | `BodyState` | Get and set all four at once |
 | `AddForce(Vector3 force)` | `void` | Force over the next step |
 | `AddImpulse(Vector3 impulse)` | `void` | Velocity change of `impulse / Mass`; ignored by kinematic bodies |
+| `AddTorque(Vector3 torque)` | `void` | Torque in world axes over the next step |
+| `AddTorqueImpulse(Vector3 torqueImpulse)` | `void` | Angular velocity change through the world inertia tensor |
+| `AddForceAtPoint(Vector3 force, Vector3 point)` | `void` | Force at a world point over the next step |
+| `AddImpulseAtPoint(Vector3 impulse, Vector3 point)` | `void` | Impulse at a world point |
+| `GetContactPoints(BodyHandle other, List<ContactPointInfo> into)` | `int` | Contact points with `other` (`default` for static geometry); an overload takes `in QueryFilter filter` before `into` |
 
 ## PhysicsBody2D
 
-`public readonly struct PhysicsBody2D`, with the constructor `PhysicsBody2D(IPhysicsWorld2D world, BodyHandle handle)`. It has the same members as `PhysicsBody`, but with `Vector2` positions and velocities, a `float` rotation in radians, a `float` angular velocity in radians per second, and `BodyState2D`.
+`public readonly struct PhysicsBody2D`, with the constructor `PhysicsBody2D(IPhysicsWorld2D world, BodyHandle handle)`. It has the same members as `PhysicsBody`, but with `Vector2` positions, velocities, forces and points, a `float` rotation in radians, a `float` angular velocity in radians per second, `float` torques, `BodyState2D` and `ContactPointInfo2D`.
 
 ## State types
 
@@ -55,10 +60,16 @@ public interface IPhysicsSimulation
 | `BodyKind GetKind(BodyHandle body)`, `float GetMass(BodyHandle body)` | Kind and mass |
 | `void SetRewindable(BodyHandle body, bool rewindable)` | Includes or excludes the body from snapshots |
 | `void AddForce(BodyHandle body, Vector3 force)`, `void AddImpulse(BodyHandle body, Vector3 impulse)` | Forces |
-| `bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, out RayHit hit)` | First hit along a ray |
-| `int Overlap(Vector3 center, float radius, BodyHandle[] results)` | Bodies overlapping a sphere; returns how many were written |
+| `void AddTorque(BodyHandle body, Vector3 torque)`, `void AddTorqueImpulse(BodyHandle body, Vector3 torqueImpulse)` | Torques |
+| `void AddForceAtPoint(BodyHandle body, Vector3 force, Vector3 point)`, `void AddImpulseAtPoint(BodyHandle body, Vector3 impulse, Vector3 point)` | Forces at a world point |
+| `bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, in QueryFilter filter, out RayHit hit)` | First hit along a ray |
+| `bool ShapeCast(in BodyShape shape, Vector3 position, Quaternion rotation, Vector3 direction, float maxDistance, in QueryFilter filter, out RayHit hit)` | First hit of a box, sphere or capsule moving along a direction |
+| `int Overlap(in BodyShape shape, Vector3 position, Quaternion rotation, in QueryFilter filter, BodyHandle[] results)` | Bodies overlapping a box, sphere or capsule; returns how many were written |
+| `int GetContactPoints(BodyHandle body, BodyHandle other, in QueryFilter filter, List<ContactPointInfo> into)` | Contact points between two bodies, or with static geometry when `other` is `default` |
 
-`IPhysicsWorld2D : IPhysicsSimulation` has the same members with `BodyDesc2D`, `BodyState2D`, `Vector2` and `RayHit2D`, and its `Overlap` tests a circle.
+`IPhysicsWorld2D : IPhysicsSimulation` has the same members with `BodyDesc2D`, `BodyState2D`, `Vector2`, a `float` rotation, `float` torques, `BodyShape2D` (box, circle or capsule for queries), `RayHit2D` and `ContactPointInfo2D`.
+
+`public static class PhysicsQueries` keeps the overloads without a filter as extension methods: `Raycast(origin, direction, maxDistance, out hit)`, `Overlap(center, radius, results)` with a sphere or circle, and `GetContactPoints(body, other, into)`. They pass `QueryFilter.All`. [Physics queries](../physics/queries.md) describes the rules of every query.
 
 ## Data types
 
@@ -75,13 +86,16 @@ public interface IPhysicsSimulation
 | `public readonly struct ColliderDesc2D` | `ColliderDesc2D(BodyShape2D shape, Vector2 position, float rotation, ColliderMaterial material, int layer, bool isTrigger)` |
 | `[Flags] public enum BodyLocks` | `None`, `PositionX`, `PositionY`, `PositionZ`, `RotationX`, `RotationY`, `RotationZ` |
 | `[Flags] public enum BodyLocks2D` | `None`, `PositionX`, `PositionY`, `Rotation` |
-| `public readonly struct BodyMotion` | `BodyMotion(BodyLocks locks, bool useGravity, float linearDamping, float angularDamping)`; `Default` has no locks, gravity on and no damping |
-| `public readonly struct BodyMotion2D` | `BodyMotion2D(BodyLocks2D locks, float gravityScale, float linearDamping, float angularDamping)`; `Default` has no locks, gravity scale 1 and no damping |
+| `public readonly struct BodyMotion` | `BodyMotion(BodyLocks locks, bool useGravity, float linearDamping, float angularDamping)` and an overload with `bool continuousCollision` at the end; `ContinuousCollision`; `Default` has no locks, gravity on, no damping and continuous collision off |
+| `public readonly struct BodyMotion2D` | `BodyMotion2D(BodyLocks2D locks, float gravityScale, float linearDamping, float angularDamping)` and an overload with `bool continuousCollision`; `Default` has no locks, gravity scale 1, no damping and continuous collision off |
 | `public readonly struct BodyDesc` | `BodyDesc(BodyKind kind, BodyShape shape, Vector3 position, Quaternion rotation, float mass)`, and constructors that take `IReadOnlyList<ColliderDesc> colliders` instead of one shape, optionally followed by `in BodyMotion motion` |
 | `public readonly struct BodyDesc2D` | The same with `BodyShape2D`, `ColliderDesc2D`, `Vector2`, a `float` rotation and `BodyMotion2D` |
 | `public readonly struct StaticGroup` | `uint SceneId`, `int Id`, `int FirstIndex`, `int Count`, `bool IsValid` (false for the default value); a group of static colliders added at runtime |
 | `public readonly struct RayHit` | `BodyHandle Body`, `Vector3 Point`, `Vector3 Normal`, `float Distance` |
 | `public readonly struct RayHit2D` | `BodyHandle Body`, `Vector2 Point`, `Vector2 Normal`, `float Distance` |
+| `public readonly struct QueryFilter` | `QueryFilter(int layerMask, BodyHandle excludeBody, bool includeTriggers)`; `LayerMask`, `ExcludeBody`, `IncludeTriggers`; `All` and `default` consider every layer and triggers and skip no body |
+| `public readonly struct ContactPointInfo` | `Vector3 Point`, `Vector3 Normal` (from the other side towards the body asked about), `float Depth` (positive when overlapping) |
+| `public readonly struct ContactPointInfo2D` | `Vector2 Point`, `Vector2 Normal`, `float Depth` |
 | `public abstract class PhysicsSnapshot` | Base class of a backend's snapshots |
 
 A capsule's `HalfHeight` is half the distance between the centers of its two end spheres.
@@ -110,6 +124,7 @@ A capsule's `HalfHeight` is half the distance between the centers of its two end
 | `bool Simulates` | Whether the manager steps physics with this component |
 | `void WorldsOf(Scene scene, List<IPhysicsSimulation> worlds)` | The worlds of a scene |
 | `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | What `NetworkObject.Body` and `Body2D` return |
+| `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | What `NetworkObject.Bodies` and `Bodies2D` return |
 | `StaticGroup AddStatic(Scene scene, IReadOnlyList<ColliderDesc> colliders)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | Adds a group of static colliders to a scene |
 | `StaticGroup AddStatic(GameObject root)`, `AddStatic2D(GameObject root)` | Adds the colliders under a GameObject |
 | `void RemoveStatic(StaticGroup group)` | Removes a group; removing it twice does nothing |

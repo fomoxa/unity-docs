@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking.rapier` 0.1.1 |
-| Yêu cầu | `com.fomoxa.networking` 0.2.0 |
+| Package | `com.fomoxa.networking.rapier` 0.2.0 |
+| Yêu cầu | `com.fomoxa.networking` 0.3.0 |
 | Unity | 6000.5 trở lên |
-| Nền tảng | Windows x64 và Linux x64: Editor, bản build player và server console |
+| Nền tảng | Windows x64 và arm64, Linux x64 và arm64, macOS, Android `arm64-v8a` và `armeabi-v7a`, iOS, Web; xem [cài đặt](setup.md#platforms) |
 | Rapier | `rapier3d` và `rapier2d` 0.36.0, build với `enhanced-determinism` |
 | Giấy phép | Apache-2.0; Rapier và các crate được link khác liệt kê trong `Third Party Notices.md` |
 
@@ -15,7 +15,7 @@
 
 Rollback với `RigidbodyPhysics` chỉ gần đúng. PhysX và Box2D không lưu được dữ liệu contact, nên một lần replay bắt đầu từ tick đã lưu có thể lệch khỏi lần chạy đầu, và client phải sửa lần nữa. [Rollback với physics](../prediction/rollback.md) mô tả chi tiết điều này.
 
-Snapshot của Rapier giữ cả world, kể cả contact, nên replay sau `Load` cho ra đúng các tick như lần chạy đầu. Rapier được ghim một phiên bản và build với `enhanced-determinism`, và cùng các bước cho cùng một state trên Windows và Linux, dưới Mono và dưới .NET. Nhờ đó có hai điều:
+Snapshot của Rapier giữ cả world, kể cả contact, nên replay sau `Load` cho ra đúng các tick như lần chạy đầu. Rapier được ghim một phiên bản và build với `enhanced-determinism`, và cùng các bước cho cùng một state trên mọi nền tảng đã được kiểm, dưới Mono, IL2CPP và .NET. Nhờ đó có hai điều:
 
 - Việc sửa chỉ xảy ra khi input hoặc state của server thật sự khác với prediction của client.
 - Một [server console](../console-server/overview.md) chạy không cần Unity có thể mô phỏng cùng physics với client Unity, vì cả hai dựng world từ cùng scene file và cùng mô tả body.
@@ -41,11 +41,22 @@ Code game vẫn dùng `PhysicsBody` và `PhysicsBody2D`, model input và reconci
 
 Server và mọi client phải dùng cùng backend. Client có backend khác với server sẽ dừng với `StopReason.PhysicsBackendMismatch`.
 
+## Phần được hỗ trợ <a href="#what-it-supports" id="what-it-supports"></a>
+
+| Phần | Trang |
+|---|---|
+| Body và collider, nhiều body cho một network object, va chạm liên tục | [Body và collider](bodies.md) |
+| Tia, shape cast, overlap, điểm tiếp xúc, lực và mô-men | [Truy vấn physics](../physics/queries.md) và [PhysicsBody](../physics/physics-body.md), cùng API với `RigidbodyPhysics` |
+| Component contact | [Contact event](contacts.md) |
+| Component joint của Unity và joint tạo từ code | [Joint](joints.md) |
+| Di chuyển nhân vật kinematic dọc tường, bậc và dốc | [Character controller](character-controller.md) |
+| Năm effector 2D của Unity | [Effector](effectors.md) |
+
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-- Chỉ Windows x64 và Linux x64. Client macOS, Android, iOS và WebGL chưa dùng được backend này.
-- Bản build player IL2CPP chưa được kiểm tra tính tất định so với Mono và .NET.
-- Không hỗ trợ joint, effector như `PlatformEffector2D`, thiết lập va chạm liên tục và contact point.
-- Mỗi network object một body.
+- Không hỗ trợ `CharacterController`, `WheelCollider`, `ConfigurableJoint`, `WheelJoint2D`, `RelativeJoint2D`, `TargetJoint2D` và `FrictionJoint2D`; 3D không có effector vì Unity không có component effector 3D.
+- Joint không gãy.
+- Thư viện Web không chạy được khi bật Enable C/C++ Native Multithreading.
+- Player trên Linux, macOS và iOS chưa được chạy với phép kiểm hash mà player Windows, Web và Android đã qua. Xem [tính tất định](determinism.md#checked-platforms).
 
-Tiếp tục với [cài đặt](setup.md). [Body và collider](bodies.md) mô tả cách object Unity trở thành body của Rapier, [contact event](contacts.md) mô tả cách các component contact hoạt động, còn [tính tất định](determinism.md) nêu những gì code game phải làm để mô phỏng giống nhau trên mọi máy.
+Tiếp tục với [cài đặt](setup.md). [Tính tất định](determinism.md) nêu những gì code game phải làm để mô phỏng giống nhau trên mọi máy.

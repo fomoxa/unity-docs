@@ -34,8 +34,11 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `OnExit` | như trên | Một collider thôi chạm |
 | `Touching` | `IReadOnlyCollection<Collider>` hoặc `<Collider2D>` | Các collider đang chạm tính tới tick đã công bố gần nhất |
 | `AdditionalSize` | `float` | Chỉ có trên `NetworkCollision` và `NetworkTrigger`. Đọc và ghi; giá trị âm thành 0. |
+| `GetContactPoints(Collider other, List<NetworkContactPoint> into)` | `int` | Chỉ có trên `NetworkCollision`; `NetworkCollision2D` nhận `Collider2D` và `List<NetworkContactPoint2D>`. Xoá `into`, thêm các điểm mà collider của component chạm `other` và trả về số điểm |
 | `IsAttached` | `bool` | Một component physics đã tiếp quản component này và báo contact từ world của chính nó |
 | `Attach(tracker, query)`, `Detach(query)` | `bool`, `void` | Do component physics tự báo contact gọi; `RigidbodyPhysics` không dùng chúng |
+
+`NetworkContactPoint` và `NetworkContactPoint2D` là kiểu `public readonly struct` trong `Fomoxa.Unity`, có `Point`, `Normal` (`Vector3` hoặc `Vector2` của UnityEngine) và `float Depth`, cùng nghĩa với `ContactPointInfo` trong [physics API](physics.md#data-types).
 
 ## Observer <a href="#observers" id="observers"></a>
 

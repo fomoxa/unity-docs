@@ -11,6 +11,10 @@
 
 Các cặp này là một phần state của world, nên snapshot lưu chúng và replay khôi phục chúng cùng với body. Giống `RigidbodyPhysics`, component gọi event enter và exit một lần mỗi tick, và sau replay chỉ gọi cho phần thay đổi.
 
+## Điểm tiếp xúc <a href="#contact-points" id="contact-points"></a>
+
+`NetworkCollision.GetContactPoints` và `NetworkCollision2D.GetContactPoints` trả về điểm của các cặp tiếp xúc Rapier, ở 3D cũng như 2D, và `PhysicsBody.GetContactPoints`, `PhysicsBody2D.GetContactPoints` cũng vậy. Chúng gồm cả điểm nằm trong lề tiếp xúc của Rapier, có `Depth` âm. Snapshot giữ các tiếp xúc, nên sau `Load` các điểm là điểm của tick vừa nạp cho tới bước mô phỏng kế tiếp.
+
 ## Khác biệt so với RigidbodyPhysics <a href="#differences-from-rigidbodyphysics" id="differences-from-rigidbodyphysics"></a>
 
 - `AdditionalSize` không có tác dụng. Contact là các cặp mà Rapier tính trong khoảng contact prediction của nó, và contact đứng yên được giữ, nên một object nằm trên mặt đất vẫn chạm mặt đất. Để phát hiện object ở gần mà không chạm, hãy thêm một trigger collider lớn hơn.

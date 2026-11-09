@@ -77,6 +77,7 @@
 
 * [Tổng quan](physics/overview.md)
 * [PhysicsBody](physics/physics-body.md)
+* [Truy vấn physics](physics/queries.md)
 * [Contact event](physics/contacts.md)
 * [Kiến trúc physics](physics/architecture.md)
 
@@ -102,6 +103,9 @@
 * [Cài đặt](rapier/setup.md)
 * [Body và collider](rapier/bodies.md)
 * [Contact event](rapier/contacts.md)
+* [Joint](rapier/joints.md)
+* [Character controller](rapier/character-controller.md)
+* [Effector](rapier/effectors.md)
 * [Tính tất định](rapier/determinism.md)
 
 ## Server console

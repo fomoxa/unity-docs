@@ -57,6 +57,28 @@ Trên client của owner, các component còn ghi lại tập đang chạm của
 
 Khi không có `NetworkManager` nào step world, ví dụ khi Simulate Physics tắt, các component chỉ chuyển tiếp callback của Unity thành `OnEnter` và `OnExit`.
 
+## Điểm tiếp xúc <a href="#contact-points" id="contact-points"></a>
+
+`NetworkCollision.GetContactPoints(Collider other, List<NetworkContactPoint> into)` và `NetworkCollision2D.GetContactPoints(Collider2D other, List<NetworkContactPoint2D> into)` liệt kê chỗ các collider của component chạm `other`. Mỗi điểm có `Point`, `Normal` là pháp tuyến đơn vị hướng từ `other` về collider của component, và `Depth` dương khi hai collider chồng lên nhau, âm khi chúng còn cách nhau nhưng nằm trong lề tiếp xúc. Hàm xoá `into`, ghi vào đó rồi trả về số điểm.
+
+```csharp
+private readonly List<NetworkContactPoint2D> points = new List<NetworkContactPoint2D>();
+
+private void Land(Collider2D other)
+{
+    GetComponent<NetworkCollision2D>().GetContactPoints(other, points);
+    foreach (NetworkContactPoint2D point in points)
+    {
+        if (point.Normal.y > 0.7f)
+        {
+            Debug.Log($"landed on {other.name} at {point.Point}");
+        }
+    }
+}
+```
+
+Collider đang tắt và trigger collider của component không góp điểm nào, và `other` là trigger thì không có điểm. Dưới `RigidbodyPhysics`, `NetworkCollision2D` đọc tiếp xúc của physics 2D trong Unity, còn `NetworkCollision` không trả điểm nào, vì Unity chỉ báo điểm tiếp xúc 3D bên trong callback va chạm. Backend Rapier trả điểm ở cả 3D và 2D. Để hỏi về hai body thay vì hai collider, hãy dùng [`PhysicsBody.GetContactPoints`](queries.md#contact-points).
+
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 
 | Field | Trên | Mặc định | Ý nghĩa |

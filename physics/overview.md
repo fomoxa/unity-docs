@@ -48,7 +48,24 @@ Proxies let predicted bodies collide with other players' objects at the position
 
 ## Bodies
 
-`NetworkObject.Body` returns a `PhysicsBody` for the object's `Rigidbody`, and `NetworkObject.Body2D` a `PhysicsBody2D` for its `Rigidbody2D`. The body component must be on the same GameObject as the `NetworkObject`. [PhysicsBody](physics-body.md) describes both types.
+`NetworkObject.Body` returns a `PhysicsBody` for the object's `Rigidbody`, and `NetworkObject.Body2D` a `PhysicsBody2D` for its `Rigidbody2D`. The body component must be on the same GameObject as the `NetworkObject`. [PhysicsBody](physics-body.md) describes both types, and [physics queries](queries.md) covers rays, shape casts, overlaps and contact points.
+
+## Several bodies
+
+A ragdoll or a vehicle with wheels has a `Rigidbody` on several GameObjects under one `NetworkObject`. `NetworkObject.Bodies` and `Bodies2D` list all of them:
+
+- every `Rigidbody` (or `Rigidbody2D`) under the GameObject of the `NetworkObject` whose GameObjects up to it are active, in hierarchy order, so the body on the root comes first;
+- the list is fixed the first time the physics component needs it, such as the first read of `Bodies` or the first time a client places the object's proxies. Adding or removing a `Rigidbody` or activating a GameObject later does not change it until the object spawns again;
+- the list is empty before the object spawns or without a physics component.
+
+The bodies of children follow these rules on a remote client:
+
+| GameObject of the body | What the client does |
+|---|---|
+| Has a `NetworkTransform` | The server sends its pose. The body is a proxy like the root body, placed at the replicated pose before each step |
+| Has no `NetworkTransform` | The client simulates the body itself, for example a ragdoll limb that follows the replicated root through its joints |
+
+A `NetworkTransform` on a child with a body syncs that body's pose. Under the Rapier backend, the server reads it only when the body moved, as it does for the root body.
 
 ## Geometry and bodies added at runtime
 
@@ -66,8 +83,6 @@ With Simulate Physics off, Unity steps physics on its own fixed timestep, indepe
 
 ## Limitations
 
-Unity physics is not deterministic across machines, and a saved state does not include contact data, so rollback is approximate, as [rollback with physics](../prediction/rollback.md) explains. Joints, character controllers and wheel colliders are not saved or restored.
-
-Each network object has one body, on the GameObject of its `NetworkObject`. Bodies on children are simulated and saved as part of the world, but they have no `PhysicsBody` and are not proxied.
+Unity physics is not deterministic across machines, and a saved state does not include contact data, so rollback is approximate, as [rollback with physics](../prediction/rollback.md) explains. Joints, character controllers and wheel colliders are not saved or restored. The [Rapier backend](../rapier/overview.md) saves the whole world, joints included.
 
 The [PhysicsBody](physics-body.md) and [contact events](contacts.md) pages cover what game code uses, and [physics architecture](architecture.md) describes the interfaces underneath.

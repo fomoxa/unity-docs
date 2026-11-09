@@ -17,6 +17,8 @@
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | The object's behaviours in behaviour index order; filled at spawn |
 | `Body` | `PhysicsBody` | The body of the `Rigidbody` on this GameObject, from the physics component of the `NetworkManager`; invalid when there is none or the object is not spawned |
 | `Body2D` | `PhysicsBody2D` | The body of the `Rigidbody2D` on this GameObject |
+| `Bodies` | `IReadOnlyList<PhysicsBody>` | Every body of the object, the body on this GameObject first; empty before the spawn. See [several bodies](../physics/overview.md#several-bodies) |
+| `Bodies2D` | `IReadOnlyList<PhysicsBody2D>` | The same for `Rigidbody2D` |
 
 ### NetworkVisibility
 

@@ -75,11 +75,13 @@ To fix a scene id of 0 or a repeated id, recreate one of the scene assets, which
 
 ## Scene files
 
-A scene file, `<Generated Folder>/<scene id>.fomoxascene`, describes a network scene in a form that does not need Unity: its scene objects with their poses, behaviours and bodies, its static colliders, and the 3D and 2D layer collision matrices. It is encoded with the codec of the package's `SceneFile` system model, so it is only readable together with the schema it was generated with.
+A scene file, `<Generated Folder>/<scene id>.fomoxascene`, describes a network scene in a form that does not need Unity: its scene objects with their poses, behaviours and bodies, including the bodies on child GameObjects and which body each behaviour sits on, its static colliders, the 2D effectors on its colliders, and the 3D and 2D layer collision matrices. It is encoded with the codec of the package's `SceneFile` system model, so it is only readable together with the schema it was generated with.
 
 The scene file step writes the file of a network scene when you save that scene, and for every network scene from the menu. Before a player build it writes the files that are missing, older than their scene or no longer readable, and it deletes the files of scenes that are no longer network scenes. Unity imports each file as a `TextAsset`, and the scene list references it, so builds include it. `RigidbodyPhysics` does not read scene files.
 
 A scene whose objects or colliders cannot be described, for example because a scene object has no scene object id yet, logs an error and keeps its previous file.
+
+An effector whose speed, force or flow variation is not 0 logs a warning, and the file stores the variation as 0, because the Rapier backend does not simulate variations.
 
 ## Scene object ids
 

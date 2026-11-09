@@ -7,13 +7,29 @@ This page installs the Rapier backend into a project that already uses `com.fomo
 A Unity package cannot declare a dependency on a Git package, so `com.fomoxa.networking` is not listed in this package's dependencies, and you install both. In Window > Package Manager, click +, choose Install package from git URL and enter each URL in turn:
 
 ```
-https://github.com/fomoxa/com.fomoxa.networking.git
-https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier
+https://github.com/fomoxa/com.fomoxa.networking.git#0.3.0
+https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.0
 ```
 
-The backend checks the version of `com.fomoxa.networking` when it creates its worlds and throws `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.2.0; the project has ...` if the project has another one.
+The backend checks the version of `com.fomoxa.networking` when it creates its worlds and throws `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.3.0; the project has ...` if the project has another one.
 
-The package carries the native library for Windows x64 and Linux x64 under `Runtime/Plugins`, and Unity copies the right one into player builds. The Linux library needs glibc 2.34 or newer, which Ubuntu 22.04, Debian 12 and later have.
+## Platforms
+
+The package carries a native library for each platform under `Runtime/Plugins`, and Unity copies the right one into player builds:
+
+| Platform | Library |
+|---|---|
+| Windows x64, arm64 | `fomoxa_rapier.dll` |
+| Linux x64, arm64 | `libfomoxa_rapier.so`; needs glibc 2.34 or newer, which Ubuntu 22.04, Debian 12 and later have |
+| macOS, Apple silicon and Intel | `libfomoxa_rapier.dylib`, one universal library |
+| Android `arm64-v8a`, `armeabi-v7a` | `libfomoxa_rapier.so`, aligned to 16 KB pages as Google Play requires. Android x86-64 is not included |
+| iOS device and simulator | `libfomoxa_rapier.xcframework`, linked statically |
+| Web | `libfomoxa_rapier.a`, linked statically into the WebAssembly build |
+
+The static libraries of Web and iOS have two limits:
+
+- The Web library does not work with Enable C/C++ Native Multithreading in the Player Settings, because it is not built with WebAssembly threads.
+- The library defines the single precision math functions it uses (`sinf`, `cosf`, `sincosf`, `acosf`, `atan2f`, `expf`, `log2f`, `powf`), so that every platform computes them the same way. In a static link, C or C++ code of the game that calls these functions can get the library's versions, and another static plug-in that defines them can fail the link with duplicate symbols.
 
 ## Add RapierPhysics
 

@@ -57,6 +57,28 @@ On the owner's client the components also record the touching set of every tick.
 
 When no `NetworkManager` steps the world, for example with Simulate Physics off, the components pass Unity's own callbacks through as `OnEnter` and `OnExit`.
 
+## Contact points
+
+`NetworkCollision.GetContactPoints(Collider other, List<NetworkContactPoint> into)` and `NetworkCollision2D.GetContactPoints(Collider2D other, List<NetworkContactPoint2D> into)` list where the component's colliders touch `other`. Each point has a `Point`, a unit `Normal` that points from `other` towards the component's collider, and a `Depth` that is positive when the colliders overlap and negative when they are still apart but within the contact margin. The method clears `into`, fills it and returns the number of points.
+
+```csharp
+private readonly List<NetworkContactPoint2D> points = new List<NetworkContactPoint2D>();
+
+private void Land(Collider2D other)
+{
+    GetComponent<NetworkCollision2D>().GetContactPoints(other, points);
+    foreach (NetworkContactPoint2D point in points)
+    {
+        if (point.Normal.y > 0.7f)
+        {
+            Debug.Log($"landed on {other.name} at {point.Point}");
+        }
+    }
+}
+```
+
+Disabled and trigger colliders of the component add no points, and a trigger `other` has none. Under `RigidbodyPhysics`, `NetworkCollision2D` reads the contacts of Unity's 2D physics, while `NetworkCollision` returns no points, because Unity reports 3D contact points only inside collision callbacks. The Rapier backend returns points in 3D and 2D. To ask about two bodies instead of two colliders, use [`PhysicsBody.GetContactPoints`](queries.md#contact-points).
+
 ## Configuration
 
 | Field | On | Default | Meaning |

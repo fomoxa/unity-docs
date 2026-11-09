@@ -7,13 +7,29 @@ Trang này cài backend Rapier vào một project đã dùng `com.fomoxa.network
 Package Unity không khai báo được dependency tới một package Git, nên `com.fomoxa.networking` không có trong danh sách dependency của package này, và bạn cài cả hai. Trong Window > Package Manager, bấm +, chọn Install package from git URL rồi lần lượt nhập từng URL:
 
 ```
-https://github.com/fomoxa/com.fomoxa.networking.git
-https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier
+https://github.com/fomoxa/com.fomoxa.networking.git#0.3.0
+https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.0
 ```
 
-Backend kiểm tra phiên bản của `com.fomoxa.networking` khi tạo world và ném `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.2.0; the project has ...` nếu project có phiên bản khác.
+Backend kiểm tra phiên bản của `com.fomoxa.networking` khi tạo world và ném `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.3.0; the project has ...` nếu project có phiên bản khác.
 
-Package mang thư viện native cho Windows x64 và Linux x64 trong `Runtime/Plugins`, và Unity copy đúng thư viện vào bản build player. Thư viện Linux cần glibc 2.34 trở lên, tức Ubuntu 22.04, Debian 12 và các bản mới hơn.
+## Nền tảng <a href="#platforms" id="platforms"></a>
+
+Package mang một thư viện native cho mỗi nền tảng trong `Runtime/Plugins`, và Unity copy đúng thư viện vào bản build player:
+
+| Nền tảng | Thư viện |
+|---|---|
+| Windows x64, arm64 | `fomoxa_rapier.dll` |
+| Linux x64, arm64 | `libfomoxa_rapier.so`; cần glibc 2.34 trở lên, tức Ubuntu 22.04, Debian 12 và các bản mới hơn |
+| macOS, Apple silicon và Intel | `libfomoxa_rapier.dylib`, một thư viện universal |
+| Android `arm64-v8a`, `armeabi-v7a` | `libfomoxa_rapier.so`, căn trang 16 KB theo yêu cầu của Google Play. Không có Android x86-64 |
+| iOS, máy thật và simulator | `libfomoxa_rapier.xcframework`, link tĩnh |
+| Web | `libfomoxa_rapier.a`, link tĩnh vào bản build WebAssembly |
+
+Thư viện tĩnh của Web và iOS có hai giới hạn:
+
+- Thư viện Web không chạy được khi bật Enable C/C++ Native Multithreading trong Player Settings, vì nó không được build với thread của WebAssembly.
+- Thư viện tự định nghĩa các hàm toán độ chính xác đơn mà nó dùng (`sinf`, `cosf`, `sincosf`, `acosf`, `atan2f`, `expf`, `log2f`, `powf`), để mọi nền tảng tính chúng giống nhau. Khi link tĩnh, code C hoặc C++ của game gọi các hàm này có thể nhận bản của thư viện, và một plug-in tĩnh khác cũng định nghĩa chúng có thể làm link lỗi vì trùng ký hiệu.
 
 ## Thêm RapierPhysics <a href="#add-rapierphysics" id="add-rapierphysics"></a>
 

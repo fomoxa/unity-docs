@@ -19,10 +19,15 @@ Trừ khi có ghi chú khác, các type trên trang này nằm trong namespace `
 | `State` | `BodyState` | Đọc và ghi cả bốn giá trị cùng lúc |
 | `AddForce(Vector3 force)` | `void` | Lực trong bước tiếp theo |
 | `AddImpulse(Vector3 impulse)` | `void` | Thay đổi vận tốc bằng `impulse / Mass`; body kinematic bỏ qua |
+| `AddTorque(Vector3 torque)` | `void` | Mô-men theo trục thế giới trong bước tiếp theo |
+| `AddTorqueImpulse(Vector3 torqueImpulse)` | `void` | Thay đổi vận tốc góc qua tensor quán tính trong hệ thế giới |
+| `AddForceAtPoint(Vector3 force, Vector3 point)` | `void` | Lực tại một điểm thế giới trong bước tiếp theo |
+| `AddImpulseAtPoint(Vector3 impulse, Vector3 point)` | `void` | Xung lực tại một điểm thế giới |
+| `GetContactPoints(BodyHandle other, List<ContactPointInfo> into)` | `int` | Điểm tiếp xúc với `other` (`default` cho geometry tĩnh); một overload nhận `in QueryFilter filter` trước `into` |
 
 ## PhysicsBody2D <a href="#physicsbody2d" id="physicsbody2d"></a>
 
-`public readonly struct PhysicsBody2D`, với constructor `PhysicsBody2D(IPhysicsWorld2D world, BodyHandle handle)`. Nó có cùng các member như `PhysicsBody`, nhưng với vị trí và vận tốc `Vector2`, góc xoay `float` tính bằng radian, vận tốc góc `float` tính bằng radian mỗi giây, và `BodyState2D`.
+`public readonly struct PhysicsBody2D`, với constructor `PhysicsBody2D(IPhysicsWorld2D world, BodyHandle handle)`. Nó có cùng các member như `PhysicsBody`, nhưng với vị trí, vận tốc, lực và điểm `Vector2`, góc xoay `float` tính bằng radian, vận tốc góc `float` tính bằng radian mỗi giây, mô-men `float`, `BodyState2D` và `ContactPointInfo2D`.
 
 ## Type state <a href="#state-types" id="state-types"></a>
 
@@ -55,10 +60,16 @@ public interface IPhysicsSimulation
 | `BodyKind GetKind(BodyHandle body)`, `float GetMass(BodyHandle body)` | Loại và khối lượng |
 | `void SetRewindable(BodyHandle body, bool rewindable)` | Đưa body vào hoặc loại khỏi snapshot |
 | `void AddForce(BodyHandle body, Vector3 force)`, `void AddImpulse(BodyHandle body, Vector3 impulse)` | Lực |
-| `bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, out RayHit hit)` | Điểm chạm đầu tiên dọc theo tia |
-| `int Overlap(Vector3 center, float radius, BodyHandle[] results)` | Các body chồng lên một hình cầu; trả về số body đã ghi |
+| `void AddTorque(BodyHandle body, Vector3 torque)`, `void AddTorqueImpulse(BodyHandle body, Vector3 torqueImpulse)` | Mô-men |
+| `void AddForceAtPoint(BodyHandle body, Vector3 force, Vector3 point)`, `void AddImpulseAtPoint(BodyHandle body, Vector3 impulse, Vector3 point)` | Lực tại một điểm thế giới |
+| `bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, in QueryFilter filter, out RayHit hit)` | Điểm chạm đầu tiên dọc theo tia |
+| `bool ShapeCast(in BodyShape shape, Vector3 position, Quaternion rotation, Vector3 direction, float maxDistance, in QueryFilter filter, out RayHit hit)` | Điểm chạm đầu tiên của hộp, cầu hoặc viên nang di chuyển theo một hướng |
+| `int Overlap(in BodyShape shape, Vector3 position, Quaternion rotation, in QueryFilter filter, BodyHandle[] results)` | Các body chồng lên hộp, cầu hoặc viên nang; trả về số body đã ghi |
+| `int GetContactPoints(BodyHandle body, BodyHandle other, in QueryFilter filter, List<ContactPointInfo> into)` | Điểm tiếp xúc giữa hai body, hoặc với geometry tĩnh khi `other` là `default` |
 
-`IPhysicsWorld2D : IPhysicsSimulation` có cùng các member với `BodyDesc2D`, `BodyState2D`, `Vector2` và `RayHit2D`, và `Overlap` của nó kiểm tra một hình tròn.
+`IPhysicsWorld2D : IPhysicsSimulation` có cùng các member với `BodyDesc2D`, `BodyState2D`, `Vector2`, góc xoay `float`, mô-men `float`, `BodyShape2D` (hộp, hình tròn hoặc viên nang cho truy vấn), `RayHit2D` và `ContactPointInfo2D`.
+
+`public static class PhysicsQueries` giữ các overload không có bộ lọc dưới dạng extension method: `Raycast(origin, direction, maxDistance, out hit)`, `Overlap(center, radius, results)` với hình cầu hoặc hình tròn, và `GetContactPoints(body, other, into)`. Chúng truyền `QueryFilter.All`. [Truy vấn physics](../physics/queries.md) mô tả quy tắc của mọi truy vấn.
 
 ## Type dữ liệu <a href="#data-types" id="data-types"></a>
 
@@ -75,13 +86,16 @@ public interface IPhysicsSimulation
 | `public readonly struct ColliderDesc2D` | `ColliderDesc2D(BodyShape2D shape, Vector2 position, float rotation, ColliderMaterial material, int layer, bool isTrigger)` |
 | `[Flags] public enum BodyLocks` | `None`, `PositionX`, `PositionY`, `PositionZ`, `RotationX`, `RotationY`, `RotationZ` |
 | `[Flags] public enum BodyLocks2D` | `None`, `PositionX`, `PositionY`, `Rotation` |
-| `public readonly struct BodyMotion` | `BodyMotion(BodyLocks locks, bool useGravity, float linearDamping, float angularDamping)`; `Default` không khóa trục, bật trọng lực, không damping |
-| `public readonly struct BodyMotion2D` | `BodyMotion2D(BodyLocks2D locks, float gravityScale, float linearDamping, float angularDamping)`; `Default` không khóa trục, gravity scale 1, không damping |
+| `public readonly struct BodyMotion` | `BodyMotion(BodyLocks locks, bool useGravity, float linearDamping, float angularDamping)` và một overload thêm `bool continuousCollision` ở cuối; `ContinuousCollision`; `Default` không khóa trục, bật trọng lực, không damping, tắt va chạm liên tục |
+| `public readonly struct BodyMotion2D` | `BodyMotion2D(BodyLocks2D locks, float gravityScale, float linearDamping, float angularDamping)` và một overload thêm `bool continuousCollision`; `Default` không khóa trục, gravity scale 1, không damping, tắt va chạm liên tục |
 | `public readonly struct BodyDesc` | `BodyDesc(BodyKind kind, BodyShape shape, Vector3 position, Quaternion rotation, float mass)`, và các constructor nhận `IReadOnlyList<ColliderDesc> colliders` thay cho một hình dạng, có thể kèm `in BodyMotion motion` ở cuối |
 | `public readonly struct BodyDesc2D` | Tương tự với `BodyShape2D`, `ColliderDesc2D`, `Vector2`, góc xoay `float` và `BodyMotion2D` |
 | `public readonly struct StaticGroup` | `uint SceneId`, `int Id`, `int FirstIndex`, `int Count`, `bool IsValid` (false với giá trị mặc định); một nhóm collider tĩnh thêm lúc chạy |
 | `public readonly struct RayHit` | `BodyHandle Body`, `Vector3 Point`, `Vector3 Normal`, `float Distance` |
 | `public readonly struct RayHit2D` | `BodyHandle Body`, `Vector2 Point`, `Vector2 Normal`, `float Distance` |
+| `public readonly struct QueryFilter` | `QueryFilter(int layerMask, BodyHandle excludeBody, bool includeTriggers)`; `LayerMask`, `ExcludeBody`, `IncludeTriggers`; `All` và `default` xét mọi layer và trigger, không bỏ body nào |
+| `public readonly struct ContactPointInfo` | `Vector3 Point`, `Vector3 Normal` (từ phía kia về body được hỏi), `float Depth` (dương khi chồng lấn) |
+| `public readonly struct ContactPointInfo2D` | `Vector2 Point`, `Vector2 Normal`, `float Depth` |
 | `public abstract class PhysicsSnapshot` | Class cơ sở cho snapshot của một backend |
 
 `HalfHeight` của capsule là một nửa khoảng cách giữa tâm hai hình cầu ở hai đầu.
@@ -110,6 +124,7 @@ public interface IPhysicsSimulation
 | `bool Simulates` | Manager có step physics bằng component này hay không |
 | `void WorldsOf(Scene scene, List<IPhysicsSimulation> worlds)` | Các world của một scene |
 | `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | Thứ mà `NetworkObject.Body` và `Body2D` trả về |
+| `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | Thứ mà `NetworkObject.Bodies` và `Bodies2D` trả về |
 | `StaticGroup AddStatic(Scene scene, IReadOnlyList<ColliderDesc> colliders)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | Thêm một nhóm collider tĩnh vào một scene |
 | `StaticGroup AddStatic(GameObject root)`, `AddStatic2D(GameObject root)` | Thêm các collider dưới một GameObject |
 | `void RemoveStatic(StaticGroup group)` | Gỡ một nhóm; gỡ hai lần không làm gì |

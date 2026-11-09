@@ -34,8 +34,11 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `OnExit` | same | A collider stopped touching |
 | `Touching` | `IReadOnlyCollection<Collider>` or `<Collider2D>` | Colliders touching as of the last published tick |
 | `AdditionalSize` | `float` | `NetworkCollision` and `NetworkTrigger` only. Get and set; negative values become 0. |
+| `GetContactPoints(Collider other, List<NetworkContactPoint> into)` | `int` | `NetworkCollision` only; `NetworkCollision2D` takes `Collider2D` and `List<NetworkContactPoint2D>`. Clears `into`, adds the points where the component's colliders touch `other` and returns their number |
 | `IsAttached` | `bool` | A physics component has taken the component over and reports contacts from its own world |
 | `Attach(tracker, query)`, `Detach(query)` | `bool`, `void` | Called by a physics component that reports contacts itself; `RigidbodyPhysics` does not use them |
+
+`NetworkContactPoint` and `NetworkContactPoint2D` are `public readonly struct` types in `Fomoxa.Unity` with `Point`, `Normal` (UnityEngine `Vector3` or `Vector2`) and `float Depth`, with the meaning of `ContactPointInfo` in the [physics API](physics.md#data-types).
 
 ## Observers
 

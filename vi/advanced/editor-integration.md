@@ -75,11 +75,13 @@ Nó tính scene id của mọi scene dưới `Assets` từ GUID và kiểm tra k
 
 ## Scene file <a href="#scene-files" id="scene-files"></a>
 
-Một scene file, `<Generated Folder>/<scene id>.fomoxascene`, mô tả một network scene ở dạng không cần Unity: các scene object với tư thế, behaviour và body của chúng, các collider tĩnh của scene, và ma trận va chạm layer 3D và 2D. File được mã hóa bằng codec của system model `SceneFile` của package, nên chỉ đọc được cùng với schema đã sinh ra nó.
+Một scene file, `<Generated Folder>/<scene id>.fomoxascene`, mô tả một network scene ở dạng không cần Unity: các scene object với tư thế, behaviour và body của chúng, gồm cả body trên GameObject con và behaviour nằm trên body nào, các collider tĩnh của scene, các effector 2D trên collider, và ma trận va chạm layer 3D và 2D. File được mã hóa bằng codec của system model `SceneFile` của package, nên chỉ đọc được cùng với schema đã sinh ra nó.
 
 Bước scene file ghi file của một network scene khi bạn lưu scene đó, và ghi cho mọi network scene khi chạy từ menu. Trước khi build player, nó ghi các file còn thiếu, cũ hơn scene của chúng hoặc không còn đọc được, và xóa file của những scene không còn là network scene. Unity import mỗi file thành một `TextAsset`, và danh sách scene tham chiếu tới nó, nên bản build có kèm file. `RigidbodyPhysics` không đọc scene file.
 
 Scene có object hoặc collider không mô tả được, ví dụ vì một scene object chưa có scene object id, sẽ log lỗi và giữ file cũ.
+
+Effector có speed, force hoặc flow variation khác 0 sẽ log một cảnh báo, và file lưu variation là 0, vì backend Rapier không mô phỏng variation.
 
 ## Scene object id <a href="#scene-object-ids" id="scene-object-ids"></a>
 

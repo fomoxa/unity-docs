@@ -11,6 +11,10 @@
 
 The pairs are part of the world state, so a snapshot saves them and a replay restores them together with the bodies. As with `RigidbodyPhysics`, a component raises its enter and exit events once per tick, and after a replay only for what changed.
 
+## Contact points
+
+`NetworkCollision.GetContactPoints` and `NetworkCollision2D.GetContactPoints` return the points of the Rapier contact pairs, in 3D as well as in 2D, and so do `PhysicsBody.GetContactPoints` and `PhysicsBody2D.GetContactPoints`. They include points within Rapier's contact margin, whose `Depth` is negative. A snapshot holds the contacts, so after a `Load` the points are those of the loaded tick until the next step.
+
 ## Differences from RigidbodyPhysics
 
 - `AdditionalSize` has no effect. Contacts are the pairs that Rapier computes within its contact prediction distance, and resting contacts are kept, so an object lying on the ground still touches it. To detect objects that are near but not touching, add a larger trigger collider.

@@ -4,10 +4,10 @@
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking.rapier` 0.1.1 |
-| Requires | `com.fomoxa.networking` 0.2.0 |
+| Package | `com.fomoxa.networking.rapier` 0.2.0 |
+| Requires | `com.fomoxa.networking` 0.3.0 |
 | Unity | 6000.5 or later |
-| Platforms | Windows x64 and Linux x64: Editor, players and console servers |
+| Platforms | Windows x64 and arm64, Linux x64 and arm64, macOS, Android `arm64-v8a` and `armeabi-v7a`, iOS, Web; see [setup](setup.md#platforms) |
 | Rapier | `rapier3d` and `rapier2d` 0.36.0, built with `enhanced-determinism` |
 | License | Apache-2.0; Rapier and the other linked crates are listed in `Third Party Notices.md` |
 
@@ -15,7 +15,7 @@
 
 Rollback with `RigidbodyPhysics` is approximate. PhysX and Box2D cannot save their contact data, so a replay that starts from a saved tick can drift from the first run, and the client corrects again. [Rollback with physics](../prediction/rollback.md) describes this in detail.
 
-A Rapier snapshot holds the whole world, contacts included, so a replay after `Load` gives the same ticks as the first run. Rapier is pinned to one version and built with `enhanced-determinism`, and the same steps give the same state on Windows and Linux, under Mono and under .NET. That makes two things possible:
+A Rapier snapshot holds the whole world, contacts included, so a replay after `Load` gives the same ticks as the first run. Rapier is pinned to one version and built with `enhanced-determinism`, and the same steps give the same state on every platform that has been checked, under Mono, IL2CPP and .NET. That makes two things possible:
 
 - Corrections only happen when the server's input or state really differs from the client's prediction.
 - A [console server](../console-server/overview.md) that runs without Unity can simulate the same physics as the Unity clients, because both build their worlds from the same scene file and the same body descriptions.
@@ -41,11 +41,22 @@ Game code keeps using `PhysicsBody` and `PhysicsBody2D`, input and reconcile mod
 
 The server and every client must use the same backend. A client whose backend differs from the server's stops with `StopReason.PhysicsBackendMismatch`.
 
+## What it supports
+
+| Area | Page |
+|---|---|
+| Bodies and colliders, several bodies per network object, continuous collision | [Bodies and colliders](bodies.md) |
+| Rays, shape casts, overlaps, contact points, forces and torques | [Physics queries](../physics/queries.md) and [PhysicsBody](../physics/physics-body.md), the same API as `RigidbodyPhysics` |
+| Contact components | [Contact events](contacts.md) |
+| Unity joint components and joints created from code | [Joints](joints.md) |
+| Moving a kinematic character along walls, steps and slopes | [Character controller](character-controller.md) |
+| The five 2D effectors of Unity | [Effectors](effectors.md) |
+
 ## Limitations
 
-- Windows x64 and Linux x64 only. macOS, Android, iOS and WebGL clients cannot use this backend.
-- IL2CPP players have not been checked for determinism against Mono and .NET.
-- Joints, effectors such as `PlatformEffector2D`, continuous collision settings and contact points are not supported.
-- One body per network object.
+- `CharacterController`, `WheelCollider`, `ConfigurableJoint`, `WheelJoint2D`, `RelativeJoint2D`, `TargetJoint2D` and `FrictionJoint2D` are not supported, and 3D has no effectors because Unity has no 3D effector components.
+- Joints do not break.
+- The Web library does not work with Enable C/C++ Native Multithreading.
+- Players on Linux, macOS and iOS have not been run with the hash check that the Windows, Web and Android players pass. See [determinism](determinism.md#checked-platforms).
 
-Continue with [setup](setup.md). [Bodies and colliders](bodies.md) describes how Unity objects become Rapier bodies, [contact events](contacts.md) how the contact components behave, and [determinism](determinism.md) what game code must do to keep the simulation the same on every machine.
+Continue with [setup](setup.md). [Determinism](determinism.md) describes what game code must do to keep the simulation the same on every machine.

@@ -7,12 +7,20 @@
 The body of a network object is described from the colliders under its GameObject that belong to its own `Rigidbody` or `Rigidbody2D`, with `BodyDescriptions.TryDescribe` and `TryDescribe2D`. The description keeps:
 
 - the kind: dynamic, kinematic when `isKinematic` is set or the `Rigidbody2D` body type is `Kinematic`, and static for a static `Rigidbody2D` or when there is no `Rigidbody`;
-- the mass, the axis constraints, gravity (`useGravity` in 3D, `gravityScale` in 2D) and the linear and angular damping;
+- the mass, the axis constraints, gravity (`useGravity` in 3D, `gravityScale` in 2D), the linear and angular damping and [continuous collision](../physics/physics-body.md#continuous-collision) from Collision Detection;
 - every enabled collider with its shape, position and rotation relative to the body, its physics material, its layer and its trigger flag.
 
 The body is created in the Rapier world of the object's network scene. The `Rigidbody` is then switched to kinematic and the `Rigidbody2D` body type to `Kinematic`, so Unity's physics no longer moves the object. After every tick, Rapier writes each body's position and rotation back to the object's `Transform`; a 2D body keeps the `Transform`'s Z. When the object despawns, the body is removed and the original `Rigidbody` settings come back.
 
-A collider that the backend cannot represent logs its exception against the object, and the object then has no Rapier body.
+A collider that the backend cannot represent logs its exception against the object, and the object then has no Rapier body. A `CharacterController` is one of them; use the [character controller](character-controller.md) of the backend with a kinematic body instead.
+
+## Several bodies
+
+Every `Rigidbody` and `Rigidbody2D` under the `NetworkObject` whose GameObjects are active becomes a Rapier body of its own, described from the colliders that belong to it, as listed under [several bodies](../physics/overview.md#several-bodies). The bodies are created together when the object is first needed, in hierarchy order, and the joint components between them become [Rapier joints](joints.md). After every tick, each body writes its pose back to the `Transform` of its own GameObject.
+
+On a remote client, a child body whose GameObject has a `NetworkTransform` is placed at the replicated pose as a proxy, and the server reads that `NetworkTransform` only when the body moved. A child body without one is simulated by the client.
+
+The scene file carries the child bodies of scene objects, so a [console server](../console-server/physics.md#several-bodies) builds the same bodies for them.
 
 ## Supported colliders
 
@@ -33,7 +41,7 @@ When a network scene loads, `RapierPhysics` reads its scene file and adds the sc
 | Member | Adds |
 |---|---|
 | `AddStatic(Scene, IReadOnlyList<ColliderDesc>)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | A group of collider descriptions to the worlds of a network scene |
-| `AddStatic(GameObject)`, `AddStatic2D(GameObject)` | The static colliders under a GameObject; the contact components on those colliders then report Rapier contacts |
+| `AddStatic(GameObject)`, `AddStatic2D(GameObject)` | The static colliders under a GameObject; the contact components on those colliders then report Rapier contacts, and the 2D [effectors](effectors.md) on them act on what they touch |
 | `AddBody(Scene, in BodyDesc)`, `AddBody2D(Scene, in BodyDesc2D)` | A body that no network object owns, such as a platform that every peer moves the same way from the tick number |
 
 `RemoveStatic`, `RemoveBody` and `RemoveBody2D` take the result back out. Static groups and unowned bodies are part of the world, so a snapshot saves them and a replay restores them.
@@ -46,7 +54,10 @@ When a network scene loads, `RapierPhysics` reads its scene file and adds the sc
 |---|---|
 | `void Touching(RapierCollider collider, List<RapierCollider> into)` | Adds every collider that touches or overlaps `collider` after the last step |
 | `void SetKind(BodyHandle body, BodyKind kind)` | Changes a body between dynamic, kinematic and static |
-| `ulong StateHash` | A hash of the whole world state, for comparing two runs |
+| `CreateJoint`, `SetJoint`, `RemoveJoint` | [Joints](joints.md#joints-from-code) |
+| `MoveCharacter` | The [character controller](character-controller.md) |
+| `AddEffector`, `SetEffector`, `RemoveEffector` (2D) | [Effectors](effectors.md#effectors-from-code) |
+| `ulong StateHash` | A hash of the bodies of the world, for comparing two runs |
 
 A `RapierCollider` names one collider of a world. `RapierCollider.OfBody(handle, index)` is the collider at `index` in the body's description, and `RapierCollider.Static(index)` is a static collider, numbered first by the scene file and then by the static groups in the order they were added (`StaticGroup.FirstIndex`). `IsStatic` tells the two apart.
 

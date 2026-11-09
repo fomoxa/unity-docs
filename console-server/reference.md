@@ -22,6 +22,8 @@ The console backend types are in the namespace `Fomoxa.Networking.Standalone` an
 | `Body`, `Body2D` | `PhysicsBody`, `PhysicsBody2D` | The physics body while spawned with a physics backend |
 | `Position`, `Rotation`, `Scale` | `Vector3`, `Quaternion`, `Vector3` | Virtual. Get and set; position and rotation read and write the body when there is one |
 | `TryGetBody(out BodyDesc)`, `TryGetBody2D(out BodyDesc2D)` | `bool` | Virtual. The body to create at spawn; by default the body from the scene file |
+| `GetChildBodies(List<ChildBodyDesc>)`, `GetChildBodies2D(List<ChildBodyDesc2D>)` | `void` | Virtual. Adds the child bodies to create after the root body; by default the child bodies from the scene file, or none |
+| `Bodies`, `Bodies2D` | `IReadOnlyList<PhysicsBody>`, `IReadOnlyList<PhysicsBody2D>` | The root body, if any, then the child bodies in list order; empty while no body is attached |
 
 ## StandalonePrefabs
 
@@ -36,6 +38,17 @@ On a console client, the factory must return an entity that is not spawned.
 | Member | Description |
 |---|---|
 | `void Register(string typeName, Func<EntityBehaviour> create)` | Registers the factory for the behaviours of scene objects whose Unity type has this full name |
+| `void Register(string typeName, Func<BehaviourSite, EntityBehaviour> create)` | The same, with the site of the behaviour. Registering the same factory again does nothing |
+
+`BehaviourSite` (`Fomoxa.Networking.Standalone`) is a `readonly struct` whose `bool TryGetBody(out ChildBody body)` returns the child body on the behaviour's GameObject, or false when there is none.
+
+## Child bodies
+
+| Type | Namespace | Description |
+|---|---|---|
+| `ChildBodyDesc` | `Fomoxa.Networking.Standalone` | `ChildBodyDesc(in BodyDesc body, Vector3 localPosition, Quaternion localRotation)`; the position and rotation in `body` are replaced by the pose derived from the entity |
+| `ChildBodyDesc2D` | `Fomoxa.Networking.Standalone` | `ChildBodyDesc2D(in BodyDesc2D body, Vector2 localPosition, float localRotation)`, rotation in radians |
+| `ChildBody` | `Fomoxa.Networking` | `ChildBody.Of(int index)` and `ChildBody.Of2D(int index)` name an entry of `GetChildBodies` or `GetChildBodies2D`; `Index`, `Is2D`. A negative index throws `ArgumentOutOfRangeException` |
 
 ## Scene files
 
@@ -53,7 +66,7 @@ On a console client, the factory must return an entity that is not spawned.
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` is the package version. |
 | `NetworkSettings` | `Fomoxa.Networking` | The settings that the `NetworkManager` Inspector holds in Unity, as properties with the same defaults, and `PhysicsBackend` |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, an overload that adds `Action<string> error`, and `NetworkLog.Console` |
-| `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` for the pose of the entity and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` for another source |
+| `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` for the pose of the entity, `SyncTransform(TransformSync, ChildBody, ITransformReceiver)` for the pose of a child body relative to the entity and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` for another source |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | The send rules of `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |
 | `ITransformSource`, `ITransformReceiver`, `TransformSample` | `Fomoxa.Networking` | `ReadLocal(out position, out rotation, out scale)` on the server; `ResetReceive()` and `Receive(in TransformSample)` on a client |
 | `INetworkEntity`, `EntityRecord` | `Fomoxa.Networking` | The interface the managers spawn, and the record of a spawned entity: `ObjectId`, `OwnerId`, `IsOwner`, `OnServer`, `OnClient`, `Representation` |

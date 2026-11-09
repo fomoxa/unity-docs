@@ -48,7 +48,24 @@ Proxy cho phép body được dự đoán va chạm với object của người 
 
 ## Body <a href="#bodies" id="bodies"></a>
 
-`NetworkObject.Body` trả về một `PhysicsBody` cho `Rigidbody` của object, và `NetworkObject.Body2D` trả về một `PhysicsBody2D` cho `Rigidbody2D` của nó. Component body phải nằm trên cùng GameObject với `NetworkObject`. [PhysicsBody](physics-body.md) mô tả cả hai type.
+`NetworkObject.Body` trả về một `PhysicsBody` cho `Rigidbody` của object, và `NetworkObject.Body2D` trả về một `PhysicsBody2D` cho `Rigidbody2D` của nó. Component body phải nằm trên cùng GameObject với `NetworkObject`. [PhysicsBody](physics-body.md) mô tả cả hai type, còn [truy vấn physics](queries.md) nói về tia, shape cast, overlap và điểm tiếp xúc.
+
+## Nhiều body <a href="#several-bodies" id="several-bodies"></a>
+
+Một ragdoll hay một chiếc xe có bánh có `Rigidbody` trên nhiều GameObject dưới một `NetworkObject`. `NetworkObject.Bodies` và `Bodies2D` liệt kê tất cả:
+
+- mọi `Rigidbody` (hoặc `Rigidbody2D`) dưới GameObject của `NetworkObject` mà các GameObject từ nó lên tới đó đều đang hoạt động, theo thứ tự trong hierarchy, nên body trên GameObject gốc đứng đầu;
+- danh sách được chốt vào lần đầu component physics cần tới nó, như lần đầu đọc `Bodies` hoặc lần đầu client đặt proxy cho object. Thêm, gỡ `Rigidbody` hay bật một GameObject sau đó không đổi danh sách cho tới khi object spawn lại;
+- danh sách rỗng trước khi object spawn hoặc khi không có component physics.
+
+Trên một client từ xa, body của GameObject con theo quy tắc sau:
+
+| GameObject của body | Client làm gì |
+|---|---|
+| Có `NetworkTransform` | Server gửi pose của nó. Body là proxy như body gốc, được đặt ở pose đã replicate trước mỗi bước mô phỏng |
+| Không có `NetworkTransform` | Client tự mô phỏng body, ví dụ một chi của ragdoll đi theo body gốc đã replicate qua các joint |
+
+`NetworkTransform` trên GameObject con có body sẽ đồng bộ pose của body đó. Dưới backend Rapier, server chỉ đọc nó khi body đã di chuyển, như với body gốc.
 
 ## Geometry và body thêm lúc chạy <a href="#geometry-and-bodies-added-at-runtime" id="geometry-and-bodies-added-at-runtime"></a>
 
@@ -66,8 +83,6 @@ Khi Simulate Physics tắt, Unity step physics theo fixed timestep của nó, đ
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Physics của Unity không tất định giữa các máy, và state đã lưu không chứa dữ liệu contact, nên rollback chỉ gần đúng, như [rollback với physics](../prediction/rollback.md) giải thích. Joint, character controller và wheel collider không được lưu hay khôi phục.
-
-Mỗi network object có một body, trên GameObject của `NetworkObject`. Body trên object con vẫn được mô phỏng và lưu như một phần của world, nhưng không có `PhysicsBody` và không được làm proxy.
+Physics của Unity không tất định giữa các máy, và state đã lưu không chứa dữ liệu contact, nên rollback chỉ gần đúng, như [rollback với physics](../prediction/rollback.md) giải thích. Joint, character controller và wheel collider không được lưu hay khôi phục. [Backend Rapier](../rapier/overview.md) lưu toàn bộ world, kể cả joint.
 
 Các trang [PhysicsBody](physics-body.md) và [contact event](contacts.md) nói về những gì code game dùng, còn [kiến trúc physics](architecture.md) mô tả các interface bên dưới.

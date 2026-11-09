@@ -41,10 +41,11 @@ Both interfaces extend `IPhysicsSimulation`. They are separate because their sta
 | Read | `GetBody` returns `BodyState`, `GetKind`, `GetMass` | `GetBody` returns `BodyState2D`, `GetKind`, `GetMass` |
 | Write | `SetBody(BodyHandle, in BodyState)` | `SetBody(BodyHandle, in BodyState2D)` |
 | Exclude from snapshots | `SetRewindable(BodyHandle, bool)` | same |
-| Forces | `AddForce`, `AddImpulse` with `Vector3` | with `Vector2` |
-| Queries | `Raycast(origin, direction, maxDistance, out RayHit)`, `Overlap(center, radius, BodyHandle[])` | `Raycast(..., out RayHit2D)`, `Overlap(Vector2, float, BodyHandle[])` |
+| Forces | `AddForce`, `AddImpulse`, `AddTorque`, `AddTorqueImpulse`, `AddForceAtPoint`, `AddImpulseAtPoint` with `Vector3` | with `Vector2`, and a `float` torque |
+| Queries | `Raycast`, `ShapeCast` and `Overlap` with a `QueryFilter` | same, with `RayHit2D` |
+| Contact points | `GetContactPoints(body, other, filter, List<ContactPointInfo>)` | with `ContactPointInfo2D` |
 
-The interfaces use a small set of data types. `BodyHandle` is an opaque id whose `IsValid` is false for the default value. `BodyKind` is one of `Dynamic`, `Kinematic` and `Static`. The shapes are `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) and `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). A `ColliderDesc` or `ColliderDesc2D` places a shape with a `ColliderMaterial`, a layer and a trigger flag, and `BodyDesc` and `BodyDesc2D` describe a new body by kind, colliders, position, rotation, mass and a `BodyMotion` or `BodyMotion2D` (axis locks, gravity, damping). The remaining types are `BodyState` and `BodyState2D`, and `RayHit` and `RayHit2D`. The [physics API reference](../reference/physics.md) lists their members.
+The interfaces use a small set of data types. `BodyHandle` is an opaque id whose `IsValid` is false for the default value. `BodyKind` is one of `Dynamic`, `Kinematic` and `Static`. The shapes are `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) and `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). A `ColliderDesc` or `ColliderDesc2D` places a shape with a `ColliderMaterial`, a layer and a trigger flag, and `BodyDesc` and `BodyDesc2D` describe a new body by kind, colliders, position, rotation, mass and a `BodyMotion` or `BodyMotion2D` (axis locks, gravity, damping, continuous collision). The remaining types are `BodyState` and `BodyState2D`, `RayHit` and `RayHit2D`, `QueryFilter`, and `ContactPointInfo` and `ContactPointInfo2D`. [Physics queries](queries.md) describes the rules every backend follows for queries and contact points. The [physics API reference](../reference/physics.md) lists their members.
 
 `PhysicsBody` and `PhysicsBody2D` wrap a world and a handle, so game code does not have to deal with handles.
 

@@ -22,6 +22,8 @@ Các type của backend console nằm trong namespace `Fomoxa.Networking.Standal
 | `Body`, `Body2D` | `PhysicsBody`, `PhysicsBody2D` | Physics body khi đã spawn với một physics backend |
 | `Position`, `Rotation`, `Scale` | `Vector3`, `Quaternion`, `Vector3` | Virtual. Đọc và ghi; vị trí và góc xoay đọc và ghi body khi có body |
 | `TryGetBody(out BodyDesc)`, `TryGetBody2D(out BodyDesc2D)` | `bool` | Virtual. Body cần tạo lúc spawn; mặc định là body từ scene file |
+| `GetChildBodies(List<ChildBodyDesc>)`, `GetChildBodies2D(List<ChildBodyDesc2D>)` | `void` | Virtual. Thêm các body con cần tạo sau body gốc; mặc định là body con từ scene file, hoặc không có |
+| `Bodies`, `Bodies2D` | `IReadOnlyList<PhysicsBody>`, `IReadOnlyList<PhysicsBody2D>` | Body gốc nếu có, rồi các body con theo thứ tự danh sách; rỗng khi chưa gắn body |
 
 ## StandalonePrefabs <a href="#standaloneprefabs" id="standaloneprefabs"></a>
 
@@ -36,6 +38,17 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | Member | Mô tả |
 |---|---|
 | `void Register(string typeName, Func<EntityBehaviour> create)` | Đăng ký factory cho các behaviour của scene object có type Unity mang tên đầy đủ này |
+| `void Register(string typeName, Func<BehaviourSite, EntityBehaviour> create)` | Như trên, kèm chỗ đặt của behaviour. Đăng ký lại cùng factory không làm gì |
+
+`BehaviourSite` (`Fomoxa.Networking.Standalone`) là một `readonly struct` có `bool TryGetBody(out ChildBody body)` trả về body con trên GameObject của behaviour, hoặc false khi không có.
+
+## Body con <a href="#child-bodies" id="child-bodies"></a>
+
+| Type | Namespace | Mô tả |
+|---|---|---|
+| `ChildBodyDesc` | `Fomoxa.Networking.Standalone` | `ChildBodyDesc(in BodyDesc body, Vector3 localPosition, Quaternion localRotation)`; vị trí và góc xoay trong `body` được thay bằng pose suy từ entity |
+| `ChildBodyDesc2D` | `Fomoxa.Networking.Standalone` | `ChildBodyDesc2D(in BodyDesc2D body, Vector2 localPosition, float localRotation)`, góc theo radian |
+| `ChildBody` | `Fomoxa.Networking` | `ChildBody.Of(int index)` và `ChildBody.Of2D(int index)` chỉ tới một phần tử của `GetChildBodies` hoặc `GetChildBodies2D`; `Index`, `Is2D`. Chỉ số âm ném `ArgumentOutOfRangeException` |
 
 ## Scene file <a href="#scene-files" id="scene-files"></a>
 
@@ -53,7 +66,7 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` là phiên bản package. |
 | `NetworkSettings` | `Fomoxa.Networking` | Các thiết lập mà Inspector của `NetworkManager` giữ trong Unity, dưới dạng property với cùng giá trị mặc định, và `PhysicsBackend` |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, một overload thêm `Action<string> error`, và `NetworkLog.Console` |
-| `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` cho tư thế của entity và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` cho nguồn khác |
+| `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` cho tư thế của entity, `SyncTransform(TransformSync, ChildBody, ITransformReceiver)` cho tư thế của một body con so với entity và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` cho nguồn khác |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | Luật gửi của `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |
 | `ITransformSource`, `ITransformReceiver`, `TransformSample` | `Fomoxa.Networking` | `ReadLocal(out position, out rotation, out scale)` trên server; `ResetReceive()` và `Receive(in TransformSample)` trên client |
 | `INetworkEntity`, `EntityRecord` | `Fomoxa.Networking` | Interface mà manager spawn, và bản ghi của một entity đã spawn: `ObjectId`, `OwnerId`, `IsOwner`, `OnServer`, `OnClient`, `Representation` |

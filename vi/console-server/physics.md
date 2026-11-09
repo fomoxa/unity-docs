@@ -36,7 +36,7 @@ NetworkRuntime runtime = StandaloneRuntime.Create(
 
 `NetworkSettings.PhysicsBackend` phải là `Rapier`, vì server báo cho mỗi client backend của nó và client có `RapierPhysics` sẽ dừng với `PhysicsBackendMismatch` nếu không khớp. Hãy dùng trọng lực của `RapierPhysics` trên client. Dispose `RapierScenes` khi chương trình kết thúc, sau `ServerManager.StopConnection()`, để giải phóng các world native.
 
-`RapierScenes` giữ một world cho mỗi scene id và mỗi chiều. Scene file của mỗi boot scene và của mỗi network scene được load thêm các collider tĩnh và ma trận va chạm layer của nó vào các world của scene đó.
+`RapierScenes` giữ một world cho mỗi scene id và mỗi chiều. Scene file của mỗi boot scene và của mỗi network scene được load thêm các collider tĩnh, ma trận va chạm layer và [effector 2D](../rapier/effectors.md) trên collider tĩnh của nó vào các world của scene đó.
 
 ## Body của entity <a href="#bodies-of-entities" id="bodies-of-entities"></a>
 
@@ -57,6 +57,25 @@ public override bool TryGetBody2D(out BodyDesc2D body)
 ```
 
 Mô tả phải khớp với mô tả mà client Unity dựng từ collider của prefab, nếu không server và client dự đoán mô phỏng hai body khác nhau. Một cách giữ chúng bằng nhau là xuất các mô tả từ Editor bằng `BodyDescriptions.TryDescribe2D` vào một file mà server console đọc, như [ví dụ Red Runner](../examples/redrunner/rapier-and-console/step-12-level-catalogue.md) làm.
+
+## Nhiều body <a href="#several-bodies" id="several-bodies"></a>
+
+Prefab Unity có `Rigidbody` trên nhiều GameObject thì có [nhiều body](../physics/overview.md#several-bodies). Entity console khai cùng các body đó bằng cách override `GetChildBodies` hoặc `GetChildBodies2D`. Mỗi `ChildBodyDesc` giữ một `BodyDesc` và pose của body con so với entity, không tính scale; `ChildBodyDesc2D` nhận một `BodyDesc2D`, vị trí `Vector2` và góc theo radian:
+
+```csharp
+public override void GetChildBodies2D(List<ChildBodyDesc2D> into)
+{
+    var wheel = new ColliderDesc2D(BodyShape2D.Circle(0.25f), Vector2.Zero, 0f, ColliderMaterial.Default, 0, false);
+    into.Add(new ChildBodyDesc2D(new BodyDesc2D(BodyKind.Dynamic, new[] { wheel }, Vector2.Zero, 0f, 0.5f), new Vector2(-0.6f, -0.4f), 0f));
+    into.Add(new ChildBodyDesc2D(new BodyDesc2D(BodyKind.Dynamic, new[] { wheel }, Vector2.Zero, 0f, 0.5f), new Vector2(0.6f, -0.4f), 0f));
+}
+```
+
+Backend đọc danh sách một lần, khi tạo body, và đặt mỗi body con ở pose của entity kết hợp với pose cục bộ của body con. Sau đó `Bodies` và `Bodies2D` liệt kê body gốc trước, nếu có, rồi tới các body con theo thứ tự của danh sách, như `NetworkObject.Bodies` trong Unity. Hãy giữ thứ tự đó trùng với thứ tự trong hierarchy của các component `Rigidbody` của prefab.
+
+Behaviour gửi pose của một body con bằng `SyncTransform(sync, ChildBody.Of2D(index), receiver)`, với `index` là vị trí trong `GetChildBodies2D` (`ChildBody.Of` cho 3D). Lời gọi này thay cho `NetworkTransform` trên GameObject con trong Unity. Pose được gửi tương đối với entity, và `SyncScale` phải tắt vì body không có scale. Body con không có slot như vậy thì client console tự mô phỏng, như trên client Unity.
+
+Scene object lấy body con từ scene file, do Editor ghi từ các component `Rigidbody` dưới mỗi scene object. Behaviour của chúng biết được GameObject của mình mang body nào qua overload `BehaviourSite` của `StandaloneBehaviours.Register`, mô tả ở mục [scene object](runtime.md#scene-objects-and-boot-scenes).
 
 ## Geometry level và body không chủ <a href="#level-geometry-and-unowned-bodies" id="level-geometry-and-unowned-bodies"></a>
 

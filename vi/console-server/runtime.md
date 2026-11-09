@@ -213,6 +213,14 @@ behaviours.Register("MyGame.Network.Door", () => new Door());
 
 Tên type không có factory sẽ ném `behaviour type ... is not registered with StandaloneBehaviours` khi scene load.
 
+Khi GameObject của một behaviour mang một trong các [body con](physics.md#several-bodies) của scene object, factory có thể nhận body đó. Overload có `BehaviourSite` truyền body của GameObject mang behaviour, và `TryGetBody` trả về false với behaviour mà GameObject không có body riêng:
+
+```csharp
+behaviours.Register("MyGame.Network.Wheel", site => site.TryGetBody(out ChildBody body) ? new Wheel(body) : new Wheel(default));
+```
+
+`Wheel` sau đó có thể truyền `body` cho `SyncTransform` hoặc tìm body trong `Bodies2D`. Hai overload dùng lẫn được cho các tên type khác nhau.
+
 Network scene mà server load qua `ServerManager.Scenes` đọc file của nó khi load. Scene mà client mở trước khi kết nối, như scene game của hướng dẫn, không được load qua mạng. Hãy truyền scene id của nó vào `bootScenes` khi nó có scene object hoặc geometry physics: backend đọc file của nó trong `Create`, spawn scene object của nó khi server khởi động, và load geometry của nó vào các physics world. Client khớp những object đó với scene mà họ đã mở sẵn, như với server Unity. Entity của boot scene đặt `SceneId` bằng id của scene đó để dùng chung physics world của nó, và server vẫn gửi chúng như object nằm ngoài mọi network scene.
 
 Trang [physics](physics.md) thêm một physics backend, còn [tham chiếu](reference.md) liệt kê các type console và backend contract.

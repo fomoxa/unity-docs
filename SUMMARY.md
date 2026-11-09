@@ -77,6 +77,7 @@
 
 * [Overview](physics/overview.md)
 * [PhysicsBody](physics/physics-body.md)
+* [Physics queries](physics/queries.md)
 * [Contact events](physics/contacts.md)
 * [Physics architecture](physics/architecture.md)
 
@@ -102,6 +103,9 @@
 * [Setup](rapier/setup.md)
 * [Bodies and colliders](rapier/bodies.md)
 * [Contact events](rapier/contacts.md)
+* [Joints](rapier/joints.md)
+* [Character controller](rapier/character-controller.md)
+* [Effectors](rapier/effectors.md)
 * [Determinism](rapier/determinism.md)
 
 ## Console server

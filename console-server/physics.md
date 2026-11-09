@@ -36,7 +36,7 @@ NetworkRuntime runtime = StandaloneRuntime.Create(
 
 `NetworkSettings.PhysicsBackend` must be `Rapier`, because the server tells each client its backend and a client with `RapierPhysics` stops with `PhysicsBackendMismatch` otherwise. Use the gravity of the clients' `RapierPhysics`. Dispose the `RapierScenes` when the program ends, after `ServerManager.StopConnection()`, to free the native worlds.
 
-`RapierScenes` keeps one world per scene id and dimension. The scene file of each boot scene and of each network scene that loads adds its static colliders and layer collision matrices to the worlds of that scene.
+`RapierScenes` keeps one world per scene id and dimension. The scene file of each boot scene and of each network scene that loads adds its static colliders, its layer collision matrices and the [2D effectors](../rapier/effectors.md) of its static colliders to the worlds of that scene.
 
 ## Bodies of entities
 
@@ -57,6 +57,25 @@ public override bool TryGetBody2D(out BodyDesc2D body)
 ```
 
 The description has to match the one the Unity client builds from the prefab's colliders, or the server and the predicting client simulate different bodies. One way to keep them equal is to export the descriptions from the Editor with `BodyDescriptions.TryDescribe2D` into a file that the console server reads, as the [Red Runner example](../examples/redrunner/rapier-and-console/step-12-level-catalogue.md) does.
+
+## Several bodies
+
+A Unity prefab with a `Rigidbody` on several GameObjects has [several bodies](../physics/overview.md#several-bodies). A console entity declares the same bodies by overriding `GetChildBodies` or `GetChildBodies2D`. Each `ChildBodyDesc` holds a `BodyDesc` and the pose of the child relative to the entity, without scale; a `ChildBodyDesc2D` takes a `BodyDesc2D`, a `Vector2` position and an angle in radians:
+
+```csharp
+public override void GetChildBodies2D(List<ChildBodyDesc2D> into)
+{
+    var wheel = new ColliderDesc2D(BodyShape2D.Circle(0.25f), Vector2.Zero, 0f, ColliderMaterial.Default, 0, false);
+    into.Add(new ChildBodyDesc2D(new BodyDesc2D(BodyKind.Dynamic, new[] { wheel }, Vector2.Zero, 0f, 0.5f), new Vector2(-0.6f, -0.4f), 0f));
+    into.Add(new ChildBodyDesc2D(new BodyDesc2D(BodyKind.Dynamic, new[] { wheel }, Vector2.Zero, 0f, 0.5f), new Vector2(0.6f, -0.4f), 0f));
+}
+```
+
+The backend reads the list once, when it creates the bodies, and places each child at the entity's pose combined with the child's local pose. `Bodies` and `Bodies2D` then list the root body first, if there is one, followed by the children in the order of the list, as `NetworkObject.Bodies` does in Unity. Keep that order equal to the hierarchy order of the prefab's `Rigidbody` components.
+
+A behaviour sends the pose of a child body with `SyncTransform(sync, ChildBody.Of2D(index), receiver)`, where `index` is the position in `GetChildBodies2D` (`ChildBody.Of` for 3D). This takes the place of a `NetworkTransform` on the child GameObject in Unity. The pose is sent relative to the entity, and `SyncScale` must be off because a body has no scale. A child body without such a slot is simulated by a console client itself, as on a Unity client.
+
+Scene objects take their child bodies from the scene file, which the Editor writes from the `Rigidbody` components under each scene object. Their behaviours can learn which body their GameObject carries through the `BehaviourSite` overload of `StandaloneBehaviours.Register`, described in [scene objects](runtime.md#scene-objects-and-boot-scenes).
 
 ## Level geometry and unowned bodies
 
