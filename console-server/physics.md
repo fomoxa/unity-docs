@@ -75,7 +75,7 @@ The backend reads the list once, when it creates the bodies, and places each chi
 
 A behaviour sends the pose of a child body with `SyncTransform(sync, ChildBody.Of2D(index), receiver)`, where `index` is the position in `GetChildBodies2D` (`ChildBody.Of` for 3D). This takes the place of a `NetworkTransform` on the child GameObject in Unity. The pose is sent relative to the entity, and `SyncScale` must be off because a body has no scale. A child body without such a slot is simulated by a console client itself, as on a Unity client.
 
-Scene objects take their child bodies from the scene file, which the Editor writes from the `Rigidbody` components under each scene object. Their behaviours can learn which body their GameObject carries through the `BehaviourSite` overload of `StandaloneBehaviours.Register`, described in [scene objects](runtime.md#scene-objects-and-boot-scenes).
+Scene objects take their child bodies from the scene file, which the Editor writes from the `Rigidbody` components under each scene object by the same rules as [several bodies](../physics/overview.md#several-bodies). Their behaviours can learn which body their GameObject carries through the `BehaviourSite` overload of `StandaloneBehaviours.Register`, described in [scene objects](runtime.md#scene-objects-and-boot-scenes).
 
 ## Level geometry and unowned bodies
 

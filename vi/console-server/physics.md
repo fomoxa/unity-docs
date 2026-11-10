@@ -75,7 +75,7 @@ Backend đọc danh sách một lần, khi tạo body, và đặt mỗi body con
 
 Behaviour gửi pose của một body con bằng `SyncTransform(sync, ChildBody.Of2D(index), receiver)`, với `index` là vị trí trong `GetChildBodies2D` (`ChildBody.Of` cho 3D). Lời gọi này thay cho `NetworkTransform` trên GameObject con trong Unity. Pose được gửi tương đối với entity, và `SyncScale` phải tắt vì body không có scale. Body con không có slot như vậy thì client console tự mô phỏng, như trên client Unity.
 
-Scene object lấy body con từ scene file, do Editor ghi từ các component `Rigidbody` dưới mỗi scene object. Behaviour của chúng biết được GameObject của mình mang body nào qua overload `BehaviourSite` của `StandaloneBehaviours.Register`, mô tả ở mục [scene object](runtime.md#scene-objects-and-boot-scenes).
+Scene object lấy body con từ scene file, do Editor ghi từ các component `Rigidbody` dưới mỗi scene object theo cùng quy tắc với [nhiều body](../physics/overview.md#several-bodies). Behaviour của chúng biết được GameObject của mình mang body nào qua overload `BehaviourSite` của `StandaloneBehaviours.Register`, mô tả ở mục [scene object](runtime.md#scene-objects-and-boot-scenes).
 
 ## Geometry level và body không chủ <a href="#level-geometry-and-unowned-bodies" id="level-geometry-and-unowned-bodies"></a>
 

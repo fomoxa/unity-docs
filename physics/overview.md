@@ -54,8 +54,8 @@ Proxies let predicted bodies collide with other players' objects at the position
 
 A ragdoll or a vehicle with wheels has a `Rigidbody` on several GameObjects under one `NetworkObject`. `NetworkObject.Bodies` and `Bodies2D` list all of them:
 
-- every `Rigidbody` (or `Rigidbody2D`) under the GameObject of the `NetworkObject` whose GameObjects up to it are active, in hierarchy order, so the body on the root comes first;
-- the list is fixed the first time the physics component needs it, such as the first read of `Bodies` or the first time a client places the object's proxies. Adding or removing a `Rigidbody` or activating a GameObject later does not change it until the object spawns again;
+- every `Rigidbody` (or `Rigidbody2D`) under the GameObject of the `NetworkObject` whose GameObjects up to it are active, in hierarchy order, so the body on the root comes first. A `Rigidbody2D` with Simulated turned off is left out, and so are the colliders attached to it, as in Box2D. A ragdoll whose bones stay off until the character dies therefore adds no bodies;
+- the list is fixed the first time the physics component needs it, such as the first read of `Bodies` or the first time a client places the object's proxies. Adding or removing a `Rigidbody`, activating a GameObject or turning Simulated on later does not change it until the object spawns again;
 - the list is empty before the object spawns or without a physics component.
 
 The bodies of children follow these rules on a remote client:

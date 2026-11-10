@@ -54,8 +54,8 @@ Proxy cho phép body được dự đoán va chạm với object của người 
 
 Một ragdoll hay một chiếc xe có bánh có `Rigidbody` trên nhiều GameObject dưới một `NetworkObject`. `NetworkObject.Bodies` và `Bodies2D` liệt kê tất cả:
 
-- mọi `Rigidbody` (hoặc `Rigidbody2D`) dưới GameObject của `NetworkObject` mà các GameObject từ nó lên tới đó đều đang hoạt động, theo thứ tự trong hierarchy, nên body trên GameObject gốc đứng đầu;
-- danh sách được chốt vào lần đầu component physics cần tới nó, như lần đầu đọc `Bodies` hoặc lần đầu client đặt proxy cho object. Thêm, gỡ `Rigidbody` hay bật một GameObject sau đó không đổi danh sách cho tới khi object spawn lại;
+- mọi `Rigidbody` (hoặc `Rigidbody2D`) dưới GameObject của `NetworkObject` mà các GameObject từ nó lên tới đó đều đang hoạt động, theo thứ tự trong hierarchy, nên body trên GameObject gốc đứng đầu. `Rigidbody2D` tắt Simulated không thuộc danh sách, các collider gắn vào nó cũng vậy, như trong Box2D. Vì thế một ragdoll để xương tắt cho tới khi nhân vật chết không thêm body nào;
+- danh sách được chốt vào lần đầu component physics cần tới nó, như lần đầu đọc `Bodies` hoặc lần đầu client đặt proxy cho object. Thêm, gỡ `Rigidbody`, bật một GameObject hay bật Simulated sau đó không đổi danh sách cho tới khi object spawn lại;
 - danh sách rỗng trước khi object spawn hoặc khi không có component physics.
 
 Trên một client từ xa, body của GameObject con theo quy tắc sau:

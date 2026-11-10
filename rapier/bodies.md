@@ -16,7 +16,7 @@ A collider that the backend cannot represent logs its exception against the obje
 
 ## Several bodies
 
-Every `Rigidbody` and `Rigidbody2D` under the `NetworkObject` whose GameObjects are active becomes a Rapier body of its own, described from the colliders that belong to it, as listed under [several bodies](../physics/overview.md#several-bodies). The bodies are created together when the object is first needed, in hierarchy order, and the joint components between them become [Rapier joints](joints.md). After every tick, each body writes its pose back to the `Transform` of its own GameObject.
+Every `Rigidbody` and `Rigidbody2D` under the `NetworkObject` whose GameObjects are active, except a `Rigidbody2D` with Simulated turned off, becomes a Rapier body of its own, described from the colliders that belong to it, as listed under [several bodies](../physics/overview.md#several-bodies). The bodies are created together when the object is first needed, in hierarchy order, and the joint components between them become [Rapier joints](joints.md). After every tick, each body writes its pose back to the `Transform` of its own GameObject.
 
 On a remote client, a child body whose GameObject has a `NetworkTransform` is placed at the replicated pose as a proxy, and the server reads that `NetworkTransform` only when the body moved. A child body without one is simulated by the client.
 

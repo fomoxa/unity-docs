@@ -16,7 +16,7 @@ Collider mà backend không biểu diễn được sẽ log exception gắn vớ
 
 ## Nhiều body <a href="#several-bodies" id="several-bodies"></a>
 
-Mỗi `Rigidbody` và `Rigidbody2D` dưới `NetworkObject` có GameObject đang hoạt động trở thành một body Rapier riêng, mô tả từ các collider thuộc về nó, theo danh sách ở mục [nhiều body](../physics/overview.md#several-bodies). Các body được tạo cùng lúc vào lần đầu object được cần tới, theo thứ tự trong hierarchy, và các component joint giữa chúng trở thành [joint Rapier](joints.md). Sau mỗi tick, mỗi body ghi pose của nó ngược lại vào `Transform` của chính GameObject của nó.
+Mỗi `Rigidbody` và `Rigidbody2D` dưới `NetworkObject` có GameObject đang hoạt động, trừ `Rigidbody2D` tắt Simulated, trở thành một body Rapier riêng, mô tả từ các collider thuộc về nó, theo danh sách ở mục [nhiều body](../physics/overview.md#several-bodies). Các body được tạo cùng lúc vào lần đầu object được cần tới, theo thứ tự trong hierarchy, và các component joint giữa chúng trở thành [joint Rapier](joints.md). Sau mỗi tick, mỗi body ghi pose của nó ngược lại vào `Transform` của chính GameObject của nó.
 
 Trên client từ xa, body con có `NetworkTransform` trên GameObject được đặt ở pose đã replicate như một proxy, và server chỉ đọc `NetworkTransform` đó khi body đã di chuyển. Body con không có component này thì client tự mô phỏng.
 
