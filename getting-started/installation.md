@@ -5,7 +5,7 @@ This page adds the package to a Unity project and sets up code generation. When 
 ## Requirements
 
 - Unity 6000.5 or later.
-- A Windows x64 or Linux x64 Editor. The `fomoxac` code generator is bundled for these two platforms only, so in the macOS Editor generation stops with `the fomoxac binary for this editor platform is missing`.
+- A Windows x64, Linux x64 or macOS Editor. The `fomoxac` code generator is bundled for all three. On macOS it is one binary for Apple silicon and Intel, and it needs macOS 11 or later.
 
 The package depends on the built-in Physics, Physics 2D and Animation modules. It declares them as dependencies, so Package Manager enables them for you.
 

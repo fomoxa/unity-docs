@@ -1,5 +1,27 @@
 # Release notes
 
+## 0.3.2
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.2 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.2` |
+| `com.fomoxa.rpc` | 0.1.3; needs `com.fomoxa.networking` 0.3.2 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.3` |
+| `com.fomoxa.networking.rapier` | 0.2.2; needs `com.fomoxa.networking` 0.3.2 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.2` |
+
+`Fomoxa.Backend.Templates` 0.1.0 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.3.1
+
+Update `com.fomoxa.rpc` to 0.1.3 and `com.fomoxa.networking.rapier` to 0.2.2 together with the package. With the 0.3.2 package, `com.fomoxa.rpc` 0.1.2 reports an error when it generates code, and Rapier 0.2.1 throws a version error when it creates its worlds.
+
+The API, the wire protocol, the handshake schema and the scene file format did not change, so 0.3.1 and 0.3.2 peers connect to each other, and generated code and exported scene files need no change.
+
+### Code generation on macOS
+
+The package now bundles `fomoxac` for the macOS Editor, next to the Windows x64 and Linux x64 builds. It is one binary for Apple silicon and Intel and needs macOS 11 or later. All three are `fomoxac` v0.2.2, so they generate the same code.
+
 ## 0.3.1
 
 This release ships these parts together:

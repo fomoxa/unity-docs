@@ -45,7 +45,6 @@ Once an object is spawned, its `NetworkBehaviour` scripts can call RPCs, keep a 
 | Client-side prediction, reconciliation and replay | Available |
 | Rollback of Unity physics (`Rigidbody` and `Rigidbody2D`) | Available, approximate (see [rollback](../prediction/rollback.md)) |
 | WebGL client | Available |
-| `fomoxac` binary for macOS | Not bundled; code generation fails in the macOS Editor |
 
 ## What is not included
 

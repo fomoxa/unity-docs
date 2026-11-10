@@ -45,7 +45,6 @@ Khi một object đã được spawn, các script `NetworkBehaviour` của nó c
 | Client-side prediction, reconciliation và replay | Có |
 | Rollback physics của Unity (`Rigidbody` và `Rigidbody2D`) | Có, gần đúng (xem [rollback](../prediction/rollback.md)) |
 | Client WebGL | Có |
-| Binary `fomoxac` cho macOS | Không đi kèm; sinh code thất bại trong Editor trên macOS |
 
 ## Những gì không có <a href="#what-is-not-included" id="what-is-not-included"></a>
 

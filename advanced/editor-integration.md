@@ -109,6 +109,6 @@ Committing these files lets a fresh clone or a build machine compile without run
 
 ## Platforms
 
-The `fomoxac` binary is bundled for the Windows x64 and Linux x64 Editors. On other Editor platforms generation fails, but a project whose generated files are committed still compiles and builds.
+The `fomoxac` binary is bundled for the Windows x64, Linux x64 and macOS Editors. The macOS binary runs on Apple silicon and Intel and needs macOS 11 or later. On other Editor platforms generation fails, but a project whose generated files are committed still compiles and builds.
 
 [Installation](../getting-started/installation.md) walks through the first generation, [models and codecs](../messaging/models.md) describes what is generated from your models, and [spawning](../objects/spawning.md) and [network scenes](../objects/scenes.md) explain how the ids are used at run time.

@@ -65,5 +65,5 @@ If you have not used the package before, read [ticks and timing](../../concepts/
 ## Requirements
 
 - Unity 6000.5 or later. The package needs 6000.5, while Red Runner's `master` branch is on 6000.2.6f2.
-- A Windows x64 or Linux x64 Editor, for code generation.
+- A Windows x64, Linux x64 or macOS Editor, for code generation.
 - Some experience with the Unity Editor and C#.

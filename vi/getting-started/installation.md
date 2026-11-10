@@ -5,7 +5,7 @@ Trang này thêm package vào một project Unity và thiết lập việc sinh 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
 - Unity 6000.5 trở lên.
-- Editor Windows x64 hoặc Linux x64. Trình sinh code `fomoxac` chỉ đi kèm cho hai nền tảng này, nên trong Editor trên macOS việc sinh code dừng với `the fomoxac binary for this editor platform is missing`.
+- Editor Windows x64, Linux x64 hoặc macOS. Trình sinh code `fomoxac` đi kèm cho cả ba. Trên macOS, đó là một binary cho cả Apple silicon và Intel, cần macOS 11 trở lên.
 
 Package phụ thuộc vào các module có sẵn Physics, Physics 2D và Animation. Package khai báo chúng là dependency, nên Package Manager tự bật chúng.
 

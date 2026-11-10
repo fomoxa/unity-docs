@@ -118,6 +118,6 @@ Mỗi lần sinh code còn ghi `NetSchema.cs`, danh sách mọi message id và l
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Ngoài các model của chính package và các model nó sinh cho RPC không tham số, chỉ những class trong Models Folder mới có codec. Binary `fomoxac` chỉ đi kèm cho Editor Windows x64 và Linux x64.
+Ngoài các model của chính package và các model nó sinh cho RPC không tham số, chỉ những class trong Models Folder mới có codec. Binary `fomoxac` đi kèm cho Editor Windows x64, Linux x64 và macOS.
 
 Model được dùng bởi [RPC](rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md). [Messaging API](../reference/messaging.md) liệt kê các type codec, và [tích hợp Editor](../advanced/editor-integration.md) mô tả bước sinh code.

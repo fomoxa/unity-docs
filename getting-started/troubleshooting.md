@@ -8,7 +8,7 @@ Generation errors and warnings appear in the Console with the prefix `[Fomoxa]`.
 
 | Message | Cause and fix |
 |---|---|
-| `the fomoxac binary for this editor platform is missing` | The Editor runs on a platform without a bundled `fomoxac`. Only Windows x64 and Linux x64 are bundled. |
+| `the fomoxac binary for this editor platform is missing` | The Editor runs on a platform without a bundled `fomoxac`. Only Windows x64, Linux x64 and macOS are bundled. |
 | `no FomoxaSettings asset; create one with Assets > Create > Fomoxa > Settings` | Create the settings asset, see [installation](installation.md#create-the-settings-asset). |
 | `more than one FomoxaSettings asset exists; keep exactly one` | Delete the extra asset. |
 | `the FomoxaSettings asset needs both a models folder and a generated folder` | Fill both fields of the settings asset. |

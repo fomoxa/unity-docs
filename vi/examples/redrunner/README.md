@@ -65,5 +65,5 @@ Nếu chưa dùng package bao giờ, hãy đọc [tick và thời gian](../../co
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
 - Unity 6000.5 trở lên. Package cần 6000.5, còn branch `master` của Red Runner dùng 6000.2.6f2.
-- Editor Windows x64 hoặc Linux x64, để sinh code.
+- Editor Windows x64, Linux x64 hoặc macOS, để sinh code.
 - Có kinh nghiệm với Unity Editor và C#.

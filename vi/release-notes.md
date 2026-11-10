@@ -1,5 +1,27 @@
 # Ghi chú phát hành
 
+## 0.3.2 <a href="#032" id="032"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.2 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.2` |
+| `com.fomoxa.rpc` | 0.1.3; cần `com.fomoxa.networking` 0.3.2 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.3` |
+| `com.fomoxa.networking.rapier` | 0.2.2; cần `com.fomoxa.networking` 0.3.2 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.2` |
+
+`Fomoxa.Backend.Templates` 0.1.0, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.3.1 <a href="#upgrading-from-031" id="upgrading-from-031"></a>
+
+Nâng `com.fomoxa.rpc` lên 0.1.3 và `com.fomoxa.networking.rapier` lên 0.2.2 cùng lúc với package. Với package 0.3.2, `com.fomoxa.rpc` 0.1.2 báo lỗi khi sinh code, còn Rapier 0.2.1 ném lỗi phiên bản khi tạo world.
+
+API, giao thức trên dây, schema của handshake và định dạng scene file không đổi, nên peer 0.3.1 và 0.3.2 kết nối được với nhau, còn code đã sinh và scene file đã xuất không cần sửa.
+
+### Sinh code trên macOS <a href="#code-generation-on-macos" id="code-generation-on-macos"></a>
+
+Package giờ có `fomoxac` cho Editor trên macOS, cạnh bản Windows x64 và Linux x64. Đó là một binary cho cả Apple silicon và Intel, cần macOS 11 trở lên. Cả ba đều là `fomoxac` v0.2.2, nên sinh ra cùng một code.
+
 ## 0.3.1 <a href="#031" id="031"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

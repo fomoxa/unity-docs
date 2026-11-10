@@ -109,6 +109,6 @@ Commit các file này giúp một bản clone mới hoặc máy build biên dị
 
 ## Nền tảng <a href="#platforms" id="platforms"></a>
 
-Binary `fomoxac` đi kèm cho Editor Windows x64 và Linux x64. Trên Editor của nền tảng khác, việc sinh code thất bại, nhưng project đã commit các file sinh ra vẫn biên dịch và build được.
+Binary `fomoxac` đi kèm cho Editor Windows x64, Linux x64 và macOS. Binary macOS chạy trên Apple silicon và Intel, cần macOS 11 trở lên. Trên Editor của nền tảng khác, việc sinh code thất bại, nhưng project đã commit các file sinh ra vẫn biên dịch và build được.
 
 [Cài đặt](../getting-started/installation.md) hướng dẫn lần sinh code đầu tiên, [model và codec](../messaging/models.md) mô tả những gì được sinh từ model của bạn, và [spawn](../objects/spawning.md) cùng [network scene](../objects/scenes.md) giải thích các id được dùng lúc chạy ra sao.

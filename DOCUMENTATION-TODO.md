@@ -36,10 +36,6 @@ Source examined: `Runtime/Unity/PrefabRegistry.cs`, `Runtime/Unity/NetworkManage
 
 ## Missing implementation
 
-### fomoxac for macOS
-Current state: `FomoxacBinary` expects `Tools~/fomoxac/osx/fomoxac`, which is not shipped.
-Documentation impact: Code generation is documented as Windows x64 and Linux x64 only.
-
 ### Lockstep, match replay, deterministic RNG, state hashing
 Current state: Not present in the code.
 Documentation impact: Listed as not included; no pages.

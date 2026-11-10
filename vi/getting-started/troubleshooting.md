@@ -8,7 +8,7 @@ Lỗi và cảnh báo khi sinh code xuất hiện trong Console với tiền t�
 
 | Thông báo | Nguyên nhân và cách sửa |
 |---|---|
-| `the fomoxac binary for this editor platform is missing` | Editor chạy trên nền tảng không có `fomoxac` đi kèm. Chỉ Windows x64 và Linux x64 có binary. |
+| `the fomoxac binary for this editor platform is missing` | Editor chạy trên nền tảng không có `fomoxac` đi kèm. Chỉ Windows x64, Linux x64 và macOS có binary. |
 | `no FomoxaSettings asset; create one with Assets > Create > Fomoxa > Settings` | Tạo settings asset, xem [cài đặt](installation.md#create-the-settings-asset). |
 | `more than one FomoxaSettings asset exists; keep exactly one` | Xóa asset thừa. |
 | `the FomoxaSettings asset needs both a models folder and a generated folder` | Điền cả hai field của settings asset. |

@@ -118,6 +118,6 @@ Every generation also writes `NetSchema.cs`, the list of all message ids and the
 
 ## Limitations
 
-Apart from the package's own models and the models it generates for parameterless RPCs, only classes in the Models Folder get codecs. The `fomoxac` binary is bundled for Windows x64 and Linux x64 Editors only.
+Apart from the package's own models and the models it generates for parameterless RPCs, only classes in the Models Folder get codecs. The `fomoxac` binary is bundled for Windows x64, Linux x64 and macOS Editors.
 
 Models are used by [RPCs](rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md). The [messaging API](../reference/messaging.md) lists the codec types, and [editor integration](../advanced/editor-integration.md) describes the generation step.
