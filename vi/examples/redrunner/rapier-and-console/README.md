@@ -31,7 +31,7 @@ Các bước bắt đầu từ [`f164d56`](https://github.com/fomoxa/RedRunner/c
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
-- Mọi thứ phần một cần, trên máy Windows x64 hoặc Linux x64, vì backend Rapier chỉ có thư viện native cho hai nền tảng đó.
+- Mọi thứ phần một cần. Trò chơi chạy trên [các nền tảng của backend Rapier](../../../rapier/setup.md#platforms), còn server console của bước 13 chỉ chép thư viện native cho Windows x64 và Linux x64.
 - .NET 8 SDK, từ bước 13 trở đi.
 - Các phép kiểm của những bước này chạy với backend Rapier bằng `Tools/unity-windows.sh`, như ở phần một. Bước 13 thêm `play-console`, chạy cùng các phép kiểm Play Mode đó trên server console.
 
@@ -43,5 +43,6 @@ Các bước bắt đầu từ [`f164d56`](https://github.com/fomoxa/RedRunner/c
 - `the level catalogue was exported for a tick of ... s, the game ticks every ... s`: tick rate của `Network Manager` đã đổi sau khi catalogue được xuất. Hãy xuất lại bằng Tools > RedRunner > Export Level Catalogue.
 - Server console in ra lỗi `behaviour type ... is not registered with StandaloneBehaviours`: một scene object của `Play.unity` có thêm `NetworkBehaviour` mới. Hãy đăng ký một behaviour console cho tên type của nó trong `ServerGame`.
 - Client thất bại ở handshake với `SchemaConflict` khi nối tới server console: server console được build từ code sinh ra khác. Hãy để Unity sinh code, rồi build lại `Server~`.
+- Trò chơi hoặc server console ném `MessageDecodeException` lúc nạp catalogue sau khi nâng package: catalogue chứa các model tệp scene của package, như `SceneFileCollider2D`, và bản package thêm trường vào chúng không đọc được catalogue xuất từ trước. Hãy xuất lại bằng Tools > RedRunner > Export Level Catalogue.
 
 Bắt đầu với [bước 10: backend Rapier](step-10-rapier-backend.md).

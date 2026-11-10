@@ -31,7 +31,7 @@ The steps start from [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164
 
 ## Requirements
 
-- Everything the first part needs, on a Windows x64 or Linux x64 machine, since the Rapier backend has native libraries for those two only.
+- Everything the first part needs. The game runs on the [platforms of the Rapier backend](../../../rapier/setup.md#platforms), and the console server of step 13 copies the native libraries for Windows x64 and Linux x64 only.
 - The .NET 8 SDK, from step 13 on.
 - The checks of these steps run against the Rapier backend with `Tools/unity-windows.sh`, as in the first part. Step 13 adds `play-console`, which runs the same Play Mode checks against the console server.
 
@@ -43,5 +43,6 @@ The steps start from [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164
 - `the level catalogue was exported for a tick of ... s, the game ticks every ... s`: the tick rate of the `Network Manager` changed after the catalogue was exported. Export it again with Tools > RedRunner > Export Level Catalogue.
 - The console server prints `behaviour type ... is not registered with StandaloneBehaviours`: a scene object of `Play.unity` got a new `NetworkBehaviour`. Register a console behaviour for its type name in `ServerGame`.
 - The client fails the handshake with `SchemaConflict` against the console server: the console server was built from other generated code. Let Unity generate, then build `Server~` again.
+- The game or the console server throws `MessageDecodeException` while loading the catalogue after a package update: the catalogue holds scene file models of the package, such as `SceneFileCollider2D`, and a package version that adds fields to them cannot read a catalogue exported before. Export it again with Tools > RedRunner > Export Level Catalogue.
 
 Start with [step 10: Rapier backend](step-10-rapier-backend.md).
