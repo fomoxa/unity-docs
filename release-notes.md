@@ -37,7 +37,7 @@ A 0.3.0 server does not accept a 0.2.0 client, and a 0.2.0 client cannot join a 
 
 ### Rapier backend 0.2.0
 
-- Native libraries for Windows arm64, Linux arm64, macOS, Android `arm64-v8a` and `armeabi-v7a`, iOS and Web join those for Windows x64 and Linux x64. A build workflow compares their hashes with a reference list, and the same hashes come out of Windows players under Mono and IL2CPP and out of Web and Android players. See [platforms](rapier/setup.md#platforms) and [checked platforms](rapier/determinism.md#checked-platforms).
+- Besides Windows x64 and Linux x64, the package now has native libraries for Windows arm64, Linux arm64, macOS, Android `arm64-v8a` and `armeabi-v7a`, iOS and Web. A build workflow compares their hashes with a reference list, and Windows players under Mono and IL2CPP, Web players and Android players give the same hashes. See [platforms](rapier/setup.md#platforms) and [checked platforms](rapier/determinism.md#checked-platforms).
 - The queries, forces, torques, continuous collision, contact points and several bodies listed above work with the same API as under `RigidbodyPhysics`, and Rapier returns contact points for 3D bodies too.
 - [Joints](rapier/joints.md) from Unity's joint components and from code.
 - `MoveCharacter`, a [character controller](rapier/character-controller.md) for kinematic bodies.
