@@ -12,7 +12,7 @@ Tài liệu này nằm trong repository riêng, tách khỏi package, nên nó k
 | Triển khai | Dedicated server, port, proxy và WebGL |
 | Nâng cao | Tích hợp Editor, custom codec, hiệu năng, gỡ lỗi |
 | Rapier physics, Server console | Backend Rapier tùy chọn và server chạy không cần Unity |
-| Ví dụ | Các game có sẵn được port bằng package, từng bước, với code và commit thật. Giải thích chung nằm ở các hướng dẫn tính năng và được liên kết từ đây |
+| Ví dụ | Các game có sẵn được port bằng package, từng bước, với code và commit thật, và một game triển khai trên cả một cụm. Giải thích chung nằm ở các hướng dẫn tính năng và được liên kết từ đây |
 | Tham chiếu | Mô tả ngắn, chính xác về API public, để tra cứu |
 | Đóng góp | Làm việc với package và với các trang này |
 

@@ -81,3 +81,5 @@ Các kết nối cần thông:
 Đặt một bộ kết thúc TLS trước các cổng công khai của backend và endpoint WebSocket của gateway nếu client kết nối bằng TLS hoặc `wss://`. Cả backend lẫn gateway đều không tự kết thúc TLS.
 
 Directory và gateway chưa có binary build sẵn, container image hay manifest Kubernetes.
+
+[Infra demo](../examples/infra-demo/README.md) có image và manifest riêng cho chúng, và triển khai mọi phần này trên k3d với Agones, từng bước một. Nó cũng có một cụm giả chạy game trên một máy, không cần Kubernetes.

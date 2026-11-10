@@ -21,6 +21,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 | Understand how the package works underneath | [Learn the basics](concepts/architecture.md) |
 | Add one feature, with working code | The guides under Connections, Network objects, Messaging, Synchronization, Prediction and Physics |
 | Take an existing game online | The [Red Runner example](examples/redrunner/README.md), which ports a single-player platformer in nine steps |
+| Deploy a game with a backend, Nakama and Agones | The [infra demo](examples/infra-demo/README.md), which builds the whole cluster on k3d step by step |
 | Look up one type or member | The [reference](reference/api.md) |
 | Fix something that does not work | [Troubleshooting](getting-started/troubleshooting.md) |
 | Upgrade from an earlier version | [Release notes](release-notes.md) |

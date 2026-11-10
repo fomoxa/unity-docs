@@ -230,4 +230,5 @@ spec:
 
 - [Cụm server](cluster.md): các phần của cụm và cách một phòng được chuyển.
 - [Backend của game](backend.md): dịch vụ trao vé cho người chơi.
+- [Infra demo](../examples/infra-demo/README.md): một fleet trên k3d cùng directory, gateway và backend, dựng từng bước.
 - [Tài liệu của Agones](https://agones.dev/site/docs/): fleet, autoscale và các cách cài đặt.

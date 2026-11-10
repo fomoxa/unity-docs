@@ -81,3 +81,5 @@ These must reach each other:
 Put a TLS terminator in front of the backend's public ports and the gateway's WebSocket endpoint if clients connect with TLS or `wss://`. Neither the backend nor the gateway ends TLS itself.
 
 There are no prebuilt binaries, container images or Kubernetes manifests for the directory and the gateway yet.
+
+The [infra demo](../examples/infra-demo/README.md) has its own images and manifests for them, and deploys all of these parts on k3d with Agones, step by step. It also has a mock cluster that runs the game on one machine without Kubernetes.

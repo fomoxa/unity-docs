@@ -318,3 +318,4 @@ Lệnh in `SERVING` và thoát với mã 0 khi backend trả lời. Backend dừ
 - [Chuyển server](../connections/transfer.md): vé chuyển đã ký giữa các pod.
 - [TLS phía client](../connections/transports/tls.md) và [WebSocket](../connections/transports/websocket.md): kết nối tới backend phía sau ingress.
 - [Đưa server lên môi trường thật](deployment.md): cổng và phiên bản của server game.
+- [Infra demo](../examples/infra-demo/README.md): một backend có tài khoản, bạn bè và ghép trận bằng Nakama, triển khai cùng directory, gateway và các pod.

@@ -230,4 +230,5 @@ spec:
 
 - [Cluster](cluster.md): the parts of the cluster and how a room moves.
 - [Game backend](backend.md): the service that hands players their tickets.
+- [Infra demo](../examples/infra-demo/README.md): a fleet on k3d with the directory, the gateway and the backend, set up step by step.
 - [Agones documentation](https://agones.dev/site/docs/): fleets, autoscaling and installation options.

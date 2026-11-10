@@ -318,3 +318,4 @@ It prints `SERVING` and exits with 0 while the backend answers. The backend stop
 - [Server transfer](../connections/transfer.md): signed tickets between pods.
 - [Client TLS](../connections/transports/tls.md) and [WebSocket](../connections/transports/websocket.md): the backend connection behind an ingress.
 - [Deployment](deployment.md): ports and versions of the game servers.
+- [Infra demo](../examples/infra-demo/README.md): a backend with accounts, friends and Nakama matchmaking, deployed with the directory, the gateway and the pods.

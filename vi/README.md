@@ -21,6 +21,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 | Hiểu package hoạt động bên dưới ra sao | [Kiến thức nền](concepts/architecture.md) |
 | Thêm một tính năng, có code chạy được | Các hướng dẫn trong Kết nối, Network object, Messaging, Đồng bộ, Prediction và Physics |
 | Đưa một game có sẵn lên online | [Ví dụ Red Runner](examples/redrunner/README.md), chuyển một game platformer một người chơi lên online qua chín bước |
+| Triển khai một game có backend, Nakama và Agones | [Infra demo](examples/infra-demo/README.md), dựng cả cụm trên k3d từng bước |
 | Tra một type hoặc một member | [Tham chiếu](reference/api.md) |
 | Sửa một chỗ không chạy | [Xử lý sự cố](getting-started/troubleshooting.md) |
 | Nâng cấp từ phiên bản trước | [Ghi chú phát hành](release-notes.md) |

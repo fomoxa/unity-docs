@@ -12,7 +12,7 @@ This documentation is kept in its own repository, separate from the package, so 
 | Deploy | Dedicated servers, ports, proxies and WebGL |
 | Advanced | Editor integration, custom codecs, performance, debugging |
 | Rapier physics, Console server | The optional Rapier backend and servers that run without Unity |
-| Examples | Existing games ported with the package, step by step, with their real code and commits. Generic explanations stay in the feature guides and are linked from here |
+| Examples | Existing games ported with the package, step by step, with their real code and commits, and a game deployed on a whole cluster. Generic explanations stay in the feature guides and are linked from here |
 | Reference | Short, exact descriptions of the public API, for lookup |
 | Contributing | Working on the package and on these pages |
 
