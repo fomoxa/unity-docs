@@ -1,5 +1,48 @@
 # Ghi chú phát hành
 
+## 0.3.0 <a href="#030" id="030"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.0` |
+| `com.fomoxa.rpc` | 0.1.1; cần `com.fomoxa.networking` 0.3.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.1` |
+| `com.fomoxa.networking.rapier` | 0.2.0; cần `com.fomoxa.networking` 0.3.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.0` |
+
+`Fomoxa.Backend.Templates` 0.1.0, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.2.0 <a href="#upgrading-from-020" id="upgrading-from-020"></a>
+
+Server 0.3.0 không nhận client 0.2.0, và client 0.2.0 không vào được server 0.3.0. Các model scene file của package có thêm trường nên handshake thấy schema khác. Hãy cập nhật server và mọi bản build của client cùng lúc.
+
+- Cập nhật `com.fomoxa.rpc` lên 0.1.1 và `com.fomoxa.networking.rapier` lên 0.2.0 cùng với package. Với package 0.3.0, `com.fomoxa.rpc` 0.1.0 báo lỗi khi sinh code, còn Rapier 0.1.1 ném lỗi phiên bản khi tạo world.
+- Package từ chối scene file do 0.2.0 ghi. Hãy xuất lại bằng Tools > Fomoxa > Export Network Scene Files rồi chép file mới sang console server. Trước khi build player, package tự ghi lại những file nó không đọc được.
+- Dữ liệu game tự mã hoá bằng model scene file của package có thể giải mã lỗi với `MessageDecodeException`, ví dụ một catalogue màn chơi chứa mảng giá trị `SceneFileCollider2D`. Hãy mã hoá lại dữ liệu đó.
+- Console server biên dịch `Standalone~` của package, nên hãy build lại nó từ package 0.3.0.
+- Với `RigidbodyPhysics`, `Raycast` không có bộ lọc và `Overlap` theo bán kính giờ dùng `QueryFilter.All`. Chúng xét mọi layer, kể cả Ignore Raycast, trúng cả trigger, và truy vấn bắt đầu bên trong một collider trúng collider đó ở khoảng cách 0. Truyền một [`QueryFilter`](physics/queries.md#filters) để bỏ bớt layer hoặc trigger.
+- Ở 0.2.0, client từ xa chỉ đặt body trên GameObject của network object làm proxy. Body trên GameObject con giờ theo quy tắc của [nhiều body](physics/overview.md#several-bodies): body con mà GameObject của nó có `NetworkTransform` cũng là proxy, còn body con không có thì client tự mô phỏng. `Rigidbody2D` tắt Simulated không phải là body.
+
+### Physics <a href="#physics" id="physics"></a>
+
+- [Truy vấn physics](physics/queries.md): mọi truy vấn nhận một `QueryFilter` gồm layer mask, một body cần bỏ qua và việc có tính trigger hay không. World có thêm `ShapeCast` và `Overlap` theo hình, còn `NetworkPhysics.WorldsOf` trả các world của một scene.
+- [PhysicsBody](physics/physics-body.md) có thêm `AddTorque`, `AddTorqueImpulse`, `AddForceAtPoint` và `AddImpulseAtPoint`. [Va chạm liên tục](physics/physics-body.md#continuous-collision) bật qua `BodyMotion.ContinuousCollision`, được `BodyDescriptions` lấy từ trường Collision Detection.
+- `PhysicsBody.GetContactPoints` liệt kê chỗ hai body chạm nhau sau bước gần nhất, còn [`NetworkCollision.GetContactPoints`](physics/contacts.md#contact-points) liệt kê các điểm của một sự kiện va chạm. Qua `PhysicsBody`, `RigidbodyPhysics` không trả điểm nào cho body 3D.
+- `NetworkObject.Bodies` và `Bodies2D` liệt kê các [body](physics/overview.md#several-bodies) của một ragdoll hay một chiếc xe, và `NetworkTransform` trên GameObject con có body đồng bộ body đó.
+
+### Console server và scene file <a href="#console-servers-and-scene-files" id="console-servers-and-scene-files"></a>
+
+- Entity khai báo body con bằng `GetChildBodies` và `GetChildBodies2D`, và gửi pose của chúng bằng `SyncTransform(sync, ChildBody.Of(index), receiver)`. Xem [nhiều body](console-server/physics.md#several-bodies).
+- Scene file mang body con của scene object, body mà mỗi behaviour nằm trên, và effector 2D của collider tĩnh. Overload `BehaviourSite` của `StandaloneBehaviours.Register` cho behaviour biết GameObject của nó mang body nào. Xem [scene file](advanced/editor-integration.md#scene-files).
+
+### Backend Rapier 0.2.0 <a href="#rapier-backend-020" id="rapier-backend-020"></a>
+
+- Ngoài Windows x64 và Linux x64, giờ có thư viện native cho Windows arm64, Linux arm64, macOS, Android `arm64-v8a` và `armeabi-v7a`, iOS và Web. Một workflow build so hash của chúng với danh sách tham chiếu, và player Windows dưới Mono và IL2CPP, player Web và player Android cho cùng hash. Xem [nền tảng](rapier/setup.md#platforms) và [nền tảng đã kiểm](rapier/determinism.md#checked-platforms).
+- Truy vấn, lực, mô-men, va chạm liên tục, điểm tiếp xúc và nhiều body ở trên chạy cùng API như với `RigidbodyPhysics`, và Rapier trả cả điểm tiếp xúc của body 3D.
+- [Joint](rapier/joints.md) từ component joint của Unity và từ code.
+- `MoveCharacter`, một [character controller](rapier/character-controller.md) cho body kinematic.
+- Năm [effector](rapier/effectors.md) 2D của Unity.
+
 ## 0.2.0 <a href="#020" id="020"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

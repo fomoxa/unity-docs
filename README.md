@@ -6,7 +6,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking` 0.2.0 |
+| Package | `com.fomoxa.networking` 0.3.0 |
 | Unity | 6000.5 or later |
 | License | Apache-2.0 |
 | Bundled code generator | `fomoxac` v0.2.2, Windows x64 and Linux x64 |
@@ -23,7 +23,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 | Take an existing game online | The [Red Runner example](examples/redrunner/README.md), which ports a single-player platformer in nine steps |
 | Look up one type or member | The [reference](reference/api.md) |
 | Fix something that does not work | [Troubleshooting](getting-started/troubleshooting.md) |
-| Upgrade from 0.1.0 | [Release notes](release-notes.md) |
+| Upgrade from an earlier version | [Release notes](release-notes.md) |
 | Run many servers behind one address | [Cluster](deploy/cluster.md) |
 
 ## What the package covers

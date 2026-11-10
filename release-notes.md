@@ -1,5 +1,48 @@
 # Release notes
 
+## 0.3.0
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.0` |
+| `com.fomoxa.rpc` | 0.1.1; needs `com.fomoxa.networking` 0.3.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.1` |
+| `com.fomoxa.networking.rapier` | 0.2.0; needs `com.fomoxa.networking` 0.3.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.0` |
+
+`Fomoxa.Backend.Templates` 0.1.0 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.2.0
+
+A 0.3.0 server does not accept a 0.2.0 client, and a 0.2.0 client cannot join a 0.3.0 server. The package's scene file models gained fields, so the handshake sees a different schema. Update the server and every client build at the same time.
+
+- Update `com.fomoxa.rpc` to 0.1.1 and `com.fomoxa.networking.rapier` to 0.2.0 together with the package. With the 0.3.0 package, `com.fomoxa.rpc` 0.1.0 reports an error when it generates code, and Rapier 0.1.1 throws a version error when it creates its worlds.
+- The package rejects scene files written by 0.2.0. Export them again with Tools > Fomoxa > Export Network Scene Files and copy the new files to your console servers. Before a player build, the package rewrites the files it cannot read.
+- Data that your game encoded with the package's scene file models can fail to decode with `MessageDecodeException`, for example a level catalogue that holds an array of `SceneFileCollider2D` values. Encode it again.
+- A console server compiles `Standalone~` from the package, so rebuild it from the 0.3.0 package.
+- Under `RigidbodyPhysics`, `Raycast` without a filter and `Overlap` with a radius now use `QueryFilter.All`. They consider every layer, Ignore Raycast included, and hit triggers, and a query that starts inside a collider hits it at distance 0. Pass a [`QueryFilter`](physics/queries.md#filters) to leave layers or triggers out.
+- In 0.2.0 a remote client placed only the body on the GameObject of a network object as a proxy. Bodies on child GameObjects now follow the rules of [several bodies](physics/overview.md#several-bodies): a child body whose GameObject has a `NetworkTransform` is a proxy too, and the client simulates a child body without one. A `Rigidbody2D` with Simulated turned off is not a body.
+
+### Physics
+
+- [Physics queries](physics/queries.md): every query takes a `QueryFilter` with a layer mask, a body to skip and whether triggers count. Worlds add `ShapeCast` and `Overlap` with a shape, and `NetworkPhysics.WorldsOf` returns the worlds of a scene.
+- [PhysicsBody](physics/physics-body.md) adds `AddTorque`, `AddTorqueImpulse`, `AddForceAtPoint` and `AddImpulseAtPoint`. [Continuous collision](physics/physics-body.md#continuous-collision) is set through `BodyMotion.ContinuousCollision`, which `BodyDescriptions` takes from the Collision Detection field.
+- `PhysicsBody.GetContactPoints` lists where two bodies touch after the last step, and [`NetworkCollision.GetContactPoints`](physics/contacts.md#contact-points) lists the points of a collision event. Through `PhysicsBody`, `RigidbodyPhysics` returns no points for 3D bodies.
+- `NetworkObject.Bodies` and `Bodies2D` list the [bodies](physics/overview.md#several-bodies) of a ragdoll or a vehicle, and a `NetworkTransform` on a child GameObject with a body syncs that body.
+
+### Console servers and scene files
+
+- An entity declares child bodies with `GetChildBodies` and `GetChildBodies2D`, and sends their poses with `SyncTransform(sync, ChildBody.Of(index), receiver)`. See [several bodies](console-server/physics.md#several-bodies).
+- Scene files carry the child bodies of scene objects, the body each behaviour sits on and the 2D effectors of static colliders. The `BehaviourSite` overload of `StandaloneBehaviours.Register` tells a behaviour which body its GameObject carries. See [scene files](advanced/editor-integration.md#scene-files).
+
+### Rapier backend 0.2.0
+
+- Native libraries for Windows arm64, Linux arm64, macOS, Android `arm64-v8a` and `armeabi-v7a`, iOS and Web join those for Windows x64 and Linux x64. A build workflow compares their hashes with a reference list, and the same hashes come out of Windows players under Mono and IL2CPP and out of Web and Android players. See [platforms](rapier/setup.md#platforms) and [checked platforms](rapier/determinism.md#checked-platforms).
+- The queries, forces, torques, continuous collision, contact points and several bodies listed above work with the same API as under `RigidbodyPhysics`, and Rapier returns contact points for 3D bodies too.
+- [Joints](rapier/joints.md) from Unity's joint components and from code.
+- `MoveCharacter`, a [character controller](rapier/character-controller.md) for kinematic bodies.
+- The five 2D [effectors](rapier/effectors.md) of Unity.
+
 ## 0.2.0
 
 This release ships these parts together:

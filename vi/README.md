@@ -6,7 +6,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking` 0.2.0 |
+| Package | `com.fomoxa.networking` 0.3.0 |
 | Unity | 6000.5 trở lên |
 | Giấy phép | Apache-2.0 |
 | Trình sinh code đi kèm | `fomoxac` v0.2.2, Windows x64 và Linux x64 |
@@ -23,7 +23,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 | Đưa một game có sẵn lên online | [Ví dụ Red Runner](examples/redrunner/README.md), chuyển một game platformer một người chơi lên online qua chín bước |
 | Tra một type hoặc một member | [Tham chiếu](reference/api.md) |
 | Sửa một chỗ không chạy | [Xử lý sự cố](getting-started/troubleshooting.md) |
-| Nâng cấp từ 0.1.0 | [Ghi chú phát hành](release-notes.md) |
+| Nâng cấp từ phiên bản trước | [Ghi chú phát hành](release-notes.md) |
 | Chạy nhiều server sau một địa chỉ | [Cụm server](deploy/cluster.md) |
 
 ## Package làm được gì <a href="#what-the-package-covers" id="what-the-package-covers"></a>
