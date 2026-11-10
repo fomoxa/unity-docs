@@ -2,7 +2,7 @@
 
 [fomoxa/fomoxa-infra-demo](https://github.com/fomoxa/fomoxa-infra-demo) là một game nhiều người chơi nhỏ chạy trên mọi phần của một cụm Fomoxa: client Unity, game server build thành console server .NET, directory và gateway, backend của game, Nakama để ghép trận và giữ tài khoản, và Agones trên Kubernetes. Các trang này dẫn bạn từ một máy trắng tới lúc game chạy. Mỗi bước là một lệnh shell copy-paste được, và bạn không cần biết Kubernetes từ trước.
 
-[Cụm server](../../deploy/cluster.md), [Backend của game](../../deploy/backend.md) và [Agones](../../deploy/agones.md) giải thích từng phần riêng. Ví dụ này chạy chúng cùng nhau, từ script và manifest của một repo. Repo dùng `com.fomoxa.networking` 0.3.0, `com.fomoxa.rpc` 0.1.1 và gateway ở tag `0.2.0`.
+[Cụm server](../../deploy/cluster.md), [Backend của game](../../deploy/backend.md) và [Agones](../../deploy/agones.md) giải thích từng phần riêng. Ví dụ này chạy chúng cùng nhau, từ script và manifest của một repo. Repo dùng `com.fomoxa.networking` 0.3.1, `com.fomoxa.rpc` 0.1.2 và gateway ở tag `0.2.0`.
 
 ## Hệ thống gồm những gì <a href="#what-the-system-contains" id="what-the-system-contains"></a>
 
