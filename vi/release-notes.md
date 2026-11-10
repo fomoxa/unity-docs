@@ -1,5 +1,30 @@
 # Ghi chú phát hành
 
+## 0.3.1 <a href="#031" id="031"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.1 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.1` |
+| `com.fomoxa.rpc` | 0.1.2; cần `com.fomoxa.networking` 0.3.1 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.2` |
+| `com.fomoxa.networking.rapier` | 0.2.1; cần `com.fomoxa.networking` 0.3.1 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.1` |
+
+`Fomoxa.Backend.Templates` 0.1.0, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.3.0 <a href="#upgrading-from-030" id="upgrading-from-030"></a>
+
+Hãy cập nhật server trước client, hoặc cùng lúc. Qua UDP, UDP mã hóa và WebSocket, client 0.3.1 gửi handshake của schema có từ 63 message trở lên thành nhiều gói. Server 0.3.0 bỏ các gói đó, và client dừng với `HandshakeFailed` và `Timeout`. Số message này tính cả message của package. Client 0.3.0 vẫn vào được server 0.3.1, còn kết nối TCP và TLS không đổi.
+
+- Cập nhật `com.fomoxa.rpc` lên 0.1.2 và `com.fomoxa.networking.rapier` lên 0.2.1 cùng với package. Với package 0.3.1, `com.fomoxa.rpc` 0.1.1 báo lỗi khi sinh code, còn Rapier 0.2.0 ném lỗi phiên bản khi tạo world.
+- Console server biên dịch `Standalone~` và tham chiếu `Runtime/Plugins/Fomoxa.Net.dll` của package, nên hãy build lại nó từ package 0.3.1.
+
+API, schema của handshake và định dạng scene file giống 0.3.0, nên code đã sinh và scene file đã xuất không phải đổi.
+
+### Handshake lớn <a href="#large-handshakes" id="large-handshakes"></a>
+
+Ở 0.3.0, handshake đi trong một gói, và gói đó dài thêm 14 byte cho mỗi message của schema. Qua UDP thường nó vượt 1200 byte từ 84 message, sớm hơn khi có mã hóa, và mạng bỏ mảnh IP thì bỏ luôn gói đó, nên client không kết nối được qua mạng ấy. Package giờ mang Fomoxa.Net 0.1.4: handshake dài hơn 900 byte được chia thành nhiều phần, mỗi phần một gói. Khi có mã hóa, mỗi datagram không quá 1200 byte với vé dài tới 249 byte. Như ở 0.2.0, bản build Fomoxa.Net của package giữ bản sửa cho lệnh gửi trong Mono của Unity (xem [Fomoxa.Net](#fomoxanet) của 0.2.0).
+
 ## 0.3.0 <a href="#030" id="030"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

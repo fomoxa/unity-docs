@@ -1,5 +1,30 @@
 # Release notes
 
+## 0.3.1
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.1 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.1` |
+| `com.fomoxa.rpc` | 0.1.2; needs `com.fomoxa.networking` 0.3.1 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.2` |
+| `com.fomoxa.networking.rapier` | 0.2.1; needs `com.fomoxa.networking` 0.3.1 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.1` |
+
+`Fomoxa.Backend.Templates` 0.1.0 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.3.0
+
+Update the server before the clients, or at the same time. Over UDP, encrypted UDP and WebSocket, a 0.3.1 client sends the handshake of a schema with 63 messages or more in several packets. A 0.3.0 server drops those packets, and the client stops with `HandshakeFailed` and `Timeout`. The count includes the package's own messages. A 0.3.0 client can still join a 0.3.1 server, and TCP and TLS connections did not change.
+
+- Update `com.fomoxa.rpc` to 0.1.2 and `com.fomoxa.networking.rapier` to 0.2.1 together with the package. With the 0.3.1 package, `com.fomoxa.rpc` 0.1.1 reports an error when it generates code, and Rapier 0.2.0 throws a version error when it creates its worlds.
+- A console server compiles `Standalone~` and references `Runtime/Plugins/Fomoxa.Net.dll` from the package, so rebuild it from the 0.3.1 package.
+
+The API, the handshake schema and the scene file format are the same as in 0.3.0, so generated code and exported scene files need no change.
+
+### Large handshakes
+
+In 0.3.0 the handshake went out in one packet that grew by 14 bytes for each message of the schema. Over plain UDP it passed 1200 bytes at 84 messages, sooner with encryption, and a network that drops IP fragments dropped it, so the client could not connect over that network. The package now ships Fomoxa.Net 0.1.4, which splits a handshake longer than 900 bytes into parts, one per packet. With encryption, each datagram stays within 1200 bytes for tickets of up to 249 bytes. As in 0.2.0, the package's build of Fomoxa.Net carries the fix for sends under Unity's Mono (see [Fomoxa.Net](#fomoxanet) under 0.2.0).
+
 ## 0.3.0
 
 This release ships these parts together:

@@ -6,7 +6,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking` 0.3.0 |
+| Package | `com.fomoxa.networking` 0.3.1 |
 | Unity | 6000.5 trở lên |
 | Giấy phép | Apache-2.0 |
 | Trình sinh code đi kèm | `fomoxac` v0.2.2, Windows x64 và Linux x64 |
