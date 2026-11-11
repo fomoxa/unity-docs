@@ -50,10 +50,10 @@ dotnet build
 | `MyGame.Backend/Models/` | Model của các lời gọi giữa client và backend |
 | `MyGame.Backend/Generated/` | Codec do `fomoxac` sinh; hãy commit |
 | `fomoxa-rpc/` | fRPC cho C# và model của directory, dạng mã nguồn |
-| `tools/fomoxac/` | `fomoxac` cho Linux x64 và Windows x64 |
+| `tools/fomoxac/` | `fomoxac` cho Linux x64, Windows x64 và macOS |
 | `Dockerfile` | Image có backend và health check của nó |
 
-**Kiểm tra:** build thành công. Build chạy `fomoxac generate` trước, và `Generated/` giữ nguyên cho tới khi bạn đổi một model. Trên macOS không có `fomoxac` đi kèm, nên build in một thông báo và dùng thư mục `Generated/` đã commit.
+**Kiểm tra:** build thành công. Build chạy `fomoxac generate` trước, và `Generated/` giữ nguyên cho tới khi bạn đổi một model.
 
 ## 2. Trỏ backend tới directory <a href="#2-point-it-at-the-directory" id="2-point-it-at-the-directory"></a>
 

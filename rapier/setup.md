@@ -7,11 +7,11 @@ This page installs the Rapier backend into a project that already uses `com.fomo
 A Unity package cannot declare a dependency on a Git package, so `com.fomoxa.networking` is not listed in this package's dependencies, and you install both. In Window > Package Manager, click +, choose Install package from git URL and enter each URL in turn:
 
 ```
-https://github.com/fomoxa/com.fomoxa.networking.git#0.3.2
-https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.2
+https://github.com/fomoxa/com.fomoxa.networking.git#0.3.3
+https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.3
 ```
 
-The backend checks the version of `com.fomoxa.networking` when it creates its worlds and throws `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.3.2; the project has ...` if the project has another one.
+The backend checks the version of `com.fomoxa.networking` when it creates its worlds and throws `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.3.3; the project has ...` if the project has another one.
 
 ## Platforms
 

@@ -50,10 +50,10 @@ dotnet build
 | `MyGame.Backend/Models/` | The models of the calls between the client and the backend |
 | `MyGame.Backend/Generated/` | Codecs written by `fomoxac`; commit them |
 | `fomoxa-rpc/` | fRPC for C# and the directory's models, as source |
-| `tools/fomoxac/` | `fomoxac` for Linux x64 and Windows x64 |
+| `tools/fomoxac/` | `fomoxac` for Linux x64, Windows x64 and macOS |
 | `Dockerfile` | An image with the backend and its health check |
 
-**Check:** the build succeeds. It runs `fomoxac generate` first, which leaves `Generated/` as it is until you change a model. On macOS no `fomoxac` is bundled, so the build prints a notice and uses the committed `Generated/` folder.
+**Check:** the build succeeds. It runs `fomoxac generate` first, which leaves `Generated/` as it is until you change a model.
 
 ## 2. Point it at the directory
 

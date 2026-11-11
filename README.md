@@ -6,10 +6,10 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking` 0.3.2 |
+| Package | `com.fomoxa.networking` 0.3.3 |
 | Unity | 6000.5 or later |
 | License | Apache-2.0 |
-| Bundled code generator | `fomoxac` v0.2.2, Windows x64, Linux x64 and macOS |
+| Bundled code generator | `fomoxac` v0.2.3, Windows x64, Linux x64 and macOS |
 
 ## Where to start
 
