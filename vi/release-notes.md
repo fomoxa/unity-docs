@@ -1,5 +1,37 @@
 # Ghi chú phát hành
 
+## 0.3.4 <a href="#034" id="034"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.4 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.4` |
+| `com.fomoxa.rpc` | 0.1.5; cần `com.fomoxa.networking` 0.3.4 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.5` |
+| `com.fomoxa.networking.rapier` | 0.2.4; cần `com.fomoxa.networking` 0.3.4 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.4` |
+
+`Fomoxa.Backend.Templates` 0.1.1, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.3.3 <a href="#upgrading-from-033" id="upgrading-from-033"></a>
+
+Nâng `com.fomoxa.rpc` lên 0.1.5 và `com.fomoxa.networking.rapier` lên 0.2.4 cùng lúc với package. Với package 0.3.4, `com.fomoxa.rpc` 0.1.4 báo lỗi khi sinh code, còn Rapier 0.2.3 ném lỗi phiên bản khi tạo world.
+
+Giao thức trên dây, fingerprint và định dạng scene file không đổi, nên peer 0.3.3 và 0.3.4 kết nối được với nhau.
+
+`IClientPredictionBackend.EndCorrection` giờ nhận tick của state bị sửa: `EndCorrection(INetworkEntity entity, uint tick)`. Chỉ backend cho engine khác mới hiện thực interface này, và backend Unity cùng backend console trong package đã làm theo.
+
+Lần sinh code kế tiếp ghi lại `FomoxaAdapters.cs`, file này giờ ghi tên của mọi message. Hãy commit file vừa sinh lại. Code sinh bằng 0.3.3 vẫn biên dịch, và `FomoxaRegistry.NameOf` trả null cho tới khi bạn sinh lại.
+
+### Công cụ debug <a href="#debug-tools" id="debug-tools"></a>
+
+- Collect Statistics trên `NetworkManager` bật bộ đếm lưu lượng cho bundle và cho từng message, trong `ClientManager.Statistics` và `ServerManager.Statistics`, với tên message lấy từ `FomoxaRegistry.NameOf`.
+- `NetworkStatsDisplay` hiện số liệu kết nối, lưu lượng, tick và prediction ở một góc của Game view.
+- `SimulatedNetworkTransport` thêm độ trễ, jitter, mất gói, lặp gói và sai thứ tự vào một transport khác trong Editor và bản build Development, và `SimulatedTransportFactory` làm việc đó trên server console.
+- `NetworkTransform.OnCorrected` và `LastCorrection` báo mỗi lần sửa của prediction dời object bao xa, và Draw Corrections hiện các cú nhảy trong Scene view.
+- `ServerManager.DroppedInputs` đếm số input bị bỏ của mọi client.
+
+[Debug](advanced/debugging.md) và [giả lập mạng](connections/transports/simulated.md) giải thích chúng.
+
 ## 0.3.3 <a href="#033" id="033"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

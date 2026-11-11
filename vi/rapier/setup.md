@@ -7,11 +7,11 @@ Trang này cài backend Rapier vào một project đã dùng `com.fomoxa.network
 Package Unity không khai báo được dependency tới một package Git, nên `com.fomoxa.networking` không có trong danh sách dependency của package này, và bạn cài cả hai. Trong Window > Package Manager, bấm +, chọn Install package from git URL rồi lần lượt nhập từng URL:
 
 ```
-https://github.com/fomoxa/com.fomoxa.networking.git#0.3.3
-https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.3
+https://github.com/fomoxa/com.fomoxa.networking.git#0.3.4
+https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.4
 ```
 
-Backend kiểm tra phiên bản của `com.fomoxa.networking` khi tạo world và ném `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.3.3; the project has ...` nếu project có phiên bản khác.
+Backend kiểm tra phiên bản của `com.fomoxa.networking` khi tạo world và ném `com.fomoxa.networking.rapier needs com.fomoxa.networking 0.3.4; the project has ...` nếu project có phiên bản khác.
 
 ## Nền tảng <a href="#platforms" id="platforms"></a>
 
