@@ -2,7 +2,7 @@
 
 [fomoxa/fomoxa-infra-demo](https://github.com/fomoxa/fomoxa-infra-demo) is a small multiplayer game that runs on every part of a Fomoxa cluster: a Unity client, game servers built as .NET console servers, the directory and the gateway, a game backend, Nakama for matchmaking and accounts, and Agones on Kubernetes. These pages take you from a blank machine to the running game. Every step is a shell command you can paste, and you do not need to know Kubernetes beforehand.
 
-[Cluster](../../deploy/cluster.md), [Game backend](../../deploy/backend.md) and [Agones](../../deploy/agones.md) explain each part separately. This example runs them together, from the scripts and manifests of one repository. The repository uses `com.fomoxa.networking` 0.3.1, `com.fomoxa.rpc` 0.1.2 and the gateway at tag `0.2.0`.
+[Cluster](../../deploy/cluster.md), [Game backend](../../deploy/backend.md) and [Agones](../../deploy/agones.md) explain each part separately. This example runs them together, from the scripts and manifests of one repository. The repository uses `com.fomoxa.networking` 0.3.4, `com.fomoxa.rpc` 0.1.5 and the gateway at tag `0.2.0`.
 
 ## What the system contains
 
