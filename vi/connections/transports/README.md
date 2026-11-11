@@ -11,7 +11,7 @@ Transport chuyển byte giữa client và server. Giao thức, độ tin cậy v
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) qua TCP | Có | Có | Có |
 | [`MultiNetworkTransport`](multi-transport.md) | Nhiều transport ở trên cho một server | Có | Có, qua transport đầu tiên | Có, qua mục WebSocket |
 
-Dù dùng transport nào, client của chính host luôn dùng kết nối [loopback](loopback.md) trong tiến trình.
+Dù dùng transport nào, client của chính host luôn dùng kết nối [loopback](loopback.md) trong tiến trình. Để thử trên mạng xấu, hãy bọc bất kỳ transport nào ở trên trong [`SimulatedNetworkTransport`](simulated.md).
 
 ## Khả năng <a href="#capabilities" id="capabilities"></a>
 

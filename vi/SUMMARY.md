@@ -41,6 +41,7 @@
   * [TLS phía client](connections/transports/tls.md)
   * [Nhiều transport](connections/transports/multi-transport.md)
   * [Loopback](connections/transports/loopback.md)
+  * [Giả lập mạng](connections/transports/simulated.md)
   * [Transport tùy chỉnh](connections/transports/custom-transport.md)
 
 ## Network object

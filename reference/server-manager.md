@@ -18,6 +18,8 @@
 | `bool Transfer(ulong peerId, string address, ushort port, ReadOnlyMemory<byte> ticket, ReadOnlyMemory<byte> connection)` | The same, and sends the grant the client needs for a new server on [encrypted UDP](../connections/transports/encrypted-udp.md#server-transfers) |
 | `bool HasRtt(ulong peerId)`, `TimeSpan RttOf(ulong peerId)` | Round-trip time reported by the peer's clock pings; `TimeSpan.Zero` when none |
 | `int DroppedInputsOf(ulong peerId)` | Inputs from the peer that were dropped |
+| `long DroppedInputs` | Dropped inputs of every peer since the server was created, including peers that have left |
+| `ServerTrafficStatistics Statistics` | [Traffic counters](../advanced/debugging.md#traffic-counters) of every peer, with `Of(peerId)` for one peer; `null` when Collect Statistics is off |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget of the peer's transport; 0 when unknown |
 | `IServerAuthenticator Authenticator` | The server side of the [authentication](../connections/authentication.md). Get and set; setting it while the server is running throws `InvalidOperationException`. |
 

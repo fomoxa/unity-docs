@@ -12,6 +12,7 @@
 | `ConnectionState State` | `Stopped`, `Starting`, `Authenticating` hoặc `Started` |
 | `IClientAuthenticator Authenticator` | Phía client của [bước xác thực](../connections/authentication.md). Đọc và ghi; đặt khi client đang chạy sẽ ném `InvalidOperationException`. |
 | `TimeSpan Rtt` | Round-trip time đã làm mượt tới server; bằng 0 với client của host và trước câu trả lời clock đầu tiên |
+| `TrafficStatistics Statistics` | [Bộ đếm lưu lượng](../advanced/debugging.md#traffic-counters); `null` khi Collect Statistics tắt |
 
 ## Object và prediction <a href="#objects-and-prediction" id="objects-and-prediction"></a>
 

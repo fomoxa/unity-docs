@@ -73,6 +73,8 @@ A correction moves the object at once. To hide that, assign a child holding the 
 
 [Deterministic simulation](../concepts/deterministic-simulation.md) explains why each of these makes the two sides differ.
 
+To see how far each correction moves the object, subscribe to `NetworkTransform.OnCorrected` or turn on Draw Corrections, as described in [debugging](../advanced/debugging.md#prediction-corrections). [Network simulation](../connections/transports/simulated.md) adds latency and loss in the Editor, so corrections show up before you test on a real network.
+
 ## With physics
 
 When the object moves with a `Rigidbody` or `Rigidbody2D` and physics simulation is on, a correction also rolls the physics worlds back, as described in [rollback with physics](rollback.md).

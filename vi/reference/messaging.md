@@ -27,8 +27,10 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 | `void SetSchema(Schema schema)` | Đặt schema |
 | `void SetCodec<T>(IMessageCodec<T> codec)` | Đăng ký codec cho một type |
 | `IMessageCodec<T> Codec<T>()` | Codec đã đăng ký cho một type, hoặc null |
+| `void SetName(uint messageId, string name)` | Ghi tên của một message; ném `ArgumentNullException` khi tên là null |
+| `string NameOf(uint messageId)` | Tên đã ghi, ví dụ `Greeting.net`, hoặc null |
 
-`FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` được sinh điền vào registry schema, các system codec, các channel đã khai báo và các RPC id.
+`FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` được sinh điền vào registry schema, tên của mọi message, các system codec, các channel đã khai báo và các RPC id.
 
 ## RpcMessageIds <a href="#rpcmessageids" id="rpcmessageids"></a>
 

@@ -10,13 +10,14 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `TransportManager` | Class | [NetworkManager reference](network-manager.md#transportmanager) |
 | `NetworkObject` | Component | [Reference](network-object.md) |
 | `NetworkBehaviour` | Abstract component | [Reference](network-object.md#networkbehaviour) |
-| `NetworkTransform`, `NetworkAnimator` | Components | [Components](components.md) |
+| `NetworkTransform`, `NetworkAnimator`, `TransformCorrection` | Components, struct | [Components](components.md) |
+| `NetworkStatsDisplay`, `ScreenCorner` | Component, enum | [Components](components.md#networkstatsdisplay) |
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Components, interfaces | [Components](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Asset types, component | [Components](components.md#observers) |
 | `NetworkAuthenticator` | Abstract component | [Authentication](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Classes, interface, extension methods | [NetworkManager reference](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Generated asset types | [Editor integration](../advanced/editor-integration.md) |
-| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Components | [Components](components.md#transports) |
+| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport`, `SimulatedNetworkTransport` | Components | [Components](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Components | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics worlds, helper | [Physics API](physics.md#unity-worlds) |
 
@@ -60,6 +61,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `ConnectionState`, `ServerState`, `StopReason`, `SendResult` | Enums | [Errors and stop reasons](errors.md) |
 | `ConnectionStateArgs`, `ServerConnectionStateArgs`, `SendDroppedArgs`, `ReceiveDroppedArgs`, `HandlerExceptionArgs`, `TransferringArgs` | Event arguments | [Events and callbacks](callbacks.md) |
 | `SessionLimits`, `ReconnectPolicy` | Settings | [Configuration](configuration.md) |
+| `TrafficStatistics`, `ServerTrafficStatistics`, `TrafficDirection`, `MessageTraffic`, `TrafficCount` | Counters | [Debugging](../advanced/debugging.md#traffic-counters) |
 | `ClientSession`, `ServerSession`, `ClientReconnector`, `SessionInbox`, `SessionOutbox`, `FlushPolicy`, `SendResults` | Building blocks | |
 
 ## Fomoxa.Networking.Objects
@@ -95,6 +97,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `EncryptedWebSocketTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factories | [Transports](../connections/transports/README.md) |
 | `TlsSettings`, `TlsRoots`, `ITlsCertificateCheck`, `TlsCertificateCheck` | Client TLS | [Client TLS](../connections/transports/tls.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transports | [Loopback](../connections/transports/loopback.md) |
+| `SimulatedTransportFactory`, `NetworkConditions` | Factory, settings | [Network simulation](../connections/transports/simulated.md#on-a-console-server) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Name resolution | [Transports overview](../connections/transports/README.md#non-blocking-operation) |
 
 ## Fomoxa.Unity.Editor

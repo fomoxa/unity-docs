@@ -10,13 +10,14 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `TransportManager` | Class | [Tham chiếu NetworkManager](network-manager.md#transportmanager) |
 | `NetworkObject` | Component | [Tham chiếu](network-object.md) |
 | `NetworkBehaviour` | Component trừu tượng | [Tham chiếu](network-object.md#networkbehaviour) |
-| `NetworkTransform`, `NetworkAnimator` | Component | [Component](components.md) |
+| `NetworkTransform`, `NetworkAnimator`, `TransformCorrection` | Component, struct | [Component](components.md) |
+| `NetworkStatsDisplay`, `ScreenCorner` | Component, enum | [Component](components.md#networkstatsdisplay) |
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Component, interface | [Component](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Type asset, component | [Component](components.md#observers) |
 | `NetworkAuthenticator` | Component trừu tượng | [Xác thực](../connections/authentication.md) |
 | `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Class, interface, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../advanced/editor-integration.md) |
-| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport` | Component | [Component](components.md#transports) |
+| `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport`, `SimulatedNetworkTransport` | Component | [Component](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Component | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics world, helper | [Physics API](physics.md#unity-worlds) |
 
@@ -60,6 +61,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `ConnectionState`, `ServerState`, `StopReason`, `SendResult` | Enum | [Lỗi và lý do dừng](errors.md) |
 | `ConnectionStateArgs`, `ServerConnectionStateArgs`, `SendDroppedArgs`, `ReceiveDroppedArgs`, `HandlerExceptionArgs`, `TransferringArgs` | Tham số event | [Event và callback](callbacks.md) |
 | `SessionLimits`, `ReconnectPolicy` | Thiết lập | [Cấu hình](configuration.md) |
+| `TrafficStatistics`, `ServerTrafficStatistics`, `TrafficDirection`, `MessageTraffic`, `TrafficCount` | Bộ đếm | [Debug](../advanced/debugging.md#traffic-counters) |
 | `ClientSession`, `ServerSession`, `ClientReconnector`, `SessionInbox`, `SessionOutbox`, `FlushPolicy`, `SendResults` | Building block | |
 
 ## Fomoxa.Networking.Objects <a href="#fomoxanetworkingobjects" id="fomoxanetworkingobjects"></a>
@@ -95,6 +97,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `UdpTransportFactory`, `EncryptedUdpTransportFactory`, `EncryptedWebSocketTransportFactory`, `TcpTransportFactory`, `WebSocketTransportFactory`, `WebSocketSettings`, `MultiTransportFactory` | Factory | [Transport](../connections/transports/README.md) |
 | `TlsSettings`, `TlsRoots`, `ITlsCertificateCheck`, `TlsCertificateCheck` | TLS phía client | [TLS phía client](../connections/transports/tls.md) |
 | `LoopbackTransport`, `LoopbackListener`, `CompositeListener` | Transport | [Loopback](../connections/transports/loopback.md) |
+| `SimulatedTransportFactory`, `NetworkConditions` | Factory, thiết lập | [Giả lập mạng](../connections/transports/simulated.md#on-a-console-server) |
 | `IHostResolver`, `HostResolver`, `ResolveStatus` | Phân giải tên | [Tổng quan transport](../connections/transports/README.md#non-blocking-operation) |
 
 ## Fomoxa.Unity.Editor <a href="#fomoxaunityeditor" id="fomoxaunityeditor"></a>

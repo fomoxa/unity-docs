@@ -12,6 +12,7 @@
 | `ConnectionState State` | `Stopped`, `Starting`, `Authenticating` or `Started` |
 | `IClientAuthenticator Authenticator` | The client side of the [authentication](../connections/authentication.md). Get and set; setting it while the client is running throws `InvalidOperationException`. |
 | `TimeSpan Rtt` | Smoothed round-trip time to the server; zero for a host's client and before the first clock answer |
+| `TrafficStatistics Statistics` | [Traffic counters](../advanced/debugging.md#traffic-counters); `null` when Collect Statistics is off |
 
 ## Objects and prediction
 

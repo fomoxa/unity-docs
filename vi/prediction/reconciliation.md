@@ -73,6 +73,8 @@ Một lần sửa di chuyển object ngay lập tức. Để che điều đó, h
 
 [Mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao mỗi nguyên nhân trên làm hai bên khác nhau.
 
+Để thấy mỗi lần sửa dời object bao xa, hãy subscribe `NetworkTransform.OnCorrected` hoặc bật Draw Corrections, như mô tả trong [debug](../advanced/debugging.md#prediction-corrections). [Giả lập mạng](../connections/transports/simulated.md) thêm độ trễ và mất gói ngay trong Editor, nên các lần sửa lộ ra trước khi bạn thử trên mạng thật.
+
 ## Với physics <a href="#with-physics" id="with-physics"></a>
 
 Khi object di chuyển bằng `Rigidbody` hoặc `Rigidbody2D` và mô phỏng physics đang bật, một lần sửa còn rollback cả các physics world, như mô tả trong [rollback với physics](rollback.md).

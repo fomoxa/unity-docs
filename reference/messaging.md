@@ -27,8 +27,10 @@ Each generated adapter is a `public sealed class <Model><Codec>Adapter : IMessag
 | `void SetSchema(Schema schema)` | Sets the schema |
 | `void SetCodec<T>(IMessageCodec<T> codec)` | Registers a codec for a type |
 | `IMessageCodec<T> Codec<T>()` | The codec registered for a type, or null |
+| `void SetName(uint messageId, string name)` | Records a message's name; throws `ArgumentNullException` for a null name |
+| `string NameOf(uint messageId)` | The recorded name, such as `Greeting.net`, or null |
 
-The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a registry with the schema, the system codecs, the declared channels and the RPC ids.
+The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a registry with the schema, the name of every message, the system codecs, the declared channels and the RPC ids.
 
 ## RpcMessageIds
 

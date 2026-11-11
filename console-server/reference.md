@@ -81,7 +81,7 @@ On a console client, the factory must return an entity that is not spawned.
 | `IServerSceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scenes on the server, presents boot scene objects, lists the scene objects of a scene |
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Creates entities for spawns, places scene objects, ends entities and hides or shows them on a host |
 | `ISceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scenes on a client |
-| `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | The worlds and histories of predicted entities, proxies, and the start and end of a correction |
+| `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | The worlds and histories of predicted entities, proxies, and the start and end of a correction; `EndCorrection(entity, tick)` gets the tick of the corrected state |
 | `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics for the tick loop, physics by scene id for the console backend, and the optional report of moved entities that lets the server skip resting transforms |
 
 `NetworkRuntime(FomoxaRegistry registry, NetworkSettings settings, ITransportFactory transport, NetworkBackends backends, Func<TimeSpan> clock, NetworkLog log)` is the constructor.

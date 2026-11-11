@@ -13,6 +13,16 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `Visual` | `Transform` | Get and set. Child smoothed after prediction corrections. |
 | `SmoothingTime` | `float` | Get and set; negative values become 0 |
 | `Teleport()` | `void` | On the server, makes clients jump to the next transform instead of interpolating. Does nothing elsewhere. |
+| `OnCorrected` | `event Action<TransformCorrection>` | Raised on the owner's client after every replay that includes the object; see [prediction corrections](../advanced/debugging.md#prediction-corrections) |
+| `LastCorrection` | `TransformCorrection?` | The last correction; `null` until the first one |
+| `DrawCorrections` | `bool` | Get and set. Draws corrections as gizmos in the Editor. |
+| `CorrectionSeconds` | `float` | Get and set; values below 0.1 become 0.1 |
+
+`TransformCorrection` is a `public readonly struct` in `Fomoxa.Unity` with `uint Tick`, `Vector3 PositionBefore`, `PositionAfter`, `PositionOffset`, `Quaternion RotationBefore`, `RotationAfter` and `float RotationDegrees`.
+
+## NetworkStatsDisplay
+
+`public sealed class NetworkStatsDisplay : MonoBehaviour`, explained in [debugging](../advanced/debugging.md#on-screen-statistics). It has no public members besides its Inspector fields, and `ScreenCorner` is the enum of its Corner field: `TopLeft`, `TopRight`, `BottomLeft`, `BottomRight`.
 
 ## NetworkAnimator
 
@@ -78,6 +88,7 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `WebSocketNetworkTransport` | WebSocket; native code on desktop, the browser in WebGL; property `Tls` for `wss://` URLs on desktop |
 | `EncryptedWebSocketNetworkTransport` | Client only: encrypted UDP datagrams as WebSocket messages to `fomoxa-gateway`; properties `Tls` and `Registry`. See [encrypted WebSocket](../connections/transports/encrypted-websocket.md) |
 | `MultiNetworkTransport` | Several transports, each with a port, on one server |
+| `SimulatedNetworkTransport` | Another transport with added latency, jitter, loss, duplicates and reordering, in the Editor and Development builds. See [network simulation](../connections/transports/simulated.md) |
 
 The [transports overview](../connections/transports/README.md) explains each transport.
 

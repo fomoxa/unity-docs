@@ -11,7 +11,7 @@ A transport moves bytes between a client and a server. The package's protocol, r
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) over TCP | Yes | Yes | Yes |
 | [`MultiNetworkTransport`](multi-transport.md) | Several of the above on one server | Yes | Yes, through its first transport | Yes, through its WebSocket entry |
 
-Whatever the transport, a host's own client always uses the in-process [loopback](loopback.md) connection.
+Whatever the transport, a host's own client always uses the in-process [loopback](loopback.md) connection. To test on a bad network, wrap any of these in [`SimulatedNetworkTransport`](simulated.md).
 
 ## Capabilities
 

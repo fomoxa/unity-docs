@@ -81,7 +81,7 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | `IServerSceneHost` | `Fomoxa.Networking.Objects` | Load và unload scene trên server, đưa ra scene object của boot scene, liệt kê scene object của một scene |
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Tạo entity cho các lần spawn, đặt scene object, kết thúc entity và ẩn hoặc hiện chúng trên host |
 | `ISceneHost` | `Fomoxa.Networking.Objects` | Load và unload scene trên client |
-| `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | Các world và history của entity được dự đoán, proxy, và lúc bắt đầu, kết thúc một lần sửa |
+| `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | Các world và history của entity được dự đoán, proxy, và lúc bắt đầu, kết thúc một lần sửa; `EndCorrection(entity, tick)` nhận tick của state bị sửa |
 | `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics cho vòng tick, physics theo scene id cho backend console, và phần báo entity vừa di chuyển (không bắt buộc) để server bỏ qua transform đứng yên |
 
 Constructor là `NetworkRuntime(FomoxaRegistry registry, NetworkSettings settings, ITransportFactory transport, NetworkBackends backends, Func<TimeSpan> clock, NetworkLog log)`.

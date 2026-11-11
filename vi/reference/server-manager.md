@@ -18,6 +18,8 @@
 | `bool Transfer(ulong peerId, string address, ushort port, ReadOnlyMemory<byte> ticket, ReadOnlyMemory<byte> connection)` | Như trên, và gửi vé kết nối mà client cần cho server mới dùng [UDP mã hóa](../connections/transports/encrypted-udp.md#server-transfers) |
 | `bool HasRtt(ulong peerId)`, `TimeSpan RttOf(ulong peerId)` | Round-trip time mà các clock ping của peer báo; `TimeSpan.Zero` khi chưa có |
 | `int DroppedInputsOf(ulong peerId)` | Số input từ peer đã bị bỏ |
+| `long DroppedInputs` | Số input bị bỏ của mọi peer kể từ khi server được tạo, kể cả peer đã rời |
+| `ServerTrafficStatistics Statistics` | [Bộ đếm lưu lượng](../advanced/debugging.md#traffic-counters) của mọi peer, với `Of(peerId)` cho một peer; `null` khi Collect Statistics tắt |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget của transport của peer; 0 khi không biết |
 | `IServerAuthenticator Authenticator` | Phía server của [bước xác thực](../connections/authentication.md). Đọc và ghi; đặt khi server đang chạy sẽ ném `InvalidOperationException`. |
 

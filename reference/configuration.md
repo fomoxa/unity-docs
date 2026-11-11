@@ -20,6 +20,7 @@ The [NetworkManager](../connections/network-manager.md) guide explains what each
 | Authenticator | `NetworkAuthenticator` | none | |
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
+| Collect Statistics | `bool` | false; read once when the manager starts | |
 | Max Reconnect Retries | `int` | -1 (no limit) | |
 | Reconnect Interval Seconds | `float` | 0.5 | |
 | Handshake Timeout Seconds | `float` | 5 | |
@@ -72,6 +73,8 @@ A value outside its range throws when the manager starts.
 | Interpolation Ticks | `int` | 2 |
 | Visual | `Transform` | none |
 | Smoothing Time | `float` | 0.1 |
+| Draw Corrections | `bool` | false |
+| Correction Seconds | `float` | 2, at least 0.1 |
 
 ## NetworkAnimator
 
@@ -90,11 +93,38 @@ A value outside its range throws when the manager starts.
 | Allowed Origins | `string[]` | empty |
 | Max Buffered Bytes | `int` | 1048576 |
 
+## SimulatedNetworkTransport
+
+| Field | Type | Default |
+|---|---|---|
+| Transport | `NetworkTransport` | none |
+| Latency Milliseconds | `float` | 0, at least 0 |
+| Jitter Milliseconds | `float` | 0, at least 0 |
+| Packet Loss | `float` | 0, 0 to 100 |
+| Duplicate | `float` | 0, 0 to 100 |
+| Reorder | `float` | 0, 0 to 100 |
+| Max Held Packets | `int` | 1024, at least 1 |
+
+Changes made while playing apply from the next packet on.
+
 ## MultiNetworkTransport
 
 | Field | Type | Default |
 |---|---|---|
 | Transports | list of entries: `NetworkTransport` Transport, `int` Port | empty |
+
+## NetworkStatsDisplay
+
+| Field | Type | Default |
+|---|---|---|
+| Manager | `NetworkManager` | none, then the one on the same GameObject |
+| Show Connection | `bool` | true |
+| Show Traffic | `bool` | false |
+| Show Time | `bool` | true |
+| Show Prediction | `bool` | false |
+| Corner | `ScreenCorner` | `TopLeft` |
+| Average Seconds | `float` | 1, at least 0.1 |
+| Run In Release Builds | `bool` | false |
 
 ## Observers
 

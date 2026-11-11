@@ -20,6 +20,7 @@ Hướng dẫn [NetworkManager](../connections/network-manager.md) giải thích
 | Authenticator | `NetworkAuthenticator` | không có | |
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
+| Collect Statistics | `bool` | false; chỉ đọc một lần khi manager khởi động | |
 | Max Reconnect Retries | `int` | -1 (không giới hạn) | |
 | Reconnect Interval Seconds | `float` | 0.5 | |
 | Handshake Timeout Seconds | `float` | 5 | |
@@ -72,6 +73,8 @@ Giá trị nằm ngoài phạm vi sẽ ném exception khi manager khởi động
 | Interpolation Ticks | `int` | 2 |
 | Visual | `Transform` | không có |
 | Smoothing Time | `float` | 0.1 |
+| Draw Corrections | `bool` | false |
+| Correction Seconds | `float` | 2, ít nhất 0.1 |
 
 ## NetworkAnimator <a href="#networkanimator" id="networkanimator"></a>
 
@@ -90,11 +93,38 @@ Giá trị nằm ngoài phạm vi sẽ ném exception khi manager khởi động
 | Allowed Origins | `string[]` | trống |
 | Max Buffered Bytes | `int` | 1048576 |
 
+## SimulatedNetworkTransport <a href="#simulatednetworktransport" id="simulatednetworktransport"></a>
+
+| Field | Type | Mặc định |
+|---|---|---|
+| Transport | `NetworkTransport` | không có |
+| Latency Milliseconds | `float` | 0, ít nhất 0 |
+| Jitter Milliseconds | `float` | 0, ít nhất 0 |
+| Packet Loss | `float` | 0, từ 0 tới 100 |
+| Duplicate | `float` | 0, từ 0 tới 100 |
+| Reorder | `float` | 0, từ 0 tới 100 |
+| Max Held Packets | `int` | 1024, ít nhất 1 |
+
+Thay đổi lúc đang chơi có tác dụng từ gói tiếp theo.
+
 ## MultiNetworkTransport <a href="#multinetworktransport" id="multinetworktransport"></a>
 
 | Field | Type | Mặc định |
 |---|---|---|
 | Transports | danh sách mục: `NetworkTransport` Transport, `int` Port | trống |
+
+## NetworkStatsDisplay <a href="#networkstatsdisplay" id="networkstatsdisplay"></a>
+
+| Field | Type | Mặc định |
+|---|---|---|
+| Manager | `NetworkManager` | không có, khi đó là manager trên cùng GameObject |
+| Show Connection | `bool` | true |
+| Show Traffic | `bool` | false |
+| Show Time | `bool` | true |
+| Show Prediction | `bool` | false |
+| Corner | `ScreenCorner` | `TopLeft` |
+| Average Seconds | `float` | 1, ít nhất 0.1 |
+| Run In Release Builds | `bool` | false |
 
 ## Observer <a href="#observers" id="observers"></a>
 

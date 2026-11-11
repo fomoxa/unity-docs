@@ -13,6 +13,16 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `Visual` | `Transform` | Đọc và ghi. Object con được làm mượt sau các lần sửa prediction. |
 | `SmoothingTime` | `float` | Đọc và ghi; giá trị âm thành 0 |
 | `Teleport()` | `void` | Trên server, khiến client nhảy tới transform tiếp theo thay vì interpolate. Ở nơi khác không làm gì. |
+| `OnCorrected` | `event Action<TransformCorrection>` | Phát trên client của owner sau mỗi lần replay có object; xem [lần sửa của prediction](../advanced/debugging.md#prediction-corrections) |
+| `LastCorrection` | `TransformCorrection?` | Lần sửa gần nhất; `null` cho tới lần đầu |
+| `DrawCorrections` | `bool` | Get và set. Vẽ các lần sửa thành gizmo trong Editor. |
+| `CorrectionSeconds` | `float` | Get và set; giá trị dưới 0.1 thành 0.1 |
+
+`TransformCorrection` là một `public readonly struct` trong `Fomoxa.Unity` với `uint Tick`, `Vector3 PositionBefore`, `PositionAfter`, `PositionOffset`, `Quaternion RotationBefore`, `RotationAfter` và `float RotationDegrees`.
+
+## NetworkStatsDisplay <a href="#networkstatsdisplay" id="networkstatsdisplay"></a>
+
+`public sealed class NetworkStatsDisplay : MonoBehaviour`, giải thích trong [debug](../advanced/debugging.md#on-screen-statistics). Ngoài các field Inspector, nó không có thành viên public nào, và `ScreenCorner` là enum của field Corner: `TopLeft`, `TopRight`, `BottomLeft`, `BottomRight`.
 
 ## NetworkAnimator <a href="#networkanimator" id="networkanimator"></a>
 
@@ -80,6 +90,7 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `WebSocketNetworkTransport` | WebSocket; code native trên desktop, trình duyệt trong WebGL; property `Tls` cho URL `wss://` trên desktop |
 | `EncryptedWebSocketNetworkTransport` | Chỉ phía client: datagram UDP mã hóa thành message WebSocket tới `fomoxa-gateway`; property `Tls` và `Registry`. Xem [WebSocket mã hóa](../connections/transports/encrypted-websocket.md) |
 | `MultiNetworkTransport` | Nhiều transport, mỗi transport một port, trên một server |
+| `SimulatedNetworkTransport` | Một transport khác có thêm độ trễ, jitter, mất gói, lặp gói và sai thứ tự, trong Editor và bản build Development. Xem [giả lập mạng](../connections/transports/simulated.md) |
 
 [Tổng quan transport](../connections/transports/README.md) giải thích từng transport.
 

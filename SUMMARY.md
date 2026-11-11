@@ -41,6 +41,7 @@
   * [Client TLS](connections/transports/tls.md)
   * [Multiple transports](connections/transports/multi-transport.md)
   * [Loopback](connections/transports/loopback.md)
+  * [Network simulation](connections/transports/simulated.md)
   * [Custom transport](connections/transports/custom-transport.md)
 
 ## Network objects
