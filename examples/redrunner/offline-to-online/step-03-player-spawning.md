@@ -222,8 +222,6 @@ public sealed class NetworkPlayer : NetworkBehaviour
 
 Add `NetworkGame` to the `Network Manager` object, with the `NetworkManager` in Manager and `RedRunner.prefab` in Player Prefab. The default spawn point, (7.24, 12.59), is where the scene character used to stand.
 
-Fomoxa creates the character on every client, assigns the owner and despawns the character when the owner leaves, while the game decides when to spawn, where, and which prefab.
-
 ### Add the address field
 
 Under `Canvas/Start Screen`, add a GameObject > UI > Legacy > Input Field named `Address Field`, below the row of small buttons (position 0, -222, size 320 × 48). Set its text to `localhost` and its placeholder to `Server address`. Give both texts the game's font, `Baloo-Regular`, at size 24, centred, with Vertical Overflow set to Overflow, because with Truncate the line height of Baloo hides the text. These layout settings come from commit `7396f92` in step 09; in `1b65628` the field sat elsewhere on the screen and its text did not show.

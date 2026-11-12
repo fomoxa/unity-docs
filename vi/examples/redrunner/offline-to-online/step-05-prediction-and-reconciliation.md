@@ -133,8 +133,6 @@ private static bool Matches(PlayerMotion server, PlayerMotion predicted) =>
 
 Trong lúc replay, `InputContext.Replaying` là true, và `Apply` từ bước 04 truyền `!context.Replaying` làm `effects`, nên một cú nhảy được replay thay đổi vận tốc mà không phát lại âm thanh, particle hay trigger lần thứ hai.
 
-Fomoxa giữ lịch sử, so sánh đúng tick, khôi phục physics world và replay, còn game quyết định thế nào là cùng kết quả và chấp nhận chênh lệch tới đâu.
-
 ### Đi theo người chơi cục bộ <a href="#follow-the-local-player" id="follow-the-local-player"></a>
 
 `NetworkGame.SetLocalPlayer` giờ hướng camera và nền vào nhân vật của owner:

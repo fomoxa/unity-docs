@@ -112,6 +112,6 @@ After a step, the points are those of that step. Between a `Load` and the next s
 
 ## Older overloads
 
-`Raycast` without a filter and `Overlap(center, radius, results)` with a sphere or circle remain as extension methods in `PhysicsQueries`. They use `QueryFilter.All`, so under `RigidbodyPhysics` they now consider every layer, including Ignore Raycast, and hit triggers.
+`Raycast` without a filter and `Overlap(center, radius, results)` with a sphere or circle remain as extension methods in `PhysicsQueries`. They use `QueryFilter.All`, so under `RigidbodyPhysics` they consider every layer, including Ignore Raycast, and hit triggers.
 
 The [physics API reference](../reference/physics.md) lists the types, and [PhysicsBody](physics-body.md) covers forces and torques.

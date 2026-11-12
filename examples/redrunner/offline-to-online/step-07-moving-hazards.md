@@ -133,8 +133,6 @@ On the server and in host mode, `TimeManager.PredictionTick` equals the server's
 
 When a client replays ticks to correct its character, the followers stay at the position of the current tick. A replay covers only a few ticks, so the difference is small, and the server still decides whether the mace killed anyone.
 
-Fomoxa provides the tick number, the tick length and the moment before each tick, and the game turns them into a position.
-
 ## Test
 
 Join a server and watch a mace without going near it.

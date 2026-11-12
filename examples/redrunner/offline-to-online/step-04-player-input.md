@@ -184,11 +184,9 @@ private void Apply(PlayerInput input, InputContext context)
 
 `Update` runs every frame and keeps button presses until the next `Gather`, so a press shorter than a tick is not lost. While the pause screen is open, `gameRunning` is false and the input is empty, so the character stops while the server and the other players keep going.
 
-On the server, `Apply` runs at the tick the input belongs to. When no input has arrived for a tick, the package repeats the last one and sets `InputContext.Repeated`, and the port then repeats only the axis, never a jump or a roll. `InputContext.Replaying` comes into play in step 05. `NetworkPlayer.Awake` now gets `RedCharacter` and finds `NetworkGame` once, so `m_Game` is set on every instance and not only on the owner's.
+On the server, `Apply` runs at the tick the input belongs to. When no input has arrived for a tick, the package repeats the last one and sets `InputContext.Repeated`, and the port then repeats only the axis, never a jump or a roll. `InputContext.Replaying` comes into play in step 05. `NetworkPlayer.Awake` now gets `RedCharacter` and finds `NetworkGame` once, so `m_Game` is set on every instance, the owner's included.
 
 The `Reconcile` line and its three callbacks belong to step 05, although they were written in the same commit.
-
-Fomoxa gathers, numbers, sends, buffers and repeats the input, and calls `Apply` at the right tick. The game decides what the input contains and what one tick of movement does.
 
 ## Test
 

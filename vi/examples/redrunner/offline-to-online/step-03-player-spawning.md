@@ -222,8 +222,6 @@ public sealed class NetworkPlayer : NetworkBehaviour
 
 Thêm `NetworkGame` vào object `Network Manager`, với `NetworkManager` trong Manager và `RedRunner.prefab` trong Player Prefab. Điểm spawn mặc định, (7.24, 12.59), là chỗ nhân vật trong scene từng đứng.
 
-Fomoxa tạo nhân vật trên mọi client, gán owner và despawn nhân vật khi owner rời đi, còn game quyết định khi nào spawn, ở đâu và dùng prefab nào.
-
 ### Thêm ô địa chỉ <a href="#add-the-address-field" id="add-the-address-field"></a>
 
 Dưới `Canvas/Start Screen`, thêm một GameObject > UI > Legacy > Input Field tên `Address Field`, bên dưới hàng nút nhỏ (vị trí 0, -222, kích thước 320 × 48). Đặt text của nó là `localhost` và placeholder là `Server address`. Cho cả hai text dùng font của game, `Baloo-Regular`, cỡ 24, căn giữa, với Vertical Overflow đặt là Overflow, vì với Truncate thì chiều cao dòng của Baloo che mất chữ. Các thiết lập bố cục này đến từ commit `7396f92` ở bước 09; trong `1b65628`, ô này nằm ở chỗ khác trên màn hình và chữ của nó không hiện.

@@ -4,7 +4,7 @@ Up to the index: [03-DEPLOY-KUBERNETES](README.md) · Next: [01-prepare-and-keys
 
 This page explains the concepts you meet in the later steps. Each one comes with a command that shows it in your cluster once it is built (steps 9 and 10). If you already know Kubernetes, skip to [01](01-prepare-and-keys.md).
 
-Output marked is built from the manifests, not captured from a running cluster. Real pod names carry random suffixes that will differ.
+Sample output on this page is built from the manifests, not captured from a running cluster. Real pod names carry random suffixes that will differ.
 
 ## The big picture
 

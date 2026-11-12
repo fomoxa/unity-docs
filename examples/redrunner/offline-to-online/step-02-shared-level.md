@@ -186,8 +186,6 @@ On the server, `OnStartServer` picks the seed and builds the level. On a client,
 
 In `Play.unity`, create a root GameObject named `Network Level` with `NetworkObject` and `NetworkLevel`, put the `Terrain Generator` object in the Generator field and save the scene, which gives the `NetworkObject` a scene object id. The package deactivates scene objects when the scene loads and activates them when they spawn, so the level stays empty until a server starts.
 
-The division of work is that Fomoxa sends the state and decodes it on the client, while the game decides what the seed means and builds the level from it in every process.
-
 ## Test
 
 Nothing starts a server yet, so start one from a throwaway component in Play Mode:

@@ -1,6 +1,6 @@
 # Mô phỏng tất định
 
-Một mô phỏng là tất định khi cùng state ban đầu và cùng input luôn cho ra cùng kết quả. Game networking dựa vào tính tất định ở các mức khác nhau tùy tính năng. Package cung cấp một số mức và không cung cấp các mức khác, trang này phân rõ mức nào thuộc loại nào.
+Một mô phỏng là tất định khi cùng state ban đầu và cùng input luôn cho ra cùng kết quả. Game networking dựa vào tính tất định ở các mức khác nhau tùy tính năng. Package cung cấp một số mức và không cung cấp các mức khác.
 
 <figure><img src="../.gitbook/assets/diagrams/determinism.svg" alt="Sáu hàng. Protocol, input và tick do package cung cấp. Logic game trong apply() thuộc trách nhiệm code của bạn. Physics không được cung cấp, vì physics của Unity không bảo đảm kết quả giống hệt. State giống hệt là không bắt buộc, vì matches() quyết định gần tới mức nào là đủ. Lockstep, ghi và phát lại trận đấu, số ngẫu nhiên tất định và state hashing không có trong package."><figcaption><p>Package cung cấp những mức tất định nào.</p></figcaption></figure>
 

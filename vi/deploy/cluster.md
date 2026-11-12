@@ -43,7 +43,7 @@ sequenceDiagram
 Pod bị rút khi nhà vận hành gọi `Drain` trên service quản trị của directory, hoặc khi pod tự xin bằng `RequestDrain`, ví dụ lúc nền tảng sắp dừng nó. Directory ngừng xếp phòng mới lên pod và báo cho pod qua `OnDrain`, kèm hạn chót.
 
 1. Với mỗi phòng, game gọi `pod.Relocate(roomKey, tickets, data)`. Directory chuyển phòng sang pod khác trong một bước và trả địa chỉ mới, URL WebSocket và mỗi người chơi một vé kết nối.
-2. Game gọi `ServerManager.Transfer` cho từng người chơi. Người chơi giữ transport của mình khi chuyển, nên hãy kiểm `ServerManager.ArrivedOverWebSocket(peerId)` và đưa người chơi WebSocket URL WebSocket với cổng 0.
+2. Game gọi `ServerManager.Transfer` cho từng người chơi. Người chơi giữ transport của mình khi chuyển, nên hãy kiểm `ServerManager.ArrivedOverWebSocket(peerId)` và đưa URL WebSocket và cổng 0 cho người chơi WebSocket.
 3. Mỗi client tự kết nối tới pod mới qua gateway. Xem [chuyển server](../connections/transfer.md).
 4. Tới hạn chót, pod dừng server dù còn phòng hay không. Thoát process là việc của game hoặc của nền tảng.
 

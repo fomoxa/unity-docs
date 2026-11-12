@@ -224,7 +224,7 @@ spec:
 - **Không gửi health ping.** Game server chuyển sang `Unhealthy` vài giây sau khi khởi động, và Agones thay nó.
 - **Tắt quá sớm.** Gọi `ShutDownAsync` ngay sau `Transfer` có thể cắt lệnh chuyển trước khi nó tới client.
 - **Bật Behind Gateway mà không có gateway.** Pod bỏ mọi datagram, vì không datagram nào mang đầu bọc của gateway.
-- **Client WebGL không có gateway.** Client trình duyệt kết nối bằng [WebSocket mã hóa](../connections/transports/encrypted-websocket.md), mà chỉ gateway phục vụ, nên chúng cần cách có gateway.
+- **Client WebGL không có gateway.** Client trình duyệt kết nối bằng [WebSocket mã hóa](../connections/transports/encrypted-websocket.md), mà chỉ gateway phục vụ, nên chúng cần cách thiết lập có gateway.
 
 ## Bước tiếp theo <a href="#next-steps" id="next-steps"></a>
 

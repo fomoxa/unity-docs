@@ -1,6 +1,6 @@
 # Deterministic simulation
 
-A simulation is deterministic when the same starting state and the same input always produce the same result. Networked games rely on determinism to different degrees depending on the feature. The package provides some levels of it and not others, and this page sorts out which is which.
+A simulation is deterministic when the same starting state and the same input always produce the same result. Networked games rely on determinism to different degrees depending on the feature. The package provides some levels of it and not others.
 
 <figure><img src="../.gitbook/assets/diagrams/determinism.svg" alt="Six rows. Protocol, input and tick are provided by the package. Game logic in apply() is your code's responsibility. Physics is not provided, because Unity physics does not promise identical results. Identical state is not required, because matches() decides how close is close enough. Lockstep, match recording and replay, deterministic random numbers and state hashing are not in the package."><figcaption><p>Which levels of determinism the package provides.</p></figcaption></figure>
 

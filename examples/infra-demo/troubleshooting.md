@@ -143,7 +143,9 @@ Fix: use "Auto matchmaking" (`auto`), or clear the queue with `reset_match` (nee
 
 ### A player who just finished a match asks for another room and lands in the old one
 
-Fixed in `main.lua`: polling no longer returns the result of the previous match. If you still see it, check that Nakama runs the new `main.lua` (compare the ConfigMap and restart Nakama).
+Cause: Nakama runs an older `main.lua`, which returns the result of the previous match when polling. The current `main.lua` does not.
+
+Fix: compare the ConfigMap with the file and restart Nakama.
 
 ### `401 Unauthorized` from Nakama
 

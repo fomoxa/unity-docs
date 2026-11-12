@@ -133,8 +133,6 @@ private static bool Matches(PlayerMotion server, PlayerMotion predicted) =>
 
 During a replay `InputContext.Replaying` is true, and `Apply` from step 04 passes `!context.Replaying` as `effects`, so a replayed jump changes the velocity without playing the sound, the particles or the trigger a second time.
 
-Fomoxa keeps the history, compares at the right tick, restores the physics world and replays, while the game decides what counts as the same result and how much difference to accept.
-
 ### Follow the local player
 
 `NetworkGame.SetLocalPlayer` now points the camera and the background at the owner's character:

@@ -68,8 +68,6 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | Member | Type | Mô tả |
 |---|---|---|
 | `Radius` | `float` | Đọc và ghi. Khoảng cách observe tính từ bất kỳ object nào peer sở hữu; giá trị âm thành 0. |
-| `IsAttached` | `bool` | Một component physics đã tiếp quản component này và báo contact từ world của chính nó |
-| `Attach(tracker, query)`, `Detach(query)` | `bool`, `void` | Do component physics tự báo contact gọi; `RigidbodyPhysics` không dùng chúng |
 
 ### ObserverRange <a href="#observerrange" id="observerrange"></a>
 

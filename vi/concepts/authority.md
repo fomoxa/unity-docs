@@ -28,6 +28,6 @@ Owner là peer mà object thuộc về, như nhân vật thuộc về người c
 
 ## Prediction vẫn do server quyết định <a href="#prediction-stays-server-authoritative" id="prediction-stays-server-authoritative"></a>
 
-Với prediction, owner áp input của mình ngay thay vì đợi server. Server áp cùng input đó khi nó tới và gửi kết quả về. Nếu hai kết quả khác nhau, client khôi phục kết quả của server và phát lại các input mới hơn lên trên. Dù client đã dự đoán gì, kết quả của server mới là kết quả được giữ lại. [Prediction](prediction.md) giải thích vòng lặp này chi tiết hơn.
+Với prediction, owner áp input của mình ngay thay vì đợi server. Server áp cùng input đó khi nó tới và gửi kết quả về. Nếu hai kết quả khác nhau, client khôi phục kết quả của server và phát lại các input mới hơn lên trên. [Prediction](prediction.md) giải thích vòng lặp này chi tiết hơn.
 
 Về cách quyết định của server tới được client, xem [server, client và message](networking-model.md) và [replication](replication.md).

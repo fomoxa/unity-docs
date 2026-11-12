@@ -28,6 +28,6 @@ An owner is the peer that an object belongs to, as a player character belongs to
 
 ## Prediction stays server-authoritative
 
-With prediction, the owner applies its own input at once instead of waiting for the server. The server applies the same input when it arrives and sends its result back. If the two results differ, the client restores the server's result and replays its newer input on top of it. Whatever the client predicted, the server's result is the one that stays. [Prediction](prediction.md) explains the loop in more detail.
+With prediction, the owner applies its own input at once instead of waiting for the server. The server applies the same input when it arrives and sends its result back. If the two results differ, the client restores the server's result and replays its newer input on top of it. [Prediction](prediction.md) explains the loop in more detail.
 
 For how the server's decisions reach clients, see [server, clients and messages](networking-model.md) and [replication](replication.md).

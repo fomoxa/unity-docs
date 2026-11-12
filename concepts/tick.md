@@ -94,7 +94,7 @@ The example subscribes in `Start` because `NetworkManager` creates its `TimeMana
 
 ## Three tick numbers
 
-A client connected to a remote server works with three tick numbers. Its own counter, an estimate of the server's tick, and the tick its input is for, which is ahead of the server.
+A client connected to a remote server works with three tick numbers: its own counter, an estimate of the server's tick, and the tick its input is for, which is ahead of the server.
 
 <figure><img src="../.gitbook/assets/diagrams/tick-numbers.svg" alt="Two tick axes from 96 to 107. On the server axis the server's tick is now 100. On the client axis ServerTick is the client's estimate of 100 and PredictionTick is 104. The distance between them is about RTT/2 plus Input Buffer ticks. The input for tick 104 reaches the server around its tick 102, before the server needs it."><figcaption><p>The client sends input for a tick the server has not reached yet, so the input arrives in time.</p></figcaption></figure>
 

@@ -118,7 +118,8 @@ kubectl logs deploy/nakama -n fomoxa | grep -iE 'lua|error' | tail
 - Xử lý: dùng "Tự động ghép trận" (`auto`); hoặc xoá hàng chờ bằng `reset_match` (cần `http_key`), xem [03, Bước 12.2](deploy/07-test-nakama.md#step-12-test-nakama-with-curl).
 
 ### Người vừa chơi xong xin phòng khác lại bị đưa vào phòng cũ <a href="#a-player-who-just-finished-a-match-asks-for-another-room-and-lands-in-the-old-one" id="a-player-who-just-finished-a-match-asks-for-another-room-and-lands-in-the-old-one"></a>
-- Đã sửa trong `main.lua` (poll không còn trả kết quả của trận cũ). Nếu còn gặp, kiểm tra Nakama đang chạy đúng bản `main.lua` mới (so ConfigMap, restart Nakama).
+- Nguyên nhân: Nakama đang chạy một bản `main.lua` cũ, bản này trả kết quả của trận trước khi poll. Bản `main.lua` hiện tại không còn như vậy.
+- Xử lý: so ConfigMap với file rồi restart Nakama.
 
 ### `401 Unauthorized` khi gọi Nakama <a href="#401-unauthorized-from-nakama" id="401-unauthorized-from-nakama"></a>
 - Sai `server-key`/`http-key`. Cụm K8s dùng khoá riêng trong secret `fomoxa-nakama`; `docker compose` dùng `defaultkey`/`defaulthttpkey`. Xem [03, Bước 12](deploy/07-test-nakama.md#step-12-test-nakama-with-curl).

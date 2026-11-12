@@ -112,6 +112,6 @@ Sau một bước mô phỏng, các điểm là điểm của bước đó. Từ
 
 ## Overload cũ <a href="#older-overloads" id="older-overloads"></a>
 
-`Raycast` không có bộ lọc và `Overlap(center, radius, results)` với hình cầu hoặc hình tròn vẫn còn, dưới dạng extension method trong `PhysicsQueries`. Chúng dùng `QueryFilter.All`, nên dưới `RigidbodyPhysics` giờ chúng xét mọi layer, kể cả Ignore Raycast, và trúng cả trigger.
+`Raycast` không có bộ lọc và `Overlap(center, radius, results)` với hình cầu hoặc hình tròn vẫn còn, dưới dạng extension method trong `PhysicsQueries`. Chúng dùng `QueryFilter.All`, nên dưới `RigidbodyPhysics` chúng xét mọi layer, kể cả Ignore Raycast, và trúng cả trigger.
 
 [Tham chiếu physics API](../reference/physics.md) liệt kê các type, còn [PhysicsBody](physics-body.md) nói về lực và mô-men.

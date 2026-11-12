@@ -186,8 +186,6 @@ Trên server, `OnStartServer` chọn seed và dựng level. Trên client, packag
 
 Trong `Play.unity`, tạo một GameObject ở gốc tên `Network Level` có `NetworkObject` và `NetworkLevel`, đặt object `Terrain Generator` vào field Generator và lưu scene, việc này gán cho `NetworkObject` một scene object id. Package tắt scene object khi scene load và bật chúng khi chúng spawn, nên level giữ trống cho tới khi server khởi động.
 
-Sự phân chia công việc là Fomoxa gửi state và decode nó trên client, còn game quyết định seed mang ý nghĩa gì và dựng level từ nó trong mọi tiến trình.
-
 ## Test <a href="#test" id="test"></a>
 
 Chưa có gì khởi động server, nên hãy khởi động một server từ một component tạm trong Play Mode:

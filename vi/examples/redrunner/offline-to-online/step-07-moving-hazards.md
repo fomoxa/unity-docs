@@ -133,8 +133,6 @@ Trên server và ở host mode, `TimeManager.PredictionTick` bằng tick của s
 
 Khi một client replay các tick để sửa nhân vật của mình, các follower giữ ở vị trí của tick hiện tại. Một lần replay chỉ bao vài tick, nên chênh lệch nhỏ, và server vẫn quyết định chùy có giết ai hay không.
 
-Fomoxa cung cấp số tick, độ dài tick và thời điểm trước mỗi tick, còn game biến chúng thành một vị trí.
-
 ## Test <a href="#test" id="test"></a>
 
 Kết nối tới một server và quan sát một cái chùy mà không lại gần.

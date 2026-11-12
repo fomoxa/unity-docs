@@ -106,7 +106,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 |---|---|---|
 | `FomoxaSettings` | Type asset | [Tích hợp Editor](../advanced/editor-integration.md) |
 | `FomoxaUnityTypes`, `FomoxaUnityField`, `FomoxaUnityType` | Layout type của Unity | [Codec tùy chỉnh](../advanced/custom-codecs.md) |
-| `FomoxaHook`, `FomoxaGenerator`, `FomoxaPrefabStep`, `FomoxaSceneStep`, `FomoxaSceneFileStep`, `FomoxaSceneFileImporter`, `FomoxaSceneObjectIds`, `FomoxaRpcScanner`, `FomoxaChannelScanner`, `FomoxaPrefabBuild`, `FomoxaRpcBuild` and their data types | Các bước Editor | [Tích hợp Editor](../advanced/editor-integration.md) |
+| `FomoxaHook`, `FomoxaGenerator`, `FomoxaPrefabStep`, `FomoxaSceneStep`, `FomoxaSceneFileStep`, `FomoxaSceneFileImporter`, `FomoxaSceneObjectIds`, `FomoxaRpcScanner`, `FomoxaChannelScanner`, `FomoxaPrefabBuild`, `FomoxaRpcBuild` cùng các type dữ liệu của chúng | Các bước Editor | [Tích hợp Editor](../advanced/editor-integration.md) |
 
 ## Từ các DLL đi kèm <a href="#from-the-bundled-dlls" id="from-the-bundled-dlls"></a>
 

@@ -184,11 +184,9 @@ private void Apply(PlayerInput input, InputContext context)
 
 `Update` chạy mỗi frame và giữ các lần bấm nút cho tới `Gather` tiếp theo, nên một lần bấm ngắn hơn một tick không bị mất. Khi màn hình tạm dừng đang mở, `gameRunning` là false và input trống, nên nhân vật dừng lại trong khi server và người chơi khác vẫn tiếp tục.
 
-Trên server, `Apply` chạy tại tick mà input thuộc về. Khi không có input nào tới cho một tick, package lặp lại input cuối và đặt `InputContext.Repeated`, và bản port khi đó chỉ lặp lại trục di chuyển, không bao giờ lặp lại nhảy hay lăn. `InputContext.Replaying` được dùng ở bước 05. `NetworkPlayer.Awake` giờ lấy `RedCharacter` và tìm `NetworkGame` một lần, nên `m_Game` được gán trên mọi instance chứ không chỉ trên instance của owner.
+Trên server, `Apply` chạy tại tick mà input thuộc về. Khi không có input nào tới cho một tick, package lặp lại input cuối và đặt `InputContext.Repeated`, và bản port khi đó chỉ lặp lại trục di chuyển, không bao giờ lặp lại nhảy hay lăn. `InputContext.Replaying` được dùng ở bước 05. `NetworkPlayer.Awake` giờ lấy `RedCharacter` và tìm `NetworkGame` một lần, nên `m_Game` được gán trên mọi instance, kể cả instance của owner.
 
 Dòng `Reconcile` và ba callback của nó thuộc bước 05, dù chúng được viết trong cùng commit.
-
-Fomoxa thu thập, đánh số, gửi, đệm và lặp lại input, và gọi `Apply` đúng tick. Game quyết định input chứa gì và một tick di chuyển làm gì.
 
 ## Test <a href="#test" id="test"></a>
 
