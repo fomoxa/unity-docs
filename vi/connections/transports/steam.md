@@ -150,11 +150,14 @@ Steam chưa khởi động, hoặc khởi động không thành công. Tìm lỗ
 
 ### Client đứng ở `Starting` <a href="#the-client-stays-in-starting" id="the-client-stays-in-starting"></a>
 
-Client đã xin Steam một kết nối và Steam chưa trả lời. Kiểm lần lượt:
+Client đã xin Steam một kết nối và Steam chưa trả lời. Steam cho mỗi lần nối khoảng 10 giây, quá thời gian đó thì bỏ. Khi đó client dừng với `TransportError` rồi khởi động lại sau Reconnect Interval Seconds, như mục [kết nối lại](../client.md#reconnection) mô tả, nên người chơi thấy client đứng ở `Starting`.
+
+Qua relay, đôi khi một lần nối hết giờ rồi lần sau nối được. Trường hợp đó không cần sửa. Khi mọi lần nối đều hỏng, kiểm lần lượt:
 
 1. Cả hai game đều gọi `SteamAPI.RunCallbacks()` mỗi frame.
 2. Steam đang online trên cả hai máy. `SteamAPI.InitEx` vẫn thành công và vẫn có SteamID khi Steam client không tới được máy chủ của Steam, nhưng nối thì cần các máy chủ đó. Nếu Steam client báo Offline, cứ đang kết nối mãi, hoặc báo lỗi -101, hãy sửa mạng trước.
 3. Địa chỉ là SteamID64 của host, và cổng ảo là cổng host đang nghe.
+4. Bản build của host bật Run In Background. Host có cửa sổ ở nền thì không trả lời; xem [xử lý sự cố](../../getting-started/troubleshooting.md#the-game-stops-while-its-window-is-in-the-background).
 
 Muốn xem Steam đang làm gì, hãy ghi log các thay đổi kết nối và thông báo của Steam trong game. Steamworks.NET gọi mọi callback đã đăng ký cho một sự kiện, nên đoạn này không lấy mất sự kiện của transport:
 
@@ -193,6 +196,19 @@ public sealed class SteamNetworkingLog : MonoBehaviour
 ```
 
 Đặt nó trong cùng scene với `SteamSession`. `SteamSession` khởi động Steam trong `Awake`, và mọi `Awake` chạy trước mọi `Start`. Máy không tới được máy chủ của Steam sẽ ghi `We're not logged into Steam`.
+
+### Steam ghi `recv queue overflow` hoặc `Did you forget to call CloseConnection()` <a href="#steam-logs-recv-queue-overflow-or-did-you-forget-to-call-closeconnection" id="steam-logs-recv-queue-overflow-or-did-you-forget-to-call-closeconnection"></a>
+
+Hai cảnh báo này là thông báo của chính Steam, do component `SteamNetworkingLog` ở trên in ra:
+
+```text
+recv queue overflow 1000 messages already queued.
+We are in state 4 and have been waiting 20.0s to be cleaned up.  Did you forget to call CloseConnection()?
+```
+
+Cảnh báo đầu nghĩa là game đã ngừng đọc một kết nối. Steam giữ 1000 message chưa đọc cho mỗi kết nối và bỏ các message tới sau đó. Cảnh báo thứ hai nghĩa là một kết nối đã kết thúc ít nhất 20 giây trước mà game chưa đóng nó. Transport đóng kết nối khi callback của Steam báo kết nối đã kết thúc, và Steam chỉ chạy callback bên trong `SteamAPI.RunCallbacks()`. Số trạng thái là 4 khi phía bên kia đóng kết nối, và 5 khi Steam thấy lỗi ở phía máy này.
+
+Cả hai thường có nghĩa là game đã ngừng chạy một lúc, hay gặp nhất là vì cửa sổ ở nền mà Run In Background tắt. Xem [xử lý sự cố](../../getting-started/troubleshooting.md#the-game-stops-while-its-window-is-in-the-background).
 
 ## Phiên bản <a href="#versions" id="versions"></a>
 

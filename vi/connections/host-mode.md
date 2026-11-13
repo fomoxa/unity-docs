@@ -50,4 +50,6 @@ Dừng client của host vẫn để server chạy cho các client khác, còn d
 
 Host không chạy được trong bản build WebGL, vì trình duyệt không nhận kết nối tới. Prediction không chạy cho object của chính host, nên host không bao giờ reconcile, nhưng các client ở xa của host vẫn dự đoán object của chúng bình thường.
 
+Mọi client ở xa đều phụ thuộc vào tiến trình của host. Khi cửa sổ của host ở nền, game dừng với tất cả mọi người, trừ khi bật Run In Background; xem [xử lý sự cố](../getting-started/troubleshooting.md#the-game-stops-while-its-window-is-in-the-background).
+
 Host mode kết hợp [server](server.md) và [client](client.md) qua một kết nối [loopback](transports/loopback.md), còn [observer](../objects/observers.md) giải thích cách server quyết định client của host nên thấy gì.

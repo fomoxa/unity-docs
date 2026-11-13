@@ -93,6 +93,12 @@ Nếu server đã spawn object nhưng một client không hiện nó, hãy kiể
 3. Client hiển thị object từ xa chậm Interpolation Ticks so với vị trí mới nhất. Giảm giá trị này để bớt trễ, hoặc tăng lên để chuyển động mượt hơn trên mạng hay mất gói.
 4. `Rigidbody` hoặc `Rigidbody2D` dynamic trên client vẫn tự mô phỏng trừ khi bật Simulate Physics trên `RigidbodyPhysics` của `NetworkManager`. Khi bật, client biến các body mà nó không dự đoán thành body kinematic đi theo `NetworkTransform`; xem [physics](../physics/overview.md).
 
+## Game dừng khi cửa sổ của nó ở nền <a href="#the-game-stops-while-its-window-is-in-the-background" id="the-game-stops-while-its-window-is-in-the-background"></a>
+
+Bản player trên Windows, macOS hoặc Linux ngừng chạy khi cửa sổ mất focus, trừ khi bật Run In Background trong **Project Settings > Player > Resolution and Presentation**. Player đã ngừng thì không gửi và không đọc message nào. Host ngừng thì mọi client ở xa không nhận được state nữa và game của họ đứng hình. Client ngừng thì server vẫn chạy, nhưng không có input của client đó. Nếu lần ngừng kéo dài hơn Heartbeat Timeout Seconds (mặc định 15), client nào vẫn chạy sẽ dừng với `Timeout`, và client nối lại khi cả hai bên chạy trở lại.
+
+Bật Run In Background trong mọi bản build có host hoặc vào trận. Player chạy với `-batchmode` không có cửa sổ, còn [server console](../console-server/overview.md) không phải Unity player, nên cả hai không bị dừng theo cách này.
+
 ## Prediction liên tục bị sửa <a href="#prediction-keeps-correcting" id="prediction-keeps-correcting"></a>
 
 Mỗi lần client sửa một lần dự đoán, nó gọi `OnReconciled` và tăng `NetworkBehaviour.ReconcileCount`. Nếu số này cứ tăng trong khi người chơi không làm gì đặc biệt, client và server đang tính ra kết quả khác nhau.

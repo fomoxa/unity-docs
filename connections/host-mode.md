@@ -50,4 +50,6 @@ Stopping the host's client leaves the server running for the other clients, whil
 
 A host cannot run in a WebGL build, because a browser cannot accept connections. Prediction does not run for the host's own objects, so the host never reconciles, but remote clients of the host predict their own objects normally.
 
+Every remote client depends on the host's process. A host whose window is in the background stops the game for everyone unless Run In Background is on; see [troubleshooting](../getting-started/troubleshooting.md#the-game-stops-while-its-window-is-in-the-background).
+
 Host mode combines the [server](server.md) and the [client](client.md) over a [loopback](transports/loopback.md) connection, and [observers](../objects/observers.md) explains how the server decides what the host's client should see.

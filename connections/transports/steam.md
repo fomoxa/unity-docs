@@ -150,11 +150,14 @@ Steam has not started, or failed to start. Look for the error from `SteamAPI.Ini
 
 ### The client stays in `Starting`
 
-The client has asked Steam for a connection and Steam has not answered. Check these, in order:
+The client has asked Steam for a connection and Steam has not answered. Steam gives up on an attempt after about 10 seconds. The client then stops with `TransportError` and starts again after Reconnect Interval Seconds, as [reconnection](../client.md#reconnection) describes, so to a player it stays in `Starting`.
+
+Over the relay, an attempt sometimes times out and the next one connects. That needs no fix. When every attempt fails, check these, in order:
 
 1. Both games call `SteamAPI.RunCallbacks()` every frame.
 2. Steam is online on both computers. `SteamAPI.InitEx` succeeds and the SteamID is known even when the Steam client cannot reach Steam's servers, but connecting needs those servers. If the Steam client shows Offline, keeps connecting, or shows error -101, fix the network first.
 3. The address is the host's SteamID64, and the virtual port is the one the host listens on.
+4. Run In Background is on in the host's build. A host whose window is in the background does not answer; see [troubleshooting](../../getting-started/troubleshooting.md#the-game-stops-while-its-window-is-in-the-background).
 
 To see what Steam is doing, log its connection changes and messages in your game. Steamworks.NET calls every callback registered for an event, so this does not take events away from the transport:
 
@@ -193,6 +196,19 @@ public sealed class SteamNetworkingLog : MonoBehaviour
 ```
 
 Put it in the same scene as `SteamSession`. `SteamSession` starts Steam in `Awake`, which runs before any `Start`. A computer that cannot reach Steam's servers logs `We're not logged into Steam`.
+
+### Steam logs `recv queue overflow` or `Did you forget to call CloseConnection()`
+
+Both warnings come from Steam's own messages, which the `SteamNetworkingLog` component above prints:
+
+```text
+recv queue overflow 1000 messages already queued.
+We are in state 4 and have been waiting 20.0s to be cleaned up.  Did you forget to call CloseConnection()?
+```
+
+The first means that the game stopped reading a connection. Steam keeps 1000 unread messages for each connection and drops the ones after that. The second means that a connection ended at least 20 seconds earlier and the game has not closed it. The transport closes a connection when Steam's callback reports that it ended, and Steam runs callbacks only inside `SteamAPI.RunCallbacks()`. The state number is 4 when the other side closed the connection and 5 when Steam found a problem on this side.
+
+Both usually mean that the game stopped running for a while, most often because its window was in the background with Run In Background off. See [troubleshooting](../../getting-started/troubleshooting.md#the-game-stops-while-its-window-is-in-the-background).
 
 ## Versions
 

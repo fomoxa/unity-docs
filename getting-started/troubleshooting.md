@@ -93,6 +93,12 @@ If the server spawns the object but a client does not show it, continue on the c
 3. Clients show remote objects Interpolation Ticks behind the newest position. Lower the value for less delay, or raise it for smoother movement over a lossy network.
 4. A dynamic `Rigidbody` or `Rigidbody2D` on a client keeps simulating unless Simulate Physics is on in the `RigidbodyPhysics` of the `NetworkManager`. With it on, the client turns the bodies it does not predict into kinematic bodies that follow `NetworkTransform`; see [physics](../physics/overview.md).
 
+## The game stops while its window is in the background
+
+A Windows, macOS or Linux player stops running when its window loses focus, unless Run In Background is on in **Project Settings > Player > Resolution and Presentation**. A stopped player neither sends nor reads messages. When the host stops, every remote client stops getting state and its game freezes. When a client stops, the server keeps running without that client's input. If the pause lasts longer than Heartbeat Timeout Seconds (15 by default), a client that kept running stops with `Timeout`, and the client reconnects once both sides run again.
+
+Turn Run In Background on in every build that hosts or joins a game. A player started with `-batchmode` has no window, and the [console server](../console-server/overview.md) is not a Unity player, so neither stops this way.
+
 ## Prediction keeps correcting
 
 Each time the client corrects a prediction, it calls `OnReconciled` and increments `NetworkBehaviour.ReconcileCount`. If the count keeps growing while the player does nothing special, the client and the server are computing different results.
