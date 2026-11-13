@@ -41,7 +41,7 @@ Trang này mô tả game online ở cuối quá trình [chuyển đổi](offline
 | Network Manager | `NetworkManager`, `UdpNetworkTransport`, `RigidbodyPhysics`, `NetworkGame` | Kết nối và tick; logic khởi động, spawn và người chơi cục bộ của game |
 | Network Level | `NetworkObject`, `NetworkLevel` | Scene object chứa seed của level; di chuyển các path follower |
 | Terrain Generator | `TerrainGenerator` | Dựng level từ seed; nền quanh người chơi cục bộ |
-| Canvas/Start Screen | `StartScreen`, Address Field | Kết nối tới địa chỉ |
+| Canvas/Start Screen | `StartScreen`, Address Field | Kết nối tới địa chỉ; ở host mode, khi client đã chạy, Play chỉ mở màn chơi |
 | Canvas/Pause Screen | `PauseScreen` | Rời server |
 
 `NetworkManager` dùng Tick Rate 50, Timing Mode Tick, một `RigidbodyPhysics` bật Simulate Physics và Max Reconnect Retries 3, với Collected Prefabs và Collected Scenes đặt thành các danh sách đã sinh. Mọi thứ khác giữ mặc định.

@@ -41,7 +41,7 @@ This page describes the online game at the end of the [migration](offline-to-onl
 | Network Manager | `NetworkManager`, `UdpNetworkTransport`, `RigidbodyPhysics`, `NetworkGame` | Connections and ticks; the game's start, spawn and local player logic |
 | Network Level | `NetworkObject`, `NetworkLevel` | Scene object with the level seed; moves path followers |
 | Terrain Generator | `TerrainGenerator` | Builds the level from a seed; background around the local player |
-| Canvas/Start Screen | `StartScreen`, Address Field | Joins the address |
+| Canvas/Start Screen | `StartScreen`, Address Field | Joins the address; in host mode, where the client already runs, Play only opens the in-game screen |
 | Canvas/Pause Screen | `PauseScreen` | Leaves the server |
 
 The `NetworkManager` uses Tick Rate 50, Timing Mode Tick, a `RigidbodyPhysics` with Simulate Physics on and Max Reconnect Retries 3, with Collected Prefabs and Collected Scenes set to the generated lists. Everything else is at its default.
