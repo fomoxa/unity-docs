@@ -38,6 +38,7 @@
   * [Encrypted WebSocket](connections/transports/encrypted-websocket.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
+  * [Steam](connections/transports/steam.md)
   * [Client TLS](connections/transports/tls.md)
   * [Multiple transports](connections/transports/multi-transport.md)
   * [Loopback](connections/transports/loopback.md)

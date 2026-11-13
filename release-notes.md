@@ -1,5 +1,15 @@
 # Release notes
 
+## com.fomoxa.networking.steam 0.1.0
+
+A new package adds a Steam transport. The other parts have no new version.
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking.steam` | 0.1.0; needs `com.fomoxa.networking` 0.3.4 and Steamworks.NET 2025.165.0 or later | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.0` |
+
+`SteamNetworkTransport` connects players by SteamID through Steam. When two computers cannot reach each other directly, Steam sends the traffic through Valve's relay network, so a player can host from behind NAT without opening a port. It runs in Windows, Linux and macOS standalone builds with the Steam client, and has no dedicated or console server. The transport does not start Steam: your game starts it and runs its callbacks every frame. [Steam](connections/transports/steam.md) explains the setup.
+
 ## 0.3.4
 
 This release ships these parts together:

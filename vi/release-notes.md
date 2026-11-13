@@ -1,5 +1,15 @@
 # Ghi chú phát hành
 
+## com.fomoxa.networking.steam 0.1.0 <a href="#comfomoxanetworkingsteam-010" id="comfomoxanetworkingsteam-010"></a>
+
+Một package mới thêm transport Steam. Các phần khác không có phiên bản mới.
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking.steam` | 0.1.0; cần `com.fomoxa.networking` 0.3.4 và Steamworks.NET 2025.165.0 trở lên | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.0` |
+
+`SteamNetworkTransport` nối người chơi theo SteamID qua Steam. Khi hai máy không nối thẳng được với nhau, Steam đưa dữ liệu qua mạng relay của Valve, nên người chơi host được sau NAT mà không cần mở cổng. Nó chạy trong bản build standalone Windows, Linux và macOS cùng Steam client, và không có server dedicated hay server console. Transport không khởi động Steam: game của bạn khởi động nó và gọi callback của Steam mỗi frame. Trang [Steam](connections/transports/steam.md) hướng dẫn cách thiết lập.
+
 ## 0.3.4 <a href="#034" id="034"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

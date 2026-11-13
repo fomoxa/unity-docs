@@ -10,6 +10,7 @@ Transport chuyển byte giữa client và server. Giao thức, độ tin cậy v
 | [`TcpNetworkTransport`](tcp.md) | Stream TCP | Có | Có | Không |
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) qua TCP | Có | Có | Có |
 | [`MultiNetworkTransport`](multi-transport.md) | Nhiều transport ở trên cho một server | Có | Có, qua transport đầu tiên | Có, qua mục WebSocket |
+| [`SteamNetworkTransport`](steam.md) | Mạng của Steam, qua relay của Valve khi cần; trong package `com.fomoxa.networking.steam` | Chỉ trong game chạy cùng Steam client, thường ở host mode | Có, theo SteamID của host | Không |
 
 Dù dùng transport nào, client của chính host luôn dùng kết nối [loopback](loopback.md) trong tiến trình. Để thử trên mạng xấu, hãy bọc bất kỳ transport nào ở trên trong [`SimulatedNetworkTransport`](simulated.md).
 

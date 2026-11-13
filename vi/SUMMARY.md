@@ -38,6 +38,7 @@
   * [WebSocket mã hóa](connections/transports/encrypted-websocket.md)
   * [TCP](connections/transports/tcp.md)
   * [WebSocket](connections/transports/websocket.md)
+  * [Steam](connections/transports/steam.md)
   * [TLS phía client](connections/transports/tls.md)
   * [Nhiều transport](connections/transports/multi-transport.md)
   * [Loopback](connections/transports/loopback.md)

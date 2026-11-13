@@ -10,6 +10,7 @@ A transport moves bytes between a client and a server. The package's protocol, r
 | [`TcpNetworkTransport`](tcp.md) | TCP stream | Yes | Yes | No |
 | [`WebSocketNetworkTransport`](websocket.md) | WebSocket (RFC 6455) over TCP | Yes | Yes | Yes |
 | [`MultiNetworkTransport`](multi-transport.md) | Several of the above on one server | Yes | Yes, through its first transport | Yes, through its WebSocket entry |
+| [`SteamNetworkTransport`](steam.md) | Steam networking, through Valve's relay when needed; in the `com.fomoxa.networking.steam` package | Only in a game running with the Steam client, usually in host mode | Yes, by the host's SteamID | No |
 
 Whatever the transport, a host's own client always uses the in-process [loopback](loopback.md) connection. To test on a bad network, wrap any of these in [`SimulatedNetworkTransport`](simulated.md).
 
