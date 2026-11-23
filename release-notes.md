@@ -1,5 +1,39 @@
 # Release notes
 
+## 0.3.5
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.5 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.5` |
+| `com.fomoxa.rpc` | 0.1.6; needs `com.fomoxa.networking` 0.3.5 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.6` |
+| `com.fomoxa.networking.rapier` | 0.2.5; needs `com.fomoxa.networking` 0.3.5 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.5` |
+| `com.fomoxa.networking.steam` | 0.1.1; needs `com.fomoxa.networking` 0.3.5 and Steamworks.NET 2025.165.0 or later | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.1` |
+
+`Fomoxa.Backend.Templates` 0.1.1 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.3.4
+
+Update `com.fomoxa.rpc` to 0.1.6, `com.fomoxa.networking.rapier` to 0.2.5 and `com.fomoxa.networking.steam` to 0.1.1 together with the package. With the 0.3.5 package, `com.fomoxa.rpc` 0.1.5 reports an error when it generates code, Rapier 0.2.4 throws a version error when it creates its worlds, and Steam 0.1.0 throws one when the `NetworkManager` creates the transport.
+
+The wire protocol, the fingerprints, the scene file format and the generated code did not change, so 0.3.4 and 0.3.5 peers connect to each other and you do not need to generate code again.
+
+`HandlerExceptionArgs` is now a class instead of a struct, with the same constructor and properties. Your source code compiles without changes, but an assembly compiled against 0.3.4 has to be compiled again.
+
+In the Editor and in Development builds, the server now logs a warning when a state registered with `onlyWhenDirty: true` changes and `SetStateDirty()` is not called. Set State Mark Warning Seconds on the `NetworkManager` to 0 to turn the check off.
+
+### Errors
+
+- A subscriber to `ServerManager.OnHandlerException` can set `HandlerExceptionArgs.Disconnect` to `false` to keep the client connected after a server message handler threw. The server then delivers the rest of the bundle and the messages after it.
+- In the Editor and in Development builds, the server warns once per object when a state registered with `onlyWhenDirty: true` has differed from what it last sent for State Mark Warning Seconds (2 by default) without a call to `SetStateDirty()`. A console server turns the check on with `NetworkSettings.StateMarkWarning`.
+- The new [Errors](concepts/error-handling.md) page lists which failures end a connection, which only drop a message, and why.
+
+### com.fomoxa.rpc 0.1.6
+
+- When the server rejects the credential in `ConnectOptions.Credential`, `ConnectException.Status` now carries the decoded detail if the authentication method declares its type.
+- A transport can implement `IPeerAddress` to give `RpcServer` the address of the peer it accepted, for example when it reads the client's address from a proxy. A `TcpTransport` still gives the address of its socket.
+
 ## com.fomoxa.networking.steam 0.1.0
 
 A new package adds a Steam transport. The other parts have no new version.

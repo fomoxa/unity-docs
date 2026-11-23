@@ -1,5 +1,39 @@
 # Ghi chú phát hành
 
+## 0.3.5 <a href="#035" id="035"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.3.5 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.3.5` |
+| `com.fomoxa.rpc` | 0.1.6; cần `com.fomoxa.networking` 0.3.5 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.6` |
+| `com.fomoxa.networking.rapier` | 0.2.5; cần `com.fomoxa.networking` 0.3.5 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.5` |
+| `com.fomoxa.networking.steam` | 0.1.1; cần `com.fomoxa.networking` 0.3.5 và Steamworks.NET 2025.165.0 trở lên | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.1` |
+
+`Fomoxa.Backend.Templates` 0.1.1, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.3.4 <a href="#upgrading-from-034" id="upgrading-from-034"></a>
+
+Nâng `com.fomoxa.rpc` lên 0.1.6, `com.fomoxa.networking.rapier` lên 0.2.5 và `com.fomoxa.networking.steam` lên 0.1.1 cùng lúc với package. Với package 0.3.5, `com.fomoxa.rpc` 0.1.5 báo lỗi khi sinh code, Rapier 0.2.4 ném lỗi phiên bản khi tạo world, còn Steam 0.1.0 ném lỗi phiên bản khi `NetworkManager` tạo transport.
+
+Giao thức trên dây, fingerprint, định dạng scene file và code sinh ra không đổi, nên peer 0.3.4 và 0.3.5 kết nối được với nhau và bạn không cần sinh lại code.
+
+`HandlerExceptionArgs` giờ là class thay vì struct, với cùng constructor và property. Mã nguồn của bạn biên dịch được mà không cần sửa, nhưng assembly đã biên dịch với 0.3.4 phải biên dịch lại.
+
+Trong Editor và bản build Development, server giờ log một cảnh báo khi một state đăng ký với `onlyWhenDirty: true` thay đổi mà không có lệnh gọi `SetStateDirty()`. Đặt State Mark Warning Seconds trên `NetworkManager` bằng 0 để tắt phép kiểm.
+
+### Lỗi <a href="#errors" id="errors"></a>
+
+- Subscriber của `ServerManager.OnHandlerException` có thể đặt `HandlerExceptionArgs.Disconnect` thành `false` để giữ kết nối với client sau khi một message handler trên server ném exception. Server sau đó giao phần còn lại của bundle và các message tiếp theo.
+- Trong Editor và bản build Development, server cảnh báo một lần cho mỗi object khi một state đăng ký với `onlyWhenDirty: true` đã khác với lần gửi cuối trong State Mark Warning Seconds (mặc định 2) mà không có lệnh gọi `SetStateDirty()`. Server console bật phép kiểm bằng `NetworkSettings.StateMarkWarning`.
+- Trang mới [Lỗi](concepts/error-handling.md) liệt kê lỗi nào kết thúc kết nối, lỗi nào chỉ bỏ một message, và vì sao.
+
+### com.fomoxa.rpc 0.1.6 <a href="#comfomoxarpc-016" id="comfomoxarpc-016"></a>
+
+- Khi server từ chối credential trong `ConnectOptions.Credential`, `ConnectException.Status` giờ mang chi tiết đã decode nếu method xác thực khai kiểu của nó.
+- Một transport có thể cài `IPeerAddress` để báo cho `RpcServer` địa chỉ của peer mà nó đã nhận, ví dụ khi nó đọc địa chỉ của client từ một proxy. `TcpTransport` vẫn báo địa chỉ của socket.
+
 ## com.fomoxa.networking.steam 0.1.0 <a href="#comfomoxanetworkingsteam-010" id="comfomoxanetworkingsteam-010"></a>
 
 Một package mới thêm transport Steam. Các phần khác không có phiên bản mới.

@@ -6,7 +6,7 @@ Transport này nằm trong một package riêng, `com.fomoxa.networking.steam`, 
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
-- `com.fomoxa.networking` 0.3.4. Package được dựng cho đúng phiên bản đó và kiểm nó, như mô tả ở [Phiên bản](#versions).
+- `com.fomoxa.networking` 0.3.5. Package được dựng cho đúng phiên bản đó và kiểm nó, như mô tả ở [Phiên bản](#versions).
 - Steamworks.NET 2025.165.0 trở lên, cài dưới dạng package của Unity.
 - Build target standalone Windows, Linux hoặc macOS. Trên WebGL, Android, iOS và các target khác, component không được biên dịch.
 - Steam client đang chạy và đã đăng nhập trên mọi máy, mỗi người chơi một tài khoản Steam riêng.
@@ -24,7 +24,7 @@ https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks
 3. Thêm package này theo cùng cách:
 
 ```
-https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.0
+https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.1
 ```
 
 `SteamNetworkTransport` nằm trong assembly `Fomoxa.Unity.Steam`. Unity chỉ biên dịch assembly đó khi đã cài Steamworks.NET và build target là Windows, Linux hoặc macOS. Chưa cài Steamworks.NET thì project vẫn biên dịch, chỉ là component không có trong menu **Add Component**.
@@ -215,7 +215,7 @@ Cả hai thường có nghĩa là game đã ngừng chạy một lúc, hay gặp
 Package được dựng cho một phiên bản của `com.fomoxa.networking`, ghi trong `SteamPackage.CoreVersion`. Khi `NetworkManager` tạo transport trong `Awake` mà project có phiên bản khác, transport ném `InvalidOperationException`:
 
 ```text
-com.fomoxa.networking.steam needs com.fomoxa.networking 0.3.4; the project has 0.3.5
+com.fomoxa.networking.steam needs com.fomoxa.networking 0.3.5; the project has 0.3.6
 ```
 
 Hãy cài phiên bản của package này mà [ghi chú phát hành](../../release-notes.md) ghi cho phiên bản `com.fomoxa.networking` của bạn.
