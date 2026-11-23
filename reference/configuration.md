@@ -21,6 +21,7 @@ The [NetworkManager](../connections/network-manager.md) guide explains what each
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
 | Collect Statistics | `bool` | false; read once when the manager starts | |
+| State Mark Warning Seconds | `float` | 2; only in the Editor and Development builds | 0 turns the check off |
 | Max Reconnect Retries | `int` | -1 (no limit) | |
 | Reconnect Interval Seconds | `float` | 0.5 | |
 | Handshake Timeout Seconds | `float` | 5 | |

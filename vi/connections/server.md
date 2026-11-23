@@ -86,7 +86,7 @@ Khi một peer dừng, server despawn các object nó sở hữu. Object có `Ne
 
 ## Lỗi trong handler <a href="#errors-in-handlers" id="errors-in-handlers"></a>
 
-Khi một handler ném exception lúc server xử lý message của một peer, ví dụ một server RPC, server phát `OnHandlerException` kèm peer id, message id và exception, rồi đóng kết nối của peer đó giống như `Kick`. Peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`, nên nó không kết nối lại rồi gặp lại đúng lỗi đó. Nếu không có ai subscribe event này, package tự log exception. Message không decode được thì không làm ngắt kết nối peer; nó bị bỏ và phát `OnReceiveDropped`.
+Khi một handler ném exception lúc server xử lý message của một peer, ví dụ một server RPC, server phát `OnHandlerException` kèm peer id, message id và exception, rồi đóng kết nối của peer đó giống như `Kick`. Peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`, nên nó không kết nối lại rồi gặp lại đúng lỗi đó. Nếu không có ai subscribe event này, package tự log exception. Subscriber đặt `HandlerExceptionArgs.Disconnect` thành `false` thì peer vẫn được giữ kết nối, và server tiếp tục xử lý các message còn lại của nó. Message không decode được thì không làm ngắt kết nối peer; nó bị bỏ và phát `OnReceiveDropped`. [Lỗi](../concepts/error-handling.md) giải thích khi nào nên giữ peer và cách kiểm tra dữ liệu client gửi lên.
 
 Exception ném ra trong `apply` của input model hoặc trong một `ObserverRule` được log và không ngắt kết nối ai.
 

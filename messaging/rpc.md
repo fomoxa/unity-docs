@@ -153,7 +153,7 @@ Each handler call receives a new instance of the model, so a handler may keep it
 
 ## Errors in handlers
 
-A server RPC handler that throws closes the calling client's connection: the peer stops with `StopReason.HandlerException`, and the client stops with `ServerClosed` and a `CloseReason` of `HandlerException`. A client RPC handler that throws stops that client with `HandlerException`. In both cases the client does not reconnect. A model that fails to decode is handled differently: it is dropped and raises `OnReceiveDropped`. Validate the arguments of server RPCs, and write handlers so that bad input does not make them throw.
+A server RPC handler that throws closes the calling client's connection: the peer stops with `StopReason.HandlerException`, and the client stops with `ServerClosed` and a `CloseReason` of `HandlerException`. A client RPC handler that throws stops that client with `HandlerException`. In both cases the client does not reconnect. On the server, a subscriber to `OnHandlerException` can set `Disconnect` to `false` to keep the client connected. A model that fails to decode is handled differently: it is dropped and raises `OnReceiveDropped`. Validate the arguments of server RPCs, and write handlers so that bad input does not make them throw; [errors](../concepts/error-handling.md#validate-client-data-in-server-handlers) shows how.
 
 ## Compile errors
 

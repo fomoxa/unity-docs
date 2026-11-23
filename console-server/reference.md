@@ -64,7 +64,7 @@ On a console client, the factory must return an entity that is not spawned.
 | Type | Namespace | Description |
 |---|---|---|
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` is the package version. |
-| `NetworkSettings` | `Fomoxa.Networking` | The settings that the `NetworkManager` Inspector holds in Unity, as properties with the same defaults, and `PhysicsBackend` |
+| `NetworkSettings` | `Fomoxa.Networking` | The settings that the `NetworkManager` Inspector holds in Unity, as properties with the same defaults, and `PhysicsBackend`. The exception is `StateMarkWarning`, a `TimeSpan` that is zero by default, so the [forgotten state mark check](../advanced/debugging.md#forgotten-state-marks) is off unless you set it |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, an overload that adds `Action<string> error`, and `NetworkLog.Console` |
 | `EntityBehaviour` | `Fomoxa.Networking` | The base class of console behaviours, with the callbacks and registrations of `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` for the pose of the entity, `SyncTransform(TransformSync, ChildBody, ITransformReceiver)` for the pose of a child body relative to the entity and `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` for another source |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | The send rules of `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |

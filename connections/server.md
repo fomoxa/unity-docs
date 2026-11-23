@@ -86,7 +86,7 @@ When a peer stops, the server despawns the objects it owned. Objects whose `Netw
 
 ## Errors in handlers
 
-When a handler throws while the server processes a peer's message, such as a server RPC, the server raises `OnHandlerException` with the peer id, the message id and the exception, then closes that peer's connection the way `Kick` does. The peer stops with `StopReason.HandlerException`, and the client stops with `ServerClosed` and a `CloseReason` of `HandlerException`, so it does not reconnect into the same error. If nothing subscribes to the event, the package logs the exception. A message that fails to decode does not disconnect the peer; it is dropped and raises `OnReceiveDropped`.
+When a handler throws while the server processes a peer's message, such as a server RPC, the server raises `OnHandlerException` with the peer id, the message id and the exception, then closes that peer's connection the way `Kick` does. The peer stops with `StopReason.HandlerException`, and the client stops with `ServerClosed` and a `CloseReason` of `HandlerException`, so it does not reconnect into the same error. If nothing subscribes to the event, the package logs the exception. A subscriber that sets `HandlerExceptionArgs.Disconnect` to `false` keeps the peer connected, and the server goes on with the rest of its messages. A message that fails to decode does not disconnect the peer; it is dropped and raises `OnReceiveDropped`. [Errors](../concepts/error-handling.md) explains when to keep the peer and how to validate what a client sends.
 
 Exceptions thrown in `apply` of an input model or in an `ObserverRule` are logged and do not disconnect anyone.
 

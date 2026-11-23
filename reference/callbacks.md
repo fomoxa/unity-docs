@@ -29,14 +29,14 @@ Every event and callback is raised on Unity's main thread, either from the `Netw
 |---|---|---|---|
 | `OnSendDropped` | both managers | `SendDroppedArgs` | A queued message could not be sent |
 | `OnReceiveDropped` | both managers | `ReceiveDroppedArgs` | A received bundle, or a model in it, could not be read |
-| `OnHandlerException` | both managers | `HandlerExceptionArgs` | A message handler threw; the server closes that peer's connection, or the client stops |
+| `OnHandlerException` | both managers | `HandlerExceptionArgs` | A message handler threw; the server closes that peer's connection unless a subscriber clears `Disconnect`, or the client stops |
 | `OnObjectMismatch` | `ClientManager` | `ObjectMismatchArgs` | The client could not apply an object message and stops |
 
 | Argument | Members |
 |---|---|
 | `SendDroppedArgs` | `ulong PeerId`, `uint MessageId`, `int PayloadLength`, `SendStatus Reason` |
 | `ReceiveDroppedArgs` | `ulong PeerId`, `int FrameLength` |
-| `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`; `MessageId` is 0 when `OnServerAuthenticating`, `OnClientAuthenticating` or a callback on the authentication's cancellation token threw |
+| `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`, `bool Disconnect`; `Disconnect` starts as `true`, and setting it to `false` keeps the peer after a server message handler threw; the server ignores it for the authenticator, spawn data sources and object factories, and the client ignores it; `MessageId` is 0 when `OnServerAuthenticating`, `OnClientAuthenticating` or a callback on the authentication's cancellation token threw |
 | `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `uint SceneId` |
 
 By default, Log Send Dropped and Log Receive Dropped log the first two events. `OnHandlerException` logs the exception and `OnObjectMismatch` logs an error, but only while no handler is subscribed.

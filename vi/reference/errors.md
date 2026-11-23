@@ -1,5 +1,7 @@
 # Tham chiếu lỗi và lý do dừng
 
+[Lỗi](../concepts/error-handling.md) giải thích lỗi nào kết thúc kết nối và vì sao. Trang này liệt kê các giá trị.
+
 ## StopReason <a href="#stopreason" id="stopreason"></a>
 
 `Fomoxa.Networking.Sessions.StopReason` xuất hiện trong `ConnectionStateArgs.Reason` khi một kết nối dừng.
@@ -12,7 +14,7 @@
 | `TransportError` | Transport thất bại: kết nối bị từ chối, không phân giải được host, lỗi socket | Có |
 | `Timeout` | Heartbeat probe không được trả lời kịp | Có |
 | `HandshakeFailed` | Handshake Fomoxa thất bại; xem `Failure` | Chỉ với `Timeout` |
-| `HandlerException` | Một message handler ở phía này ném exception. Khi handler trên server ném exception với message của một client, peer trên server dừng với lý do này còn client dừng với `ServerClosed` | Không |
+| `HandlerException` | Một message handler ở phía này ném exception. Khi handler trên server ném exception với message của một client, peer trên server dừng với lý do này còn client dừng với `ServerClosed`, trừ khi một subscriber của `OnHandlerException` giữ peer lại | Không |
 | `PrefabMismatch` | Client không spawn được một object: prefab hoặc scene object không biết hoặc khác, hoặc một network scene không load được | Không |
 | `ObjectMismatch` | Client nhận một object message mà nó không áp dụng được | Không |
 | `PhysicsBackendMismatch` | Client và server dùng physics backend khác nhau | Không |

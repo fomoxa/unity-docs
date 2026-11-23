@@ -21,6 +21,7 @@ Hướng dẫn [NetworkManager](../connections/network-manager.md) giải thích
 | Log Send Dropped | `bool` | true | |
 | Log Receive Dropped | `bool` | true | |
 | Collect Statistics | `bool` | false; chỉ đọc một lần khi manager khởi động | |
+| State Mark Warning Seconds | `float` | 2; chỉ trong Editor và bản build Development | 0 tắt phép kiểm |
 | Max Reconnect Retries | `int` | -1 (không giới hạn) | |
 | Reconnect Interval Seconds | `float` | 0.5 | |
 | Handshake Timeout Seconds | `float` | 5 | |

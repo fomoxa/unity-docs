@@ -69,6 +69,7 @@ Manager đọc các field này một lần, trong `Awake`. Thay đổi chúng tr
 | Close Timeout Seconds | 1 | Thời gian server dành để gửi nốt hàng đợi của một peer bị kick trước khi vẫn đóng kết nối |
 | Log Send Dropped | bật | Log cảnh báo khi một message trong queue không gửi được |
 | Log Receive Dropped | bật | Log cảnh báo khi một bundle nhận được không đọc được |
+| State Mark Warning Seconds | 2 | Thời gian một state đăng ký với `onlyWhenDirty` được phép khác với lần gửi cuối mà không có `SetStateDirty()`, trước khi server log cảnh báo. 0 tắt phép kiểm. Chỉ Editor và bản build Development chạy nó. Xem [debug](../advanced/debugging.md#forgotten-state-marks). |
 
 ### Kết nối <a href="#connection" id="connection"></a>
 

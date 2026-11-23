@@ -23,6 +23,7 @@
 * [Prediction](concepts/prediction.md)
 * [Deterministic simulation](concepts/deterministic-simulation.md)
 * [Lifecycle](concepts/lifecycle.md)
+* [Errors](concepts/error-handling.md)
 
 ## Connections
 

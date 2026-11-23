@@ -64,7 +64,7 @@ Trên client console, factory phải trả về một entity chưa spawn.
 | Type | Namespace | Mô tả |
 |---|---|---|
 | `NetworkRuntime` | `Fomoxa.Networking` | `ServerManager`, `ClientManager`, `TimeManager`, `Physics`, `BeginFrame(TimeSpan now, double elapsedSeconds)`, `EndFrame()`. `Version` là phiên bản package. |
-| `NetworkSettings` | `Fomoxa.Networking` | Các thiết lập mà Inspector của `NetworkManager` giữ trong Unity, dưới dạng property với cùng giá trị mặc định, và `PhysicsBackend` |
+| `NetworkSettings` | `Fomoxa.Networking` | Các thiết lập mà Inspector của `NetworkManager` giữ trong Unity, dưới dạng property với cùng giá trị mặc định, và `PhysicsBackend`. Ngoại lệ là `StateMarkWarning`, một `TimeSpan` mặc định bằng 0, nên [phép kiểm quên đánh dấu state](../advanced/debugging.md#forgotten-state-marks) tắt trừ khi bạn đặt nó |
 | `NetworkLog` | `Fomoxa.Networking` | `NetworkLog(Action<Exception> exception, Action<string> warning)`, một overload thêm `Action<string> error`, và `NetworkLog.Console` |
 | `EntityBehaviour` | `Fomoxa.Networking` | Class cơ sở của behaviour console, với các callback và phần đăng ký của `NetworkBehaviour`, `SetStateDirty()`, `SyncTransform(TransformSync, ITransformReceiver)` cho tư thế của entity, `SyncTransform(TransformSync, ChildBody, ITransformReceiver)` cho tư thế của một body con so với entity và `SyncTransform(TransformSync, ITransformSource, ITransformReceiver)` cho nguồn khác |
 | `TransformSync`, `TransformSyncSettings` | `Fomoxa.Networking` | Luật gửi của `NetworkTransform`: `TransformSyncSettings(syncPosition, syncRotation, syncScale, positionThreshold, rotationThreshold, scaleThreshold)`, `TransformSync.Teleport()` |

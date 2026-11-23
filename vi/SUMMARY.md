@@ -23,6 +23,7 @@
 * [Prediction](concepts/prediction.md)
 * [Mô phỏng tất định](concepts/deterministic-simulation.md)
 * [Vòng đời](concepts/lifecycle.md)
+* [Lỗi](concepts/error-handling.md)
 
 ## Kết nối
 

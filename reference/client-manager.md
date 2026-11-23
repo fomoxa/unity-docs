@@ -36,7 +36,7 @@
 | `OnClientConnectionState` | `ConnectionStateArgs`, including `WillRetry` |
 | `OnSendDropped` | `SendDroppedArgs` |
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
-| `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes |
+| `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes; `Disconnect` has no effect, because the client always stops |
 | `OnObjectMismatch` | `ObjectMismatchArgs`; logged when nobody subscribes |
 | `OnTransferring` | `TransferringArgs`; the server moved the client to another server. See [server transfer](../connections/transfer.md). |
 

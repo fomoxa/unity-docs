@@ -99,7 +99,7 @@ Các method về scene ném `InvalidOperationException` khi server đã dừng.
 | `OnRemoteConnectionState` | `ConnectionStateArgs` |
 | `OnSendDropped` | `SendDroppedArgs` |
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
-| `OnHandlerException` | `HandlerExceptionArgs`; được log khi không ai subscribe |
+| `OnHandlerException` | `HandlerExceptionArgs`; được log khi không ai subscribe; đặt `Disconnect` thành `false` để giữ peer |
 
 [Event và callback](callbacks.md) mô tả các tham số event.
 

@@ -100,7 +100,7 @@ public void TakeDamage(ushort amount)
 }
 ```
 
-A change made without `SetStateDirty()` is not sent, and nothing reports the omission. Clients keep the last state sent, and a client that starts observing later receives that same state in its spawn message. The state captured at `Spawn` needs no call. Without `onlyWhenDirty`, which is the default, `SetStateDirty()` does nothing and the server compares the state every tick.
+A change made without `SetStateDirty()` is not sent. In the Editor and in Development builds, the server logs a warning when such a change has gone unsent for State Mark Warning Seconds on the `NetworkManager`, 2 by default; [debugging](../advanced/debugging.md#forgotten-state-marks) describes the check. Clients keep the last state sent, and a client that starts observing later receives that same state in its spawn message. The state captured at `Spawn` needs no call. Without `onlyWhenDirty`, which is the default, `SetStateDirty()` does nothing and the server compares the state every tick.
 
 ## Server behavior
 

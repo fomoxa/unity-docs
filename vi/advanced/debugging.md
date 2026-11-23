@@ -2,7 +2,13 @@
 
 ## Log message <a href="#log-messages" id="log-messages"></a>
 
-Package log với hai tiền tố. Message từ các bước Editor, như sinh code, prefab id và scene id và kiểm tra khi build, bắt đầu bằng `[Fomoxa]`. Cảnh báo và lỗi lúc chạy, như message bị bỏ, RPC bị từ chối và object mismatch, bắt đầu bằng `Fomoxa`. [Lỗi và lý do dừng](../reference/errors.md) liệt kê các message và nguyên nhân của chúng.
+Package log với hai tiền tố. Message từ các bước Editor, như sinh code, prefab id và scene id và kiểm tra khi build, bắt đầu bằng `[Fomoxa]`. Cảnh báo và lỗi lúc chạy, như message bị bỏ, RPC bị từ chối và object mismatch, bắt đầu bằng `Fomoxa`. [Lỗi và lý do dừng](../reference/errors.md) liệt kê các message và nguyên nhân của chúng, còn [lỗi](../concepts/error-handling.md) giải thích lỗi nào kết thúc kết nối.
+
+## Quên đánh dấu state <a href="#forgotten-state-marks" id="forgotten-state-marks"></a>
+
+Behaviour đăng ký state với `onlyWhenDirty: true` phải gọi `SetStateDirty()` sau mỗi lần thay đổi, nếu không thay đổi đó không được gửi. Trong Editor và trong bản build Development, server kiểm tra các state này ở mỗi tick. Khi một state như vậy khác với lần gửi cuối trong State Mark Warning Seconds trên `NetworkManager` (mặc định 2) mà không có lệnh gọi `SetStateDirty()`, server log một cảnh báo ghi tên behaviour, object id và GameObject. Mỗi object chỉ bị cảnh báo một lần, và thay đổi vẫn không được gửi.
+
+Đặt field này bằng 0 để tắt phép kiểm. Bản build release không bao giờ chạy nó, còn console server chỉ chạy khi `NetworkSettings.StateMarkWarning` lớn hơn 0, mà mặc định thì không. [Đánh dấu thay đổi](../synchronization/state.md#marking-changes) mô tả `onlyWhenDirty`.
 
 ## Event <a href="#events" id="events"></a>
 
@@ -14,7 +20,7 @@ Package log với hai tiền tố. Message từ các bước Editor, như sinh c
 | `OnServerConnectionState`, `OnRemoteConnectionState` | `ServerManager` | Server hoặc một kết nối client đổi trạng thái |
 | `OnSendDropped` | cả hai | Một message trong queue không gửi được, ví dụ `TooLarge` |
 | `OnReceiveDropped` | cả hai | Một bundle hoặc model nhận được không đọc được |
-| `OnHandlerException` | cả hai | Một message handler ném exception; server đóng kết nối của peer đó, hoặc client dừng |
+| `OnHandlerException` | cả hai | Một message handler ném exception; server đóng kết nối của peer đó trừ khi một subscriber bỏ `Disconnect`, hoặc client dừng |
 | `OnObjectMismatch` | `ClientManager` | Client không áp dụng được một object message và dừng |
 
 Package log `OnSendDropped` và `OnReceiveDropped` theo mặc định, có thể tắt bằng Log Send Dropped và Log Receive Dropped trên `NetworkManager`. Nó chỉ log `OnHandlerException` và `OnObjectMismatch` khi không có ai subscribe chúng.

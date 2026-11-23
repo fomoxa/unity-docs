@@ -100,7 +100,7 @@ public void TakeDamage(ushort amount)
 }
 ```
 
-Thay đổi không kèm `SetStateDirty()` sẽ không được gửi, và không có gì báo việc thiếu này. Client giữ state gửi lần cuối, và client bắt đầu observe sau đó cũng nhận đúng state ấy trong message spawn. State bắt lúc `Spawn` không cần gọi. Không có `onlyWhenDirty`, giá trị mặc định, thì `SetStateDirty()` không làm gì và server so sánh state ở mỗi tick.
+Thay đổi không kèm `SetStateDirty()` sẽ không được gửi. Trong Editor và trong bản build Development, server log một cảnh báo khi một thay đổi như vậy chưa được gửi sau State Mark Warning Seconds trên `NetworkManager`, mặc định 2; [debug](../advanced/debugging.md#forgotten-state-marks) mô tả phép kiểm này. Client giữ state gửi lần cuối, và client bắt đầu observe sau đó cũng nhận đúng state ấy trong message spawn. State bắt lúc `Spawn` không cần gọi. Không có `onlyWhenDirty`, giá trị mặc định, thì `SetStateDirty()` không làm gì và server so sánh state ở mỗi tick.
 
 ## Hành vi trên server <a href="#server-behavior" id="server-behavior"></a>
 

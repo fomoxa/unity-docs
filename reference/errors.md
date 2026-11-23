@@ -1,5 +1,7 @@
 # Errors and stop reasons reference
 
+[Errors](../concepts/error-handling.md) explains which failures end a connection and why. This page lists the values.
+
 ## StopReason
 
 `Fomoxa.Networking.Sessions.StopReason` appears in `ConnectionStateArgs.Reason` when a connection stops.
@@ -12,7 +14,7 @@
 | `TransportError` | The transport failed: refused connection, unresolved host, socket error | Yes |
 | `Timeout` | The heartbeat probe was not answered in time | Yes |
 | `HandshakeFailed` | The Fomoxa handshake failed; see `Failure` | Only for `Timeout` |
-| `HandlerException` | A message handler on this side threw. When a server handler throws on a client's message, the server's peer stops with this reason and the client stops with `ServerClosed` | No |
+| `HandlerException` | A message handler on this side threw. When a server handler throws on a client's message, the server's peer stops with this reason and the client stops with `ServerClosed`, unless a subscriber to `OnHandlerException` keeps the peer | No |
 | `PrefabMismatch` | The client cannot spawn an object: unknown or different prefab or scene object, or a network scene that does not load | No |
 | `ObjectMismatch` | The client received an object message it cannot apply | No |
 | `PhysicsBackendMismatch` | The client and the server use different physics backends | No |

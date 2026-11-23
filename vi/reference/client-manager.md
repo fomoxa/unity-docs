@@ -36,7 +36,7 @@
 | `OnClientConnectionState` | `ConnectionStateArgs`, kể cả `WillRetry` |
 | `OnSendDropped` | `SendDroppedArgs` |
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
-| `OnHandlerException` | `HandlerExceptionArgs`; được log khi không ai subscribe |
+| `OnHandlerException` | `HandlerExceptionArgs`; được log khi không ai subscribe; `Disconnect` không có tác dụng, vì client luôn dừng |
 | `OnObjectMismatch` | `ObjectMismatchArgs`; được log khi không ai subscribe |
 | `OnTransferring` | `TransferringArgs`; server chuyển client sang server khác. Xem [chuyển server](../connections/transfer.md). |
 

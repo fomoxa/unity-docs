@@ -29,14 +29,14 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 |---|---|---|---|
 | `OnSendDropped` | cả hai manager | `SendDroppedArgs` | Một message trong queue không gửi được |
 | `OnReceiveDropped` | cả hai manager | `ReceiveDroppedArgs` | Một bundle nhận được, hoặc một model trong đó, không đọc được |
-| `OnHandlerException` | cả hai manager | `HandlerExceptionArgs` | Một message handler ném exception; server đóng kết nối của peer đó, hoặc client dừng |
+| `OnHandlerException` | cả hai manager | `HandlerExceptionArgs` | Một message handler ném exception; server đóng kết nối của peer đó trừ khi một subscriber bỏ `Disconnect`, hoặc client dừng |
 | `OnObjectMismatch` | `ClientManager` | `ObjectMismatchArgs` | Client không áp dụng được một object message và dừng |
 
 | Tham số | Member |
 |---|---|
 | `SendDroppedArgs` | `ulong PeerId`, `uint MessageId`, `int PayloadLength`, `SendStatus Reason` |
 | `ReceiveDroppedArgs` | `ulong PeerId`, `int FrameLength` |
-| `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`; `MessageId` là 0 khi `OnServerAuthenticating`, `OnClientAuthenticating` hoặc một callback trên cancellation token của lần xác thực ném exception |
+| `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`, `bool Disconnect`; `Disconnect` ban đầu là `true`, đặt thành `false` thì peer được giữ sau khi một message handler trên server ném exception; server bỏ qua nó với authenticator, spawn data source và object factory, còn client bỏ qua nó; `MessageId` là 0 khi `OnServerAuthenticating`, `OnClientAuthenticating` hoặc một callback trên cancellation token của lần xác thực ném exception |
 | `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `uint SceneId` |
 
 Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `OnHandlerException` log exception và `OnObjectMismatch` log một lỗi, nhưng chỉ khi không có handler nào subscribe.

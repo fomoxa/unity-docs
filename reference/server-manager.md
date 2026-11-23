@@ -99,7 +99,7 @@ The scene methods throw `InvalidOperationException` while the server is stopped.
 | `OnRemoteConnectionState` | `ConnectionStateArgs` |
 | `OnSendDropped` | `SendDroppedArgs` |
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
-| `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes |
+| `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes; set `Disconnect` to `false` to keep the peer |
 
 [Events and callbacks](callbacks.md) describes the event arguments.
 

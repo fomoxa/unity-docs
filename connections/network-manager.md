@@ -69,6 +69,7 @@ The manager reads these fields once, in `Awake`. Changing them in Play Mode has 
 | Close Timeout Seconds | 1 | Time the server spends sending a kicked peer's queue before it closes the connection anyway |
 | Log Send Dropped | on | Logs a warning when a queued message could not be sent |
 | Log Receive Dropped | on | Logs a warning when a received bundle could not be read |
+| State Mark Warning Seconds | 2 | Time a state registered with `onlyWhenDirty` may differ from what was sent, without `SetStateDirty()`, before the server logs a warning. 0 turns the check off. Only the Editor and Development builds run it. See [debugging](../advanced/debugging.md#forgotten-state-marks). |
 
 ### Connection
 

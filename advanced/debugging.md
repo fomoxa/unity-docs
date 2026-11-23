@@ -2,7 +2,13 @@
 
 ## Log messages
 
-The package logs with two prefixes. Messages from Editor steps, such as code generation, prefab and scene ids and build checks, start with `[Fomoxa]`. Run-time warnings and errors, such as dropped messages, rejected RPCs and object mismatches, start with `Fomoxa`. [Errors and stop reasons](../reference/errors.md) lists the messages and what causes them.
+The package logs with two prefixes. Messages from Editor steps, such as code generation, prefab and scene ids and build checks, start with `[Fomoxa]`. Run-time warnings and errors, such as dropped messages, rejected RPCs and object mismatches, start with `Fomoxa`. [Errors and stop reasons](../reference/errors.md) lists the messages and what causes them, and [errors](../concepts/error-handling.md) explains which failures end a connection.
+
+## Forgotten state marks
+
+A behaviour that registers its state with `onlyWhenDirty: true` must call `SetStateDirty()` after each change, or the change is not sent. In the Editor and in Development builds, the server checks these states every tick. When such a state has differed from what was last sent for State Mark Warning Seconds on the `NetworkManager` (2 by default) without a call to `SetStateDirty()`, the server logs a warning that names the behaviour, the object id and the GameObject. It warns once per object and still does not send the change.
+
+Set the field to 0 to turn the check off. Release builds never run it, and a console server runs it only when `NetworkSettings.StateMarkWarning` is above zero, which it is not by default. [Marking changes](../synchronization/state.md#marking-changes) describes `onlyWhenDirty`.
 
 ## Events
 
@@ -14,7 +20,7 @@ To log or count problems in your own format, subscribe to these events:
 | `OnServerConnectionState`, `OnRemoteConnectionState` | `ServerManager` | The server or a client connection changes state |
 | `OnSendDropped` | both | A queued message could not be sent, for example `TooLarge` |
 | `OnReceiveDropped` | both | A received bundle or model could not be read |
-| `OnHandlerException` | both | A message handler threw; the server closes that peer's connection, or the client stops |
+| `OnHandlerException` | both | A message handler threw; the server closes that peer's connection unless a subscriber clears `Disconnect`, or the client stops |
 | `OnObjectMismatch` | `ClientManager` | The client could not apply an object message and stops |
 
 The package logs `OnSendDropped` and `OnReceiveDropped` by default, which you can turn off with Log Send Dropped and Log Receive Dropped on the `NetworkManager`. It logs `OnHandlerException` and `OnObjectMismatch` only while nothing is subscribed to them.

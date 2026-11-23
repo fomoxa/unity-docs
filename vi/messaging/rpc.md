@@ -153,7 +153,7 @@ Mỗi lần gọi handler nhận một instance model mới, nên handler có th
 
 ## Lỗi trong handler <a href="#errors-in-handlers" id="errors-in-handlers"></a>
 
-Server RPC handler ném exception sẽ đóng kết nối của client gọi nó: peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`. Client RPC handler ném exception sẽ dừng client đó với `HandlerException`. Trong cả hai trường hợp client không kết nối lại. Model không decode được thì được xử lý khác: nó bị bỏ và phát `OnReceiveDropped`. Hãy kiểm tra tham số của server RPC, và viết handler sao cho input xấu không làm nó ném exception.
+Server RPC handler ném exception sẽ đóng kết nối của client gọi nó: peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`. Client RPC handler ném exception sẽ dừng client đó với `HandlerException`. Trong cả hai trường hợp client không kết nối lại. Trên server, subscriber của `OnHandlerException` có thể đặt `Disconnect` thành `false` để giữ kết nối với client. Model không decode được thì được xử lý khác: nó bị bỏ và phát `OnReceiveDropped`. Hãy kiểm tra tham số của server RPC, và viết handler sao cho input xấu không làm nó ném exception; [lỗi](../concepts/error-handling.md#validate-client-data-in-server-handlers) chỉ cách làm.
 
 ## Lỗi biên dịch <a href="#compile-errors" id="compile-errors"></a>
 
