@@ -41,9 +41,9 @@ The generated namespace is named after the last folder of Generated Folder.
 Generation runs after every script compilation, when the Editor loads, and from the menu, but never while Play Mode is starting or running. It goes through these steps:
 
 1. Copy the package's system models into `FomoxaSystemModels/` at the project root.
-2. Write an empty model for every parameterless RPC into `<Generated Folder>/RpcModels/`.
+2. Write a model for every RPC into `<Generated Folder>/RpcModels/`, and the state, input and reconcile models of every behaviour with `[NetworkState]`, `[NetworkInput]` or `[NetworkReconcile]` fields into `<Generated Folder>/StateModels/`.
 3. Write `fomoxa.toml` from the settings.
-4. Run the bundled `fomoxac generate` in the project root. It reads the Models Folder, `FomoxaSystemModels` and `RpcModels`, and writes the codecs, `NetSchema.cs`, `Handshake.cs` and `Runtime.cs` into the Generated Folder, and its schema files into `.fomoxa/`.
+4. Run the bundled `fomoxac generate` in the project root. It reads the Models Folder, `FomoxaSystemModels`, `RpcModels` and `StateModels`, and writes the codecs, `NetSchema.cs`, `Handshake.cs` and `Runtime.cs` into the Generated Folder, and its schema files into `.fomoxa/`.
 5. Write codecs for the Unity types the models use into `<Generated Folder>/UnityCodecs/`, and `.fomoxa/schema.inspect.json`, a copy of the schema with those types described for inspection tools.
 6. Write an adapter for every codec, `<Model><Codec>Adapter.cs`.
 7. Write `FomoxaAdapters.cs`, which registers the schema, every system adapter, every declared channel and every RPC id, and `FomoxaUnityRegistration.cs`, which calls it when the player starts.
@@ -53,9 +53,11 @@ Every file the package writes starts with a marker comment. The package refuses 
 
 Errors and warnings appear in the Console with the prefix `[Fomoxa]`, and [troubleshooting](../getting-started/troubleshooting.md#code-generation-fails) explains each of them.
 
-## RPC source generator
+## Source generator
 
-`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` is a Roslyn source generator that Unity runs for every assembly referencing `Fomoxa.Networking`. It writes the registration of `[ServerRpc]` and `[ClientRpc]` methods into each `partial` behaviour and reports the errors `FOMOXA001` to `FOMOXA010`, which are listed in [RPCs](../messaging/rpc.md#compile-errors).
+`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` is a Roslyn source generator that Unity runs for every assembly referencing `Fomoxa.Networking`. Into each `partial` behaviour it writes the send methods and the registration of its `[ServerRpc]` and `[ClientRpc]` methods, and the code that registers and copies its `[NetworkState]`, `[NetworkInput]` and `[NetworkReconcile]` fields. It reports the errors `FOMOXA001` to `FOMOXA022`, which [RPCs](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors), [collections](../synchronization/collections.md#errors) and [input](../prediction/input.md#declaring) list.
+
+The registration of fields needs their generated model, so it appears once the code generation has written the model and Unity has compiled again.
 
 ## Prefab step
 
@@ -91,7 +93,7 @@ In Play Mode, a scene object without a valid id gets a temporary one, and the pa
 
 ## Build checks
 
-Before a player build, the package runs the prefab, scene and scene file steps and fails the build on their errors. It checks that the generated model of every parameterless RPC is present and current and that `FomoxaAdapters.cs` registers it, and fails with `run Tools > Fomoxa > Generate and commit the generated files` otherwise.
+Before a player build, the package runs the prefab, scene and scene file steps and fails the build on their errors. It checks that the generated model of every RPC and every state, input and reconcile model is present and current, that `FomoxaAdapters.cs` registers it, and that the source generator registered the fields, and fails with `run Tools > Fomoxa > Generate and commit the generated files` otherwise. Entering Play Mode runs the same check for state, input and reconcile models and stops Play Mode on an error.
 
 It then assigns the generated prefab list and scene list to every `NetworkManager` in the built scenes, the prefab list only where the manager's Collect Prefabs is on, and checks the scene object ids of every built scene. The same assignment runs for each scene when you enter Play Mode, but after the managers' `Awake`, so it has no effect in that session; [NetworkManager](../connections/network-manager.md#prefab-and-scene-lists) explains why the lists also belong in the scene.
 
@@ -103,7 +105,7 @@ It then assigns the generated prefab list and scene list to every `NetworkManage
 | `fomoxa.toml` | Yes |
 | `FomoxaSystemModels/` | Yes |
 | `.fomoxa/` | Yes |
-| Generated Folder, with `RpcModels/`, `UnityCodecs/` and the scene files | Yes |
+| Generated Folder, with `RpcModels/`, `StateModels/`, `UnityCodecs/` and the scene files | Yes |
 
 Committing these files lets a fresh clone or a build machine compile without running the generator first.
 

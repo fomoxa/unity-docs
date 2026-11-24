@@ -8,7 +8,7 @@ Nhân vật là một network object có `Rigidbody` hoặc `Rigidbody2D` kinema
 
 ## Di chuyển <a href="#moving" id="moving"></a>
 
-Gọi `MoveCharacter` trong `apply`, mỗi tick một lần, với độ dời mong muốn của tick đó:
+Gọi `MoveCharacter` trong `OnApplyInput`, mỗi tick một lần, với độ dời mong muốn của tick đó:
 
 ```csharp
 using Fomoxa.Networking;
@@ -17,7 +17,7 @@ using Fomoxa.Unity;
 using Fomoxa.Unity.Rapier;
 using UnityEngine;
 
-public sealed class Walker : NetworkBehaviour
+public sealed partial class Walker : NetworkBehaviour
 {
     [SerializeField] private NetworkManager manager;
     [SerializeField] private RapierPhysics rapier;
@@ -27,19 +27,27 @@ public sealed class Walker : NetworkBehaviour
     private static readonly CharacterSettings2D Settings = default(CharacterSettings2D)
         .WithAutostep(new CharacterAutostep(CharacterLength.Absolute(0.3f), CharacterLength.Absolute(0.2f), true));
 
+    [NetworkInput]
+    private float x;
+
     private bool grounded;
 
-    private void Apply(MoveInput input, InputContext context)
+    protected override void OnGatherInput()
+    {
+        x = Input.GetAxisRaw("Horizontal");
+    }
+
+    protected override void OnApplyInput(InputContext context)
     {
         float seconds = (float)manager.TimeManager.TickDelta;
-        var desired = new System.Numerics.Vector2(input.X * speed, -fallSpeed) * seconds;
+        var desired = new System.Numerics.Vector2(x * speed, -fallSpeed) * seconds;
         CharacterMove2D move = rapier.Scenes.MoveCharacter(NetworkObject, NetworkObject.Body2D, desired, seconds, Settings);
         grounded = move.Grounded;
     }
 }
 ```
 
-`MoveInput` đại diện cho model input của game, đăng ký trong `OnRegisterInput` như ở trang [input](../prediction/input.md); `manager` và `rapier` là `NetworkManager` và `RapierPhysics` của nó. Cho gọn, ví dụ rơi với tốc độ không đổi; game thường giữ vận tốc theo phương đứng trong state được dự đoán. Lời gọi tính body đi được bao xa và đặt chỗ đó làm vị trí kinematic kế tiếp, nên body tới đó trong bước mô phỏng của cùng tick và `Transform` theo sau. Gọi lần nữa trước bước mô phỏng thì độ dời được tính lại từ vị trí cũ và thay lần đầu.
+`x` là một field input như ở trang [input](../prediction/input.md); `manager` và `rapier` là `NetworkManager` và `RapierPhysics` của nó. Cho gọn, ví dụ rơi với tốc độ không đổi; game thường giữ vận tốc theo phương đứng trong state được dự đoán. Lời gọi tính body đi được bao xa và đặt chỗ đó làm vị trí kinematic kế tiếp, nên body tới đó trong bước mô phỏng của cùng tick và `Transform` theo sau. Gọi lần nữa trước bước mô phỏng thì độ dời được tính lại từ vị trí cũ và thay lần đầu.
 
 Kết quả cho biết chuyện gì đã xảy ra:
 

@@ -4,7 +4,7 @@ Rapier cho cùng một kết quả với cùng một world và cùng một chu�
 
 ## Code game phải làm gì <a href="#what-game-code-must-do" id="what-game-code-must-do"></a>
 
-- Chỉ thay đổi body trong callback prediction (`apply`, `restore`) và tick event, theo một thứ tự cố định, từ input và số tick. Lực, xung lực và việc ghi state là thao tác trên world, và thứ tự khác cho kết quả khác.
+- Chỉ thay đổi body trong callback prediction (`OnApplyInput`, `OnRestoreState`) và tick event, theo một thứ tự cố định, từ input và số tick. Lực, xung lực và việc ghi state là thao tác trên world, và thứ tự khác cho kết quả khác.
 - Không để phép toán thư viện đi vào các giá trị tới được mô phỏng. `Mathf.Sin`, `MathF.Cos` và các hàm thư viện khác có thể khác nhau ở bit cuối giữa Mono, IL2CPP và .NET. Hãy dùng bảng tra, phép toán số nguyên hoặc giá trị đến từ input.
 - Không đọc thời gian, giá trị phụ thuộc frame hay bộ sinh số ngẫu nhiên seed từ đồng hồ trong code mô phỏng. Bộ sinh seed từ một giá trị server gửi, với phép toán của riêng nó, cho cùng một dãy số ở mọi nơi.
 - Dựng geometry lúc chạy theo cùng thứ tự trên mọi peer. Số thứ tự của `AddStatic`, `AddBody` và thứ tự body trong world đi theo thứ tự các lời gọi, joint và effector tạo từ code cũng vậy.

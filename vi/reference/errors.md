@@ -48,7 +48,7 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | Giá trị | Ý nghĩa |
 |---|---|
 | `VersionMismatch` | Hai bên dùng phiên bản giao thức Fomoxa khác nhau |
-| `SchemaConflict` | Hai bên được build từ các model khác nhau |
+| `SchemaConflict` | Một model khác nhau giữa hai bên ở chỗ khác ngoài các field thêm vào cuối |
 | `Corrupt` | Dữ liệu handshake không đọc được |
 | `Timeout` | Handshake không xong trong Handshake Timeout Seconds |
 
@@ -101,7 +101,7 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `InvalidOperationException` | `ClientManager.StartConnection(address, port)` | Transport cần vé kết nối, như [UDP mã hóa](../connections/transports/encrypted-udp.md) |
 | `InvalidOperationException` | `ServerManager.StartConnection` với UDP mã hóa | Transport không có `ConnectTokens` |
 | `InvalidOperationException` | Constructor của `ConnectTokens`, của `EncryptedUdpTransportFactory` | Registry không có codec của các model vé kết nối |
-| `InvalidOperationException` | Các method gửi RPC | Object chưa spawn ở phía gửi, hoặc RPC không tham số chưa có model được sinh |
+| `InvalidOperationException` | Các method gửi RPC | Object chưa spawn ở phía gửi, hoặc RPC chưa có model được sinh |
 | `InvalidOperationException` | Các method thay đổi collection | Gọi trên client với object đã spawn |
 | `ArgumentException` | `Spawn` | Asset prefab, đã spawn, prefab id chưa đăng ký, scene object không hợp lệ, owner chưa khởi động |
 | `ArgumentException` | `PrefabRegistry.Register`, `SceneRegistry.Register` | Id 0, id đã đăng ký cho thứ khác, hierarchy prefab không hợp lệ |

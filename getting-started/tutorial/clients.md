@@ -66,11 +66,10 @@ Click **Stop** on a client. The client stops and its objects disappear, and the 
 | Step | Feature | Guide |
 |---|---|---|
 | Network Manager with a UDP transport | Transport and tick loop | [NetworkManager](../../connections/network-manager.md), [UDP](../../connections/transports/udp.md) |
-| `PlayerStats` model | Models and generated codecs | [Models and codecs](../../messaging/models.md) |
 | Player prefab with `NetworkObject` | Network objects and prefab ids | [NetworkObject](../../objects/network-object.md), [Spawning](../../objects/spawning.md) |
 | `ServerManager.Spawn` with an owner | Spawning and ownership | [Ownership](../../objects/ownership.md) |
 | `[ServerRpc] Jump` | RPCs | [RPCs](../../messaging/rpc.md) |
-| `state.Use` | State | [State](../../synchronization/state.md) |
+| `[NetworkState] jumps` | State | [State](../../synchronization/state.md) |
 | `NetworkTransform` | Transform replication | [NetworkTransform](../../synchronization/transform.md) |
 | **Host** button | Host mode | [Host mode](../../connections/host-mode.md) |
 

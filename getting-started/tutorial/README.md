@@ -8,7 +8,7 @@ This tutorial builds a small multiplayer game in three parts. Every connected pl
 
 | Part | You add | You learn |
 |---|---|---|
-| [1. Set up the project](project-setup.md) | A `NetworkManager`, a model and a player prefab | Models and generated code, `NetworkObject`, `NetworkBehaviour`, state, RPCs |
+| [1. Set up the project](project-setup.md) | A `NetworkManager`, a player script and a player prefab | `NetworkObject`, `NetworkBehaviour`, state fields, RPCs, generated code |
 | [2. Start a server](server.md) | A launcher that starts a server and spawns a player per client | `ServerManager`, connection events, spawning, dedicated servers |
 | [3. Connect clients](clients.md) | Clients and a host | `ClientManager`, reconnection, host mode |
 

@@ -6,9 +6,9 @@ Package log với hai tiền tố. Message từ các bước Editor, như sinh c
 
 ## Quên đánh dấu state <a href="#forgotten-state-marks" id="forgotten-state-marks"></a>
 
-Behaviour đăng ký state với `onlyWhenDirty: true` phải gọi `SetStateDirty()` sau mỗi lần thay đổi, nếu không thay đổi đó không được gửi. Trong Editor và trong bản build Development, server kiểm tra các state này ở mỗi tick. Khi một state như vậy khác với lần gửi cuối trong State Mark Warning Seconds trên `NetworkManager` (mặc định 2) mà không có lệnh gọi `SetStateDirty()`, server log một cảnh báo ghi tên behaviour, object id và GameObject. Mỗi object chỉ bị cảnh báo một lần, và thay đổi vẫn không được gửi.
+Behaviour mà class mang `[NetworkStateModel(OnlyWhenDirty = true)]` phải gọi `SetStateDirty()` sau mỗi lần thay đổi, nếu không thay đổi đó không được gửi. Trong Editor và trong bản build Development, server kiểm tra các state này ở mỗi tick. Khi một state như vậy khác với lần gửi cuối trong State Mark Warning Seconds trên `NetworkManager` (mặc định 2) mà không có lệnh gọi `SetStateDirty()`, server log một cảnh báo ghi tên behaviour, object id và GameObject. Mỗi object chỉ bị cảnh báo một lần, và thay đổi vẫn không được gửi.
 
-Đặt field này bằng 0 để tắt phép kiểm. Bản build release không bao giờ chạy nó, còn console server chỉ chạy khi `NetworkSettings.StateMarkWarning` lớn hơn 0, mà mặc định thì không. [Đánh dấu thay đổi](../synchronization/state.md#marking-changes) mô tả `onlyWhenDirty`.
+Đặt field này bằng 0 để tắt phép kiểm. Bản build release không bao giờ chạy nó, còn console server chỉ chạy khi `NetworkSettings.StateMarkWarning` lớn hơn 0, mà mặc định thì không. [Đánh dấu thay đổi](../synchronization/state.md#marking-changes) mô tả `OnlyWhenDirty`.
 
 ## Event <a href="#events" id="events"></a>
 

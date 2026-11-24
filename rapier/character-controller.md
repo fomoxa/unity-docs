@@ -8,7 +8,7 @@ The character is a network object with a kinematic `Rigidbody` or `Rigidbody2D` 
 
 ## Moving
 
-Call `MoveCharacter` in `apply`, once per tick, with the move you want for this tick:
+Call `MoveCharacter` in `OnApplyInput`, once per tick, with the move you want for this tick:
 
 ```csharp
 using Fomoxa.Networking;
@@ -17,7 +17,7 @@ using Fomoxa.Unity;
 using Fomoxa.Unity.Rapier;
 using UnityEngine;
 
-public sealed class Walker : NetworkBehaviour
+public sealed partial class Walker : NetworkBehaviour
 {
     [SerializeField] private NetworkManager manager;
     [SerializeField] private RapierPhysics rapier;
@@ -27,19 +27,27 @@ public sealed class Walker : NetworkBehaviour
     private static readonly CharacterSettings2D Settings = default(CharacterSettings2D)
         .WithAutostep(new CharacterAutostep(CharacterLength.Absolute(0.3f), CharacterLength.Absolute(0.2f), true));
 
+    [NetworkInput]
+    private float x;
+
     private bool grounded;
 
-    private void Apply(MoveInput input, InputContext context)
+    protected override void OnGatherInput()
+    {
+        x = Input.GetAxisRaw("Horizontal");
+    }
+
+    protected override void OnApplyInput(InputContext context)
     {
         float seconds = (float)manager.TimeManager.TickDelta;
-        var desired = new System.Numerics.Vector2(input.X * speed, -fallSpeed) * seconds;
+        var desired = new System.Numerics.Vector2(x * speed, -fallSpeed) * seconds;
         CharacterMove2D move = rapier.Scenes.MoveCharacter(NetworkObject, NetworkObject.Body2D, desired, seconds, Settings);
         grounded = move.Grounded;
     }
 }
 ```
 
-`MoveInput` stands for the input model of your game, registered in `OnRegisterInput` as in [input](../prediction/input.md); `manager` and `rapier` are the `NetworkManager` and its `RapierPhysics`. The fall here is a constant speed for brevity; a game usually keeps a vertical velocity in its predicted state. The call computes how far the body can go and sets that as its next kinematic position, so the body gets there during the step of the same tick and the `Transform` follows after it. Calling it again before the step computes the move again from the old position and replaces the first one.
+`x` is an input field as in [input](../prediction/input.md); `manager` and `rapier` are the `NetworkManager` and its `RapierPhysics`. The fall here is a constant speed for brevity; a game usually keeps a vertical velocity in its predicted state. The call computes how far the body can go and sets that as its next kinematic position, so the body gets there during the step of the same tick and the `Transform` follows after it. Calling it again before the step computes the move again from the old position and replaces the first one.
 
 The result tells what happened:
 

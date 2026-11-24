@@ -1,6 +1,6 @@
 # Fomoxa for Unity
 
-Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking package for Unity games. It is built on the Fomoxa protocol and its C# runtime, Fomoxa.Net. A game declares the data it sends as plain C# classes, the package generates their codecs, and components such as `NetworkManager`, `NetworkObject` and `NetworkBehaviour` handle connections, spawning, RPCs, state, transforms and client-side prediction.
+Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking package for Unity games. It is built on the Fomoxa protocol and its C# runtime, Fomoxa.Net. A game declares RPCs, state and input on its scripts with attributes, the package generates the models and codecs that carry them, and components such as `NetworkManager`, `NetworkObject` and `NetworkBehaviour` handle connections, spawning, RPCs, state, transforms and client-side prediction.
 
 <figure><img src=".gitbook/assets/diagrams/topology.svg" alt="A dedicated server with three clients, and a host process that runs a server and the host player's client with two remote clients."><figcaption><p>A game runs either a dedicated server or a host. Clients send input and requests; the server sends back what happens.</p></figcaption></figure>
 
@@ -31,7 +31,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) is a server-authoritative networking 
 
 The package connects peers over UDP, TCP or WebSocket, and one server can listen on several transports at once. UDP can be encrypted, WebGL clients can send the same encrypted datagrams over WebSocket, and native clients can use TLS on TCP and WebSocket. A server can authenticate a peer before it starts, kick it with a reason, or transfer it to another server. Host mode joins the host player's client to the server through an in-process connection instead of a socket.
 
-Network objects are spawned from prefabs or placed in scenes. Each one can have an owner, and a visibility that differs per peer. Clients call the server and the server calls clients through RPCs declared with attributes. Each behaviour can keep a state that is sent with delta encoding, `NetworkTransform` sends transforms with interpolation and teleport, and `NetworkAnimator` sends the Animator's parameters. Network scenes can be loaded for everyone or for selected peers.
+Network objects are spawned from prefabs or placed in scenes. Each one can have an owner, and a visibility that differs per peer. Clients call the server and the server calls clients through RPCs declared with attributes. Each behaviour can mark fields as state, which is sent with delta encoding, `NetworkTransform` sends transforms with interpolation and teleport, and `NetworkAnimator` sends the Animator's parameters. Network scenes can be loaded for everyone or for selected peers.
 
 The package also offers client-side prediction with input, reconciliation and replay, including rollback of Unity 3D and 2D physics. WebGL clients connect through the browser's WebSocket.
 

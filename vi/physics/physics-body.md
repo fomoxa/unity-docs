@@ -1,6 +1,6 @@
 # PhysicsBody
 
-`PhysicsBody` và `PhysicsBody2D` là cách package nhìn vào physics body của một network object, và bạn dùng chúng trong `apply`, `capture` và `restore` để đọc và thay đổi body. Chúng làm việc với vector `System.Numerics` và không phụ thuộc vào API `Rigidbody` của Unity.
+`PhysicsBody` và `PhysicsBody2D` là cách package nhìn vào physics body của một network object, và bạn dùng chúng trong `OnApplyInput`, `OnCaptureState` và `OnRestoreState` để đọc và thay đổi body. Chúng làm việc với vector `System.Numerics` và không phụ thuộc vào API `Rigidbody` của Unity.
 
 ```csharp
 using Fomoxa.Networking.Simulation;
@@ -74,11 +74,11 @@ Ghi state sẽ di chuyển body và transform của nó ngay lập tức và đ�
 ## Lực và xung lực <a href="#forces-and-impulses" id="forces-and-impulses"></a>
 
 ```csharp
-private void Apply(MoveInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
     PhysicsBody body = NetworkObject.Body;
-    body.AddForce(new System.Numerics.Vector3(input.X, 0f, input.Z) * moveForce);
-    if (input.Jump && !context.Repeated)
+    body.AddForce(new System.Numerics.Vector3(x, 0f, z) * moveForce);
+    if (jump && !context.Repeated)
     {
         body.AddImpulse(new System.Numerics.Vector3(0f, jumpImpulse, 0f));
     }

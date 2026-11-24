@@ -29,9 +29,9 @@ Prediction and interpolation apply to different objects. A client predicts the o
 
 ## Requirements
 
-Prediction needs the `NetworkManager` to use the Tick timing mode, and the object needs a `NetworkBehaviour` that registers an input model with `NetworkInput.Use`. To predict, the behaviour also needs a reconcile model; without one, the client only sends input.
+Prediction needs the `NetworkManager` to use the Tick timing mode, and the object needs a `NetworkBehaviour` with `[NetworkInput]` fields. To predict, the behaviour also needs `[NetworkReconcile]` fields; without them, the client only sends input.
 
-The `apply` callback must compute the same result on the server and on the client from the same input and the same starting state. In practice it reads only the input, the behaviour's own state and `TimeManager.TickDelta`. The results do not have to be bit-exact: a `matches` function decides what counts as close enough, and small differences are corrected, as [deterministic simulation](deterministic-simulation.md) explains.
+`OnApplyInput` must compute the same result on the server and on the client from the same input and the same starting state. In practice it reads only the input fields, the behaviour's own state and `TimeManager.TickDelta`. The results do not have to be bit-exact: the `Tolerance` of the reconcile fields decides what counts as close enough, and small differences are corrected, as [deterministic simulation](deterministic-simulation.md) explains.
 
 ## Guides
 

@@ -35,7 +35,7 @@ The client's `OnClientConnectionState` reports `Stopped` with a `Reason`, and `W
 4. Both sides use the same transport. A UDP client cannot reach a TCP or WebSocket listener, and a server with a [`MultiNetworkTransport`](../connections/transports/multi-transport.md) listens on a separate port for each transport.
 5. The firewall lets the transport's protocol, UDP or TCP, through on the server's port.
 6. If the `Reason` is `HandshakeFailed`, it comes with a `Failure` that narrows the cause down.
-   - `SchemaConflict` means the client and the server were built from different models. Generate code once and build both from the same project state.
+   - `SchemaConflict` means a model differs between the client and the server in a way older builds cannot accept, such as a field inserted or retyped. The Console marked that change `BREAKING:` when the package generated the model. Generate code once and build both from the same project state.
    - `VersionMismatch` means the two sides speak different Fomoxa protocol versions, for example because they were built with different versions of the package.
    - `Timeout` means the handshake did not finish within Handshake Timeout Seconds. Over UDP an unreachable server can also show up this way, because UDP has no connection step before the handshake.
 7. A `Reason` of `TransportError` means the transport itself failed, for example on a refused TCP connection or a host name that does not resolve. The logs say which.
@@ -61,7 +61,7 @@ Start on the server.
 
 1. The code calls `ServerManager.Spawn` only after the server has started; before that, the call throws `the server is not started`.
 2. The argument is an instance in a scene. Passing the prefab asset throws `<name> is a prefab asset; spawn an instance of it`.
-3. The prefab is registered. `prefab id 0x... of <name> is not registered` means it is in neither Collected Prefabs nor the Prefabs list of the `NetworkManager`; see step 5 of [the tutorial](tutorial/project-setup.md#5-give-the-networkmanager-the-generated-lists).
+3. The prefab is registered. `prefab id 0x... of <name> is not registered` means it is in neither Collected Prefabs nor the Prefabs list of the `NetworkManager`; see step 4 of [the tutorial](tutorial/project-setup.md#4-give-the-networkmanager-the-generated-lists).
 4. The prefab has a prefab id. A prefab with Prefab Id 0 cannot be registered, so run Tools > Fomoxa > Assign Prefab Ids.
 5. The owner is a connected client. `owner <id> is not a started peer` means it is not; pass 0 for an object without an owner.
 
@@ -75,16 +75,17 @@ If the server spawns the object but a client does not show it, continue on the c
 
 1. If the server logs `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object`, the caller is not the owner. Call the RPC from the owner's client, or set `RequireOwnership = false`.
 2. `<name> is not spawned on the server` or `on the client` means the object is not spawned on the side that sends.
-3. `<Type>.<Method> has no generated parameterless RPC model; mark the method with [NetworkRpc] and run Tools > Fomoxa > Generate` means the generated model is missing. Let the generation finish, then try again.
-4. Compile errors `FOMOXA001` to `FOMOXA010` describe a wrong RPC declaration; see [RPCs](../messaging/rpc.md#compile-errors).
-5. An RPC with a model uses the model's channel, which is unreliable unless the model declares `[NetworkChannel(..., Channel.ReliableOrdered)]`, and an unreliable RPC can be lost.
-6. `SendTargetRpc` returns `SendResult.NotObserver` when the target peer does not observe the object.
+3. `<Type>.<Method> has no generated RPC model for its parameters; run Tools > Fomoxa > Generate` or `has no generated parameterless RPC model` means the generated model is missing. Let the generation finish, then try again.
+4. Compile errors `FOMOXA001` to `FOMOXA011` and `FOMOXA022` describe a wrong RPC declaration; see [RPCs](../messaging/rpc.md#compile-errors).
+5. An RPC declared with `Channel = Channel.Unreliable` can be lost.
+6. `Send<Method>TargetRpc` returns `SendResult.NotObserver` when the target peer does not observe the object.
 
 ## State does not update
 
 1. Only the server sends state. A change made on a client stays local and is overwritten by the next change from the server.
-2. Registration errors are thrown as `HandlerRegistrationException` when the object spawns. The causes are a state model that is not on the reliable-ordered channel, a state model that encodes to no bytes, or a behaviour that registers more than one state model.
-3. `onChanged` runs only for changes after the spawn. The initial value is already in place in `OnStartClient`, and it does not trigger the callback.
+2. A field without `[NetworkState]` is not sent. If Play Mode does not start and the Console shows `[NetworkState] fields of <Type>: the source generator of com.fomoxa.networking has not registered them`, the class or one of its base classes is not `partial`, or the Console shows `FOMOXA` errors; fix those first.
+3. `OnChanged` runs only for changes after the spawn. The initial value is already in place in `OnStartClient`, and it does not trigger the callback.
+4. With `[NetworkStateModel(OnlyWhenDirty = true)]`, a change is sent only after `SetStateDirty()`.
 
 ## Remote objects jitter, lag or do not move
 
@@ -103,12 +104,12 @@ Turn Run In Background on in every build that hosts or joins a game. A player st
 
 Each time the client corrects a prediction, it calls `OnReconciled` and increments `NetworkBehaviour.ReconcileCount`. If the count keeps growing while the player does nothing special, the client and the server are computing different results.
 
-1. `apply` must move by `TimeManager.TickDelta`, never by `Time.deltaTime`.
-2. Per-frame input, such as a button press, must be stored in `Update` and read in `gather`, so that a short press is not lost.
-3. `apply` must read only the input, the behaviour's own state and the tick length. Reading other objects, frame time or unseeded random numbers makes the two sides differ.
+1. `OnApplyInput` must move by `TimeManager.TickDelta`, never by `Time.deltaTime`.
+2. Per-frame input, such as a button press, must be stored in `Update` and written to an input field in `OnGatherInput`, so that a short press is not lost.
+3. `OnApplyInput` must read only the input fields, the behaviour's own state and the tick length. Reading other objects, frame time or unseeded random numbers makes the two sides differ.
 4. With physics, Simulate Physics must be on in the `RigidbodyPhysics` of the `NetworkManager` so that the package steps and rolls back physics per tick. Even then, rollback of Unity physics is approximate; see [rollback](../prediction/rollback.md).
-5. The reconcile model must contain everything `apply` depends on. A value that carries over between ticks, such as a damping velocity, belongs in it.
-6. Without a `matches` function, the package compares the encoded bytes exactly, so float noise counts as a mismatch. Pass a `matches` function with tolerances.
+5. The `[NetworkReconcile]` fields must contain everything `OnApplyInput` depends on. A value that carries over between ticks, such as a damping velocity, belongs in them.
+6. Without a `Tolerance` on any reconcile field, the package compares the encoded bytes exactly, so float noise counts as a mismatch. Give the float and vector fields a `Tolerance`.
 
 Input that the server could not use also causes corrections. Input that arrives too late or too far ahead is dropped, the server repeats the last input for that tick, and `ServerManager.DroppedInputsOf(peerId)` counts these cases.
 

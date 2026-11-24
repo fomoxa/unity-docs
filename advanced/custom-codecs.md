@@ -27,7 +27,7 @@ public class Status
 
 ## Unity types
 
-Model properties can use `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32` and `Rect` directly. For each of these types that a model uses, the package writes a small codec named `<Type><Codec>Codec` into `<Generated Folder>/UnityCodecs/`, which writes the type's fields one after another:
+Model properties, RPC parameters and state and input fields can use `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32` and `Rect` directly. For each of these types that a model uses, the package writes a small codec named `<Type><Codec>Codec` into `<Generated Folder>/UnityCodecs/`, which writes the type's fields one after another:
 
 | Type | Fields |
 |---|---|

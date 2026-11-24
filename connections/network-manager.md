@@ -69,7 +69,7 @@ The manager reads these fields once, in `Awake`. Changing them in Play Mode has 
 | Close Timeout Seconds | 1 | Time the server spends sending a kicked peer's queue before it closes the connection anyway |
 | Log Send Dropped | on | Logs a warning when a queued message could not be sent |
 | Log Receive Dropped | on | Logs a warning when a received bundle could not be read |
-| State Mark Warning Seconds | 2 | Time a state registered with `onlyWhenDirty` may differ from what was sent, without `SetStateDirty()`, before the server logs a warning. 0 turns the check off. Only the Editor and Development builds run it. See [debugging](../advanced/debugging.md#forgotten-state-marks). |
+| State Mark Warning Seconds | 2 | Time a state with `OnlyWhenDirty` may differ from what was sent, without `SetStateDirty()`, before the server logs a warning. 0 turns the check off. Only the Editor and Development builds run it. See [debugging](../advanced/debugging.md#forgotten-state-marks). |
 
 ### Connection
 
@@ -136,7 +136,7 @@ The Editor also assigns both lists to every `NetworkManager` in a scene, in two 
 - During a player build, so a built player always has the current lists.
 - When you enter Play Mode. This assignment arrives after the manager's `Awake` has already run, so it does not register anything in that session.
 
-Assign both lists in the scene, as in the [tutorial](../getting-started/tutorial/project-setup.md#5-give-the-networkmanager-the-generated-lists), so that Play Mode in the Editor finds them. A `NetworkManager` that you create from a prefab at runtime is never assigned automatically, so put the lists on that prefab.
+Assign both lists in the scene, as in the [tutorial](../getting-started/tutorial/project-setup.md#4-give-the-networkmanager-the-generated-lists), so that Play Mode in the Editor finds them. A `NetworkManager` that you create from a prefab at runtime is never assigned automatically, so put the lists on that prefab.
 
 ## Several managers
 

@@ -31,10 +31,11 @@ The generated registration records the channels in `FomoxaRegistry.Channels`, so
 
 | Use | Channel |
 |---|---|
-| State model | Must be `ReliableOrdered`; registration throws otherwise |
-| RPC with a model | The model's channel |
-| Parameterless RPC | `ReliableOrdered` by default, set with the attribute's `Channel` property |
-| Input and reconcile models | Ignored; the package carries them inside its own unreliable messages |
+| State fields | `ReliableOrdered`, set on the generated model |
+| RPC | `ReliableOrdered` by default, set with the attribute's `Channel` property on the generated model |
+| Input and reconcile fields | None; the package carries them inside its own unreliable messages |
+| State model of a console server | Must be `ReliableOrdered`; registration throws otherwise |
+| RPC with a model on a console server | The model's channel |
 | Raw messages | The model's channel |
 
 ## How reliability works

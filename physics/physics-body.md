@@ -1,6 +1,6 @@
 # PhysicsBody
 
-`PhysicsBody` and `PhysicsBody2D` are the package's view of a network object's physics body, and you use them in `apply`, `capture` and `restore` to read and change the body. They work with `System.Numerics` vectors and do not depend on Unity's `Rigidbody` API.
+`PhysicsBody` and `PhysicsBody2D` are the package's view of a network object's physics body, and you use them in `OnApplyInput`, `OnCaptureState` and `OnRestoreState` to read and change the body. They work with `System.Numerics` vectors and do not depend on Unity's `Rigidbody` API.
 
 ```csharp
 using Fomoxa.Networking.Simulation;
@@ -74,11 +74,11 @@ Writing a state moves the body and its transform at once and wakes the body up. 
 ## Forces and impulses
 
 ```csharp
-private void Apply(MoveInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
     PhysicsBody body = NetworkObject.Body;
-    body.AddForce(new System.Numerics.Vector3(input.X, 0f, input.Z) * moveForce);
-    if (input.Jump && !context.Repeated)
+    body.AddForce(new System.Numerics.Vector3(x, 0f, z) * moveForce);
+    if (jump && !context.Repeated)
     {
         body.AddImpulse(new System.Numerics.Vector3(0f, jumpImpulse, 0f));
     }

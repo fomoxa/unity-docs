@@ -44,7 +44,7 @@ def layers(language):
 def send_queue(language):
     t = translator(language)
     canvas = Canvas(920, 290, t('Sends go into a queue that is flushed into bundles', 'Lệnh gửi đi vào hàng đợi rồi được flush thành bundle'))
-    sends = ['SendServerRpc(...)', t('state change', 'state thay đổi'), t('transform update', 'cập nhật transform'), 'Send(...)']
+    sends = ['SendFireServerRpc(...)', t('state change', 'state thay đổi'), t('transform update', 'cập nhật transform'), 'Send(...)']
     canvas.text(30, 40, t('Your code and the package', 'Code của bạn và package'), 13, 700, color=MUTED)
     for index, label in enumerate(sends):
         y = 72 + index * 44
@@ -302,9 +302,9 @@ def determinism(language):
         (t('Protocol', 'Protocol'), t('every message has a fixed layout; schemas are compared in the handshake', 'mỗi message có layout cố định; schema được so ở handshake'), 'client', t('provided', 'có')),
         (t('Input', 'Input'), t('input belongs to a tick; missing input repeats the last one', 'input gắn với một tick; thiếu input thì lặp input trước'), 'client', t('provided', 'có')),
         (t('Tick', 'Tick'), t('fixed length TickDelta, one numbering on both sides', 'độ dài cố định TickDelta, cùng cách đánh số ở hai phía'), 'client', t('provided', 'có')),
-        (t('Game logic', 'Logic game'), t('apply() must read only input, own state and TickDelta', 'apply() chỉ được đọc input, state riêng và TickDelta'), 'accent', t('your code', 'code của bạn')),
+        (t('Game logic', 'Logic game'), t('OnApplyInput reads only input, own state and TickDelta', 'OnApplyInput chỉ đọc input, state riêng và TickDelta'), 'accent', t('your code', 'code của bạn')),
         (t('Physics', 'Physics'), t('Unity physics does not promise identical results', 'physics của Unity không bảo đảm kết quả giống hệt'), 'danger', t('not provided', 'không có')),
-        (t('State', 'State'), t('matches() decides how close is close enough', 'matches() quyết định gần tới mức nào là đủ'), 'neutral', t('not required', 'không bắt buộc')),
+        (t('State', 'State'), t('Tolerance decides how close is close enough', 'Tolerance quyết định gần tới mức nào là đủ'), 'neutral', t('not required', 'không bắt buộc')),
     ]
     top, row = 40, 50
     canvas = Canvas(920, top + len(rows) * row + 70, t('What the package makes deterministic', 'Package làm cho phần nào tất định'))

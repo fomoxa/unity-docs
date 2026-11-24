@@ -10,14 +10,14 @@ A server can run on its own as a dedicated server, or together with a player's c
 
 A game goes through four steps to use the package.
 
-<figure><img src="../.gitbook/assets/diagrams/workflow.svg" alt="Four steps in a row: declare models, add a NetworkManager, make network prefabs, start and spawn."><figcaption><p>The four steps, in the order the tutorial follows them.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/workflow.svg" alt="Four steps in a row: add a NetworkManager, write behaviours, make network prefabs, start and spawn."><figcaption><p>The four steps, in the order the tutorial follows them.</p></figcaption></figure>
 
-1. The game declares the data it sends as C# classes called models, marked with `[Network]` and `[Codec]`. The package runs the `fomoxac` compiler on them and generates a codec for each model, which turns the model into bytes and back.
-2. It puts a `NetworkManager` in a scene, together with a transport component such as `UdpNetworkTransport`.
-3. It adds a `NetworkObject` to every prefab that exists on the network, and writes `NetworkBehaviour` scripts for the networked logic of those prefabs.
+1. The game puts a `NetworkManager` in a scene, together with a transport component such as `UdpNetworkTransport`.
+2. It writes `NetworkBehaviour` scripts for its networked logic, with RPC methods and state fields marked by attributes. From these, the package generates models, C# classes that describe each message, and runs the `fomoxac` compiler on them to generate a codec for each model, which turns the model into bytes and back. Data with a structure of its own can also be declared as a model, marked with `[Network]` and `[Codec]`.
+3. It adds a `NetworkObject` to every prefab that exists on the network, together with its behaviours.
 4. It starts a server, a client or a host from code, and the server spawns objects, which then appear on the clients.
 
-Once an object is spawned, its `NetworkBehaviour` scripts can call RPCs, keep a state that the server sends to clients, and register input so that the owner's client can predict its own character. A `NetworkTransform` on the prefab sends the object's position, rotation and scale.
+Once an object is spawned, its `NetworkBehaviour` scripts can call RPCs, keep a state that the server sends to clients, and declare input so that the owner's client can predict its own character. A `NetworkTransform` on the prefab sends the object's position, rotation and scale.
 
 ## Main types
 
@@ -39,8 +39,8 @@ Once an object is spawned, its `NetworkBehaviour` scripts can call RPCs, keep a 
 | UDP, TCP and WebSocket transports, several transports on one server | Available |
 | Host mode over an in-process connection | Available |
 | Spawning, scene objects, ownership, observers | Available |
-| RPCs with and without a model, declared by attribute or registered by hand | Available |
-| State with delta encoding, `NetworkTransform`, `NetworkAnimator` | Available |
+| RPCs with any number of parameters, declared by attribute | Available |
+| State fields with delta encoding, collections, `NetworkTransform`, `NetworkAnimator` | Available |
 | Network scenes | Available |
 | Client-side prediction, reconciliation and replay | Available |
 | Rollback of Unity physics (`Rigidbody` and `Rigidbody2D`) | Available, approximate (see [rollback](../prediction/rollback.md)) |

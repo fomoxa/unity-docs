@@ -4,41 +4,47 @@ Khi một object được dự đoán di chuyển bằng `Rigidbody` hoặc `Rig
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
-Component `RigidbodyPhysics` của `NetworkManager` phải bật Simulate Physics, cả trên server lẫn client, để manager step physics mỗi tick một lần (xem [physics](../physics/overview.md#turning-it-on)). Object được dự đoán phải có `Rigidbody` hoặc `Rigidbody2D` trên cùng GameObject với `NetworkObject` của nó. `apply` di chuyển body bằng lực, xung lực hoặc vận tốc, còn `capture` và `restore` đọc và ghi body qua `NetworkObject.Body` hoặc `Body2D`:
+Component `RigidbodyPhysics` của `NetworkManager` phải bật Simulate Physics, cả trên server lẫn client, để manager step physics mỗi tick một lần (xem [physics](../physics/overview.md#turning-it-on)). Object được dự đoán phải có `Rigidbody` hoặc `Rigidbody2D` trên cùng GameObject với `NetworkObject` của nó. `OnApplyInput` di chuyển body bằng lực, xung lực hoặc vận tốc, còn `OnCaptureState` và `OnRestoreState` chép body sang các field reconcile và ngược lại qua `NetworkObject.Body` hoặc `Body2D`:
 
 ```csharp
-private void Apply(MoveInput input, InputContext context)
+[NetworkReconcile(Tolerance = 0.01f)]
+private float positionX;
+
+[NetworkReconcile(Tolerance = 0.01f)]
+private float positionZ;
+
+[NetworkReconcile(Tolerance = 0.05f)]
+private float velocityX;
+
+[NetworkReconcile(Tolerance = 0.05f)]
+private float velocityZ;
+
+protected override void OnApplyInput(InputContext context)
 {
-    var push = new System.Numerics.Vector3(input.X, 0f, input.Z) * pushStrength;
+    var push = new System.Numerics.Vector3(x, 0f, z) * pushStrength;
     NetworkObject.Body.AddImpulse(push);
 }
 
-private void Capture(PushState state)
+protected override void OnCaptureState()
 {
     BodyState body = NetworkObject.Body.State;
-    state.X = body.Position.X;
-    state.Z = body.Position.Z;
-    state.VelocityX = body.Velocity.X;
-    state.VelocityZ = body.Velocity.Z;
+    positionX = body.Position.X;
+    positionZ = body.Position.Z;
+    velocityX = body.Velocity.X;
+    velocityZ = body.Velocity.Z;
 }
 
-private void Restore(PushState state)
+protected override void OnRestoreState()
 {
     PhysicsBody body = NetworkObject.Body;
     BodyState current = body.State;
-    current.Position = new System.Numerics.Vector3(state.X, current.Position.Y, state.Z);
-    current.Velocity = new System.Numerics.Vector3(state.VelocityX, current.Velocity.Y, state.VelocityZ);
+    current.Position = new System.Numerics.Vector3(positionX, current.Position.Y, positionZ);
+    current.Velocity = new System.Numerics.Vector3(velocityX, current.Velocity.Y, velocityZ);
     body.State = current;
 }
-
-private static bool Matches(PushState server, PushState predicted) =>
-    Math.Abs(server.X - predicted.X) <= 0.01f
-    && Math.Abs(server.Z - predicted.Z) <= 0.01f
-    && Math.Abs(server.VelocityX - predicted.VelocityX) <= 0.05f
-    && Math.Abs(server.VelocityZ - predicted.VelocityZ) <= 0.05f;
 ```
 
-`PushState` là một model có bốn property `f32`, `X`, `Z`, `VelocityX` và `VelocityZ`. `BodyState` và `PhysicsBody` nằm trong `Fomoxa.Networking.Simulation`, và `Math` là `System.Math`. Ví dụ di chuyển trên mặt phẳng nền và để trục dọc cho trọng lực.
+`x` và `z` là các field input của trang [tổng quan](overview.md), và `OnGatherInput` điền chúng như ở đó. `BodyState` và `PhysicsBody` nằm trong `Fomoxa.Networking.Simulation`. Ví dụ di chuyển trên mặt phẳng nền và để trục dọc cho trọng lực.
 
 ## Dòng thời gian <a href="#timeline" id="timeline"></a>
 
@@ -46,7 +52,7 @@ Mỗi tick, sau khi step physics, client của owner lưu state của mỗi phys
 
 <figure><img src="../.gitbook/assets/diagrams/physics-rollback.svg" alt="Trong lần chạy đầu, client dự đoán các tick 0 tới 4 và lưu các physics world sau mỗi tick. State của server cho tick 2 không khớp. Lần sửa load tick 2 vào mọi world của nhóm và khôi phục state của server, rồi replay các tick 3 và 4: apply input, step các world, capture và lưu. State đã lưu gồm vị trí, góc xoay, vận tốc, vận tốc góc và trạng thái ngủ của mỗi dynamic body không phải proxy. Dữ liệu contact không được lưu, nên replay có thể khác lần chạy đầu."><figcaption><p>Một lần sửa ở T2 khi client đã dự đoán tới T4.</p></figcaption></figure>
 
-Với mỗi tick của lần replay, từ T3 tới T4, `apply` chạy cho mọi object được dự đoán của nhóm rồi mỗi world step một lần.
+Với mỗi tick của lần replay, từ T3 tới T4, `OnApplyInput` chạy cho mọi object được dự đoán của nhóm rồi mỗi world step một lần.
 
 ## Rollback group <a href="#rollback-groups" id="rollback-groups"></a>
 
@@ -68,7 +74,7 @@ Với mỗi world, state đã lưu giữ vị trí, góc xoay, vận tốc, vậ
 
 Spawn và despawn cũng không được replay. Body tạo sau một tick đã lưu giữ state hiện tại khi tick đó được load, và body bị hủy sau tick đó không được tạo lại.
 
-Dữ liệu contact của physics engine không được lưu, nên một lần replay có thể khác lần chạy đầu dù input giống hệt. Hãy chấp nhận thỉnh thoảng có lần sửa, và dùng dung sai trong `matches`.
+Dữ liệu contact của physics engine không được lưu, nên một lần replay có thể khác lần chạy đầu dù input giống hệt. Hãy chấp nhận thỉnh thoảng có lần sửa, và đặt `Tolerance` cho các field reconcile.
 
 ## Contact event trong lúc replay <a href="#contact-events-during-a-replay" id="contact-events-during-a-replay"></a>
 

@@ -12,7 +12,7 @@ Server cấp cho mỗi client đang kết nối một peer id, kiểu `ulong` v�
 
 Mọi thứ package gửi đi đều là model: một class C# đánh dấu bằng `[Network]` và `[Codec]`, có codec do `fomoxac` sinh ra. Điều này đúng với message của chính package, như message spawn, despawn, state và transform, và với tham số RPC, state và input của bạn.
 
-Mỗi cặp model và codec có một message id, và `NetSchema` sinh ra liệt kê mọi message id cùng một fingerprint của layout. Trong lúc handshake, Fomoxa.Net so schema của client với schema của server. Nếu chúng khác nhau, Fomoxa.Net từ chối kết nối với `HandshakeFailure.SchemaConflict`, nên client và server phải được build từ cùng một bộ model. [Model và codec](../messaging/models.md) hướng dẫn cách khai báo chúng.
+Mỗi cặp model và codec có một message id, và `NetSchema` sinh ra liệt kê mọi message id cùng một fingerprint của layout. Trong lúc handshake, Fomoxa.Net so schema của client với schema của server, từng message một. Một model được phép có thêm field ở cuối ở một bên; mọi khác biệt khác làm Fomoxa.Net từ chối kết nối với `HandshakeFailure.SchemaConflict`. [Model và codec](../messaging/models.md) hướng dẫn cách khai báo chúng.
 
 ## Ba loại message <a href="#three-kinds-of-message" id="three-kinds-of-message"></a>
 

@@ -2,50 +2,85 @@
 
 Reconciliation là cách client của owner sửa lại dự đoán của mình. Sau khi áp dụng một input, server chụp state của object và gửi nó tới owner kèm số tick. Client so sánh nó với state đã dự đoán cho cùng tick, và nếu hai bên khác nhau, nó khôi phục state của server rồi replay input cho mọi tick sau đó.
 
-## Đăng ký <a href="#registering" id="registering"></a>
+## Khai báo <a href="#declaring" id="declaring"></a>
 
-Reconcile model được đăng ký sau input model:
+State cần so sánh nằm trong các field `[NetworkReconcile]`, cạnh các [field input](input.md):
 
 ```csharp
-protected override void OnRegisterInput(NetworkInput input)
+using Fomoxa.Networking;
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed partial class Glider : NetworkBehaviour
 {
-    input.Use(MoveInputNetAdapter.Instance, Gather, Apply);
-    input.Reconcile(MoveStateNetAdapter.Instance, Capture, Restore, Matches);
+    [NetworkInput]
+    private float thrust;
+
+    [NetworkReconcile(Tolerance = 0.01f)]
+    private Vector3 position;
+
+    [NetworkReconcile(Tolerance = 0.01f)]
+    private float speed;
+
+    protected override void OnGatherInput()
+    {
+        thrust = Input.GetAxisRaw("Vertical");
+    }
+
+    protected override void OnApplyInput(InputContext context)
+    {
+        speed = Mathf.Max(0f, speed + thrust * 0.1f);
+        transform.position += transform.forward * speed * 0.02f;
+    }
+
+    protected override void OnCaptureState()
+    {
+        position = transform.position;
+    }
+
+    protected override void OnRestoreState()
+    {
+        transform.position = position;
+    }
 }
 ```
 
-`NetworkInput.Reconcile<TState>(codec, capture, restore, matches = null)` nhận ba callback:
+Package gom các field reconcile vào một model mang tên class theo sau là `Reconcile`, ở đây là `GliderReconcile`, cạnh input model. Đặt tên khác cho model bằng `[NetworkReconcileModel("...")]` trên class. Thay đổi field của nó theo luật của [state](../synchronization/state.md#changing-the-fields). Class có field `[NetworkReconcile]` cần ít nhất một field `[NetworkInput]`, và một field mang một trong hai attribute, không mang cả hai.
 
-| Callback | Chạy khi | Làm gì |
+| Method | Chạy khi | Làm gì |
 |---|---|---|
-| `capture(TState state)` | Sau mỗi input được áp dụng trên server; sau mỗi tick được dự đoán hoặc replay trên client | Copy state của behaviour vào model |
-| `restore(TState state)` | Trên client, khi bắt đầu một lần sửa | Copy state của server ngược vào behaviour |
-| `matches(TState server, TState predicted)` | Trên client, cho mỗi state tới | Trả về dự đoán có đủ gần hay không |
+| `OnCaptureState()` | Sau mỗi input được áp dụng trên server; sau mỗi tick được dự đoán hoặc replay trên client. Package chép các field sau khi nó trả về | Chép state nằm ngoài các field, như transform hay physics body, vào chúng |
+| `OnRestoreState()` | Trên client, khi bắt đầu một lần sửa, sau khi package đã ghi state của server vào các field | Chép các field ngược về transform hoặc body |
 
-`Reconcile` ném `HandlerRegistrationException` khi được gọi trước `Use` hoặc bị gọi hai lần.
+Cả hai đều không bắt buộc. Field mà `OnApplyInput` thay đổi trực tiếp, như `speed` ở trên, không cần method nào.
 
-## Reconcile model chứa gì <a href="#what-goes-in-the-reconcile-model" id="what-goes-in-the-reconcile-model"></a>
+## Field reconcile chứa gì <a href="#what-goes-in-the-reconcile-fields" id="what-goes-in-the-reconcile-fields"></a>
 
-Reconcile model phải giữ mọi thứ mà `apply` đọc, thay đổi và mang từ tick này sang tick sau, như vị trí, vận tốc, bộ đếm cooldown hay vận tốc damping. Nếu thiếu thứ gì, lần replay bắt đầu từ một giá trị khác với server, và lần so sánh tiếp theo lại thất bại.
+Các field reconcile phải giữ mọi thứ mà `OnApplyInput` đọc, thay đổi và mang từ tick này sang tick sau, như vị trí, vận tốc, bộ đếm cooldown hay vận tốc damping. Nếu thiếu thứ gì, lần replay bắt đầu từ một giá trị khác với server, và lần so sánh tiếp theo lại thất bại.
 
 ## So sánh <a href="#comparing" id="comparing"></a>
 
-Không có `matches`, package so sánh các byte đã encode của hai state, nên mọi khác biệt đều tính là mismatch, kể cả nhiễu số thực ở bit cuối. Với số thực, hãy truyền một hàm `matches` có dung sai:
+Khi không có `Tolerance` nào, package so sánh các byte đã encode của hai state, nên mọi khác biệt đều tính là mismatch, kể cả nhiễu số thực ở bit cuối. Khi một field có `Tolerance`, package so sánh từng field, và dự đoán khớp khi mọi field đều khớp:
 
-```csharp
-private static bool Matches(MoveState server, MoveState predicted) =>
-    Vector3.Distance(server.Position, predicted.Position) <= 0.01f;
-```
+| Field | Khớp khi |
+|---|---|
+| `float`, `double` với `Tolerance = t` | Hai giá trị lệch nhau tối đa `t` |
+| `Vector2`, `Vector3`, `Vector4` với `Tolerance = t` | Mỗi thành phần lệch nhau tối đa `t` |
+| `Quaternion` với `Tolerance = t` | Góc giữa hai giá trị tối đa `t` độ |
+| Model, không có `Tolerance` | Bản encode giống nhau |
+| Field khác không có `Tolerance` | Hai giá trị bằng nhau |
+
+`Tolerance` trên type khác là lỗi biên dịch `FOMOXA020`.
 
 ## Sửa và replay <a href="#correction-and-replay" id="correction-and-replay"></a>
 
-<figure><img src="../.gitbook/assets/diagrams/reconcile-replay.svg" alt="Client đã dự đoán các tick 10 tới 14 và đang ở tick 14 khi state của server cho tick 11 tới. matches() trả về false cho tick 11. Client khôi phục state của server ở tick 11 và replay các tick 12, 13 và 14. Mỗi tick replay gọi apply với context.Replaying là true, rồi capture. Sau đó OnReconciled(11) chạy và ReconcileCount tăng thêm một."><figcaption><p>Một lần sửa ở tick 11 khi client đã ở tick 14.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/reconcile-replay.svg" alt="Client đã dự đoán các tick 10 tới 14 và đang ở tick 14 khi state của server cho tick 11 tới. State của tick 11 không khớp. Client khôi phục state của server ở tick 11 và replay các tick 12, 13 và 14. Mỗi tick replay gọi OnApplyInput với context.Replaying là true, rồi OnCaptureState. Sau đó OnReconciled(11) chạy và ReconcileCount tăng thêm một."><figcaption><p>Một lần sửa ở tick 11 khi client đã ở tick 14.</p></figcaption></figure>
 
 Client giữ input và state của Prediction History tick gần nhất (mặc định 64). Một lần replay bao các tick từ tick được sửa tới tick dự đoán mới nhất, dùng các input client đã ghi lại, và sau lần sửa package gọi `OnReconciled(tick)` trên behaviour và tăng `ReconcileCount` của nó.
 
 Khi nhiều state tới giữa hai tick, client chỉ xử lý state mới nhất. State cho một tick mà client không có dự đoán được tính là mismatch.
 
-Trong lúc replay, `NetworkBehaviour.IsReplaying` và `ClientManager.IsReplaying` là true, và `InputContext.Replaying` trong `apply` cũng vậy.
+Trong lúc replay, `NetworkBehaviour.IsReplaying` và `ClientManager.IsReplaying` là true, và `InputContext.Replaying` trong `OnApplyInput` cũng vậy.
 
 ## Bắt đầu và dừng dự đoán <a href="#starting-and-stopping-prediction" id="starting-and-stopping-prediction"></a>
 
@@ -65,10 +100,10 @@ Một lần sửa di chuyển object ngay lập tức. Để che điều đó, h
 
 `ReconcileCount` nên giữ ở mức thấp chừng nào không có gì bất thường xảy ra. Khi nó cứ tăng, nguyên nhân thường gặp là:
 
-- `apply` dùng `Time.deltaTime` thay vì `TimeManager.TickDelta`.
-- `apply` đọc dữ liệu khác nhau giữa server và client, như object khác hoặc số ngẫu nhiên không có seed.
-- Reconcile model thiếu state được mang qua các tick.
-- `matches` bị thiếu hoặc quá chặt.
+- `OnApplyInput` dùng `Time.deltaTime` thay vì `TimeManager.TickDelta`.
+- `OnApplyInput` đọc dữ liệu khác nhau giữa server và client, như object khác hoặc số ngẫu nhiên không có seed.
+- Các field reconcile thiếu state được mang qua các tick.
+- `Tolerance` bị thiếu hoặc quá nhỏ.
 - Input tới server muộn và bị lặp lại, điều mà `ServerManager.DroppedInputsOf` cho thấy.
 
 [Mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao mỗi nguyên nhân trên làm hai bên khác nhau.

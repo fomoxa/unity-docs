@@ -4,9 +4,9 @@ Collection là một list, một dictionary hoặc một set mà một `NetworkB
 
 ## Khi nào dùng <a href="#when-to-use-it" id="when-to-use-it"></a>
 
-Dùng collection cho dữ liệu lớn lên và nhỏ đi: túi đồ, danh sách người chơi trong phòng, bảng điểm. Một [state model](state.md) có field `Array` được gửi nguyên vẹn khi mảng đổi độ dài, nên thêm một món vào list 500 món là gửi cả 500. Collection chỉ gửi một món đó.
+Dùng collection cho dữ liệu lớn lên và nhỏ đi: túi đồ, danh sách người chơi trong phòng, bảng điểm. Một [field state](state.md) chứa mảng được gửi nguyên vẹn khi mảng đổi độ dài, nên thêm một món vào list 500 món là gửi cả 500. Collection chỉ gửi một món đó.
 
-Các giá trị đổi cùng nhau và giữ nguyên kích thước, như máu hay vị trí trong một trận, nên ở lại trong state model, vì với chúng state model rẻ hơn.
+Các giá trị đổi cùng nhau và giữ nguyên kích thước, như máu hay vị trí trong một trận, nên ở lại trong field state, vì với chúng field state rẻ hơn.
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
@@ -32,30 +32,27 @@ namespace MyGame.Network.Models
 }
 ```
 
-Behaviour giữ các collection của nó và đăng ký từng cái trong `OnRegisterState`, dưới một index do bạn chọn:
+Behaviour giữ mỗi collection trong một field `readonly` đánh dấu `[NetworkState]` với một index do bạn chọn:
 
 ```csharp
 using System.Collections.Generic;
 using Fomoxa.Networking;
 using Fomoxa.Unity;
-using Generated;
 using MyGame.Network.Models;
 using UnityEngine;
 
-public sealed class Inventory : NetworkBehaviour
+public sealed partial class Inventory : NetworkBehaviour
 {
+    [NetworkState(Index = 0, OnChanged = nameof(OnItemsChanged))]
     private readonly NetworkList<Item> items = new NetworkList<Item>();
+
+    [NetworkState(Index = 1)]
     private readonly NetworkDictionary<string, int> scores = new NetworkDictionary<string, int>();
+
+    [NetworkState(Index = 2)]
     private readonly NetworkSet<ulong> visitors = new NetworkSet<ulong>();
 
     public IReadOnlyList<Item> Items => items;
-
-    protected override void OnRegisterState(NetworkState state)
-    {
-        state.Use(0, items, ItemNetAdapter.Instance, OnItemsChanged);
-        state.Use(1, scores);
-        state.Use(2, visitors);
-    }
 
     public void Pick(uint id)
     {
@@ -76,22 +73,26 @@ public sealed class Inventory : NetworkBehaviour
 
 Gọi `Pick` và `UseOne` trên server. Cuối tick đó mỗi observer nhận các thao tác, áp chúng lên `items` của riêng nó và gọi `OnItemsChanged` một lần cho mỗi thao tác.
 
-## Đăng ký collection <a href="#registering-a-collection" id="registering-a-collection"></a>
+Class phải là `partial`, như với [field state](state.md), vì package sinh code đăng ký các collection khi object spawn.
 
-`state.Use(index, collection, ...)` đăng ký một collection. Index là một `byte` do bạn chọn. Các lời gọi có thể theo thứ tự bất kỳ và index có thể nhảy số; package xử lý các collection theo thứ tự index tăng dần. Dùng cùng một index hai lần trong một behaviour, hoặc đăng ký một instance collection hai lần, sẽ ném `HandlerRegistrationException`.
+## Khai báo collection <a href="#declaring-a-collection" id="declaring-a-collection"></a>
 
-Index đi kèm mọi thao tác, nên client phải đăng ký cùng index với cùng loại collection và cùng kiểu phần tử. Nếu message spawn cho thấy một tập index, loại hoặc kiểu phần tử khác, client dừng với `ObjectMismatch` (`InvalidSpawn`).
+Field collection có type `NetworkList<T>`, `NetworkDictionary<TKey, TValue>` hoặc `NetworkSet<T>`, là `readonly`, và mang `[NetworkState(Index = n)]`. Package đăng ký instance mà field đang giữ khi object spawn, nên một instance gán sau đó sẽ không được đồng bộ; `readonly` loại trừ trường hợp này. Field vẫn là `null` lúc đó sẽ ném `ArgumentNullException`.
 
-Một behaviour có thể đăng ký collection bên cạnh [state model](state.md) của nó, hoặc không cần state model.
+Index là một `byte` và là bắt buộc, nên đổi thứ tự các field không đổi những gì được gửi. Index có thể nhảy số; package xử lý các collection theo thứ tự index tăng dần. Hai field collection của một class, hoặc của một class và class cha của nó, không được dùng chung index.
+
+Index đi kèm mọi thao tác, nên client phải có cùng index với cùng loại collection và cùng kiểu phần tử. Nếu message spawn cho thấy một tập index, loại hoặc kiểu phần tử khác, client dừng với `ObjectMismatch` (`InvalidSpawn`). Vì vậy thêm hoặc bỏ một field collection cần server mới và client mới cùng lúc. Collection không thuộc model sinh ra nào, nên Console không hiện kết luận cho chúng.
+
+Một behaviour có thể có collection bên cạnh các [field state](state.md) của nó, hoặc không có field state nào. Collection không thuộc state model sinh ra.
 
 ## Kiểu phần tử <a href="#element-types" id="element-types"></a>
 
-| Phần tử | Đăng ký |
+| Phần tử | Gửi dưới dạng |
 |---|---|
-| Một model (`[Network]`, `[Codec("net")]`) | Truyền adapter của nó: `state.Use(0, items, ItemNetAdapter.Instance)` |
-| `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `string` | Không cần adapter: `state.Use(1, scores)` |
+| Model có `[Network]` và `[Codec("net")]` | Codec `net` của nó |
+| `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `string` | Kiểu nguyên thuỷ tương ứng |
 
-Value của dictionary có thể là model hoặc kiểu nguyên thuỷ. Key của dictionary và phần tử của set phải là kiểu nguyên thuỷ, vì chúng được so sánh theo giá trị. Model đăng ký thiếu adapter, hoặc model dùng làm key hay phần tử set, sẽ ném `HandlerRegistrationException` với thông báo nêu tên kiểu.
+Phần tử của list và value của dictionary có thể là model hoặc kiểu nguyên thuỷ. Key của dictionary và phần tử của set phải là kiểu nguyên thuỷ, vì chúng được so sánh theo giá trị. Kiểu khác là lỗi biên dịch, với thông báo nêu tên kiểu và liệt kê các kiểu được chấp nhận.
 
 ## Thao tác <a href="#operations" id="operations"></a>
 
@@ -138,7 +139,7 @@ Phần tử được encode lúc bạn gọi thao tác. Một field đổi sau �
 
 ## Callback <a href="#callbacks" id="callbacks"></a>
 
-Mỗi collection nhận một callback tuỳ chọn, được gọi trên client sau khi thao tác đã được áp:
+Mỗi collection nhận một callback tuỳ chọn, đặt tên bằng `OnChanged` trên attribute của nó và được gọi trên client sau khi thao tác đã được áp:
 
 | Kiểu | Callback |
 |---|---|
@@ -160,7 +161,7 @@ Nội dung đến cùng message spawn không kích hoạt callback. Nó đã n�
 
 ## Cách hoạt động <a href="#how-it-works" id="how-it-works"></a>
 
-Giữa hai lần gửi, server ghi lại từng thao tác theo thứ tự bạn gọi. Sau các event `OnTick` và `OnPostTick` của tick, cùng chỗ [state](state.md) được gửi, server gửi một message cho mỗi collection có thao tác, tới mọi observer. Trong một behaviour, state model đi trước, rồi tới các collection theo thứ tự index tăng dần, nên callback của collection đã thấy state mới.
+Giữa hai lần gửi, server ghi lại từng thao tác theo thứ tự bạn gọi. Sau các event `OnTick` và `OnPostTick` của tick, cùng chỗ [state](state.md) được gửi, server gửi một message cho mỗi collection có thao tác, tới mọi observer. Trong một behaviour, các field state đi trước, rồi tới các collection theo thứ tự index tăng dần, nên callback của collection đã thấy state mới.
 
 `Clear` bỏ các thao tác ghi từ lần gửi trước, vì client chỉ cần collection rỗng. Thao tác thực hiện khi object không có observer nào cũng bị bỏ; observer đến sau nhận toàn bộ collection trong message spawn của nó.
 
@@ -184,21 +185,32 @@ Trên host, collection dùng chung với server, nên client của host không �
 
 ## Khôi phục <a href="#recovery" id="recovery"></a>
 
-Client không áp được một thao tác, ví dụ index vượt quá cuối, key không có hoặc byte không decode được, sẽ đánh dấu collection đó lệch nhịp. Nó bỏ qua các thao tác tiếp theo cho collection đó, xin server toàn bộ nội dung, và thay collection khi nội dung tới. Callback sau đó chạy một lần với `Reset`. Các collection khác và state model không bị ảnh hưởng. Khi chính message không đọc được, client không biết nó dành cho collection nào, nên mọi collection của behaviour đó khôi phục theo cách này.
+Client không áp được một thao tác, ví dụ index vượt quá cuối, key không có hoặc byte không decode được, sẽ đánh dấu collection đó lệch nhịp. Nó bỏ qua các thao tác tiếp theo cho collection đó, xin server toàn bộ nội dung, và thay collection khi nội dung tới. Callback sau đó chạy một lần với `Reset`. Các collection khác và các field state không bị ảnh hưởng. Khi chính message không đọc được, client không biết nó dành cho collection nào, nên mọi collection của behaviour đó khôi phục theo cách này.
 
-## Cấu hình <a href="#configuration" id="configuration"></a>
+## Lỗi <a href="#errors" id="errors"></a>
+
+Source generator báo các lỗi biên dịch sau cho field collection:
+
+| Id | Ý nghĩa |
+|---|---|
+| `FOMOXA012` | Field không phải `readonly`, hoặc là `static` |
+| `FOMOXA013` | `OnChanged` không chỉ tới một method có chữ ký callback của collection |
+| `FOMOXA014` | Class, hoặc một class chứa nó, không phải `partial` |
+| `FOMOXA015` | Thiếu `Index`, attribute ghi một wire type, hoặc phần tử model không có codec `net` |
+| `FOMOXA016` | Hai field collection dùng cùng index |
+| `FOMOXA017` | Kiểu phần tử, key hoặc value không được chấp nhận |
+
+Lúc chạy:
 
 | Quy tắc | Khi vi phạm |
 |---|---|
-| Mỗi index dùng một lần trong một behaviour | `HandlerRegistrationException`: `... uses collection index 1 twice` |
-| Mỗi instance collection đăng ký một lần | `HandlerRegistrationException`: `... uses as collection 2 an instance that is already collection 1 of a behaviour` |
-| Phần tử model đi kèm adapter; key và phần tử set là kiểu nguyên thuỷ | `HandlerRegistrationException`: `... which is not a primitive type; a model needs its codec, and keys and set elements must be primitive` |
 | Chỉ server thay đổi collection đã spawn | `InvalidOperationException`: `... cannot change collection 0 on a client; only the server changes a collection` |
 | Không có phần tử, value hay key `null` | `ArgumentNullException` |
-| Hai phía đăng ký cùng index, loại và kiểu phần tử | Client dừng với `ObjectMismatch` (`InvalidSpawn`) |
+| Field giữ một instance khi object spawn | `ArgumentNullException` |
+| Hai phía có cùng index, loại và kiểu phần tử | Client dừng với `ObjectMismatch` (`InvalidSpawn`) |
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
 Chỉ server thay đổi collection. Một behaviour có nhiều nhất 256 collection, mỗi cái một index `byte`. Toàn bộ collection đi trong message spawn, nên collection rất lớn làm mọi lần spawn object của nó lớn theo. Thứ tự duyệt một dictionary hay một set không được đảm bảo giống nhau giữa server và client.
 
-Collection được đăng ký trong một [NetworkBehaviour](../objects/network-behaviour.md), và phần tử model được khai báo như mọi [model](../messaging/models.md) khác.
+Collection được khai báo trong một [NetworkBehaviour](../objects/network-behaviour.md), và phần tử model được khai báo như mọi [model](../messaging/models.md) khác.

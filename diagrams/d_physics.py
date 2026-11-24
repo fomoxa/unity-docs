@@ -8,7 +8,7 @@ def physics_stack(language):
     canvas = Canvas(920, 470, t('The physics layers, from game code down to Unity',
                                 'Các tầng physics, từ code game xuống Unity'))
     rows = [
-        ('code', t('Game code', 'Code game'), 'apply, capture, restore, OnTick'),
+        ('code', t('Game code', 'Code game'), 'OnApplyInput, OnCaptureState, OnRestoreState, OnTick'),
         ('client', t('Fomoxa physics API', 'API physics của Fomoxa'), 'PhysicsBody, PhysicsBody2D, PhysicsHistory'),
         ('server', 'IPhysicsSimulation', 'Step, CreateSnapshot, Save, Load'),
         ('server', 'IPhysicsWorld, IPhysicsWorld2D', t('bodies, forces, queries', 'body, lực, truy vấn')),
@@ -136,7 +136,7 @@ def rapier_stack(language):
                                 'Rapier nằm ở đâu, trong Unity và trong console server'))
     canvas.text(30, 38, t('Unity client or server', 'Client hoặc server Unity'), 15, 700)
     left = [
-        ('code', t('Game code', 'Code game'), 'apply, capture, restore, OnTick'),
+        ('code', t('Game code', 'Code game'), 'OnApplyInput, OnCaptureState, OnRestoreState, OnTick'),
         ('client', 'PhysicsBody, PhysicsBody2D', t('unchanged', 'không đổi')),
         ('host', 'RapierPhysics', t('one world per network scene and dimension', 'một world mỗi network scene và mỗi chiều')),
     ]

@@ -57,7 +57,7 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 
 | Callback | Side | Order |
 |---|---|---|
-| `OnRegisterRpcs`, `OnRegisterState`, `OnRegisterInput` | First side the instance spawns on | Once per instance, before the start callback |
+| Registration of RPCs, state and input | First side the instance spawns on | Once per instance, before the start callback |
 | `OnStartServer` | Server | After the spawn message is queued |
 | `OnStartClient` | Client | After the initial state is applied |
 | `OnOwnerChangedServer(previousOwnerId)` | Server | After the owner changed |
@@ -71,11 +71,11 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 
 | Callback | Registered with | Runs |
 |---|---|---|
-| RPC handlers | Attributes or `NetworkRpcs` | When the RPC arrives |
-| State `onChanged(previous)` | `NetworkState.Use` | On clients, after each state change |
-| Collection `onChanged(operation, index or key, old, new)` | `NetworkState.Use` | On clients, after each operation; once with `Reset` after a [recovery](../synchronization/collections.md#recovery) |
-| `gather`, `apply` | `NetworkInput.Use` | See [input](../prediction/input.md#apply) |
-| `capture`, `restore`, `matches` | `NetworkInput.Reconcile` | See [reconciliation](../prediction/reconciliation.md) |
+| RPC methods | `[ServerRpc]`, `[ClientRpc]` | When the RPC arrives |
+| State `OnChanged(previous, current)` | `[NetworkState(OnChanged = ...)]` | On clients, after a change of the field |
+| Collection `OnChanged(operation, index or key, old, new)` | `[NetworkState(Index = ..., OnChanged = ...)]` | On clients, after each operation; once with `Reset` after a [recovery](../synchronization/collections.md#recovery) |
+| `OnGatherInput`, `OnApplyInput` | `[NetworkInput]` fields | See [input](../prediction/input.md#apply) |
+| `OnCaptureState`, `OnRestoreState` | `[NetworkReconcile]` fields | See [reconciliation](../prediction/reconciliation.md) |
 | `ObserverRule.Observes` | Observer Rule field | On the server, when observers are recalculated |
 | `OnServerAuthenticating`, `OnClientAuthenticating` and the authenticator's handlers | Authenticator field | See [authentication](../connections/authentication.md) |
 | `ISceneLoader.Load`, `Unload` | `SceneRegistry.Register` | When a network scene is loaded or unloaded |

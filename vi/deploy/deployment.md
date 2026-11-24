@@ -23,7 +23,7 @@ Client desktop và mobile có thể dùng cùng proxy đó với `wss://`, hoặ
 
 ## Phiên bản <a href="#versions" id="versions"></a>
 
-Client chỉ kết nối được tới server build từ cùng các model, vì handshake so sánh schema và từ chối mọi schema khác bằng `SchemaConflict`. Prefab và scene object cũng phải khớp, nếu không client dừng với `PrefabMismatch` khi object spawn. Khi phát hành phiên bản mới, hãy cập nhật server và client cùng lúc, hoặc chạy song song server cũ và mới trên các port khác nhau.
+Handshake so model của client với model của server và từ chối kết nối bằng `SchemaConflict` khi chúng khác nhau, trừ khi chỗ khác duy nhất là các field thêm vào cuối một model; [state](../synchronization/state.md#changing-the-fields) liệt kê những thay đổi mà bản build cũ vẫn kết nối được. Prefab và scene object cũng phải khớp, nếu không client dừng với `PrefabMismatch` khi object spawn. Khi phát hành phiên bản mới, hãy cập nhật server và client cùng lúc, hoặc chạy song song server cũ và mới trên các port khác nhau.
 
 ## Timeout <a href="#timeouts" id="timeouts"></a>
 

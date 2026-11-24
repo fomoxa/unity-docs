@@ -4,7 +4,7 @@
   <rect x="0.5" y="0.5" width="919" height="469" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
   <rect x="160.0" y="30.0" width="560.0" height="46.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
   <text x="180.0" y="58.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#0F172A" text-anchor="start">Game code</text>
-  <text x="700.0" y="58.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="end">apply, capture, restore, OnTick</text>
+  <text x="700.0" y="58.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="end">OnApplyInput, OnCaptureState, OnRestoreState, OnTick</text>
   <rect x="160.0" y="90.0" width="560.0" height="46.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
   <text x="180.0" y="118.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13.5" font-weight="700" fill="#065F46" text-anchor="start">Fomoxa physics API</text>
   <text x="700.0" y="118.0" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="500" fill="#6B7280" text-anchor="end">PhysicsBody, PhysicsBody2D, PhysicsHistory</text>

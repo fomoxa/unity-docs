@@ -129,7 +129,7 @@ stateDiagram-v2
     Stopped --> [*]
 ```
 
-`Starting` covers the Fomoxa handshake, in which the client and the server check that they were built from the same models. `Authenticating` is where an [authenticator](../../connections/authentication.md) would check the client; this tutorial has none, so the server lets every client in at once. Messages can flow only once the client reaches `Started`, so that is where the launcher spawns its player:
+`Starting` covers the Fomoxa handshake, in which the client and the server compare their models. `Authenticating` is where an [authenticator](../../connections/authentication.md) would check the client; this tutorial has none, so the server lets every client in at once. Messages can flow only once the client reaches `Started`, so that is where the launcher spawns its player:
 
 ```mermaid
 sequenceDiagram

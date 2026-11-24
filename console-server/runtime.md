@@ -4,7 +4,7 @@ This page writes a console server for the game from [your first project](../gett
 
 ## Entities and behaviours
 
-On the console, a network object is a `StandaloneEntity`, and its networked logic lives in `EntityBehaviour` classes. `EntityBehaviour` has the callbacks and registrations of `NetworkBehaviour`: `OnStartServer`, `OnStopServer`, `OnStartClient`, `OnStopClient`, the owner change callbacks, `OnRegisterRpcs`, `OnRegisterState`, `OnRegisterInput`, `OnReconciled`, the `SendServerRpc`, `SendObserversRpc` and `SendTargetRpc` methods, and `IsPredicting`, `IsReplaying` and `ReconcileCount`.
+On the console, a network object is a `StandaloneEntity`, and its networked logic lives in `EntityBehaviour` classes. `EntityBehaviour` has the callbacks of `NetworkBehaviour`: `OnStartServer`, `OnStopServer`, `OnStartClient`, `OnStopClient`, the owner change callbacks and `OnReconciled`, and `IsPredicting`, `IsReplaying` and `ReconcileCount`. The console has no Editor step that reads fields, so an `EntityBehaviour` registers its RPCs, state and input in code, with models: `OnRegisterRpcs`, `OnRegisterState`, `OnRegisterInput`, and the `SendServerRpc`, `SendObserversRpc` and `SendTargetRpc` methods that take a model's adapter or an RPC's name.
 
 The `Player` prefab of the tutorial has a `NetworkTransform` and a `Player` behaviour, in that order. The console entity has one behaviour for each, in the same order:
 
@@ -12,8 +12,8 @@ The `Player` prefab of the tutorial has a `NetworkTransform` and a `Player` beha
 using System.Numerics;
 using Fomoxa.Networking;
 using Fomoxa.Networking.Standalone;
+using FomoxaStateModels;
 using Generated;
-using MyGame.Network.Models;
 
 namespace MyGame.Network
 {
@@ -72,6 +72,8 @@ namespace MyGame.Network
 }
 ```
 
+The Unity `Player` declares its state as the field `jumps` and names the model `PlayerStats` with `[NetworkStateModel("PlayerStats")]`, so the Editor generates `FomoxaStateModels.PlayerStats` with a `Jumps` property in `Generated/StateModels/`. The console compiles that file and registers it with `state.Use`, which sends the same bytes the Unity server would.
+
 `PlayerTransform` takes the place of `NetworkTransform`. `SyncTransform(sync, receiver)` gives the behaviour a `TransformSync` and sends the pose of its entity, with the same rules as `NetworkTransform`. Use the settings of the prefab's `NetworkTransform`: sync position, rotation and scale, then the three thresholds. `ITransformReceiver` is called on a console client; a server leaves it empty. `TransformSync.Teleport()` does what `NetworkTransform.Teleport()` does.
 
 The server reads the entity's `Position`, `Rotation` and `Scale` only after one of their setters is called, while the entity's [Rapier body](physics.md) moves, and after `Teleport()`. It then keeps reading after every tick until it has sent the settle. An entity that stands still is not read at all. Two kinds of entity are read after every tick instead:
@@ -89,9 +91,9 @@ The client checks a spawn by its prefab id and fingerprint, then gives the messa
 
 - the prefab id and the fingerprint come from the generated `FomoxaPrefabs` constants;
 - the behaviours are in the order of the prefab's `NetworkBehaviour` components, which is the order the Inspector shows, children after their parent;
-- each behaviour registers the same state, input and RPC models as its Unity counterpart.
+- each behaviour registers the models that the Editor generated from the fields and RPCs of its Unity counterpart.
 
-A parameterless RPC is found by the full name of the behaviour's type and the method name, as the generated `RpcModels` registered them. Give the console behaviour the same namespace and class name as the Unity one, as `MyGame.Network.Player` above, or use RPCs with a model, which are matched by the model alone.
+An RPC with parameters is matched by its generated model in `RpcModels/`. Register it with that model's adapter, for example `rpc.OnServer(PlayerFireNetAdapter.Instance, (peerId, fire) => Fire(fire.Yaw))` for a Unity `[ServerRpc] void Fire(ulong peerId, float yaw)`, and read the parameters from the model's properties. A parameterless RPC is found by the full name of the behaviour's type and the method name, as the generated `RpcModels` registered them, so give the console behaviour the same namespace and class name as the Unity one, as `MyGame.Network.Player` above.
 
 ## Program
 

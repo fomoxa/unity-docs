@@ -10,14 +10,14 @@ Server có thể chạy riêng, gọi là dedicated server, hoặc chạy chung 
 
 Một game đi qua bốn bước để dùng package.
 
-<figure><img src="../.gitbook/assets/diagrams/workflow.svg" alt="Bốn bước nối tiếp: khai báo model, thêm NetworkManager, tạo network prefab, khởi động và spawn."><figcaption><p>Bốn bước, theo đúng thứ tự tutorial đi qua.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/workflow.svg" alt="Bốn bước nối tiếp: thêm NetworkManager, viết behaviour, tạo network prefab, khởi động và spawn."><figcaption><p>Bốn bước, theo đúng thứ tự tutorial đi qua.</p></figcaption></figure>
 
-1. Game khai báo dữ liệu cần gửi bằng các class C# gọi là model, đánh dấu bằng `[Network]` và `[Codec]`. Package chạy trình biên dịch `fomoxac` trên các model và sinh một codec cho mỗi model, codec này chuyển model thành byte và ngược lại.
-2. Game đặt một `NetworkManager` vào scene, kèm một component transport như `UdpNetworkTransport`.
-3. Game thêm `NetworkObject` vào mọi prefab tồn tại trên mạng, và viết các script `NetworkBehaviour` cho phần logic networking của những prefab đó.
+1. Game đặt một `NetworkManager` vào scene, kèm một component transport như `UdpNetworkTransport`.
+2. Game viết các script `NetworkBehaviour` cho phần logic networking, với method RPC và field state đánh dấu bằng attribute. Từ đó package sinh các model, tức class C# mô tả từng message, rồi chạy trình biên dịch `fomoxac` trên chúng để sinh một codec cho mỗi model, codec này chuyển model thành byte và ngược lại. Dữ liệu có cấu trúc riêng cũng có thể được khai báo thành model, đánh dấu bằng `[Network]` và `[Codec]`.
+3. Game thêm `NetworkObject` vào mọi prefab tồn tại trên mạng, cùng các behaviour của prefab đó.
 4. Game khởi động server, client hoặc host từ code. Server spawn các object, và các object đó xuất hiện trên client.
 
-Khi một object đã được spawn, các script `NetworkBehaviour` của nó có thể gọi RPC, giữ một state mà server gửi xuống client, và đăng ký input để client của owner tự dự đoán nhân vật của mình. Một `NetworkTransform` trên prefab gửi vị trí, góc xoay và tỉ lệ của object.
+Khi một object đã được spawn, các script `NetworkBehaviour` của nó có thể gọi RPC, giữ một state mà server gửi xuống client, và khai báo input để client của owner tự dự đoán nhân vật của mình. Một `NetworkTransform` trên prefab gửi vị trí, góc xoay và tỉ lệ của object.
 
 ## Các type chính <a href="#main-types" id="main-types"></a>
 
@@ -39,8 +39,8 @@ Khi một object đã được spawn, các script `NetworkBehaviour` của nó c
 | Transport UDP, TCP và WebSocket, nhiều transport trên một server | Có |
 | Host mode qua kết nối trong cùng tiến trình | Có |
 | Spawn, scene object, ownership, observer | Có |
-| RPC có và không có model, khai báo bằng attribute hoặc đăng ký thủ công | Có |
-| State với delta encoding, `NetworkTransform`, `NetworkAnimator` | Có |
+| RPC với số tham số bất kỳ, khai báo bằng attribute | Có |
+| Field state với delta encoding, collection, `NetworkTransform`, `NetworkAnimator` | Có |
 | Network scene | Có |
 | Client-side prediction, reconciliation và replay | Có |
 | Rollback physics của Unity (`Rigidbody` và `Rigidbody2D`) | Có, gần đúng (xem [rollback](../prediction/rollback.md)) |

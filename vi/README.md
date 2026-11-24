@@ -1,6 +1,6 @@
 # Fomoxa for Unity
 
-Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình server-authoritative cho game Unity. Package được xây trên giao thức Fomoxa và runtime C# của giao thức là Fomoxa.Net. Game khai báo dữ liệu cần gửi bằng các class C# thông thường, package sinh codec cho chúng, còn các component như `NetworkManager`, `NetworkObject` và `NetworkBehaviour` lo phần kết nối, spawn, RPC, state, transform và client-side prediction.
+Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình server-authoritative cho game Unity. Package được xây trên giao thức Fomoxa và runtime C# của giao thức là Fomoxa.Net. Game khai báo RPC, state và input ngay trên script bằng attribute, package sinh các model và codec mang chúng đi, còn các component như `NetworkManager`, `NetworkObject` và `NetworkBehaviour` lo phần kết nối, spawn, RPC, state, transform và client-side prediction.
 
 <figure><img src=".gitbook/assets/diagrams/topology.svg" alt="Một dedicated server với ba client, và một tiến trình host chạy server cùng client của người chơi host, có hai client từ xa."><figcaption><p>Game chạy một dedicated server hoặc một host. Client gửi input và yêu cầu; server gửi lại những gì đã xảy ra.</p></figcaption></figure>
 
@@ -31,7 +31,7 @@ Fomoxa for Unity (`com.fomoxa.networking`) là package networking theo mô hình
 
 Package kết nối các peer qua UDP, TCP hoặc WebSocket, và một server có thể lắng nghe trên nhiều transport cùng lúc. UDP có thể được mã hoá, client WebGL gửi được cùng các datagram mã hoá đó qua WebSocket, và client native dùng được TLS trên TCP và WebSocket. Server có thể xác thực peer trước khi peer bắt đầu, kick peer kèm lý do, hoặc chuyển peer sang server khác. Host mode nối client của người chơi host vào server qua một kết nối trong cùng tiến trình thay vì qua socket.
 
-Network object được spawn từ prefab hoặc đặt sẵn trong scene. Mỗi object có thể có một owner, và mức hiển thị khác nhau với từng peer. Client gọi server và server gọi client qua RPC khai báo bằng attribute. Mỗi behaviour có thể giữ một state được gửi bằng delta encoding, `NetworkTransform` gửi transform có interpolation và teleport, còn `NetworkAnimator` gửi các parameter của Animator. Network scene có thể được load cho mọi người hoặc chỉ cho một số peer.
+Network object được spawn từ prefab hoặc đặt sẵn trong scene. Mỗi object có thể có một owner, và mức hiển thị khác nhau với từng peer. Client gọi server và server gọi client qua RPC khai báo bằng attribute. Mỗi behaviour có thể đánh dấu field là state, được gửi bằng delta encoding, `NetworkTransform` gửi transform có interpolation và teleport, còn `NetworkAnimator` gửi các parameter của Animator. Network scene có thể được load cho mọi người hoặc chỉ cho một số peer.
 
 Package còn có client-side prediction với input, reconciliation và replay, kể cả rollback physics 3D và 2D của Unity. Client WebGL kết nối qua WebSocket của trình duyệt.
 

@@ -28,12 +28,12 @@ Các attribute này đến từ `Fomoxa.Attributes.dll`, trong namespace `Fomoxa
 
 | Property | Type | Mặc định | Ý nghĩa |
 |---|---|---|---|
-| `Model` | `string` | `<Type><Method>` | Tên model được sinh của RPC không tham số; đặt qua constructor |
-| `Codec` | `string` | codec duy nhất của model | Codec của tham số model; bắt buộc khi model có nhiều codec |
-| `Channel` | `Channel` | `ReliableOrdered` | Channel của RPC không tham số |
+| `Model` | `string` | `<Type><Method>` | Tên model được sinh; đặt qua constructor |
+| `Channel` | `Channel` | `ReliableOrdered` | Channel của RPC |
 | `RequireOwnership` | `bool` | `true` | Chỉ owner được gọi |
+| `Codec` | `string` | codec duy nhất của model | Trên `EntityBehaviour`, codec của tham số model |
 
-Method có thể có một trong các chữ ký `void M()`, `void M(ulong peerId)`, `void M(TModel value)` và `void M(ulong peerId, TModel value)`.
+Trên `NetworkBehaviour`, method là `void M(...)` với tham số bất kỳ, và tham số đầu tiên có type `ulong` nhận peer id của bên gọi. Trên `EntityBehaviour`, method là `void M()`, `void M(ulong peerId)`, `void M(TModel value)` hoặc `void M(ulong peerId, TModel value)`, và `Model`, `Channel` chỉ áp dụng cho hai dạng đầu.
 
 ## ClientRpcAttribute <a href="#clientrpcattribute" id="clientrpcattribute"></a>
 
@@ -41,19 +41,55 @@ Method có thể có một trong các chữ ký `void M()`, `void M(ulong peerId
 
 | Property | Type | Mặc định | Ý nghĩa |
 |---|---|---|---|
-| `Model` | `string` | `<Type><Method>` | Tên model được sinh của RPC không tham số |
-| `Codec` | `string` | codec duy nhất của model | Codec của tham số model |
-| `Channel` | `Channel` | `ReliableOrdered` | Channel của RPC không tham số |
+| `Model` | `string` | `<Type><Method>` | Tên model được sinh |
+| `Channel` | `Channel` | `ReliableOrdered` | Channel của RPC |
+| `Codec` | `string` | codec duy nhất của model | Trên `EntityBehaviour`, codec của tham số model |
 
-Method có thể có chữ ký `void M()` hoặc `void M(TModel value)`.
+Trên `NetworkBehaviour`, method là `void M(...)` với tham số bất kỳ. Trên `EntityBehaviour`, method là `void M()` hoặc `void M(TModel value)`.
 
-## NetworkRpcAttribute <a href="#networkrpcattribute" id="networkrpcattribute"></a>
+## NetworkTypeAttribute <a href="#networktypeattribute" id="networktypeattribute"></a>
 
-`[NetworkRpc]` hoặc `[NetworkRpc("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên method không tham số. Nó sinh model của RPC không tham số mà không sinh phần đăng ký, nên bạn tự đăng ký RPC trong `OnRegisterRpcs`.
+`[NetworkType("type")]`, trong namespace `Fomoxa.Networking`, đặt trên một tham số của RPC trên `NetworkBehaviour`. Chuỗi là wire type của tham số, viết giống đối số của `[Network("type")]`, ví dụ `"f16"` hoặc `"Array<u32>"`.
+
+## NetworkStateAttribute <a href="#networkstateattribute" id="networkstateattribute"></a>
+
+`[NetworkState]` hoặc `[NetworkState("type")]`, trong namespace `Fomoxa.Networking`, đặt trên một field instance của `NetworkBehaviour`. [State](../synchronization/state.md) và [collection](../synchronization/collections.md) giải thích cách dùng nó.
 
 | Property | Type | Mặc định | Ý nghĩa |
 |---|---|---|---|
-| `Model` | `string` | `<Type><Method>` | Tên model được sinh |
+| `WireType` | `string` | suy ra từ type của field | Wire type của field state; đặt qua constructor |
+| `OnChanged` | `string` | không có | Method được gọi trên client sau một thay đổi: `void M(T previous, T current)` với field state, chữ ký callback của collection với collection |
+| `Index` | `byte` | không có | Index của field collection; bắt buộc với collection và không được dùng cho field khác |
+
+## NetworkStateModelAttribute <a href="#networkstatemodelattribute" id="networkstatemodelattribute"></a>
+
+`[NetworkStateModel]` hoặc `[NetworkStateModel("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên một class `NetworkBehaviour` và chỉ áp dụng cho class đó, không áp cho class con.
+
+| Property | Type | Mặc định | Ý nghĩa |
+|---|---|---|---|
+| `Model` | `string` | `<Type>State` | Tên state model được sinh; đặt qua constructor |
+| `OnlyWhenDirty` | `bool` | `false` | Server chỉ so sánh state sau `SetStateDirty()` |
+
+## NetworkInputAttribute và NetworkReconcileAttribute <a href="#networkinputattribute-and-networkreconcileattribute" id="networkinputattribute-and-networkreconcileattribute"></a>
+
+`[NetworkInput]` hoặc `[NetworkInput("type")]`, và `[NetworkReconcile]` hoặc `[NetworkReconcile("type")]`, trong namespace `Fomoxa.Networking`, đặt trên các field instance của `NetworkBehaviour`. [Input](../prediction/input.md) và [reconciliation](../prediction/reconciliation.md) giải thích cách dùng chúng.
+
+| Property | Type | Mặc định | Ý nghĩa |
+|---|---|---|---|
+| `WireType` | `string` | suy ra từ type của field | Wire type của field; đặt qua constructor |
+| `Tolerance` | `float` | không có | Chỉ với `[NetworkReconcile]`: giá trị dự đoán được lệch khỏi giá trị của server bao xa, cho `float`, `double`, `Vector2`, `Vector3`, `Vector4` (từng thành phần) và `Quaternion` (tính bằng độ) |
+
+## NetworkInputModelAttribute và NetworkReconcileModelAttribute <a href="#networkinputmodelattribute-and-networkreconcilemodelattribute" id="networkinputmodelattribute-and-networkreconcilemodelattribute"></a>
+
+`[NetworkInputModel("ModelName")]` và `[NetworkReconcileModel("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên một class `NetworkBehaviour` và đặt tên cho input model và reconcile model được sinh của nó. Không có chúng, tên là `<Type>Input` và `<Type>Reconcile`.
+
+## NetworkRpcAttribute <a href="#networkrpcattribute" id="networkrpcattribute"></a>
+
+`[NetworkRpc]` hoặc `[NetworkRpc("ModelName")]`, trong namespace `Fomoxa.Networking`, đặt trên method không tham số của một `EntityBehaviour` mà RPC được đăng ký thủ công trong `OnRegisterRpcs`. Trên `NetworkBehaviour` nó là lỗi biên dịch `FOMOXA022`; ở đó hãy dùng `[ServerRpc]` hoặc `[ClientRpc]`.
+
+| Property | Type | Mặc định | Ý nghĩa |
+|---|---|---|---|
+| `Model` | `string` | `<Type><Method>` | Tên model |
 | `Channel` | `Channel` | `ReliableOrdered` | Channel của RPC |
 
 ## MessageAdapterAttribute <a href="#messageadapterattribute" id="messageadapterattribute"></a>
@@ -62,6 +98,6 @@ Method có thể có chữ ký `void M()` hoặc `void M(TModel value)`.
 
 ## Quy tắc <a href="#rules" id="rules"></a>
 
-Một method mang nhiều nhất một trong `[NetworkRpc]`, `[ServerRpc]` và `[ClientRpc]`, và class có method `[ServerRpc]` hoặc `[ClientRpc]` phải là `partial`, mọi class chứa nó cũng vậy. `Model` và `Channel` chỉ áp dụng cho RPC không có tham số model, và `Codec` chỉ áp dụng cho RPC có tham số model. Không có hai RPC không tham số nào trong project được trùng tên model.
+Một method mang nhiều nhất một trong `[NetworkRpc]`, `[ServerRpc]` và `[ClientRpc]`, và một field mang nhiều nhất một trong `[NetworkState]`, `[NetworkInput]` và `[NetworkReconcile]`. Class có method RPC hoặc có field như vậy, của chính nó hay được kế thừa, phải là `partial`, mọi class chứa nó cũng vậy. Không có hai RPC nào trong project được trùng tên model, và hai state model, input model hay reconcile model cũng vậy.
 
-[RPC](../messaging/rpc.md#compile-errors) liệt kê các lỗi biên dịch khi vi phạm quy tắc.
+[RPC](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors) và [collection](../synchronization/collections.md#errors) liệt kê các lỗi biên dịch khi vi phạm quy tắc.

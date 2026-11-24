@@ -1,6 +1,6 @@
 # NetworkBehaviour
 
-`NetworkBehaviour` là base class cho các script networking. Nó là một `MonoBehaviour` thuộc về `NetworkObject` trên chính GameObject của nó hoặc trên một object cha, và cung cấp cho script các callback vòng đời phía server và client cùng những chỗ để đăng ký RPC, state và input.
+`NetworkBehaviour` là base class cho các script networking. Nó là một `MonoBehaviour` thuộc về `NetworkObject` trên chính GameObject của nó hoặc trên một object cha, và cung cấp cho script các callback vòng đời phía server và client. RPC, state và input được khai báo trên nó bằng attribute.
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
@@ -25,7 +25,7 @@ public sealed partial class Door : NetworkBehaviour
     private void Knock(ulong peerId)
     {
         Debug.Log($"peer {peerId} knocked");
-        SendObserversRpc(nameof(PlayKnock));
+        SendPlayKnockObserversRpc();
     }
 
     [ClientRpc]
@@ -34,11 +34,11 @@ public sealed partial class Door : NetworkBehaviour
         GetComponent<AudioSource>().Play();
     }
 
-    public void RequestKnock() => SendServerRpc(nameof(Knock));
+    public void RequestKnock() => SendKnockServerRpc();
 }
 ```
 
-Class khai báo RPC bằng attribute phải là `partial`, và mọi class chứa nó cũng vậy, vì package sinh code đăng ký các RPC đó.
+Class khai báo RPC, state hoặc input phải là `partial`, và mọi class chứa nó cũng vậy, vì package sinh code đăng ký chúng và các method gửi của RPC.
 
 ## Callback vòng đời <a href="#lifecycle-callbacks" id="lifecycle-callbacks"></a>
 
@@ -57,28 +57,37 @@ Override các callback sau để phản ứng với vòng đời network của o
 
 [Vòng đời](../concepts/lifecycle.md) cho thấy thứ tự chạy của chúng.
 
-## Hook đăng ký <a href="#registration-hooks" id="registration-hooks"></a>
+## Khai báo <a href="#declarations" id="declarations"></a>
 
-Package gọi các hook này một lần cho mỗi instance component, ở lần đầu object của nó spawn trên server hoặc trên client, trước `OnStartServer` hoặc `OnStartClient`:
-
-| Hook | Đăng ký gì | Hướng dẫn |
+| Khai báo | Bằng | Hướng dẫn |
 |---|---|---|
-| `OnRegisterRpcs(NetworkRpcs rpc)` | Các RPC handler viết tay | [RPC](../messaging/rpc.md#registering-by-hand) |
-| `OnRegisterState(NetworkState state)` | State model của behaviour | [State](../synchronization/state.md) |
-| `OnRegisterInput(NetworkInput input)` | Input model và reconcile model của behaviour | [Input](../prediction/input.md) |
+| RPC | `[ServerRpc]` và `[ClientRpc]` trên method | [RPC](../messaging/rpc.md) |
+| State | `[NetworkState]` trên field | [State](../synchronization/state.md) |
+| Collection | `[NetworkState(Index = n)]` trên field collection `readonly` | [Collection](../synchronization/collections.md) |
+| Input và state được dự đoán | `[NetworkInput]` và `[NetworkReconcile]` trên field | [Input](../prediction/input.md), [reconciliation](../prediction/reconciliation.md) |
+
+Package đăng ký chúng một lần cho mỗi instance component, ở lần đầu object của nó spawn trên server hoặc trên client, trước `OnStartServer` hoặc `OnStartClient`.
+
+Behaviour có field `[NetworkInput]` override các method điền và đọc chúng:
+
+| Method | Chạy khi |
+|---|---|
+| `OnGatherInput()` | Trên client của owner, mỗi tick một lần; ghi các field input ở đây |
+| `OnApplyInput(InputContext context)` | Trên server và trên client đang dự đoán, sau khi các field input đã được ghi; mô phỏng từ chúng ở đây |
+| `OnCaptureState()` | Trước khi các field `[NetworkReconcile]` được chép; không bắt buộc |
+| `OnRestoreState()` | Sau khi các field `[NetworkReconcile]` đã được khôi phục từ server; không bắt buộc |
 
 ## Gửi RPC <a href="#sending-rpcs" id="sending-rpcs"></a>
 
+Với mỗi RPC, package sinh các method gửi `protected`, đặt theo tên RPC:
+
 | Method | Phía | Gửi tới | Trả về |
 |---|---|---|---|
-| `SendServerRpc<T>(codec, value)` | Client | Server | `SendResult` |
-| `SendServerRpc(rpcName)` | Client | Server | `SendResult` |
-| `SendObserversRpc<T>(codec, value)` | Server | Mọi observer của object | Số peer đã được đưa vào queue |
-| `SendObserversRpc(rpcName)` | Server | Mọi observer của object | Số peer |
-| `SendTargetRpc<T>(peerId, codec, value)` | Server | Một observer | `SendResult`, `NotObserver` khi peer không observe |
-| `SendTargetRpc(peerId, rpcName)` | Server | Một observer | `SendResult` |
+| `Send<Method>ServerRpc(...)` | Client | Server | `SendResult` |
+| `Send<Method>ObserversRpc(...)` | Server | Mọi observer của object | Số peer đã được đưa vào queue |
+| `Send<Method>TargetRpc(peerId, ...)` | Server | Một observer | `SendResult`, `NotObserver` khi peer không observe |
 
-Các method này là `protected`. Khi object chưa spawn ở phía gửi, chúng ném `InvalidOperationException` với `<name> is not spawned on the server` hoặc `on the client`.
+Chúng gọi `SendServerRpc`, `SendObserversRpc` và `SendTargetRpc`, các method nhận tên RPC và cũng là `protected`; [RPC](../messaging/rpc.md#sending-by-name) mô tả chúng. Khi object chưa spawn ở phía gửi, các method gửi ném `InvalidOperationException` với `<name> is not spawned on the server` hoặc `on the client`.
 
 ## Property <a href="#properties" id="properties"></a>
 
@@ -92,6 +101,6 @@ Các method này là `protected`. Khi object chưa spawn ở phía gửi, chúng
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Một behaviour đăng ký được một state model, tối đa 256 [collection](../synchronization/collections.md) và một input model; object cần nhiều hơn thì dùng nhiều behaviour. Ở mỗi phía, một message id thuộc về một type behaviour, nên dùng cùng một model làm server RPC của hai type behaviour, hoặc vừa làm RPC vừa làm state model, sẽ ném `HandlerRegistrationException` khi object thứ hai spawn. Vì các hook đăng ký chạy một lần cho mỗi instance component, scene object bị despawn rồi spawn lại vẫn giữ lần đăng ký đầu tiên.
+Một behaviour có một state model, gồm mọi field state của nó, tối đa 256 [collection](../synchronization/collections.md) và một input model; object cần nhiều hơn thì dùng nhiều behaviour. Vì việc đăng ký chạy một lần cho mỗi instance component, scene object bị despawn rồi spawn lại vẫn giữ lần đăng ký đầu tiên.
 
-Behaviour thuộc về một [NetworkObject](network-object.md). Các hướng dẫn về [RPC](../messaging/rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md) giải thích cần đăng ký gì trong mỗi hook, và [tham chiếu NetworkBehaviour](../reference/network-object.md#networkbehaviour) liệt kê mọi member.
+Behaviour thuộc về một [NetworkObject](network-object.md). Các hướng dẫn về [RPC](../messaging/rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md) giải thích từng loại khai báo, và [tham chiếu NetworkBehaviour](../reference/network-object.md#networkbehaviour) liệt kê mọi member.

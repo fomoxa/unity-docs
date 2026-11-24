@@ -4,46 +4,44 @@ RPC (remote procedure call) chạy một method của `NetworkBehaviour` ở ph�
 
 | RPC | Từ | Tới | Gửi bằng |
 |---|---|---|---|
-| Server RPC | Một client | Server | `SendServerRpc` |
-| Observers RPC | Server | Mọi client đang observe object | `SendObserversRpc` |
-| Target RPC | Server | Một client đang observe object | `SendTargetRpc` |
+| Server RPC | Một client | Server | `Send<Method>ServerRpc` |
+| Observers RPC | Server | Mọi client observe object | `Send<Method>ObserversRpc` |
+| Target RPC | Server | Một client observe object | `Send<Method>TargetRpc` |
 
-Mỗi RPC nhận không tham số nào hoặc đúng một [model](models.md).
+RPC nhận số tham số bất kỳ, và package viết method gửi cho từng RPC từ chữ ký của nó.
 
 <figure><img src="../.gitbook/assets/diagrams/rpc-directions.svg" alt="Ba khung, mỗi khung có một server và các client A, B, C, trong đó A sở hữu object. Server RPC: A gọi và nó chạy trên server, còn lời gọi tương tự từ B bị bỏ. Observers RPC: server gửi tới A và B, hai client observe object, và không gửi tới C, client không observe. Target RPC: server chỉ gửi tới B."><figcaption><p>Phía nào gửi từng loại RPC, và ai nhận.</p></figcaption></figure>
 
-## Khai báo RPC bằng attribute <a href="#declaring-rpcs-with-attributes" id="declaring-rpcs-with-attributes"></a>
+## Khai báo RPC <a href="#declaring-rpcs" id="declaring-rpcs"></a>
 
 ```csharp
 using Fomoxa.Networking;
 using Fomoxa.Unity;
-using Generated;
-using MyGame.Network.Models;
 using UnityEngine;
 
 public sealed partial class Turret : NetworkBehaviour
 {
-    public void RequestFire(Shot shot) => SendServerRpc(ShotNetAdapter.Instance, shot);
+    public void RequestFire(Vector3 direction, byte weapon) => SendFireServerRpc(direction, weapon);
 
-    public void RequestReload() => SendServerRpc(nameof(Reload));
+    public void RequestReload() => SendReloadServerRpc();
 
     [ServerRpc]
-    private void Fire(ulong peerId, Shot shot)
+    private void Fire(ulong peerId, Vector3 direction, byte weapon)
     {
-        Debug.Log($"peer {peerId} fires weapon {shot.Weapon}");
-        SendObserversRpc(ShotNetAdapter.Instance, shot);
+        Debug.Log($"peer {peerId} fires weapon {weapon}");
+        SendShowShotObserversRpc(direction);
     }
 
     [ServerRpc]
     private void Reload()
     {
-        SendObserversRpc(nameof(PlayReload));
+        SendPlayReloadObserversRpc();
     }
 
     [ClientRpc]
-    private void ShowShot(Shot shot)
+    private void ShowShot(Vector3 direction)
     {
-        Debug.DrawRay(transform.position, shot.Direction, Color.red, 1f);
+        Debug.DrawRay(transform.position, direction, Color.red, 1f);
     }
 
     [ClientRpc]
@@ -54,110 +52,93 @@ public sealed partial class Turret : NetworkBehaviour
 }
 ```
 
-Class phải là `partial`, và mọi class chứa nó cũng vậy, vì một source generator trong package viết code đăng ký từng method có attribute khi object spawn.
+Class phải là `partial`, và mọi class chứa nó cũng vậy. Một source generator trong package thêm vào class các method gửi và code đăng ký từng RPC khi object spawn.
 
-### Chữ ký được phép <a href="#allowed-signatures" id="allowed-signatures"></a>
+### Chữ ký <a href="#signatures" id="signatures"></a>
 
 | Attribute | Chữ ký |
 |---|---|
-| `[ServerRpc]` | `void M()`, `void M(ulong peerId)`, `void M(TModel value)`, `void M(ulong peerId, TModel value)` |
-| `[ClientRpc]` | `void M()`, `void M(TModel value)` |
+| `[ServerRpc]` | `void M(...)`. Tham số đầu tiên có type `ulong` nhận peer id của bên gọi và không được gửi |
+| `[ClientRpc]` | `void M(...)`. Mọi tham số đều được gửi |
 
-`TModel` là một model có adapter đã sinh, và `peerId` nhận peer id của bên gọi. Method có thể là private, nhưng không được là static hay generic.
+Method có thể là private, nhưng không được là static hay generic, không được trả về giá trị, và không có tham số `ref`, `out`, `in` hay `params`.
 
-### RPC có model <a href="#rpcs-with-a-model" id="rpcs-with-a-model"></a>
+### Type của tham số <a href="#parameter-types" id="parameter-types"></a>
 
-Server và client tra RPC theo message id của model, nên chính model quyết định method nào chạy. Trong ví dụ, `SendObserversRpc(ShotNetAdapter.Instance, shot)` chạy `ShowShot` trên các client.
+Package tự xác định cách mỗi tham số được gửi:
 
-Khi model có một codec, generator dùng adapter của codec đó. Khi có nhiều codec, hãy chỉ ra codec cần dùng, như `[ServerRpc(Codec = "compact")]`. RPC đi trên channel của model, khai báo bằng `[NetworkChannel]` trên model, và là unreliable nếu model không khai báo channel nào.
+| Type C# | Gửi dưới dạng |
+|---|---|
+| `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `string` | Type nguyên thuỷ tương ứng |
+| `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32`, `Rect`, và các type đăng ký bằng `FomoxaUnityTypes.Register` | Các [type Unity](../advanced/custom-codecs.md#unity-types) của package |
+| Class đánh dấu `[Network]` có codec `net` | [Model](models.md) đó |
 
-### RPC không có model <a href="#rpcs-without-a-model" id="rpcs-without-a-model"></a>
+Với type khác, hoặc để gửi một giá trị ở dạng khác, hãy đặt `[NetworkType("...")]` kèm wire type lên tham số, ví dụ `[NetworkType("f16")] float yaw` hoặc `[NetworkType("Array<u32>")] List<uint> targets`. Tham số có type mà package không xác định được sẽ dừng bước sinh code với `[ServerRpc] <Type>.<Method>: the parameter <name> has the type <type>, whose wire type com.fomoxa.networking cannot infer; give the parameter [NetworkType("...")]`.
 
-Với mỗi RPC không tham số, package sinh một model rỗng trong thư mục con `RpcModels` của Generated Folder, và bạn gọi các RPC này theo tên method:
+Đối số `string` hoặc model không được là `null`; method gửi ném `ArgumentNullException` kèm tên tham số.
 
-```csharp
-SendServerRpc(nameof(Reload));
-SendObserversRpc(nameof(PlayReload));
-SendTargetRpc(peerId, nameof(PlayReload));
-```
+### Model sinh ra <a href="#the-generated-model" id="the-generated-model"></a>
 
-Model được sinh mang tên class nối với tên method, `TurretReload` trong ví dụ. Khi hai method cho ra cùng một tên, hãy đặt tên khác cho một method qua tham số của attribute, như `[ServerRpc("TurretReloadRequest")]`. Channel được đặt trên attribute và mặc định là `ReliableOrdered`, nên RPC unreliable được khai báo là `[ClientRpc(Channel = Channel.Unreliable)]`.
+Tham số của một RPC đi trong một model mà package sinh ra ở thư mục con `RpcModels` của Generated Folder. Tên model là tên class theo sau là tên method, trong ví dụ là `TurretFire`, và model có một field cho mỗi tham số được gửi, đặt theo tên tham số với chữ cái đầu viết hoa. RPC không tham số có một model rỗng.
 
-Khi bạn thêm hoặc đổi tên một method như vậy, package sinh model của nó sau lần biên dịch tiếp theo và Unity biên dịch lại lần nữa. Build player sẽ thất bại chừng nào còn một model được sinh bị thiếu hoặc lỗi thời. Method khai báo trong base class có thể được gọi theo tên từ class con.
+Khi bạn thêm một RPC hoặc đổi tham số của nó, package sinh model sau lần biên dịch kế tiếp và Unity biên dịch lại. Build player thất bại chừng nào một model sinh ra còn thiếu hoặc cũ.
+
+Tham số theo cùng luật với [field state](../synchronization/state.md#changing-the-fields). Thêm một tham số vào cuối, hoặc bỏ tham số cuối, vẫn giữ được kết nối với bản build cũ; tham số mà bản build cũ không gửi sẽ tới dưới dạng 0, `false` hoặc giá trị rỗng. Chèn, đổi thứ tự, đổi type hoặc đổi tên một tham số, trừ đổi chữ hoa chữ thường hay dấu gạch dưới, thì không, và đổi tên class hoặc method cũng vậy, trừ khi attribute giữ nguyên tên model. Console hiện kết luận khi model được sinh. Luật này không áp cho một RPC mà bản build cũ hoàn toàn không có: khi thêm RPC mới, hãy phát hành server và client cùng lúc.
+
+Khi hai RPC cho ra cùng một tên model, hãy đặt tên khác cho một trong hai bằng đối số của attribute, như `[ServerRpc("TurretReloadRequest")]`.
+
+### Channel <a href="#channels" id="channels"></a>
+
+RPC đi trên `ReliableOrdered` theo mặc định. Đặt channel khác trên attribute, ví dụ `[ClientRpc(Channel = Channel.Unreliable)]` cho một hiệu ứng được phép mất.
 
 ### Ownership <a href="#ownership" id="ownership"></a>
 
-Server RPC chỉ chạy khi bên gọi sở hữu object. Server bỏ các lời gọi khác và log `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object`. Để mọi client đều gọi được, ví dụ với cánh cửa ai cũng mở được, hãy khai báo `[ServerRpc(RequireOwnership = false)]`.
+Server RPC chỉ chạy khi bên gọi sở hữu object. Server bỏ các lời gọi khác và log `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object`. Để client nào cũng gọi được, ví dụ trên một cánh cửa ai cũng mở được, hãy khai báo nó bằng `[ServerRpc(RequireOwnership = false)]`.
 
 ## Gửi <a href="#sending" id="sending"></a>
 
-Các method gửi là member `protected` của `NetworkBehaviour`:
+Với mỗi RPC, generator viết các method gửi `protected` trên class:
 
-| Method | Trả về |
+| RPC | Method gửi | Trả về |
+|---|---|---|
+| `[ServerRpc] void Fire(ulong peerId, Vector3 direction, byte weapon)` | `SendFireServerRpc(Vector3 direction, byte weapon)` | `SendResult` của queue |
+| `[ClientRpc] void ShowShot(Vector3 direction)` | `SendShowShotObserversRpc(Vector3 direction)` | Số observer mà RPC đã được đưa vào queue |
+| | `SendShowShotTargetRpc(ulong peerId, Vector3 direction)` | `SendResult`; `NotObserver` khi peer không observe object |
+
+Tham số peer id của server RPC do server điền, nên nó không nằm trong method gửi. Các method gửi có từ lần biên dịch đầu tiên, trước khi model được sinh. Method gửi mà tên đã bị một member khác của class dùng thì không được sinh, và generator báo `FOMOXA011`.
+
+Các đối số được encode ngay trong lời gọi, nên sau đó bạn được sửa hoặc dùng lại chúng, và RPC đi cùng lần flush tiếp theo ở cuối tick.
+
+Server RPC chỉ gửi được ở nơi object đã spawn trên client, còn observers RPC hoặc target RPC chỉ ở nơi object đã spawn trên server. Ngược lại, lời gọi ném `<name> is not spawned on the client` hoặc `on the server`. Trên host, observers RPC cũng tới client của host nếu client đó observe object, và client RPC khi đó chạy trên instance dùng chung.
+
+### Gửi theo tên <a href="#sending-by-name" id="sending-by-name"></a>
+
+Các method sinh ra gọi những method `protected` của `NetworkBehaviour` nhận tên RPC, và bạn cũng có thể tự gọi chúng:
+
+| Method | Đối số |
 |---|---|
-| `SendServerRpc<T>(IMessageCodec<T> codec, T value)`, `SendServerRpc(string rpc)` | `SendResult` của queue |
-| `SendObserversRpc<T>(IMessageCodec<T> codec, T value)`, `SendObserversRpc(string rpc)` | Số observer mà RPC đã được đưa vào queue |
-| `SendTargetRpc<T>(ulong peerId, IMessageCodec<T> codec, T value)`, `SendTargetRpc(ulong peerId, string rpc)` | `SendResult`; `NotObserver` khi peer không observe object |
-
-Giá trị được encode ngay trong lúc gọi, nên bạn có thể thay đổi hoặc dùng lại nó sau đó, và RPC đi cùng lần flush tiếp theo ở cuối tick.
-
-Server RPC chỉ gửi được ở nơi object đã spawn trên client, còn observers RPC và target RPC chỉ ở nơi object đã spawn trên server. Nếu không, lời gọi ném `<name> is not spawned on the client` hoặc `on the server`. Trên host, observers RPC cũng tới client của host nếu client đó observe object, và client RPC khi đó chạy trên instance dùng chung.
-
-## Đăng ký thủ công <a href="#registering-by-hand" id="registering-by-hand"></a>
-
-Thay vì dùng attribute, bạn có thể đăng ký handler bằng code trong `OnRegisterRpcs`, hook chạy một lần cho mỗi instance trước `OnStartServer` hoặc `OnStartClient`:
+| `SendServerRpc(string rpc)`, `SendObserversRpc(string rpc)`, `SendTargetRpc(ulong peerId, string rpc)` | Không có |
+| `SendServerRpc<TValues>(string rpc, TValues values)`, `SendObserversRpc<TValues>(...)`, `SendTargetRpc<TValues>(ulong peerId, ...)` | Một giá trị, hoặc một tuple khi có nhiều giá trị |
 
 ```csharp
-using Fomoxa.Networking;
-using Fomoxa.Unity;
-using Generated;
-using UnityEngine;
-
-public sealed class Lever : NetworkBehaviour
-{
-    public void RequestPull() => SendServerRpc(nameof(Pull));
-
-    protected override void OnRegisterRpcs(NetworkRpcs rpc)
-    {
-        rpc.OnServer(nameof(Pull), peerId => Pull(), requireOwnership: false);
-        rpc.OnClient(nameof(PlayClick), PlayClick);
-        rpc.OnClient(ShotNetAdapter.Instance, shot => Debug.Log($"weapon {shot.Weapon}"));
-    }
-
-    [NetworkRpc]
-    private void Pull()
-    {
-        SendObserversRpc(nameof(PlayClick));
-    }
-
-    [NetworkRpc]
-    private void PlayClick()
-    {
-        GetComponent<AudioSource>().Play();
-    }
-}
+SendServerRpc(nameof(Reload));
+SendServerRpc(nameof(Fire), (direction, weapon));
+SendTargetRpc(peerId, nameof(ShowShot), direction);
 ```
 
-| Method | Đăng ký |
-|---|---|
-| `OnServer<T>(IMessageCodec<T> codec, Action<ulong, T> handler, bool requireOwnership = true)` | Server RPC có model |
-| `OnClient<T>(IMessageCodec<T> codec, Action<T> handler)` | Client RPC có model |
-| `OnServer(string rpc, Action<ulong> handler, bool requireOwnership = true)` | Server RPC không tham số |
-| `OnClient(string rpc, Action handler)` | Client RPC không tham số |
+Các giá trị phải có type của các tham số được gửi của RPC, theo đúng thứ tự. Nếu không, lời gọi ném `ArgumentException`; với method sinh ra, trình biên dịch bắt được lỗi này. Method khai báo ở class cha có thể được gửi theo tên từ class con.
 
-RPC không tham số đăng ký thủ công vẫn cần model được sinh của nó. `[NetworkRpc]` sinh model đó mà không sinh phần đăng ký, nên class chỉ dùng `[NetworkRpc]` không cần là `partial`. Nó nhận cùng tham số tên model và property `Channel` như `[ServerRpc]`. Nếu thiếu model, việc đăng ký ném `<Type>.<Method> has no generated parameterless RPC model; mark the method with [NetworkRpc] and run Tools > Fomoxa > Generate`.
+## Nhận <a href="#receiving" id="receiving"></a>
 
-Đừng đăng ký thủ công một method đã mang `[ServerRpc]` hoặc `[ClientRpc]`, vì behaviour đăng ký cùng một message id hai lần ở một phía sẽ ném `HandlerRegistrationException`.
-
-Mỗi lần gọi handler nhận một instance model mới, nên handler có thể giữ lại instance đó.
+Method RPC chạy ở phía nhận với các giá trị đã gửi. Tham số đầu tiên `ulong` của server RPC chứa id của peer đã gọi nó. Mỗi lời gọi nhận instance mới của các đối số là model, nên method được phép giữ chúng lại.
 
 ## Lỗi trong handler <a href="#errors-in-handlers" id="errors-in-handlers"></a>
 
-Server RPC handler ném exception sẽ đóng kết nối của client gọi nó: peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`. Client RPC handler ném exception sẽ dừng client đó với `HandlerException`. Trong cả hai trường hợp client không kết nối lại. Trên server, subscriber của `OnHandlerException` có thể đặt `Disconnect` thành `false` để giữ kết nối với client. Model không decode được thì được xử lý khác: nó bị bỏ và phát `OnReceiveDropped`. Hãy kiểm tra tham số của server RPC, và viết handler sao cho input xấu không làm nó ném exception; [lỗi](../concepts/error-handling.md#validate-client-data-in-server-handlers) chỉ cách làm.
+Server RPC ném exception sẽ đóng kết nối của client gọi nó: peer dừng với `StopReason.HandlerException`, còn client dừng với `ServerClosed` và `CloseReason` là `HandlerException`. Client RPC ném exception sẽ dừng client đó với `HandlerException`. Trong cả hai trường hợp client không kết nối lại. Trên server, subscriber của `OnHandlerException` có thể đặt `Disconnect` thành `false` để giữ kết nối với client. Message không decode được thì được xử lý khác: nó bị bỏ và phát `OnReceiveDropped`. Hãy kiểm tra tham số của server RPC, và viết chúng sao cho input xấu không làm nó ném exception; [lỗi](../concepts/error-handling.md#validate-client-data-in-server-handlers) chỉ cách làm.
 
 ## Lỗi biên dịch <a href="#compile-errors" id="compile-errors"></a>
 
-Source generator báo các lỗi biên dịch sau:
+Source generator báo các lỗi biên dịch sau cho RPC trên một `NetworkBehaviour`:
 
 | Id | Ý nghĩa |
 |---|---|
@@ -166,16 +147,12 @@ Source generator báo các lỗi biên dịch sau:
 | `FOMOXA003` | Chữ ký `[ServerRpc]` không được hỗ trợ |
 | `FOMOXA004` | Chữ ký `[ClientRpc]` không được hỗ trợ |
 | `FOMOXA005` | Method mang nhiều hơn một trong `[NetworkRpc]`, `[ServerRpc]`, `[ClientRpc]` |
-| `FOMOXA006` | Model không có adapter đã sinh; chạy Tools > Fomoxa > Generate |
-| `FOMOXA007` | Model có nhiều codec và attribute không chỉ ra codec nào |
-| `FOMOXA008` | Codec được chỉ ra không tồn tại cho model |
-| `FOMOXA009` | `Codec` được đặt trên RPC không có model |
-| `FOMOXA010` | Tên model hoặc `Channel` được đặt trên RPC có model; hãy khai báo channel trên model |
+| `FOMOXA009` | `Codec` được đặt trên attribute; nó không áp dụng trên `NetworkBehaviour` |
+| `FOMOXA011` | Một method gửi sẽ trùng tên với một member đã có |
+| `FOMOXA022` | Method mang `[NetworkRpc]`; hãy khai báo nó bằng `[ServerRpc]` hoặc `[ClientRpc]` |
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-RPC nhận nhiều nhất một tham số, nên nhiều giá trị phải gom vào một model. Ở mỗi phía, một message id thuộc về một type behaviour: model dùng làm server RPC cho một type không thể làm server RPC cho type khác, và model dùng làm RPC không thể đồng thời làm state model. Cùng một model vẫn có thể vừa là server RPC vừa là client RPC, như `Shot` trong ví dụ trên.
-
 RPC luôn gửi tới một behaviour của một object đã spawn. Để gửi message không gắn với object, dùng [raw message](messages.md).
 
-Tham số là các [model](models.md) đi trên [channel](channels.md) của chúng. [Tham chiếu attribute](../reference/attributes.md) liệt kê mọi attribute và property của RPC, và [NetworkBehaviour](../objects/network-behaviour.md) tóm tắt các method gửi.
+Các model sinh ra đi trên [channel](channels.md) của RPC. [Tham chiếu attribute](../reference/attributes.md) liệt kê mọi attribute và property của RPC, và [NetworkBehaviour](../objects/network-behaviour.md) tóm tắt các method gửi. [Console server](../console-server/runtime.md) khai báo và đăng ký RPC trên `EntityBehaviour`, với model viết tay.

@@ -56,17 +56,17 @@ The models folder must exist before the first generation, even while it is empty
 
 The package generates code after every script compilation. You can also run it with **Tools > Fomoxa > Generate**.
 
-<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Your models, the package's system models and the RPC models go into fomoxac. fomoxac writes codecs, NetSchema.cs, Handshake.cs and Runtime.cs. The package then writes codecs for Unity types, adapters, FomoxaAdapters.cs and FomoxaUnityRegistration.cs. The prefab and scene steps write the prefab and scene lists. At startup FomoxaUnityRegistration fills FomoxaRegistry.Default, which NetworkManager reads in Awake."><figcaption><p>What one generation reads and writes, and how the result reaches a NetworkManager.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Your models, the package's system models and the RPC and state models go into fomoxac. fomoxac writes codecs, NetSchema.cs, Handshake.cs and Runtime.cs. The package then writes codecs for Unity types, adapters, FomoxaAdapters.cs and FomoxaUnityRegistration.cs. The prefab and scene steps write the prefab and scene lists. At startup FomoxaUnityRegistration fills FomoxaRegistry.Default, which NetworkManager reads in Awake."><figcaption><p>What one generation reads and writes, and how the result reaches a NetworkManager.</p></figcaption></figure>
 
 A generation goes through these steps:
 
 1. The package copies its own models, such as the spawn and transform messages, into `FomoxaSystemModels/` at the project root, so that your models and its models form one schema.
-2. For every RPC declared without a model, it writes a small model into `RpcModels/` inside the Generated Folder.
+2. For every RPC, it writes a model into `RpcModels/` inside the Generated Folder, and for every behaviour with state or input fields, it writes their models into `StateModels/`.
 3. It writes `fomoxa.toml` from the settings asset and runs `fomoxac`, which writes a codec for every model, `NetSchema.cs` with the message ids and fingerprints, `Handshake.cs` and `Runtime.cs`.
 4. It writes codecs for the Unity types your models use, such as `Vector3`, into `UnityCodecs/`. The folder only appears once a model uses a Unity type.
 5. It writes an adapter for every codec, `FomoxaAdapters.cs`, which registers them, and `FomoxaUnityRegistration.cs`, which runs that registration when Play Mode or a player starts.
 
-The prefab and scene lists come from two separate steps, which run when you save a prefab, change a scene or the Build Profiles scene list, and before every player build. The [tutorial](tutorial/project-setup.md#4-make-the-player-prefab) shows when they matter. [Editor integration](../advanced/editor-integration.md) describes every step and every generated file.
+The prefab and scene lists come from two separate steps, which run when you save a prefab, change a scene or the Build Profiles scene list, and before every player build. The [tutorial](tutorial/project-setup.md#3-make-the-player-prefab) shows when they matter. [Editor integration](../advanced/editor-integration.md) describes every step and every generated file.
 
 You never call the registration yourself. When Play Mode or a player starts, `FomoxaUnityRegistration` registers the schema and the codecs in `FomoxaRegistry.Default`, and every `NetworkManager` reads them from there in `Awake`.
 

@@ -41,9 +41,9 @@ Namespace được sinh mang tên thư mục cuối của Generated Folder.
 Việc sinh code chạy sau mỗi lần biên dịch script, khi Editor load, và từ menu, nhưng không bao giờ chạy khi Play Mode đang khởi động hoặc đang chạy. Nó đi qua các bước sau:
 
 1. Copy các system model của package vào `FomoxaSystemModels/` ở gốc project.
-2. Ghi một model rỗng cho mỗi RPC không tham số vào `<Generated Folder>/RpcModels/`.
+2. Ghi một model cho mỗi RPC vào `<Generated Folder>/RpcModels/`, và state model, input model, reconcile model của mọi behaviour có field `[NetworkState]`, `[NetworkInput]` hoặc `[NetworkReconcile]` vào `<Generated Folder>/StateModels/`.
 3. Ghi `fomoxa.toml` từ settings.
-4. Chạy `fomoxac generate` đi kèm ở gốc project. Nó đọc Models Folder, `FomoxaSystemModels` và `RpcModels`, rồi ghi các codec, `NetSchema.cs`, `Handshake.cs` và `Runtime.cs` vào Generated Folder, và các file schema vào `.fomoxa/`.
+4. Chạy `fomoxac generate` đi kèm ở gốc project. Nó đọc Models Folder, `FomoxaSystemModels`, `RpcModels` và `StateModels`, rồi ghi các codec, `NetSchema.cs`, `Handshake.cs` và `Runtime.cs` vào Generated Folder, và các file schema vào `.fomoxa/`.
 5. Ghi codec cho các type Unity mà model dùng vào `<Generated Folder>/UnityCodecs/`, và `.fomoxa/schema.inspect.json`, một bản copy của schema có mô tả các type đó cho công cụ inspect.
 6. Ghi một adapter cho mỗi codec, `<Model><Codec>Adapter.cs`.
 7. Ghi `FomoxaAdapters.cs`, file đăng ký schema, mọi system adapter, mọi channel đã khai báo và mọi RPC id, và `FomoxaUnityRegistration.cs`, file gọi nó khi player khởi động.
@@ -53,9 +53,11 @@ Mọi file package ghi đều bắt đầu bằng một comment đánh dấu. Pa
 
 Lỗi và cảnh báo xuất hiện trong Console với tiền tố `[Fomoxa]`, và [xử lý sự cố](../getting-started/troubleshooting.md#code-generation-fails) giải thích từng thông báo.
 
-## Source generator cho RPC <a href="#rpc-source-generator" id="rpc-source-generator"></a>
+## Source generator <a href="#source-generator" id="source-generator"></a>
 
-`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` là một Roslyn source generator mà Unity chạy cho mọi assembly tham chiếu `Fomoxa.Networking`. Nó viết phần đăng ký các method `[ServerRpc]` và `[ClientRpc]` vào mỗi behaviour `partial` và báo các lỗi `FOMOXA001` tới `FOMOXA010`, liệt kê trong [RPC](../messaging/rpc.md#compile-errors).
+`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` là một Roslyn source generator mà Unity chạy cho mọi assembly tham chiếu `Fomoxa.Networking`. Vào mỗi behaviour `partial`, nó viết các method gửi và phần đăng ký các method `[ServerRpc]`, `[ClientRpc]`, cùng code đăng ký và chép các field `[NetworkState]`, `[NetworkInput]`, `[NetworkReconcile]`. Nó báo các lỗi `FOMOXA001` tới `FOMOXA022`, liệt kê trong [RPC](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors), [collection](../synchronization/collections.md#errors) và [input](../prediction/input.md#declaring).
+
+Phần đăng ký field cần model sinh ra của chúng, nên nó xuất hiện khi bước sinh code đã ghi model và Unity đã biên dịch lại.
 
 ## Bước prefab <a href="#prefab-step" id="prefab-step"></a>
 
@@ -91,7 +93,7 @@ Trong Play Mode, scene object không có id hợp lệ sẽ nhận id tạm, và
 
 ## Kiểm tra khi build <a href="#build-checks" id="build-checks"></a>
 
-Trước khi build player, package chạy bước prefab, bước scene và bước scene file, và làm build thất bại nếu chúng có lỗi. Nó kiểm tra model sinh ra của mọi RPC không tham số có mặt và đúng phiên bản và được `FomoxaAdapters.cs` đăng ký, nếu không thì thất bại với `run Tools > Fomoxa > Generate and commit the generated files`.
+Trước khi build player, package chạy bước prefab, bước scene và bước scene file, và làm build thất bại nếu chúng có lỗi. Nó kiểm tra model sinh ra của mọi RPC và mọi state model, input model, reconcile model có mặt và đúng phiên bản, được `FomoxaAdapters.cs` đăng ký, và source generator đã đăng ký các field, nếu không thì thất bại với `run Tools > Fomoxa > Generate and commit the generated files`. Vào Play Mode cũng chạy phép kiểm đó cho state model, input model, reconcile model và dừng Play Mode khi có lỗi.
 
 Sau đó nó gán danh sách prefab và danh sách scene đã sinh cho mọi `NetworkManager` trong các scene được build, danh sách prefab chỉ ở những manager bật Collect Prefabs, và kiểm tra scene object id của mọi scene được build. Việc gán này cũng chạy cho mỗi scene khi bạn vào Play Mode, nhưng sau `Awake` của các manager, nên nó không có tác dụng trong phiên đó; [NetworkManager](../connections/network-manager.md#prefab-and-scene-lists) giải thích vì sao danh sách cũng cần được gán trong scene.
 
@@ -103,7 +105,7 @@ Sau đó nó gán danh sách prefab và danh sách scene đã sinh cho mọi `Ne
 | `fomoxa.toml` | Có |
 | `FomoxaSystemModels/` | Có |
 | `.fomoxa/` | Có |
-| Generated Folder, kèm `RpcModels/`, `UnityCodecs/` và các scene file | Có |
+| Generated Folder, kèm `RpcModels/`, `StateModels/`, `UnityCodecs/` và các scene file | Có |
 
 Commit các file này giúp một bản clone mới hoặc máy build biên dịch được mà không cần chạy bộ sinh code trước.
 

@@ -23,7 +23,7 @@ Từ đó, manager làm bốn việc mỗi tick:
 3. Step physics world 3D và 2D của mọi scene đã load một lần, bằng `TimeManager.TickDelta`.
 4. Truy vấn contact cho các [component contact](contacts.md).
 
-`FixedUpdate` vẫn chạy theo fixed timestep của Unity, nhưng physics không còn tiến lên ở đó, nên lực và thay đổi vận tốc cần được network hóa phải đặt trong `apply` hoặc một tick event.
+`FixedUpdate` vẫn chạy theo fixed timestep của Unity, nhưng physics không còn tiến lên ở đó, nên lực và thay đổi vận tốc cần được network hóa phải đặt trong `OnApplyInput` hoặc một tick event.
 
 Hãy đặt tick rate bằng tần số mà physics của game đã được tinh chỉnh. Ví dụ, project tinh chỉnh cho fixed timestep 0.02 s khớp với 50 tick mỗi giây.
 

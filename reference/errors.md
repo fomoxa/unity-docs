@@ -48,7 +48,7 @@ A newer server may send a value this list does not have. The client keeps the va
 | Value | Meaning |
 |---|---|
 | `VersionMismatch` | The two sides speak different Fomoxa protocol versions |
-| `SchemaConflict` | The two sides were built from different models |
+| `SchemaConflict` | A model differs between the two sides, other than by fields added at the end |
 | `Corrupt` | The handshake data could not be read |
 | `Timeout` | The handshake did not finish within Handshake Timeout Seconds |
 
@@ -101,7 +101,7 @@ A newer server may send a value this list does not have. The client keeps the va
 | `InvalidOperationException` | `ClientManager.StartConnection(address, port)` | The transport needs a grant, such as [encrypted UDP](../connections/transports/encrypted-udp.md) |
 | `InvalidOperationException` | `ServerManager.StartConnection` with encrypted UDP | The transport has no `ConnectTokens` |
 | `InvalidOperationException` | `ConnectTokens` constructor, `EncryptedUdpTransportFactory` constructor | The registry has no codec for the connect token models |
-| `InvalidOperationException` | Send RPC methods | The object is not spawned on the sending side, or a parameterless RPC has no generated model |
+| `InvalidOperationException` | Send RPC methods | The object is not spawned on the sending side, or the RPC has no generated model |
 | `InvalidOperationException` | Methods that change a collection | Called on a client for a spawned object |
 | `ArgumentException` | `Spawn` | Prefab asset, already spawned, unregistered prefab id, invalid scene object, owner not started |
 | `ArgumentException` | `PrefabRegistry.Register`, `SceneRegistry.Register` | Id 0, id registered to something else, invalid prefab hierarchy |

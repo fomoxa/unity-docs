@@ -8,9 +8,9 @@ def rpc_directions(language):
     canvas = Canvas(920, 330, t('The three kinds of RPC', 'Ba loại RPC'))
     blue, green, red = STROKES['server'], STROKES['client'], STROKES['danger']
     panels = [
-        ('Server RPC', 'SendServerRpc', 'server'),
-        ('Observers RPC', 'SendObserversRpc', 'observers'),
-        ('Target RPC', 'SendTargetRpc(B, ...)', 'target'),
+        ('Server RPC', 'SendFireServerRpc', 'server'),
+        ('Observers RPC', 'SendShowShotObserversRpc', 'observers'),
+        ('Target RPC', 'SendShowShotTargetRpc(B, ...)', 'target'),
     ]
     for index, (title, method, kind) in enumerate(panels):
         x0 = 20 + index * 300
@@ -192,7 +192,7 @@ def state_sync(language):
     blue, green, muted = STROKES['server'], STROKES['client'], STROKES['muted']
 
     canvas.text(30, 38, t('Server, every tick', 'Server, mỗi tick'), 15, 700)
-    canvas.box(30, 56, 190, 76, 'code', t('Your code', 'Code của bạn'), ['health.Current = 80'], mono_body=True)
+    canvas.box(30, 56, 190, 76, 'code', t('Your code', 'Code của bạn'), ['health = 80'], mono_body=True)
     canvas.box(255, 56, 190, 76, 'server', t('Encode', 'Encode'),
                [t('after OnTick and', 'sau OnTick và'), 'OnPostTick'])
     canvas.box(480, 56, 190, 76, 'server', t('Compare bytes', 'So byte'),
@@ -207,9 +207,9 @@ def state_sync(language):
 
     canvas.text(30, 220, t('Each observing client', 'Mỗi client đang observe'), 15, 700)
     canvas.box(480, 236, 190, 70, 'client', t('Decode', 'Decode'),
-               [t('into your instance', 'vào instance của bạn')])
-    canvas.box(705, 236, 185, 70, 'client', 'onChanged(previous)',
-               [t('previous values', 'giá trị trước đó')], title_mono=True)
+               [t('into your fields', 'vào các field của bạn')])
+    canvas.box(705, 236, 185, 70, 'client', 'OnChanged',
+               [t('previous and current value', 'giá trị trước và hiện tại')], title_mono=True)
     canvas.arrow([(797, 132), (797, 190), (575, 190), (575, 236)], blue, width=2,
                  label=t('reliable, ordered', 'reliable, có thứ tự'), label_at=0.35, label_offset=(0, -7))
     canvas.arrow([(670, 271), (705, 271)], LINE)

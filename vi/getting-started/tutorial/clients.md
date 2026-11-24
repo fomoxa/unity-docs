@@ -66,11 +66,10 @@ Bấm **Stop** trên một client. Client dừng và các object của nó biế
 | Bước | Tính năng | Hướng dẫn |
 |---|---|---|
 | Network Manager với transport UDP | Transport và vòng lặp tick | [NetworkManager](../../connections/network-manager.md), [UDP](../../connections/transports/udp.md) |
-| Model `PlayerStats` | Model và codec sinh ra | [Model và codec](../../messaging/models.md) |
 | Player prefab có `NetworkObject` | Network object và prefab id | [NetworkObject](../../objects/network-object.md), [Spawn](../../objects/spawning.md) |
 | `ServerManager.Spawn` kèm owner | Spawn và ownership | [Ownership](../../objects/ownership.md) |
 | `[ServerRpc] Jump` | RPC | [RPC](../../messaging/rpc.md) |
-| `state.Use` | State | [State](../../synchronization/state.md) |
+| `[NetworkState] jumps` | State | [State](../../synchronization/state.md) |
 | `NetworkTransform` | Replication transform | [NetworkTransform](../../synchronization/transform.md) |
 | Nút **Host** | Host mode | [Host mode](../../connections/host-mode.md) |
 

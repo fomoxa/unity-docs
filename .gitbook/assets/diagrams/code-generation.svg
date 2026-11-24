@@ -12,9 +12,9 @@
   <text x="38.0" y="167.8" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6B7280" text-anchor="start">copied to FomoxaSystemModels/</text>
   <path d="M 274.0 155.0 L 330.0 160.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
   <rect x="24.0" y="200.0" width="250.0" height="62.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
-  <text x="38.0" y="218.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#0F172A" text-anchor="start">RPC models</text>
-  <text x="38.0" y="235.4" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6B7280" text-anchor="start">written to Generated/RpcModels/ for</text>
-  <text x="38.0" y="252.1" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6B7280" text-anchor="start">RPCs without a model</text>
+  <text x="38.0" y="218.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="13" font-weight="600" fill="#0F172A" text-anchor="start">RPC and state models</text>
+  <text x="38.0" y="235.4" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6B7280" text-anchor="start">written to Generated/RpcModels/ and</text>
+  <text x="38.0" y="252.1" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="400" fill="#6B7280" text-anchor="start">StateModels/ from your behaviours</text>
   <path d="M 274.0 231.0 L 330.0 178.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
   <rect x="334.0" y="128.0" width="150.0" height="64.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
   <text x="409.0" y="156.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#78350F" text-anchor="middle">fomoxac</text>

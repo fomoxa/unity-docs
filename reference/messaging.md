@@ -23,7 +23,7 @@ Each generated adapter is a `public sealed class <Model><Codec>Adapter : IMessag
 | `static FomoxaRegistry Default` | The registry the generated registration fills when the player starts, and that `NetworkManager` uses by default |
 | `Schema Schema` | The generated schema |
 | `MessageChannels Channels` | The channel of every reliable message id |
-| `RpcMessageIds Rpcs` | Message ids of parameterless RPCs |
+| `RpcMessageIds Rpcs` | Message ids of the generated RPC models |
 | `void SetSchema(Schema schema)` | Sets the schema |
 | `void SetCodec<T>(IMessageCodec<T> codec)` | Registers a codec for a type |
 | `IMessageCodec<T> Codec<T>()` | The codec registered for a type, or null |
@@ -39,7 +39,7 @@ The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a regi
 | Member | Description |
 |---|---|
 | `int Count` | Declared RPCs |
-| `void Set(string type, string method, uint messageId)` | Declares the message id of a parameterless RPC by full type name and method name |
+| `void Set(string type, string method, uint messageId)` | Declares the message id of an RPC's generated model by full type name and method name |
 | `bool TryGet(Type type, string method, out uint messageId)` | Finds the id for a type or its base types |
 
 ## MessageChannels

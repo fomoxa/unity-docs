@@ -56,17 +56,17 @@ Thư mục model phải tồn tại trước lần sinh code đầu tiên, kể 
 
 Package sinh code sau mỗi lần biên dịch script. Bạn cũng có thể chạy nó bằng **Tools > Fomoxa > Generate**.
 
-<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Model của bạn, system model của package và RPC model đi vào fomoxac. fomoxac ghi codec, NetSchema.cs, Handshake.cs và Runtime.cs. Sau đó package ghi codec cho type của Unity, adapter, FomoxaAdapters.cs và FomoxaUnityRegistration.cs. Bước prefab và bước scene ghi danh sách prefab và danh sách scene. Khi khởi động, FomoxaUnityRegistration điền FomoxaRegistry.Default, và NetworkManager đọc registry đó trong Awake."><figcaption><p>Một lần sinh code đọc gì, ghi gì, và kết quả đến được NetworkManager như thế nào.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Model của bạn, system model của package, RPC model và state model đi vào fomoxac. fomoxac ghi codec, NetSchema.cs, Handshake.cs và Runtime.cs. Sau đó package ghi codec cho type của Unity, adapter, FomoxaAdapters.cs và FomoxaUnityRegistration.cs. Bước prefab và bước scene ghi danh sách prefab và danh sách scene. Khi khởi động, FomoxaUnityRegistration điền FomoxaRegistry.Default, và NetworkManager đọc registry đó trong Awake."><figcaption><p>Một lần sinh code đọc gì, ghi gì, và kết quả đến được NetworkManager như thế nào.</p></figcaption></figure>
 
 Một lần sinh code đi qua các bước sau:
 
 1. Package copy các model của chính nó, như message spawn và message transform, vào `FomoxaSystemModels/` ở thư mục gốc của project, để model của bạn và model của package tạo thành một schema chung.
-2. Với mỗi RPC khai báo không có model, package viết một model nhỏ vào `RpcModels/` trong Generated Folder.
+2. Với mỗi RPC, package viết một model vào `RpcModels/` trong Generated Folder, và với mỗi behaviour có field state hoặc field input, package viết model của chúng vào `StateModels/`.
 3. Package viết `fomoxa.toml` từ settings asset và chạy `fomoxac`. `fomoxac` viết codec cho mọi model, `NetSchema.cs` chứa message id và fingerprint, `Handshake.cs` và `Runtime.cs`.
 4. Package viết codec cho các type của Unity mà model của bạn dùng, như `Vector3`, vào `UnityCodecs/`. Thư mục này chỉ xuất hiện khi có model dùng type của Unity.
 5. Package viết một adapter cho mỗi codec, `FomoxaAdapters.cs` để đăng ký các adapter đó, và `FomoxaUnityRegistration.cs` để chạy việc đăng ký khi Play Mode hoặc bản build khởi động.
 
-Danh sách prefab và danh sách scene đến từ hai bước riêng, chạy khi bạn lưu một prefab, sửa một scene hoặc danh sách scene trong Build Profiles, và trước mỗi lần build player. [Tutorial](tutorial/project-setup.md#4-make-the-player-prefab) cho thấy lúc nào chúng cần đến. [Tích hợp Editor](../advanced/editor-integration.md) mô tả từng bước và từng file sinh ra.
+Danh sách prefab và danh sách scene đến từ hai bước riêng, chạy khi bạn lưu một prefab, sửa một scene hoặc danh sách scene trong Build Profiles, và trước mỗi lần build player. [Tutorial](tutorial/project-setup.md#3-make-the-player-prefab) cho thấy lúc nào chúng cần đến. [Tích hợp Editor](../advanced/editor-integration.md) mô tả từng bước và từng file sinh ra.
 
 Bạn không bao giờ tự gọi việc đăng ký. Khi Play Mode hoặc bản build khởi động, `FomoxaUnityRegistration` đăng ký schema và codec vào `FomoxaRegistry.Default`, và mọi `NetworkManager` đọc chúng từ đó trong `Awake`.
 

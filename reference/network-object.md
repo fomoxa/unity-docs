@@ -57,37 +57,40 @@ Whatever the value, the owner always observes its objects, and network scenes re
 | `OnOwnerChangedServer(ulong previousOwnerId)` | `public virtual` | On the server after an owner change |
 | `OnOwnerChangedClient(ulong previousOwnerId)` | `public virtual` | On observing clients after an owner change |
 | `OnHostVisibility(bool visible)` | `protected virtual` | On a host when its client stops or starts observing the object |
-| `OnRegisterRpcs(NetworkRpcs rpc)` | `protected virtual` | Once per instance, at its first spawn |
-| `OnRegisterState(NetworkState state)` | `protected virtual` | Once per instance, at its first spawn |
-| `OnRegisterInput(NetworkInput input)` | `protected virtual` | Once per instance, at its first spawn |
+| `OnGatherInput()` | `protected virtual` | On the owner's client once per tick, before the `[NetworkInput]` fields are copied |
+| `OnApplyInput(InputContext context)` | `protected virtual` | After the input of a tick was written into the `[NetworkInput]` fields |
+| `OnCaptureState()` | `protected virtual` | Before the `[NetworkReconcile]` fields are copied |
+| `OnRestoreState()` | `protected virtual` | After the server's state was written into the `[NetworkReconcile]` fields |
 | `OnReconciled(uint tick)` | `protected virtual` | On the owner's client after a correction at `tick` |
 
-`OnRegisterGeneratedRpcs` is used by the source generator and hidden from IntelliSense, so do not override it.
+`OnRegisterGeneratedRpcs`, `OnRegisterGeneratedState` and `OnRegisterGeneratedInput` are used by the source generator and hidden from IntelliSense, so do not override them.
 
 ### Send methods
 
-All send methods are `protected`.
+All send methods are `protected`. For each RPC the source generator adds `Send<Method>ServerRpc(...)`, or `Send<Method>ObserversRpc(...)` and `Send<Method>TargetRpc(ulong peerId, ...)`, with the RPC's sent parameters, as described in [RPCs](../messaging/rpc.md#sending). They call these members:
 
 | Member | Returns |
 |---|---|
-| `SendServerRpc<T>(IMessageCodec<T> codec, T value)` | `SendResult` |
 | `SendServerRpc(string rpc)` | `SendResult` |
-| `SendObserversRpc<T>(IMessageCodec<T> codec, T value)` | `int`, observers queued for |
-| `SendObserversRpc(string rpc)` | `int` |
-| `SendTargetRpc<T>(ulong peerId, IMessageCodec<T> codec, T value)` | `SendResult` |
+| `SendServerRpc<TValues>(string rpc, TValues values)` | `SendResult` |
+| `SendObserversRpc(string rpc)` | `int`, observers queued for |
+| `SendObserversRpc<TValues>(string rpc, TValues values)` | `int` |
 | `SendTargetRpc(ulong peerId, string rpc)` | `SendResult` |
+| `SendTargetRpc<TValues>(ulong peerId, string rpc, TValues values)` | `SendResult` |
 
-They throw `ArgumentNullException` for a null codec, value or name, and `InvalidOperationException` when the object is not spawned on the sending side. For a name without a generated model they also throw `InvalidOperationException`, with the message `... has no generated parameterless RPC model ...`.
+`values` is one value, or a tuple for several. The members throw `ArgumentNullException` for a null name or a null `string` or model value, `InvalidOperationException` when the object is not spawned on the sending side or the RPC has no generated model (`... has no generated parameterless RPC model ...` or `... has no generated RPC model for its parameters ...`), and `ArgumentException` when `values` does not have the types of the RPC's parameters.
 
 ### State
 
-`protected void SetStateDirty()` marks the behaviour's state as changed, so the server compares and sends it after the current tick. It only has an effect on a state registered with `onlyWhenDirty`, as described in [marking changes](../synchronization/state.md#marking-changes), and does nothing otherwise.
+`protected void SetStateDirty()` marks the behaviour's state as changed, so the server compares and sends it after the current tick. It only has an effect when the class carries `[NetworkStateModel(OnlyWhenDirty = true)]`, as described in [marking changes](../synchronization/state.md#marking-changes), and does nothing otherwise.
 
 ## Registration types
 
+A `NetworkBehaviour` registers its RPCs, state and input through attributes. The types below are the registration API of `EntityBehaviour`, which a [console server](../console-server/runtime.md) uses.
+
 ### NetworkRpcs
 
-`public sealed class NetworkRpcs` is passed to `OnRegisterRpcs`, as described in [RPCs](../messaging/rpc.md#registering-by-hand).
+`public sealed class NetworkRpcs` is passed to `EntityBehaviour.OnRegisterRpcs`.
 
 | Member | Description |
 |---|---|
@@ -100,12 +103,12 @@ Registering the same message id twice on one behaviour throws `HandlerRegistrati
 
 ### NetworkState
 
-`public sealed class NetworkState` is passed to `OnRegisterState`, as described in [state](../synchronization/state.md).
+`public sealed class NetworkState` is passed to `EntityBehaviour.OnRegisterState`.
 
 | Member | Description |
 |---|---|
 | `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null, bool onlyWhenDirty = false) where T : class, new()` | Registers the behaviour's state. `onChanged` receives the previous values. With `onlyWhenDirty`, the server compares the state only after `SetStateDirty()`. |
-| `Use<T>(byte index, NetworkList<T> list, IMessageCodec<T> codec, NetworkListChanged<T> onChanged = null) where T : class, new()` | Registers a list of models under `index`, as described in [collections](../synchronization/collections.md). |
+| `Use<T>(byte index, NetworkList<T> list, IMessageCodec<T> codec, NetworkListChanged<T> onChanged = null) where T : class, new()` | Registers a list of models under `index`. |
 | `Use<T>(byte index, NetworkList<T> list, NetworkListChanged<T> onChanged = null)` | Registers a list of a primitive type. |
 | `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, IMessageCodec<TValue> codec, NetworkDictionaryChanged<TKey, TValue> onChanged = null) where TValue : class, new()` | Registers a dictionary whose values are models. |
 | `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, NetworkDictionaryChanged<TKey, TValue> onChanged = null)` | Registers a dictionary whose values are a primitive type. |
@@ -126,7 +129,7 @@ The collection types are in `Fomoxa.Networking`. Their operations and callbacks 
 
 ### NetworkInput
 
-`public sealed class NetworkInput` is passed to `OnRegisterInput`, as described in [input](../prediction/input.md) and [reconciliation](../prediction/reconciliation.md).
+`public sealed class NetworkInput` is passed to `EntityBehaviour.OnRegisterInput`.
 
 | Member | Description |
 |---|---|

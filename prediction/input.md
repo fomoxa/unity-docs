@@ -1,30 +1,51 @@
 # Input
 
-An input model carries what the owner's player did in one tick. The package gathers it on the owner's client every tick and sends it to the server tagged with the tick. Your `apply` callback runs with it on the server when that tick comes, and also right away on the owner's client if the client predicts.
+Input fields carry what the owner's player did in one tick. The package gathers them on the owner's client every tick and sends them to the server tagged with the tick. Your `OnApplyInput` runs with them on the server when that tick comes, and also right away on the owner's client if the client predicts.
 
-## Registering
+## Declaring
 
 ```csharp
-protected override void OnRegisterInput(NetworkInput input)
+using Fomoxa.Networking;
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed partial class Walker : NetworkBehaviour
 {
-    input.Use(MoveInputNetAdapter.Instance, Gather, Apply);
-    input.Reconcile(MoveStateNetAdapter.Instance, Capture, Restore, Matches);
+    [NetworkInput]
+    private float x;
+
+    [NetworkInput]
+    private float z;
+
+    protected override void OnGatherInput()
+    {
+        x = Input.GetAxisRaw("Horizontal");
+        z = Input.GetAxisRaw("Vertical");
+    }
+
+    protected override void OnApplyInput(InputContext context)
+    {
+        transform.position += new Vector3(x, 0f, z) * 0.1f;
+    }
 }
 ```
 
-`NetworkInput.Use<T>(codec, gather, apply)` takes two callbacks. `gather(T input)` fills in the input of the current tick, and `apply(T input, InputContext context)` runs the tick with that input.
+An input field is an instance field that is not `readonly`, and it may be private. Its type decides how it travels, as for [state fields](../synchronization/state.md#state-fields), and `[NetworkInput("...")]` gives it a wire type. A behaviour with input fields must override both `OnGatherInput` and `OnApplyInput`, and the class must be `partial`.
 
-A behaviour has at most one input model. `Use` throws `HandlerRegistrationException` when it is called twice, or when the `NetworkManager` uses the Variable timing mode.
+The package gathers the input fields of a class, including those of its base classes, into one model, named after the class followed by `Input`, `WalkerInput` here, in the `StateModels` subfolder of the Generated Folder. Give it another name with `[NetworkInputModel("...")]` on the class. As with state, Play mode and builds are blocked while the model is missing or out of date, and adding a field after the last one keeps older builds connected, as [state](../synchronization/state.md#changing-the-fields) explains. When the `NetworkManager` uses the Variable timing mode, the object throws `HandlerRegistrationException` when it spawns.
 
-Without a reconcile model the owner only sends input and does not predict, so the object moves when the server's result arrives, like any other object. [Reconciliation](reconciliation.md) describes the reconcile model.
+Without [`[NetworkReconcile]` fields](reconciliation.md) the owner only sends input and does not predict, so the object moves when the server's result arrives, like any other object.
 
 ## Gather
 
-`gather` runs once per tick on the owner's client, for `TimeManager.PredictionTick`, as long as the client is connected to a remote server and its clock is synchronized. On a host it runs on the server, for the objects the host's client owns. The package passes the same instance every tick, so set every field each time.
+`OnGatherInput` runs once per tick on the owner's client, for `TimeManager.PredictionTick`, as long as the client is connected to a remote server and its clock is synchronized. On a host it runs on the server, for the objects the host's client owns. After it returns, the package copies the input fields. A replay writes older inputs into the same fields, so set every input field each time.
 
-Input that happens between ticks, such as a button pressed during one frame, is caught in `Update` and handed over in `gather`. The following example adds a `bool` field `Jump` (wire type `bool`) to the `MoveInput` model from the [overview](overview.md):
+Input that happens between ticks, such as a button pressed during one frame, is caught in `Update` and handed over in `OnGatherInput`. The following example adds a `jump` input field to the `PredictedMover` from the [overview](overview.md):
 
 ```csharp
+[NetworkInput]
+private bool jump;
+
 private bool jumpPressed;
 
 private void Update()
@@ -35,29 +56,29 @@ private void Update()
     }
 }
 
-private void Gather(MoveInput input)
+protected override void OnGatherInput()
 {
-    input.X = Input.GetAxisRaw("Horizontal");
-    input.Z = Input.GetAxisRaw("Vertical");
-    input.Jump = jumpPressed;
+    x = Input.GetAxisRaw("Horizontal");
+    z = Input.GetAxisRaw("Vertical");
+    jump = jumpPressed;
     jumpPressed = false;
 }
 ```
 
 ## Apply
 
-`apply` runs in four situations:
+Before each call to `OnApplyInput`, the package writes the input for that tick into the input fields. `OnApplyInput` runs in four situations:
 
 | Where | When | `context.Replaying` |
 |---|---|---|
 | Server | At each tick, for objects with an owner, with the input for that tick | false |
-| Owner's client, while predicting | Right after `gather` | false |
+| Owner's client, while predicting | Right after `OnGatherInput` | false |
 | Owner's client, during reconciliation | Again for each tick after the corrected one | true |
 | Host | At each tick, with the host's freshly gathered input | false |
 
-The server does not call `apply` for objects it owns itself, nor before the first input from the owner has arrived.
+The server does not call `OnApplyInput` for objects it owns itself, nor before the first input from the owner has arrived.
 
-`InputContext` tells `apply` more about the input it receives:
+`InputContext` tells `OnApplyInput` more about the input in the fields:
 
 | Property | Meaning |
 |---|---|
@@ -69,17 +90,17 @@ The server does not call `apply` for objects it owns itself, nor before the firs
 `Replaying` lets you skip effects that were already shown, such as sounds and particles, and `Repeated` lets you avoid repeating one-shot actions:
 
 ```csharp
-private void Apply(MoveInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
-    Move(input.X, input.Z, (float)manager.TimeManager.TickDelta);
-    if (input.Jump && !context.Repeated)
+    Move(x, z, (float)manager.TimeManager.TickDelta);
+    if (jump && !context.Repeated)
     {
         Jump(playEffects: !context.Replaying);
     }
 }
 ```
 
-An exception thrown in `apply` or `gather` is logged and does not disconnect anyone.
+An exception thrown in `OnApplyInput` or `OnGatherInput` is logged and does not disconnect anyone.
 
 ## Sending
 
@@ -97,6 +118,6 @@ The client aims to have each input arrive Input Buffer ticks (2 by default) befo
 
 ## Validating input
 
-The server applies whatever the owner sends, so clamp or reject values in `apply`, for example with `Vector3.ClampMagnitude` on a direction, to keep a modified client from moving faster than allowed. Since the same `apply` runs on the owner's client, an honest client predicts the clamped result.
+The server applies whatever the owner sends, so clamp or reject values in `OnApplyInput`, for example with `Vector3.ClampMagnitude` on a direction, to keep a modified client from moving faster than allowed. Since the same `OnApplyInput` runs on the owner's client, an honest client predicts the clamped result.
 
-Input works together with [reconciliation](reconciliation.md) and the tick clock described in [ticks and timing](../concepts/tick.md). [NetworkBehaviour](../objects/network-behaviour.md) lists the registration hooks.
+Input works together with [reconciliation](reconciliation.md) and the tick clock described in [ticks and timing](../concepts/tick.md). [NetworkBehaviour](../objects/network-behaviour.md) lists the methods a behaviour overrides.

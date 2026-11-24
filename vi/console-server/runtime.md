@@ -4,7 +4,7 @@ Trang này viết một server console cho game ở [project đầu tiên của 
 
 ## Entity và behaviour <a href="#entities-and-behaviours" id="entities-and-behaviours"></a>
 
-Trên console, một network object là một `StandaloneEntity`, và logic mạng của nó nằm trong các class `EntityBehaviour`. `EntityBehaviour` có các callback và phần đăng ký của `NetworkBehaviour`: `OnStartServer`, `OnStopServer`, `OnStartClient`, `OnStopClient`, các callback đổi owner, `OnRegisterRpcs`, `OnRegisterState`, `OnRegisterInput`, `OnReconciled`, các method `SendServerRpc`, `SendObserversRpc` và `SendTargetRpc`, cùng `IsPredicting`, `IsReplaying` và `ReconcileCount`.
+Trên console, một network object là một `StandaloneEntity`, và logic mạng của nó nằm trong các class `EntityBehaviour`. `EntityBehaviour` có các callback của `NetworkBehaviour`: `OnStartServer`, `OnStopServer`, `OnStartClient`, `OnStopClient`, các callback đổi owner và `OnReconciled`, cùng `IsPredicting`, `IsReplaying` và `ReconcileCount`. Console không có bước Editor nào đọc field, nên `EntityBehaviour` đăng ký RPC, state và input bằng code, với model: `OnRegisterRpcs`, `OnRegisterState`, `OnRegisterInput`, và các method `SendServerRpc`, `SendObserversRpc`, `SendTargetRpc` nhận adapter của một model hoặc tên một RPC.
 
 Prefab `Player` của hướng dẫn có một `NetworkTransform` và một behaviour `Player`, theo thứ tự đó. Entity console có một behaviour cho mỗi cái, theo cùng thứ tự:
 
@@ -12,8 +12,8 @@ Prefab `Player` của hướng dẫn có một `NetworkTransform` và một beha
 using System.Numerics;
 using Fomoxa.Networking;
 using Fomoxa.Networking.Standalone;
+using FomoxaStateModels;
 using Generated;
-using MyGame.Network.Models;
 
 namespace MyGame.Network
 {
@@ -72,6 +72,8 @@ namespace MyGame.Network
 }
 ```
 
+`Player` của Unity khai báo state là field `jumps` và đặt tên model là `PlayerStats` bằng `[NetworkStateModel("PlayerStats")]`, nên Editor sinh `FomoxaStateModels.PlayerStats` có property `Jumps` trong `Generated/StateModels/`. Console biên dịch file đó và đăng ký nó bằng `state.Use`, nên gửi đúng những byte mà server Unity gửi.
+
 `PlayerTransform` thay chỗ `NetworkTransform`. `SyncTransform(sync, receiver)` cho behaviour một `TransformSync` và gửi tư thế của entity mang nó, với cùng luật như `NetworkTransform`. Hãy dùng thiết lập của `NetworkTransform` trên prefab: có đồng bộ vị trí, góc xoay và scale hay không, rồi ba ngưỡng. `ITransformReceiver` được gọi trên client console; server để trống. `TransformSync.Teleport()` làm việc giống `NetworkTransform.Teleport()`.
 
 Server chỉ đọc `Position`, `Rotation` và `Scale` của entity sau khi một trong các setter của chúng được gọi, trong lúc [body Rapier](physics.md) của entity di chuyển, và sau `Teleport()`. Sau đó server đọc tiếp sau mỗi tick tới khi đã gửi bản settle. Entity đứng yên không bị đọc lần nào. Hai loại entity được đọc sau mỗi tick:
@@ -89,9 +91,9 @@ Client kiểm tra một lần spawn theo prefab id và fingerprint, rồi giao m
 
 - prefab id và fingerprint lấy từ các hằng số `FomoxaPrefabs` được sinh ra;
 - các behaviour theo thứ tự các component `NetworkBehaviour` của prefab, tức thứ tự Inspector hiển thị, con đứng sau cha;
-- mỗi behaviour đăng ký cùng model state, input và RPC như bản Unity tương ứng.
+- mỗi behaviour đăng ký các model mà Editor sinh từ field và RPC của bản Unity tương ứng.
 
-RPC không tham số được tìm theo tên đầy đủ của type behaviour và tên method, như các `RpcModels` được sinh đã đăng ký. Hãy cho behaviour console cùng namespace và tên class với bản Unity, như `MyGame.Network.Player` ở trên, hoặc dùng RPC có model, vốn được khớp chỉ theo model.
+RPC có tham số được khớp theo model sinh ra của nó trong `RpcModels/`. Hãy đăng ký nó bằng adapter của model đó, ví dụ `rpc.OnServer(PlayerFireNetAdapter.Instance, (peerId, fire) => Fire(fire.Yaw))` cho `[ServerRpc] void Fire(ulong peerId, float yaw)` của Unity, rồi đọc tham số từ các property của model. RPC không tham số được tìm theo tên đầy đủ của type behaviour và tên method, như các `RpcModels` được sinh đã đăng ký, nên hãy cho behaviour console cùng namespace và tên class với bản Unity, như `MyGame.Network.Player` ở trên.
 
 ## Chương trình <a href="#program" id="program"></a>
 

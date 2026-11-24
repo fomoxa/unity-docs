@@ -23,7 +23,7 @@ Desktop and mobile clients can use the same proxy with `wss://`, or TLS over TCP
 
 ## Versions
 
-A client can only connect to a server built from the same models, because the handshake compares schemas and refuses any other with `SchemaConflict`. Prefabs and scene objects must match as well, or clients stop with `PrefabMismatch` when objects spawn. When you release a new version, update the server and the clients together, or run the old and the new server side by side on different ports.
+The handshake compares the models of the client and the server and refuses the connection with `SchemaConflict` when they differ, unless the only difference is fields added at the end of a model; [state](../synchronization/state.md#changing-the-fields) lists the changes that keep older builds connected. Prefabs and scene objects must match as well, or clients stop with `PrefabMismatch` when objects spawn. When you release a new version, update the server and the clients together, or run the old and the new server side by side on different ports.
 
 ## Timeouts
 

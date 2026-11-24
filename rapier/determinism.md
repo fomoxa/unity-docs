@@ -4,7 +4,7 @@ Rapier gives the same result for the same world and the same sequence of operati
 
 ## What game code must do
 
-- Change bodies only in prediction callbacks (`apply`, `restore`) and tick events, in a fixed order, from the input and the tick number. Forces, impulses and state writes are operations on the world, and a different order gives a different result.
+- Change bodies only in prediction callbacks (`OnApplyInput`, `OnRestoreState`) and tick events, in a fixed order, from the input and the tick number. Forces, impulses and state writes are operations on the world, and a different order gives a different result.
 - Keep library math out of values that reach the simulation. `Mathf.Sin`, `MathF.Cos` and other library functions can differ in the last bit between Mono, IL2CPP and .NET. Use tables, integer arithmetic or values that come from the input.
 - Do not read time, frame-dependent values or random generators seeded from the clock in simulation code. A generator seeded from a value that the server sends, with its own arithmetic, gives the same sequence everywhere.
 - Build runtime geometry in the same order on every peer. `AddStatic` and `AddBody` numbering and the order of bodies in the world follow the order of the calls, and so do joints and effectors created from code.

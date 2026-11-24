@@ -29,9 +29,9 @@ Prediction và interpolation áp dụng cho các object khác nhau. Client dự 
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 
-Prediction cần `NetworkManager` dùng timing mode Tick, và object cần một `NetworkBehaviour` đăng ký input model bằng `NetworkInput.Use`. Để dự đoán, behaviour còn cần một reconcile model; thiếu nó, client chỉ gửi input.
+Prediction cần `NetworkManager` dùng timing mode Tick, và object cần một `NetworkBehaviour` có field `[NetworkInput]`. Để dự đoán, behaviour còn cần field `[NetworkReconcile]`; thiếu chúng, client chỉ gửi input.
 
-Callback `apply` phải cho ra cùng kết quả trên server và client từ cùng input và cùng state ban đầu. Trên thực tế, nó chỉ đọc input, state riêng của behaviour và `TimeManager.TickDelta`. Kết quả không cần giống nhau tới từng bit: một hàm `matches` quyết định thế nào là đủ gần, và chênh lệch nhỏ sẽ được sửa, như [mô phỏng tất định](deterministic-simulation.md) giải thích.
+`OnApplyInput` phải cho ra cùng kết quả trên server và client từ cùng input và cùng state ban đầu. Trên thực tế, nó chỉ đọc các field input, state riêng của behaviour và `TimeManager.TickDelta`. Kết quả không cần giống nhau tới từng bit: `Tolerance` của các field reconcile quyết định thế nào là đủ gần, và chênh lệch nhỏ sẽ được sửa, như [mô phỏng tất định](deterministic-simulation.md) giải thích.
 
 ## Hướng dẫn <a href="#guides" id="guides"></a>
 

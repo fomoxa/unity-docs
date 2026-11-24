@@ -35,7 +35,7 @@ Exception có nội dung `no Fomoxa schema is registered; FomoxaAdapters.Registe
 4. Hai bên dùng cùng một transport. Client UDP không tới được listener TCP hay WebSocket, và server có [`MultiNetworkTransport`](../connections/transports/multi-transport.md) lắng nghe trên port riêng cho mỗi transport.
 5. Firewall cho phép giao thức của transport, UDP hoặc TCP, đi qua port của server.
 6. Nếu `Reason` là `HandshakeFailed`, nó đi kèm một `Failure` giúp thu hẹp nguyên nhân.
-   - `SchemaConflict` nghĩa là client và server được build từ các model khác nhau. Sinh code một lần và build cả hai từ cùng một trạng thái project.
+   - `SchemaConflict` nghĩa là một model khác nhau giữa client và server theo cách bản build cũ không chấp nhận, như một field bị chèn vào hoặc đổi type. Console đã đánh dấu thay đổi đó là `BREAKING:` khi package sinh model. Sinh code một lần và build cả hai từ cùng một trạng thái project.
    - `VersionMismatch` nghĩa là hai bên dùng phiên bản giao thức Fomoxa khác nhau, ví dụ vì được build bằng hai phiên bản package khác nhau.
    - `Timeout` nghĩa là handshake không xong trong Handshake Timeout Seconds. Với UDP, server không tới được cũng có thể biểu hiện như vậy, vì UDP không có bước kết nối trước handshake.
 7. `Reason` là `TransportError` nghĩa là chính transport thất bại, ví dụ kết nối TCP bị từ chối hoặc host name không phân giải được. Log sẽ cho biết là trường hợp nào.
@@ -61,7 +61,7 @@ Bắt đầu kiểm tra từ server.
 
 1. Code chỉ gọi `ServerManager.Spawn` sau khi server đã khởi động; trước đó lời gọi ném `the server is not started`.
 2. Tham số là một instance trong scene. Truyền asset prefab sẽ ném `<name> is a prefab asset; spawn an instance of it`.
-3. Prefab đã được đăng ký. `prefab id 0x... of <name> is not registered` nghĩa là prefab không có trong Collected Prefabs lẫn danh sách Prefabs của `NetworkManager`; xem bước 5 của [tutorial](tutorial/project-setup.md#5-give-the-networkmanager-the-generated-lists).
+3. Prefab đã được đăng ký. `prefab id 0x... of <name> is not registered` nghĩa là prefab không có trong Collected Prefabs lẫn danh sách Prefabs của `NetworkManager`; xem bước 4 của [tutorial](tutorial/project-setup.md#4-give-the-networkmanager-the-generated-lists).
 4. Prefab có prefab id. Prefab có Prefab Id bằng 0 không đăng ký được, nên hãy chạy Tools > Fomoxa > Assign Prefab Ids.
 5. Owner là một client đang kết nối. `owner <id> is not a started peer` nghĩa là không phải vậy; truyền 0 cho object không có owner.
 
@@ -75,16 +75,17 @@ Nếu server đã spawn object nhưng một client không hiện nó, hãy kiể
 
 1. Nếu server log `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object`, bên gọi không phải owner. Hãy gọi RPC từ client của owner, hoặc đặt `RequireOwnership = false`.
 2. `<name> is not spawned on the server` hoặc `on the client` nghĩa là object chưa được spawn ở phía gửi.
-3. `<Type>.<Method> has no generated parameterless RPC model; mark the method with [NetworkRpc] and run Tools > Fomoxa > Generate` nghĩa là thiếu model đã sinh. Để việc sinh code chạy xong rồi thử lại.
-4. Lỗi biên dịch `FOMOXA001` tới `FOMOXA010` mô tả khai báo RPC sai; xem [RPC](../messaging/rpc.md#compile-errors).
-5. RPC có model dùng channel của model đó, mặc định là unreliable trừ khi model khai báo `[NetworkChannel(..., Channel.ReliableOrdered)]`, và RPC unreliable có thể bị mất.
-6. `SendTargetRpc` trả về `SendResult.NotObserver` khi peer đích không observe object.
+3. `<Type>.<Method> has no generated RPC model for its parameters; run Tools > Fomoxa > Generate` hoặc `has no generated parameterless RPC model` nghĩa là thiếu model đã sinh. Để việc sinh code chạy xong rồi thử lại.
+4. Lỗi biên dịch `FOMOXA001` tới `FOMOXA011` và `FOMOXA022` mô tả khai báo RPC sai; xem [RPC](../messaging/rpc.md#compile-errors).
+5. RPC khai báo với `Channel = Channel.Unreliable` có thể bị mất.
+6. `Send<Method>TargetRpc` trả về `SendResult.NotObserver` khi peer đích không observe object.
 
 ## State không cập nhật <a href="#state-does-not-update" id="state-does-not-update"></a>
 
 1. Chỉ server gửi state. Thay đổi trên client chỉ nằm ở client đó và bị lần thay đổi tiếp theo từ server ghi đè.
-2. Lỗi đăng ký được ném dưới dạng `HandlerRegistrationException` khi object spawn. Nguyên nhân là state model không nằm trên channel reliable-ordered, state model encode ra không byte nào, hoặc một behaviour đăng ký nhiều hơn một state model.
-3. `onChanged` chỉ chạy cho các thay đổi sau khi spawn. Giá trị ban đầu đã có sẵn trong `OnStartClient` và không kích hoạt callback.
+2. Field không có `[NetworkState]` thì không được gửi. Nếu Play Mode không chạy và Console báo `[NetworkState] fields of <Type>: the source generator of com.fomoxa.networking has not registered them`, thì class hoặc một class cha của nó không phải `partial`, hoặc Console đang có lỗi `FOMOXA`; hãy sửa chúng trước.
+3. `OnChanged` chỉ chạy cho các thay đổi sau khi spawn. Giá trị ban đầu đã có sẵn trong `OnStartClient` và không kích hoạt callback.
+4. Với `[NetworkStateModel(OnlyWhenDirty = true)]`, thay đổi chỉ được gửi sau `SetStateDirty()`.
 
 ## Object từ xa bị giật, trễ hoặc không di chuyển <a href="#remote-objects-jitter-lag-or-do-not-move" id="remote-objects-jitter-lag-or-do-not-move"></a>
 
@@ -103,12 +104,12 @@ Bật Run In Background trong mọi bản build có host hoặc vào trận. Pla
 
 Mỗi lần client sửa một lần dự đoán, nó gọi `OnReconciled` và tăng `NetworkBehaviour.ReconcileCount`. Nếu số này cứ tăng trong khi người chơi không làm gì đặc biệt, client và server đang tính ra kết quả khác nhau.
 
-1. `apply` phải di chuyển theo `TimeManager.TickDelta`, không bao giờ theo `Time.deltaTime`.
-2. Input theo frame, như một lần bấm nút, phải được lưu trong `Update` và đọc trong `gather`, để lần bấm ngắn không bị mất.
-3. `apply` chỉ được đọc input, state của chính behaviour và độ dài tick. Đọc object khác, thời gian frame hoặc số ngẫu nhiên không có seed sẽ làm hai bên khác nhau.
+1. `OnApplyInput` phải di chuyển theo `TimeManager.TickDelta`, không bao giờ theo `Time.deltaTime`.
+2. Input theo frame, như một lần bấm nút, phải được lưu trong `Update` và ghi vào một field input trong `OnGatherInput`, để lần bấm ngắn không bị mất.
+3. `OnApplyInput` chỉ được đọc các field input, state của chính behaviour và độ dài tick. Đọc object khác, thời gian frame hoặc số ngẫu nhiên không có seed sẽ làm hai bên khác nhau.
 4. Khi có physics, Simulate Physics trên `RigidbodyPhysics` của `NetworkManager` phải được bật để package step và rollback physics theo tick. Dù vậy, rollback physics của Unity vẫn chỉ gần đúng; xem [rollback](../prediction/rollback.md).
-5. Reconcile model phải chứa mọi thứ `apply` phụ thuộc vào. Một giá trị được mang từ tick này sang tick sau, như vận tốc damping, phải nằm trong đó.
-6. Không có hàm `matches`, package so sánh chính xác các byte đã encode, nên nhiễu số thực cũng bị tính là mismatch. Hãy truyền một hàm `matches` có dung sai.
+5. Các field `[NetworkReconcile]` phải chứa mọi thứ `OnApplyInput` phụ thuộc vào. Một giá trị được mang từ tick này sang tick sau, như vận tốc damping, phải nằm trong đó.
+6. Khi không field reconcile nào có `Tolerance`, package so sánh chính xác các byte đã encode, nên nhiễu số thực cũng bị tính là mismatch. Hãy đặt `Tolerance` cho các field số thực và vector.
 
 Input mà server không dùng được cũng gây ra việc sửa. Input tới quá muộn hoặc quá sớm sẽ bị bỏ, server lặp lại input cuối cho tick đó, và `ServerManager.DroppedInputsOf(peerId)` đếm các trường hợp này.
 

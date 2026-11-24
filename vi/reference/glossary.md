@@ -8,14 +8,14 @@
 | Bundle | Một frame của transport chứa nhiều message. |
 | Channel | `Unreliable` hoặc `ReliableOrdered`; đặt theo từng message id. Xem [channel](../messaging/channels.md). |
 | Codec | Một cách encode model có tên, do `fomoxac` sinh. Một model có thể có nhiều codec. |
-| Collection | Một `NetworkList`, `NetworkDictionary` hoặc `NetworkSet` đăng ký bằng `NetworkState.Use`; server gửi các thao tác gọi trên nó. Xem [collection](../synchronization/collections.md). |
+| Collection | Một `NetworkList`, `NetworkDictionary` hoặc `NetworkSet` trong một field `[NetworkState(Index = n)]`; server gửi các thao tác gọi trên nó. Xem [collection](../synchronization/collections.md). |
 | Delta | XOR giữa bản encode mới và bản encode trước của một state, với các đoạn không đổi được nén lại. |
 | Fingerprint | Hash của danh sách type `NetworkBehaviour` của một prefab hoặc scene object, được so sánh khi spawn. |
 | Fragment | Một mảnh của message `ReliableOrdered` lớn hơn frame budget. Bên nhận ghép các mảnh lại rồi mới giao message. Xem [kích thước message](../messaging/channels.md#message-size). |
 | Frame budget | Frame lớn nhất package dựng cho một transport: 1200 byte với UDP. |
 | Grant (vé kết nối) | Các byte từ `ConnectTokens.Issue` cho phép client kết nối qua [UDP mã hóa](../connections/transports/encrypted-udp.md): một token và các khoá phiên của client. |
 | Host | Tiến trình chạy server và client trong cùng một `NetworkManager`. Xem [host mode](../connections/host-mode.md). |
-| Input model | Model mà một behaviour đăng ký bằng `NetworkInput.Use`, được owner gửi mỗi tick. |
+| Input model | Model của các field `[NetworkInput]` của một behaviour, được owner gửi mỗi tick. |
 | Interpolation | Hiển thị một object ở xa nằm giữa các transform đã nhận, chậm vài tick so với hiện tại. |
 | Tầng 1 | `Fomoxa.Networking`, tức Core: phần của package không tham chiếu Unity. |
 | Tầng 2 | `Fomoxa.Unity`, phần tích hợp với Unity. |
@@ -31,7 +31,7 @@
 | Prediction tick | Tick mà input của client dành cho, đi trước tick của server. |
 | Prefab id | Id 32 bit của một prefab, suy ra từ asset GUID trừ khi được đặt tường minh. |
 | Proxy | Trên client, body kinematic của một object mà client không dự đoán, được đặt ở vị trí đã replicate. |
-| Reconcile model | Model mà một behaviour đăng ký bằng `NetworkInput.Reconcile`, được so sánh sau mỗi tick. |
+| Reconcile model | Model của các field `[NetworkReconcile]` của một behaviour, được so sánh sau mỗi tick. |
 | Reconciliation | So sánh authoritative state với dự đoán và sửa khi không khớp. |
 | Replay | Áp dụng lại input đã ghi sau một lần sửa. Không phải bản ghi trận đấu. |
 | Rollback | Khôi phục một state trước đó, của một behaviour hoặc của các physics world, trước khi replay. |
@@ -41,7 +41,7 @@
 | Scene object | Một `NetworkObject` đặt trong scene, nhận diện bằng scene object id. |
 | Schema | Danh sách mọi message id và layout của chúng, được sinh thành `NetSchema`; được so sánh trong lúc handshake. |
 | Settle | Message reliable mà `NetworkTransform` gửi khi object dừng, spawn hoặc teleport. |
-| State model | Model mà một behaviour đăng ký bằng `NetworkState.Use`, được server giữ đồng bộ. |
+| State model | Model của các field `[NetworkState]` của một behaviour, được server giữ đồng bộ. |
 | System model | Một trong các model của chính package, như `ObjectSpawn`. |
 | Tick | Một bước cố định của mô phỏng network. Xem [tick và thời gian](../concepts/tick.md). |
 | Ticket (vé) | Các byte server đưa cho client nó chuyển đi, để authenticator của server mới kiểm tra. Xem [chuyển server](../connections/transfer.md#the-ticket). |

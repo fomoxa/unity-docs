@@ -1,6 +1,8 @@
 # Models and codecs
 
-A model is a C# class that describes a message, that is, its fields and their wire types. The bundled `fomoxac` compiler generates a codec for each model, and the package wraps each codec in an adapter, which is what the rest of the API works with. RPC arguments, state, input and reconcile data are all models.
+A model is a C# class that describes a message, that is, its fields and their wire types. The bundled `fomoxac` compiler generates a codec for each model, and the package wraps each codec in an adapter, which is what the rest of the API works with.
+
+The package generates the models that carry the RPCs, state and input of your behaviours, so you do not write those. You write a model for structured data that an RPC parameter or a state field holds, for [raw messages](messages.md), for [authentication](../connections/authentication.md) and [transfer](../connections/transfer.md) data, and for the RPCs and state of a [console server](../console-server/runtime.md) that a Unity behaviour does not declare.
 
 ## Basic usage
 
@@ -30,11 +32,16 @@ namespace MyGame.Network.Models
 }
 ```
 
-After compilation the package generates `ShotNetCodec` and `ShotNetAdapter` in the Generated Folder, and you pass the adapter wherever the API asks for an `IMessageCodec<Shot>`:
+After compilation the package generates `ShotNetCodec` and `ShotNetAdapter` in the Generated Folder. The model can then be the type of an RPC parameter or a state field, which travel with its `net` codec:
 
 ```csharp
-SendServerRpc(ShotNetAdapter.Instance, new Shot { Weapon = 2, Direction = transform.forward });
+[ServerRpc]
+private void Fire(Shot shot)
+{
+}
 ```
+
+Where the API asks for an `IMessageCodec<Shot>`, as for [raw messages](messages.md), pass the adapter, `ShotNetAdapter.Instance`.
 
 ## Attributes
 
@@ -110,14 +117,14 @@ public class Status
 }
 ```
 
-Each codec gets its own message id and its own adapter, here `StatusNetAdapter` and `StatusCompactAdapter`. An attribute RPC whose model has several codecs must name the one it uses with `Codec = "..."`.
+Each codec gets its own message id and its own adapter, here `StatusNetAdapter` and `StatusCompactAdapter`. An RPC parameter or a state field of type `Status` uses the `net` codec, so a model used that way needs one.
 
 ## Schema and compatibility
 
-Every generation also writes `NetSchema.cs`, the list of all message ids and their layouts. During the handshake the client and the server compare their schemas and refuse to connect with `HandshakeFailure.SchemaConflict` if they differ, so after you change a model, rebuild both the server and the clients.
+Every generation also writes `NetSchema.cs`, the list of all message ids and their layouts. During the handshake the client and the server compare their schemas message by message. Two versions of a model work together when the fields of one are the first fields of the other, so adding properties at the end of a model, or removing the last ones, keeps older builds connected. Inserting, reordering, retyping or renaming a property makes the handshake fail with `HandshakeFailure.SchemaConflict`, so after such a change, rebuild both the server and the clients. When the package generates the code, the Console shows a verdict for every changed model, starting with `COMPATIBLE:` or `BREAKING:`.
 
 ## Limitations
 
-Apart from the package's own models and the models it generates for parameterless RPCs, only classes in the Models Folder get codecs. The `fomoxac` binary is bundled for Windows x64, Linux x64 and macOS Editors.
+Apart from the package's own models and the models it generates for RPCs, state and input, only classes in the Models Folder get codecs. The `fomoxac` binary is bundled for Windows x64, Linux x64 and macOS Editors.
 
-Models are used by [RPCs](rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md). The [messaging API](../reference/messaging.md) lists the codec types, and [editor integration](../advanced/editor-integration.md) describes the generation step.
+Models carry [RPCs](rpc.md), [state](../synchronization/state.md), [input](../prediction/input.md) and [raw messages](messages.md). The [messaging API](../reference/messaging.md) lists the codec types, and [editor integration](../advanced/editor-integration.md) describes the generation step.

@@ -8,7 +8,7 @@ Tutorial này dựng một game nhiều người chơi nhỏ qua ba phần. Mỗ
 
 | Phần | Bạn thêm | Bạn học được |
 |---|---|---|
-| [1. Chuẩn bị project](project-setup.md) | Một `NetworkManager`, một model và một player prefab | Model và code sinh ra, `NetworkObject`, `NetworkBehaviour`, state, RPC |
+| [1. Chuẩn bị project](project-setup.md) | Một `NetworkManager`, một script player và một player prefab | `NetworkObject`, `NetworkBehaviour`, field state, RPC, code sinh ra |
 | [2. Khởi động server](server.md) | Một launcher khởi động server và spawn một player cho mỗi client | `ServerManager`, event kết nối, spawn, dedicated server |
 | [3. Kết nối client](clients.md) | Client và host | `ClientManager`, kết nối lại, host mode |
 

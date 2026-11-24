@@ -66,12 +66,12 @@ Unity bỏ qua thư mục có tên kết thúc bằng `~`, nên `Server~` bên t
 | `EnableDefaultCompileItems` false | Project tự liệt kê mã nguồn của nó, nên không lấy nhầm script của project Unity |
 | `Core` | Thư mục của package. Điều kiện cho phép truyền thư mục khác bằng `-p:Core=<folder>` |
 | `Runtime/Core/**` và `Standalone~/**` | Tầng 1 và backend console, dưới dạng mã nguồn |
-| Models và Generated | Model của bạn và codec, adapter, hằng số `FomoxaPrefabs` và `FomoxaScenes` được sinh ra |
+| Models và Generated | Model của bạn, các model sinh ra từ behaviour của bạn trong `RpcModels/` và `StateModels/`, codec và adapter được sinh ra, cùng hằng số `FomoxaPrefabs` và `FomoxaScenes` |
 | `*.fomoxascene` | Các scene file, copy vào thư mục `Scenes` cạnh file chạy |
 | `Fomoxa.Attributes`, `Fomoxa.Net`, `Fomoxa.Net.WebSockets` | Các DLL đi kèm, tham chiếu từ package |
 | `BouncyCastle.Cryptography` | Gói NuGet của DLL BouncyCastle trong `Runtime/Plugins`, cùng phiên bản; UDP mã hoá và TLS phía client dùng nó |
 
-File `FomoxaUnityRegistration.cs` được sinh ra sẽ biên dịch thành rỗng bên ngoài Unity, nên chương trình console tự gọi `FomoxaAdapters.RegisterAll`, như trang sau cho thấy. Model dùng type của Unity như `UnityEngine.Vector3`, cùng codec của chúng trong `UnityCodecs/`, không biên dịch được khi không có Unity. Hãy cho các model mà server console cần dùng field thông thường.
+File `FomoxaUnityRegistration.cs` được sinh ra sẽ biên dịch thành rỗng bên ngoài Unity, nên chương trình console tự gọi `FomoxaAdapters.RegisterAll`, như trang sau cho thấy. Model dùng type của Unity như `UnityEngine.Vector3`, cùng codec của chúng trong `UnityCodecs/`, không biên dịch được khi không có Unity. Model sinh ra có tham số RPC hoặc field state mang type của Unity cũng vậy. Hãy cho các model, tham số và field mà server console cần dùng type thông thường.
 
 ## Code game dùng chung với Unity <a href="#game-code-shared-with-unity" id="game-code-shared-with-unity"></a>
 
@@ -85,7 +85,7 @@ Code như vậy không được dùng `UnityEngine` và phải viết bằng C# 
 
 ## RPC khai báo bằng attribute <a href="#rpcs-declared-with-attributes" id="rpcs-declared-with-attributes"></a>
 
-Source generator cho RPC xử lý `EntityBehaviour` cũng như `NetworkBehaviour`. Để dùng `[ServerRpc]` và `[ClientRpc]` trong project console, hãy tham chiếu nó như một analyzer:
+Source generator cho RPC xử lý `EntityBehaviour` cũng như `NetworkBehaviour`. Trên một `EntityBehaviour`, RPC không nhận đối số nào hoặc nhận đúng một model, như liệt kê trong [tham chiếu attribute](../reference/attributes.md#serverrpcattribute). Để dùng `[ServerRpc]` và `[ClientRpc]` trong project console, hãy tham chiếu nó như một analyzer:
 
 ```xml
 <ItemGroup>
@@ -93,7 +93,7 @@ Source generator cho RPC xử lý `EntityBehaviour` cũng như `NetworkBehaviour
 </ItemGroup>
 ```
 
-Nếu không, hãy đăng ký RPC trong `OnRegisterRpcs`, như mô tả trong [RPC](../messaging/rpc.md).
+Nếu không, hãy đăng ký RPC trong `OnRegisterRpcs`, như trang [runtime](runtime.md) làm.
 
 ## Build và chạy <a href="#building-and-running" id="building-and-running"></a>
 
@@ -101,6 +101,6 @@ Nếu không, hãy đăng ký RPC trong `OnRegisterRpcs`, như mô tả trong [R
 dotnet run --project Server~ -c Release
 ```
 
-Khi package nằm ở chỗ khác, hãy truyền thư mục của nó: `dotnet run --project Server~ -c Release -p:Core=/path/to/com.fomoxa.networking`. Mỗi lần model hoặc scene thay đổi trong Unity, hãy để Editor sinh code và xuất scene file, rồi build lại project console; server và client build từ model khác nhau sẽ thất bại ở handshake với `SchemaConflict`.
+Khi package nằm ở chỗ khác, hãy truyền thư mục của nó: `dotnet run --project Server~ -c Release -p:Core=/path/to/com.fomoxa.networking`. Mỗi lần model hoặc scene thay đổi trong Unity, hãy để Editor sinh code và xuất scene file, rồi build lại project console; server và client có model khác nhau ở chỗ khác ngoài các field thêm vào cuối sẽ thất bại ở handshake với `SchemaConflict`.
 
 Trang [runtime](runtime.md) viết `Program.cs`.

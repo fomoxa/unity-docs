@@ -1,30 +1,51 @@
 # Input
 
-Input model mang những gì người chơi của owner đã làm trong một tick. Package thu thập nó trên client của owner mỗi tick và gửi tới server kèm số tick. Callback `apply` của bạn chạy với input đó trên server khi tick ấy tới, và chạy ngay trên client của owner nếu client đang dự đoán.
+Field input mang những gì người chơi của owner đã làm trong một tick. Package thu thập chúng trên client của owner mỗi tick và gửi tới server kèm số tick. `OnApplyInput` của bạn chạy với chúng trên server khi tick ấy tới, và chạy ngay trên client của owner nếu client đang dự đoán.
 
-## Đăng ký <a href="#registering" id="registering"></a>
+## Khai báo <a href="#declaring" id="declaring"></a>
 
 ```csharp
-protected override void OnRegisterInput(NetworkInput input)
+using Fomoxa.Networking;
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed partial class Walker : NetworkBehaviour
 {
-    input.Use(MoveInputNetAdapter.Instance, Gather, Apply);
-    input.Reconcile(MoveStateNetAdapter.Instance, Capture, Restore, Matches);
+    [NetworkInput]
+    private float x;
+
+    [NetworkInput]
+    private float z;
+
+    protected override void OnGatherInput()
+    {
+        x = Input.GetAxisRaw("Horizontal");
+        z = Input.GetAxisRaw("Vertical");
+    }
+
+    protected override void OnApplyInput(InputContext context)
+    {
+        transform.position += new Vector3(x, 0f, z) * 0.1f;
+    }
 }
 ```
 
-`NetworkInput.Use<T>(codec, gather, apply)` nhận hai callback. `gather(T input)` điền input của tick hiện tại, còn `apply(T input, InputContext context)` chạy tick với input đó.
+Field input là một field instance không phải `readonly`, và có thể là private. Type của field quyết định cách nó được gửi, như với [field state](../synchronization/state.md#state-fields), còn `[NetworkInput("...")]` cho nó một wire type. Behaviour có field input phải override cả `OnGatherInput` lẫn `OnApplyInput`, và class phải là `partial`.
 
-Một behaviour có nhiều nhất một input model. `Use` ném `HandlerRegistrationException` khi bị gọi hai lần, hoặc khi `NetworkManager` dùng timing mode Variable.
+Package gom các field input của một class, kể cả của các class cha, vào một model mang tên class theo sau là `Input`, ở đây là `WalkerInput`, trong thư mục con `StateModels` của Generated Folder. Đặt tên khác cho model bằng `[NetworkInputModel("...")]` trên class. Như với state, Play mode và build bị chặn chừng nào model còn thiếu hoặc cũ, và thêm một field sau field cuối cùng vẫn giữ được kết nối với bản build cũ, như trang [state](../synchronization/state.md#changing-the-fields) giải thích. Khi `NetworkManager` dùng timing mode Variable, object ném `HandlerRegistrationException` lúc spawn.
 
-Không có reconcile model, owner chỉ gửi input mà không dự đoán, nên object di chuyển khi kết quả của server tới, như mọi object khác. [Reconciliation](reconciliation.md) mô tả reconcile model.
+Không có [field `[NetworkReconcile]`](reconciliation.md), owner chỉ gửi input mà không dự đoán, nên object di chuyển khi kết quả của server tới, như mọi object khác.
 
 ## Gather <a href="#gather" id="gather"></a>
 
-`gather` chạy mỗi tick một lần trên client của owner, cho `TimeManager.PredictionTick`, khi client đang kết nối tới server ở xa và đồng hồ đã đồng bộ. Trên host nó chạy trên server, cho các object mà client của host sở hữu. Package truyền cùng một instance mỗi tick, nên hãy đặt mọi field mỗi lần.
+`OnGatherInput` chạy mỗi tick một lần trên client của owner, cho `TimeManager.PredictionTick`, khi client đang kết nối tới server ở xa và đồng hồ đã đồng bộ. Trên host nó chạy trên server, cho các object mà client của host sở hữu. Sau khi nó trả về, package chép các field input. Lần replay ghi các input cũ hơn vào cùng các field đó, nên hãy đặt mọi field input mỗi lần.
 
-Input xảy ra giữa các tick, như một nút được bấm trong một frame, được bắt trong `Update` và chuyển sang trong `gather`. Ví dụ sau thêm một field `bool` tên `Jump` (wire type `bool`) vào model `MoveInput` từ trang [tổng quan](overview.md):
+Input xảy ra giữa các tick, như một nút được bấm trong một frame, được bắt trong `Update` và chuyển sang trong `OnGatherInput`. Ví dụ sau thêm một field input `jump` vào `PredictedMover` từ trang [tổng quan](overview.md):
 
 ```csharp
+[NetworkInput]
+private bool jump;
+
 private bool jumpPressed;
 
 private void Update()
@@ -35,29 +56,29 @@ private void Update()
     }
 }
 
-private void Gather(MoveInput input)
+protected override void OnGatherInput()
 {
-    input.X = Input.GetAxisRaw("Horizontal");
-    input.Z = Input.GetAxisRaw("Vertical");
-    input.Jump = jumpPressed;
+    x = Input.GetAxisRaw("Horizontal");
+    z = Input.GetAxisRaw("Vertical");
+    jump = jumpPressed;
     jumpPressed = false;
 }
 ```
 
 ## Apply <a href="#apply" id="apply"></a>
 
-`apply` chạy trong bốn tình huống:
+Trước mỗi lần gọi `OnApplyInput`, package ghi input của tick đó vào các field input. `OnApplyInput` chạy trong bốn tình huống:
 
 | Ở đâu | Khi nào | `context.Replaying` |
 |---|---|---|
 | Server | Mỗi tick, với object có owner, bằng input của tick đó | false |
-| Client của owner, khi đang dự đoán | Ngay sau `gather` | false |
+| Client của owner, khi đang dự đoán | Ngay sau `OnGatherInput` | false |
 | Client của owner, trong lúc reconciliation | Lại một lần cho mỗi tick sau tick được sửa | true |
 | Host | Mỗi tick, với input vừa thu thập của host | false |
 
-Server không gọi `apply` cho object do chính nó sở hữu, cũng không gọi trước khi input đầu tiên từ owner tới.
+Server không gọi `OnApplyInput` cho object do chính nó sở hữu, cũng không gọi trước khi input đầu tiên từ owner tới.
 
-`InputContext` cho `apply` biết thêm về input nó nhận:
+`InputContext` cho `OnApplyInput` biết thêm về input trong các field:
 
 | Property | Ý nghĩa |
 |---|---|
@@ -69,17 +90,17 @@ Server không gọi `apply` cho object do chính nó sở hữu, cũng không g�
 `Replaying` cho phép bỏ qua các hiệu ứng đã hiển thị, như âm thanh và particle, còn `Repeated` cho phép tránh lặp lại các hành động một lần:
 
 ```csharp
-private void Apply(MoveInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
-    Move(input.X, input.Z, (float)manager.TimeManager.TickDelta);
-    if (input.Jump && !context.Repeated)
+    Move(x, z, (float)manager.TimeManager.TickDelta);
+    if (jump && !context.Repeated)
     {
         Jump(playEffects: !context.Replaying);
     }
 }
 ```
 
-Exception ném ra trong `apply` hoặc `gather` được log và không ngắt kết nối ai.
+Exception ném ra trong `OnApplyInput` hoặc `OnGatherInput` được log và không ngắt kết nối ai.
 
 ## Gửi <a href="#sending" id="sending"></a>
 
@@ -97,6 +118,6 @@ Client cố gắng để mỗi input tới sớm Input Buffer tick (mặc địn
 
 ## Kiểm tra input <a href="#validating-input" id="validating-input"></a>
 
-Server áp dụng bất cứ gì owner gửi lên, nên hãy kẹp hoặc từ chối giá trị trong `apply`, ví dụ bằng `Vector3.ClampMagnitude` trên một hướng, để một client bị sửa đổi không thể di chuyển nhanh hơn mức cho phép. Vì cùng `apply` chạy trên client của owner, một client trung thực sẽ dự đoán ra đúng kết quả đã kẹp.
+Server áp dụng bất cứ gì owner gửi lên, nên hãy kẹp hoặc từ chối giá trị trong `OnApplyInput`, ví dụ bằng `Vector3.ClampMagnitude` trên một hướng, để một client bị sửa đổi không thể di chuyển nhanh hơn mức cho phép. Vì cùng `OnApplyInput` chạy trên client của owner, một client trung thực sẽ dự đoán ra đúng kết quả đã kẹp.
 
-Input làm việc cùng [reconciliation](reconciliation.md) và đồng hồ tick mô tả trong [tick và thời gian](../concepts/tick.md). [NetworkBehaviour](../objects/network-behaviour.md) liệt kê các hook đăng ký.
+Input làm việc cùng [reconciliation](reconciliation.md) và đồng hồ tick mô tả trong [tick và thời gian](../concepts/tick.md). [NetworkBehaviour](../objects/network-behaviour.md) liệt kê các method mà một behaviour override.

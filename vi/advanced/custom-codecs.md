@@ -27,7 +27,7 @@ public class Status
 
 ## Type của Unity <a href="#unity-types" id="unity-types"></a>
 
-Property của model có thể dùng trực tiếp `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32` và `Rect`. Với mỗi type trong số này mà một model dùng, package ghi một codec nhỏ tên `<Type><Codec>Codec` vào `<Generated Folder>/UnityCodecs/`, codec này ghi lần lượt các field của type:
+Property của model, tham số RPC và field state, field input có thể dùng trực tiếp `Vector2`, `Vector3`, `Vector4`, `Vector2Int`, `Vector3Int`, `Quaternion`, `Color`, `Color32` và `Rect`. Với mỗi type trong số này mà một model dùng, package ghi một codec nhỏ tên `<Type><Codec>Codec` vào `<Generated Folder>/UnityCodecs/`, codec này ghi lần lượt các field của type:
 
 | Type | Field |
 |---|---|

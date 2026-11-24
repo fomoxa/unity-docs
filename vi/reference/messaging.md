@@ -23,7 +23,7 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 | `static FomoxaRegistry Default` | Registry mà phần đăng ký sinh ra điền vào khi player khởi động, và `NetworkManager` dùng theo mặc định |
 | `Schema Schema` | Schema được sinh |
 | `MessageChannels Channels` | Channel của mọi message id reliable |
-| `RpcMessageIds Rpcs` | Message id của các RPC không tham số |
+| `RpcMessageIds Rpcs` | Message id của các model RPC được sinh |
 | `void SetSchema(Schema schema)` | Đặt schema |
 | `void SetCodec<T>(IMessageCodec<T> codec)` | Đăng ký codec cho một type |
 | `IMessageCodec<T> Codec<T>()` | Codec đã đăng ký cho một type, hoặc null |
@@ -39,7 +39,7 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 | Member | Mô tả |
 |---|---|
 | `int Count` | Số RPC đã khai báo |
-| `void Set(string type, string method, uint messageId)` | Khai báo message id của một RPC không tham số theo tên type đầy đủ và tên method |
+| `void Set(string type, string method, uint messageId)` | Khai báo message id của model sinh ra của một RPC theo tên type đầy đủ và tên method |
 | `bool TryGet(Type type, string method, out uint messageId)` | Tìm id cho một type hoặc các base type của nó |
 
 ## MessageChannels <a href="#messagechannels" id="messagechannels"></a>

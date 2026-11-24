@@ -1,6 +1,6 @@
 # NetworkBehaviour
 
-`NetworkBehaviour` is the base class for networked scripts. It is a `MonoBehaviour` that belongs to the `NetworkObject` on its own GameObject or on one of its parents, and it gives your script lifecycle callbacks for the server and the client along with the places to register RPCs, state and input.
+`NetworkBehaviour` is the base class for networked scripts. It is a `MonoBehaviour` that belongs to the `NetworkObject` on its own GameObject or on one of its parents, and it gives your script lifecycle callbacks for the server and the client. RPCs, state and input are declared on it with attributes.
 
 ## Basic usage
 
@@ -25,7 +25,7 @@ public sealed partial class Door : NetworkBehaviour
     private void Knock(ulong peerId)
     {
         Debug.Log($"peer {peerId} knocked");
-        SendObserversRpc(nameof(PlayKnock));
+        SendPlayKnockObserversRpc();
     }
 
     [ClientRpc]
@@ -34,11 +34,11 @@ public sealed partial class Door : NetworkBehaviour
         GetComponent<AudioSource>().Play();
     }
 
-    public void RequestKnock() => SendServerRpc(nameof(Knock));
+    public void RequestKnock() => SendKnockServerRpc();
 }
 ```
 
-A class that declares RPCs with attributes must be `partial`, and so must every class that contains it, because the package generates the code that registers those RPCs.
+A class that declares RPCs, state or input must be `partial`, and so must every class that contains it, because the package generates the code that registers them and the RPCs' send methods.
 
 ## Lifecycle callbacks
 
@@ -57,28 +57,37 @@ Override these callbacks to react to the object's network lifecycle:
 
 [Lifecycle](../concepts/lifecycle.md) shows the order in which they run.
 
-## Registration hooks
+## Declarations
 
-The package calls these hooks once per component instance, the first time its object spawns on the server or on a client, before `OnStartServer` or `OnStartClient`:
-
-| Hook | Register here | Guide |
+| Declare | With | Guide |
 |---|---|---|
-| `OnRegisterRpcs(NetworkRpcs rpc)` | RPC handlers written by hand | [RPCs](../messaging/rpc.md#registering-by-hand) |
-| `OnRegisterState(NetworkState state)` | The behaviour's state model | [State](../synchronization/state.md) |
-| `OnRegisterInput(NetworkInput input)` | The behaviour's input model and reconcile model | [Input](../prediction/input.md) |
+| RPCs | `[ServerRpc]` and `[ClientRpc]` on methods | [RPCs](../messaging/rpc.md) |
+| State | `[NetworkState]` on fields | [State](../synchronization/state.md) |
+| Collections | `[NetworkState(Index = n)]` on `readonly` collection fields | [Collections](../synchronization/collections.md) |
+| Input and predicted state | `[NetworkInput]` and `[NetworkReconcile]` on fields | [Input](../prediction/input.md), [reconciliation](../prediction/reconciliation.md) |
+
+The package registers these once per component instance, the first time its object spawns on the server or on a client, before `OnStartServer` or `OnStartClient`.
+
+A behaviour with `[NetworkInput]` fields overrides the methods that fill and read them:
+
+| Method | Runs |
+|---|---|
+| `OnGatherInput()` | On the owner's client, once per tick; write the input fields here |
+| `OnApplyInput(InputContext context)` | On the server and on the predicting client, after the input fields were written; simulate from them here |
+| `OnCaptureState()` | Before the `[NetworkReconcile]` fields are copied; optional |
+| `OnRestoreState()` | After the `[NetworkReconcile]` fields were restored from the server; optional |
 
 ## Sending RPCs
 
+For each RPC the package generates `protected` send methods, named after the RPC:
+
 | Method | Side | Sends to | Returns |
 |---|---|---|---|
-| `SendServerRpc<T>(codec, value)` | Client | The server | `SendResult` |
-| `SendServerRpc(rpcName)` | Client | The server | `SendResult` |
-| `SendObserversRpc<T>(codec, value)` | Server | Every observer of the object | Number of peers it was queued for |
-| `SendObserversRpc(rpcName)` | Server | Every observer of the object | Number of peers |
-| `SendTargetRpc<T>(peerId, codec, value)` | Server | One observer | `SendResult`, `NotObserver` when the peer does not observe |
-| `SendTargetRpc(peerId, rpcName)` | Server | One observer | `SendResult` |
+| `Send<Method>ServerRpc(...)` | Client | The server | `SendResult` |
+| `Send<Method>ObserversRpc(...)` | Server | Every observer of the object | Number of peers it was queued for |
+| `Send<Method>TargetRpc(peerId, ...)` | Server | One observer | `SendResult`, `NotObserver` when the peer does not observe |
 
-These methods are `protected`. When the object is not spawned on the sending side, they throw `InvalidOperationException` with `<name> is not spawned on the server` or `on the client`.
+They call `SendServerRpc`, `SendObserversRpc` and `SendTargetRpc`, which take the RPC's name and are `protected` as well; [RPCs](../messaging/rpc.md#sending-by-name) describes them. When the object is not spawned on the sending side, the send methods throw `InvalidOperationException` with `<name> is not spawned on the server` or `on the client`.
 
 ## Properties
 
@@ -92,6 +101,6 @@ These methods are `protected`. When the object is not spawned on the sending sid
 
 ## Limitations
 
-A behaviour can register one state model, up to 256 [collections](../synchronization/collections.md) and one input model; an object that needs more uses several behaviours. On each side a message id belongs to one behaviour type, so using the same model as a server RPC of two behaviour types, or as both an RPC and a state model, throws `HandlerRegistrationException` when the second object spawns. Because the registration hooks run once per component instance, a scene object that is despawned and spawned again keeps its first registration.
+A behaviour has one state model, made of all its state fields, up to 256 [collections](../synchronization/collections.md) and one input model; an object that needs more uses several behaviours. Because registration runs once per component instance, a scene object that is despawned and spawned again keeps its first registration.
 
-The behaviour belongs to a [NetworkObject](network-object.md). The guides on [RPCs](../messaging/rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md) explain what to register in each hook, and the [NetworkBehaviour reference](../reference/network-object.md#networkbehaviour) lists every member.
+The behaviour belongs to a [NetworkObject](network-object.md). The guides on [RPCs](../messaging/rpc.md), [state](../synchronization/state.md) and [input](../prediction/input.md) explain each declaration, and the [NetworkBehaviour reference](../reference/network-object.md#networkbehaviour) lists every member.

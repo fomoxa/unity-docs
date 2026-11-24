@@ -69,7 +69,7 @@ Manager đọc các field này một lần, trong `Awake`. Thay đổi chúng tr
 | Close Timeout Seconds | 1 | Thời gian server dành để gửi nốt hàng đợi của một peer bị kick trước khi vẫn đóng kết nối |
 | Log Send Dropped | bật | Log cảnh báo khi một message trong queue không gửi được |
 | Log Receive Dropped | bật | Log cảnh báo khi một bundle nhận được không đọc được |
-| State Mark Warning Seconds | 2 | Thời gian một state đăng ký với `onlyWhenDirty` được phép khác với lần gửi cuối mà không có `SetStateDirty()`, trước khi server log cảnh báo. 0 tắt phép kiểm. Chỉ Editor và bản build Development chạy nó. Xem [debug](../advanced/debugging.md#forgotten-state-marks). |
+| State Mark Warning Seconds | 2 | Thời gian một state có `OnlyWhenDirty` được phép khác với lần gửi cuối mà không có `SetStateDirty()`, trước khi server log cảnh báo. 0 tắt phép kiểm. Chỉ Editor và bản build Development chạy nó. Xem [debug](../advanced/debugging.md#forgotten-state-marks). |
 
 ### Kết nối <a href="#connection" id="connection"></a>
 
@@ -136,7 +136,7 @@ Editor cũng tự gán cả hai danh sách cho mọi `NetworkManager` nằm tron
 - Trong lúc build player, nên bản build luôn có danh sách mới nhất.
 - Khi bạn vào Play Mode. Lần gán này tới sau khi `Awake` của manager đã chạy, nên nó không đăng ký gì trong phiên Play Mode đó.
 
-Hãy gán cả hai danh sách trong scene, như trong [tutorial](../getting-started/tutorial/project-setup.md#5-give-the-networkmanager-the-generated-lists), để Play Mode trong Editor có chúng. Một `NetworkManager` mà bạn tạo từ prefab lúc chạy không bao giờ được gán tự động, nên hãy đặt danh sách lên chính prefab đó.
+Hãy gán cả hai danh sách trong scene, như trong [tutorial](../getting-started/tutorial/project-setup.md#4-give-the-networkmanager-the-generated-lists), để Play Mode trong Editor có chúng. Một `NetworkManager` mà bạn tạo từ prefab lúc chạy không bao giờ được gán tự động, nên hãy đặt danh sách lên chính prefab đó.
 
 ## Nhiều manager <a href="#several-managers" id="several-managers"></a>
 

@@ -2,7 +2,7 @@
 
 A simulation is deterministic when the same starting state and the same input always produce the same result. Networked games rely on determinism to different degrees depending on the feature. The package provides some levels of it and not others.
 
-<figure><img src="../.gitbook/assets/diagrams/determinism.svg" alt="Six rows. Protocol, input and tick are provided by the package. Game logic in apply() is your code's responsibility. Physics is not provided, because Unity physics does not promise identical results. Identical state is not required, because matches() decides how close is close enough. Lockstep, match recording and replay, deterministic random numbers and state hashing are not in the package."><figcaption><p>Which levels of determinism the package provides.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/determinism.svg" alt="Six rows. Protocol, input and tick are provided by the package. Game logic in OnApplyInput is your code's responsibility. Physics is not provided, because Unity physics does not promise identical results. Identical state is not required, because the Tolerance of the reconcile fields decides how close is close enough. Lockstep, match recording and replay, deterministic random numbers and state hashing are not in the package."><figcaption><p>Which levels of determinism the package provides.</p></figcaption></figure>
 
 A lockstep game needs every level to hold bit for bit on every platform. Client-side prediction, which is what this package implements, only needs them to hold closely enough that corrections are rare.
 
@@ -13,15 +13,15 @@ A lockstep game needs every level to hold bit for bit on every platform. Client-
 | Deterministic protocol | Every message has a fixed layout given by the generated schema, and the client and the server compare schemas during the handshake. |
 | Deterministic input | Input is tied to a tick. The server applies the input of tick N at its tick N. When the input for a tick is missing, it repeats the last input and marks it with `InputContext.Repeated`. |
 | Deterministic tick | Ticks have a fixed length, `TimeManager.TickDelta`, and the client and the server number them on the same scale. Replays use the same tick length. |
-| Deterministic game logic | Your responsibility. The package calls `apply` with the same input on both sides, but cannot check what `apply` reads. |
+| Deterministic game logic | Your responsibility. The package calls `OnApplyInput` with the same input on both sides, but cannot check what `OnApplyInput` reads. |
 | Deterministic physics | Not provided. The package steps Unity's physics engines, which do not promise identical results across machines. |
-| Deterministic state | Not required. The reconcile `matches` function decides how close the client's state must be to the server's. |
+| Deterministic state | Not required. The `Tolerance` of the reconcile fields decides how close the client's state must be to the server's. |
 
 ## Prediction does not need bit-exact results
 
-The client compares its predicted state with the server's state for the same tick. When they differ, it restores the server's state and replays its newer input, so a small difference costs one correction and the game stays in sync. By default the comparison is exact on the encoded bytes; for floating-point values, pass a `matches` function with tolerances, as shown in [reconciliation](../prediction/reconciliation.md).
+The client compares its predicted state with the server's state for the same tick. When they differ, it restores the server's state and replays its newer input, so a small difference costs one correction and the game stays in sync. By default the comparison is exact on the encoded bytes; for floating-point values, give the reconcile fields a `Tolerance`, as shown in [reconciliation](../prediction/reconciliation.md#comparing).
 
-To keep corrections rare, `apply` should read only the input it receives, the behaviour's own state (which the reconcile model captures and restores) and `TimeManager.TickDelta`. Reading other objects, `Time.deltaTime`, unseeded random numbers, or data that only one side has makes the two sides differ, and reconciliation then corrects the difference every time it happens. `NetworkBehaviour.ReconcileCount` counts the corrections of a behaviour, which helps you track down such a dependency.
+To keep corrections rare, `OnApplyInput` should read only the input fields, the behaviour's own state (which the reconcile fields capture and restore) and `TimeManager.TickDelta`. Reading other objects, `Time.deltaTime`, unseeded random numbers, or data that only one side has makes the two sides differ, and reconciliation then corrects the difference every time it happens. `NetworkBehaviour.ReconcileCount` counts the corrections of a behaviour, which helps you track down such a dependency.
 
 ## Physics is approximate
 

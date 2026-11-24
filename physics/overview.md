@@ -23,7 +23,7 @@ From then on, the manager does four things each tick:
 3. It steps the 3D and 2D physics world of every loaded scene once, by `TimeManager.TickDelta`.
 4. It queries contacts for the [contact components](contacts.md).
 
-`FixedUpdate` still runs at Unity's fixed timestep, but physics no longer advances there, so forces and velocity changes that should be networked belong in `apply` or a tick event.
+`FixedUpdate` still runs at Unity's fixed timestep, but physics no longer advances there, so forces and velocity changes that should be networked belong in `OnApplyInput` or a tick event.
 
 Set the tick rate to the rate your game's physics was tuned for. A project tuned for a 0.02 s fixed timestep, for example, matches 50 ticks per second.
 

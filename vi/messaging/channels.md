@@ -31,10 +31,11 @@ Phần đăng ký sinh ra ghi các channel vào `FomoxaRegistry.Channels`, nên 
 
 | Dùng làm | Channel |
 |---|---|
-| State model | Phải là `ReliableOrdered`; nếu không, đăng ký sẽ ném exception |
-| RPC có model | Channel của model |
-| RPC không tham số | Mặc định `ReliableOrdered`, đặt bằng property `Channel` của attribute |
-| Input model và reconcile model | Bị bỏ qua; package mang chúng bên trong các message unreliable của riêng nó |
+| Field state | `ReliableOrdered`, đặt trên model sinh ra |
+| RPC | Mặc định `ReliableOrdered`, đặt bằng property `Channel` của attribute trên model sinh ra |
+| Field input và field reconcile | Không có; package mang chúng bên trong các message unreliable của riêng nó |
+| State model của console server | Phải là `ReliableOrdered`; nếu không, đăng ký sẽ ném exception |
+| RPC có model trên console server | Channel của model |
 | Raw message | Channel của model |
 
 ## Độ tin cậy hoạt động thế nào <a href="#how-reliability-works" id="how-reliability-works"></a>

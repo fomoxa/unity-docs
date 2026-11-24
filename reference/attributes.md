@@ -28,12 +28,12 @@ These attributes come from `Fomoxa.Attributes.dll`, in the namespace `Fomoxa`, a
 
 | Property | Type | Default | Meaning |
 |---|---|---|---|
-| `Model` | `string` | `<Type><Method>` | Name of the generated model of a parameterless RPC; set with the constructor |
-| `Codec` | `string` | the model's only codec | Codec of the model argument; required when the model has several |
-| `Channel` | `Channel` | `ReliableOrdered` | Channel of a parameterless RPC |
+| `Model` | `string` | `<Type><Method>` | Name of the generated model; set with the constructor |
+| `Channel` | `Channel` | `ReliableOrdered` | Channel of the RPC |
 | `RequireOwnership` | `bool` | `true` | Only the owner may call it |
+| `Codec` | `string` | the model's only codec | On an `EntityBehaviour`, the codec of the model argument |
 
-The method can have one of the signatures `void M()`, `void M(ulong peerId)`, `void M(TModel value)` and `void M(ulong peerId, TModel value)`.
+On a `NetworkBehaviour` the method is `void M(...)` with any parameters, and a first parameter of type `ulong` receives the caller's peer id. On an `EntityBehaviour` it is `void M()`, `void M(ulong peerId)`, `void M(TModel value)` or `void M(ulong peerId, TModel value)`, and `Model` and `Channel` apply only to the first two.
 
 ## ClientRpcAttribute
 
@@ -41,19 +41,55 @@ The method can have one of the signatures `void M()`, `void M(ulong peerId)`, `v
 
 | Property | Type | Default | Meaning |
 |---|---|---|---|
-| `Model` | `string` | `<Type><Method>` | Name of the generated model of a parameterless RPC |
-| `Codec` | `string` | the model's only codec | Codec of the model argument |
-| `Channel` | `Channel` | `ReliableOrdered` | Channel of a parameterless RPC |
+| `Model` | `string` | `<Type><Method>` | Name of the generated model |
+| `Channel` | `Channel` | `ReliableOrdered` | Channel of the RPC |
+| `Codec` | `string` | the model's only codec | On an `EntityBehaviour`, the codec of the model argument |
 
-The method can have the signature `void M()` or `void M(TModel value)`.
+On a `NetworkBehaviour` the method is `void M(...)` with any parameters. On an `EntityBehaviour` it is `void M()` or `void M(TModel value)`.
 
-## NetworkRpcAttribute
+## NetworkTypeAttribute
 
-`[NetworkRpc]` or `[NetworkRpc("ModelName")]`, in the namespace `Fomoxa.Networking`, goes on a method without parameters. It generates the model of a parameterless RPC without generating its registration, so you register the RPC yourself in `OnRegisterRpcs`.
+`[NetworkType("type")]`, in the namespace `Fomoxa.Networking`, goes on a parameter of an RPC on a `NetworkBehaviour`. The string is the wire type of the parameter, written like the argument of `[Network("type")]`, for example `"f16"` or `"Array<u32>"`.
+
+## NetworkStateAttribute
+
+`[NetworkState]` or `[NetworkState("type")]`, in the namespace `Fomoxa.Networking`, goes on an instance field of a `NetworkBehaviour`. [State](../synchronization/state.md) and [collections](../synchronization/collections.md) explain how it is used.
 
 | Property | Type | Default | Meaning |
 |---|---|---|---|
-| `Model` | `string` | `<Type><Method>` | Name of the generated model |
+| `WireType` | `string` | inferred from the field's type | Wire type of a state field; set with the constructor |
+| `OnChanged` | `string` | none | Method called on clients after a change: `void M(T previous, T current)` for a state field, the collection's callback signature for a collection |
+| `Index` | `byte` | none | Index of a collection field; required on a collection and not allowed otherwise |
+
+## NetworkStateModelAttribute
+
+`[NetworkStateModel]` or `[NetworkStateModel("ModelName")]`, in the namespace `Fomoxa.Networking`, goes on a `NetworkBehaviour` class and applies to that class only, not to derived classes.
+
+| Property | Type | Default | Meaning |
+|---|---|---|---|
+| `Model` | `string` | `<Type>State` | Name of the generated state model; set with the constructor |
+| `OnlyWhenDirty` | `bool` | `false` | The server compares the state only after `SetStateDirty()` |
+
+## NetworkInputAttribute and NetworkReconcileAttribute
+
+`[NetworkInput]` or `[NetworkInput("type")]`, and `[NetworkReconcile]` or `[NetworkReconcile("type")]`, in the namespace `Fomoxa.Networking`, go on instance fields of a `NetworkBehaviour`. [Input](../prediction/input.md) and [reconciliation](../prediction/reconciliation.md) explain how they are used.
+
+| Property | Type | Default | Meaning |
+|---|---|---|---|
+| `WireType` | `string` | inferred from the field's type | Wire type of the field; set with the constructor |
+| `Tolerance` | `float` | none | `[NetworkReconcile]` only: how far the predicted value may be from the server's, for `float`, `double`, `Vector2`, `Vector3`, `Vector4` (per component) and `Quaternion` (in degrees) |
+
+## NetworkInputModelAttribute and NetworkReconcileModelAttribute
+
+`[NetworkInputModel("ModelName")]` and `[NetworkReconcileModel("ModelName")]`, in the namespace `Fomoxa.Networking`, go on a `NetworkBehaviour` class and name its generated input model and reconcile model. Without them the names are `<Type>Input` and `<Type>Reconcile`.
+
+## NetworkRpcAttribute
+
+`[NetworkRpc]` or `[NetworkRpc("ModelName")]`, in the namespace `Fomoxa.Networking`, goes on a parameterless method of an `EntityBehaviour` whose RPC is registered by hand in `OnRegisterRpcs`. On a `NetworkBehaviour` it is the compile error `FOMOXA022`; use `[ServerRpc]` or `[ClientRpc]` there.
+
+| Property | Type | Default | Meaning |
+|---|---|---|---|
+| `Model` | `string` | `<Type><Method>` | Name of the model |
 | `Channel` | `Channel` | `ReliableOrdered` | Channel of the RPC |
 
 ## MessageAdapterAttribute
@@ -62,6 +98,6 @@ The method can have the signature `void M()` or `void M(TModel value)`.
 
 ## Rules
 
-A method carries at most one of `[NetworkRpc]`, `[ServerRpc]` and `[ClientRpc]`, and a class with `[ServerRpc]` or `[ClientRpc]` methods must be `partial`, as must every class containing it. `Model` and `Channel` apply only to RPCs without a model argument, and `Codec` only to RPCs with one. No two parameterless RPCs in the project can have the same model name.
+A method carries at most one of `[NetworkRpc]`, `[ServerRpc]` and `[ClientRpc]`, and a field at most one of `[NetworkState]`, `[NetworkInput]` and `[NetworkReconcile]`. A class with RPC methods or with such fields, its own or inherited, must be `partial`, as must every class containing it. No two RPCs in the project can have the same model name, and no two state, input or reconcile models either.
 
-[RPCs](../messaging/rpc.md#compile-errors) lists the compile errors for broken rules.
+[RPCs](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors) and [collections](../synchronization/collections.md#errors) list the compile errors for broken rules.

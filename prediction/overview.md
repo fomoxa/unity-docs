@@ -4,67 +4,29 @@ Client-side prediction lets the owner of an object apply its own input at once i
 
 ## Requirements
 
-The `NetworkManager` must use Timing Mode Tick, and the object needs a `NetworkBehaviour` that registers an input model and a reconcile model in `OnRegisterInput`. The object also needs an owner, because only the owning client predicts and the server accepts the object's input only from the owner.
+The `NetworkManager` must use Timing Mode Tick, and the object needs a `NetworkBehaviour` with `[NetworkInput]` fields and `[NetworkReconcile]` fields. The object also needs an owner, because only the owning client predicts and the server accepts the object's input only from the owner.
 
 ## A predicted character
 
-The character needs two models. The first carries the input of one tick:
-
-```csharp
-using Fomoxa;
-
-namespace MyGame.Network.Models
-{
-    [Network]
-    [Codec("net")]
-    public class MoveInput
-    {
-        [Network("f32")]
-        [Codec("net")]
-        public float X { get; set; }
-
-        [Network("f32")]
-        [Codec("net")]
-        public float Z { get; set; }
-    }
-}
-```
-
-The second holds the state that the client compares with the server's after each tick:
-
-```csharp
-using Fomoxa;
-using UnityEngine;
-
-namespace MyGame.Network.Models
-{
-    [Network]
-    [Codec("net")]
-    public class MoveState
-    {
-        [Network("Vector3")]
-        [Codec("net")]
-        public Vector3 Position { get; set; }
-    }
-}
-```
-
-Neither model needs `[NetworkChannel]`, because the package carries input and reconcile states inside its own messages.
-
-The behaviour ties them together:
+The behaviour keeps the input of one tick in `[NetworkInput]` fields, and the state that the client compares with the server's after each tick in `[NetworkReconcile]` fields:
 
 ```csharp
 using Fomoxa.Networking;
 using Fomoxa.Unity;
-using Generated;
-using MyGame.Network.Models;
 using UnityEngine;
 
-public sealed class PredictedMover : NetworkBehaviour
+public sealed partial class PredictedMover : NetworkBehaviour
 {
-    private const float Tolerance = 0.01f;
-
     [SerializeField] private float speed = 5f;
+
+    [NetworkInput]
+    private float x;
+
+    [NetworkInput]
+    private float z;
+
+    [NetworkReconcile(Tolerance = 0.01f)]
+    private Vector3 position;
 
     private NetworkManager manager;
 
@@ -73,40 +35,33 @@ public sealed class PredictedMover : NetworkBehaviour
         manager = FindAnyObjectByType<NetworkManager>();
     }
 
-    protected override void OnRegisterInput(NetworkInput input)
+    protected override void OnGatherInput()
     {
-        input.Use(MoveInputNetAdapter.Instance, Gather, Apply);
-        input.Reconcile(MoveStateNetAdapter.Instance, Capture, Restore, Matches);
+        x = Input.GetAxisRaw("Horizontal");
+        z = Input.GetAxisRaw("Vertical");
     }
 
-    private void Gather(MoveInput input)
+    protected override void OnApplyInput(InputContext context)
     {
-        input.X = Input.GetAxisRaw("Horizontal");
-        input.Z = Input.GetAxisRaw("Vertical");
-    }
-
-    private void Apply(MoveInput input, InputContext context)
-    {
-        Vector3 direction = Vector3.ClampMagnitude(new Vector3(input.X, 0f, input.Z), 1f);
+        Vector3 direction = Vector3.ClampMagnitude(new Vector3(x, 0f, z), 1f);
         transform.position += direction * speed * (float)manager.TimeManager.TickDelta;
     }
 
-    private void Capture(MoveState state)
+    protected override void OnCaptureState()
     {
-        state.Position = transform.position;
+        position = transform.position;
     }
 
-    private void Restore(MoveState state)
+    protected override void OnRestoreState()
     {
-        transform.position = state.Position;
+        transform.position = position;
     }
-
-    private static bool Matches(MoveState server, MoveState predicted) =>
-        Vector3.Distance(server.Position, predicted.Position) <= Tolerance;
 }
 ```
 
-The example reads the legacy Input Manager; with the Input System package, read your input action in `Gather` instead.
+The class must be `partial`. The package gathers the input fields into a model named `PredictedMoverInput` and the reconcile fields into `PredictedMoverReconcile`, both in the `StateModels` subfolder of the Generated Folder, and carries them inside its own messages. `Tolerance` lets each component of `position` differ by up to 0.01 before the client corrects itself.
+
+The example reads the legacy Input Manager; with the Input System package, read your input action in `OnGatherInput` instead.
 
 Put `NetworkObject`, `NetworkTransform` and `PredictedMover` on the player prefab, and spawn it with the player's peer id as its owner.
 
@@ -114,9 +69,9 @@ Put `NetworkObject`, `NetworkTransform` and `PredictedMover` on the player prefa
 
 | Who | What |
 |---|---|
-| Owner's client | Calls `Gather` for its prediction tick and sends the input together with the previous inputs. Once it predicts, it also calls `Apply` with that input and records the state from `Capture`. It starts predicting when the first state from the server arrives. |
-| Server | When its tick reaches the input's tick, calls `Apply` with it, then `Capture`, and sends the captured state to the owner. |
-| Owner's client | When the server's state for a tick arrives, compares it with its record of that tick using `Matches`. On a mismatch it calls `Restore` with the server's state and calls `Apply` again for every later tick it has input for. |
+| Owner's client | Calls `OnGatherInput` for its prediction tick, copies the input fields and sends them together with the previous inputs. Once it predicts, it also calls `OnApplyInput` and records the reconcile fields after `OnCaptureState`. It starts predicting when the first state from the server arrives. |
+| Server | When its tick reaches the input's tick, writes that input into the input fields and calls `OnApplyInput`, then `OnCaptureState`, and sends the reconcile fields to the owner. |
+| Owner's client | When the server's state for a tick arrives, compares it with its record of that tick, field by field within `Tolerance`. On a mismatch it writes the server's state into the reconcile fields, calls `OnRestoreState`, and calls `OnApplyInput` again for every later tick it has input for. |
 | Other clients | Do nothing with input. They see the object through `NetworkTransform`. |
 
 ## Expected result

@@ -4,9 +4,9 @@ A collection is a list, a dictionary or a set held by a `NetworkBehaviour` and k
 
 ## When to use it
 
-Use a collection for data that grows and shrinks: an inventory, the players in a room, a scoreboard. A [state model](state.md) with an `Array` field is sent in full when the array changes length, so adding one item to a list of 500 sends all 500. A collection sends the one item.
+Use a collection for data that grows and shrinks: an inventory, the players in a room, a scoreboard. A [state field](state.md) holding an array is sent in full when the array changes length, so adding one item to a list of 500 sends all 500. A collection sends the one item.
 
-Values that change together and keep their size, such as health or a position in a match, stay in a state model, which is cheaper for them.
+Values that change together and keep their size, such as health or a position in a match, stay in state fields, which are cheaper for them.
 
 ## Basic usage
 
@@ -32,30 +32,27 @@ namespace MyGame.Network.Models
 }
 ```
 
-The behaviour keeps its collections and registers each one in `OnRegisterState`, under an index of your choice:
+The behaviour keeps each collection in a `readonly` field marked `[NetworkState]` with an index of your choice:
 
 ```csharp
 using System.Collections.Generic;
 using Fomoxa.Networking;
 using Fomoxa.Unity;
-using Generated;
 using MyGame.Network.Models;
 using UnityEngine;
 
-public sealed class Inventory : NetworkBehaviour
+public sealed partial class Inventory : NetworkBehaviour
 {
+    [NetworkState(Index = 0, OnChanged = nameof(OnItemsChanged))]
     private readonly NetworkList<Item> items = new NetworkList<Item>();
+
+    [NetworkState(Index = 1)]
     private readonly NetworkDictionary<string, int> scores = new NetworkDictionary<string, int>();
+
+    [NetworkState(Index = 2)]
     private readonly NetworkSet<ulong> visitors = new NetworkSet<ulong>();
 
     public IReadOnlyList<Item> Items => items;
-
-    protected override void OnRegisterState(NetworkState state)
-    {
-        state.Use(0, items, ItemNetAdapter.Instance, OnItemsChanged);
-        state.Use(1, scores);
-        state.Use(2, visitors);
-    }
 
     public void Pick(uint id)
     {
@@ -76,22 +73,26 @@ public sealed class Inventory : NetworkBehaviour
 
 Call `Pick` and `UseOne` on the server. At the end of that tick each observer receives the operations, applies them to its own `items` and calls `OnItemsChanged` once per operation.
 
-## Registering a collection
+The class must be `partial`, as for [state fields](state.md), because the package generates the code that registers the collections when the object spawns.
 
-`state.Use(index, collection, ...)` registers a collection. The index is a `byte` you choose. Calls can come in any order and indexes can skip numbers; the package handles collections in increasing index order. The same index used twice in one behaviour, or one collection instance registered twice, throws `HandlerRegistrationException`.
+## Declaring a collection
 
-The index travels with every operation, so the client must register the same index with the same kind of collection and the same element type. If the spawn message shows a different set of indexes, kinds or element types, the client stops with `ObjectMismatch` (`InvalidSpawn`).
+A collection field has the type `NetworkList<T>`, `NetworkDictionary<TKey, TValue>` or `NetworkSet<T>`, is `readonly`, and carries `[NetworkState(Index = n)]`. The package registers the instance that the field holds when the object spawns, so an instance assigned later would not be synchronized; `readonly` rules that out. A field that is still `null` at that point throws `ArgumentNullException`.
 
-A behaviour can register collections next to its [state model](state.md), or without one.
+The index is a `byte`, and it is required, so reordering the fields does not change what travels. Indexes can skip numbers; the package handles collections in increasing index order. Two collection fields of one class, or of a class and its base class, cannot share an index.
+
+The index travels with every operation, so the client must have the same index with the same kind of collection and the same element type. If the spawn message shows a different set of indexes, kinds or element types, the client stops with `ObjectMismatch` (`InvalidSpawn`). Adding or removing a collection field therefore needs a new server and new clients together. Collections are not part of a generated model, so the Console shows no verdict for them.
+
+A behaviour can have collections next to its [state fields](state.md), or without any. Collections are not part of the generated state model.
 
 ## Element types
 
-| Element | Registration |
+| Element | Travels as |
 |---|---|
-| A model (`[Network]`, `[Codec("net")]`) | Pass its adapter: `state.Use(0, items, ItemNetAdapter.Instance)` |
-| `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `string` | No adapter: `state.Use(1, scores)` |
+| A model with `[Network]` and `[Codec("net")]` | Its `net` codec |
+| `bool`, `sbyte`, `byte`, `short`, `ushort`, `int`, `uint`, `long`, `ulong`, `float`, `double`, `string` | The matching primitive |
 
-Dictionary values can be models or primitive types. Dictionary keys and set elements must be primitive types, which compare by value. A model registered without its adapter, or a model used as a key or set element, throws `HandlerRegistrationException` with a message that names the type.
+List elements and dictionary values can be models or primitive types. Dictionary keys and set elements must be primitive types, which compare by value. Any other type is a compile error that names the type and lists the accepted ones.
 
 ## Operations
 
@@ -138,7 +139,7 @@ The element is encoded when you call the operation. A field changed later in the
 
 ## Callbacks
 
-Each collection takes one optional callback, called on clients after the operation is applied:
+Each collection takes one optional callback, named with `OnChanged` on its attribute and called on clients after the operation is applied:
 
 | Type | Callback |
 |---|---|
@@ -160,7 +161,7 @@ The content that arrives with the spawn message does not trigger callbacks. It i
 
 ## How it works
 
-Between two sends the server records each operation in the order you call it. After the tick's `OnTick` and `OnPostTick` events, at the same point where [state](state.md) is sent, the server sends one message per collection that has operations, to every observer. Within one behaviour the state model goes first, then the collections in increasing index order, so a collection callback already sees the new state.
+Between two sends the server records each operation in the order you call it. After the tick's `OnTick` and `OnPostTick` events, at the same point where [state](state.md) is sent, the server sends one message per collection that has operations, to every observer. Within one behaviour the state fields go first, then the collections in increasing index order, so a collection callback already sees the new state.
 
 `Clear` drops the operations recorded since the last send, because clients only need the empty collection. Operations made while the object has no observers are dropped as well; an observer that arrives later gets the whole collection in its spawn message.
 
@@ -184,21 +185,32 @@ On a host the collection is shared with the server, so the host's client does no
 
 ## Recovery
 
-A client that cannot apply an operation, for example an index past the end, a missing key or bytes it cannot decode, marks that collection out of step. It ignores further operations for it, asks the server for its full content, and replaces the collection when the content arrives. The callback then runs once with `Reset`. Other collections and the state model are not affected. When the message itself cannot be read, the client cannot tell which collection it was for, so every collection of that behaviour recovers this way.
+A client that cannot apply an operation, for example an index past the end, a missing key or bytes it cannot decode, marks that collection out of step. It ignores further operations for it, asks the server for its full content, and replaces the collection when the content arrives. The callback then runs once with `Reset`. Other collections and the state fields are not affected. When the message itself cannot be read, the client cannot tell which collection it was for, so every collection of that behaviour recovers this way.
 
-## Configuration
+## Errors
+
+The source generator reports these compile errors for collection fields:
+
+| Id | Meaning |
+|---|---|
+| `FOMOXA012` | The field is not `readonly`, or is `static` |
+| `FOMOXA013` | `OnChanged` does not name a method with the collection's callback signature |
+| `FOMOXA014` | The class, or a class containing it, is not `partial` |
+| `FOMOXA015` | `Index` is missing, the attribute gives a wire type, or a model element has no `net` codec |
+| `FOMOXA016` | Two collection fields use the same index |
+| `FOMOXA017` | The element, key or value type is not accepted |
+
+At run time:
 
 | Rule | When broken |
 |---|---|
-| Each index is used once per behaviour | `HandlerRegistrationException`: `... uses collection index 1 twice` |
-| Each collection instance is registered once | `HandlerRegistrationException`: `... uses as collection 2 an instance that is already collection 1 of a behaviour` |
-| A model element comes with its adapter; keys and set elements are primitive types | `HandlerRegistrationException`: `... which is not a primitive type; a model needs its codec, and keys and set elements must be primitive` |
 | Only the server changes a spawned collection | `InvalidOperationException`: `... cannot change collection 0 on a client; only the server changes a collection` |
 | No `null` elements, values or keys | `ArgumentNullException` |
-| Both sides register the same indexes, kinds and element types | The client stops with `ObjectMismatch` (`InvalidSpawn`) |
+| The field holds an instance when the object spawns | `ArgumentNullException` |
+| Both sides have the same indexes, kinds and element types | The client stops with `ObjectMismatch` (`InvalidSpawn`) |
 
 ## Limitations
 
 Only the server changes a collection. A behaviour has at most 256 collections, one per `byte` index. The whole collection travels in the spawn message, so a very large collection makes every spawn of its object large. The order in which a dictionary or a set is enumerated is not guaranteed to match between the server and a client.
 
-Collections are registered in a [NetworkBehaviour](../objects/network-behaviour.md), and model elements are declared like any other [model](../messaging/models.md).
+Collections are declared in a [NetworkBehaviour](../objects/network-behaviour.md), and model elements are declared like any other [model](../messaging/models.md).

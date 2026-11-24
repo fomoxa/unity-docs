@@ -1,6 +1,8 @@
 # Model và codec
 
-Model là một class C# mô tả một message, tức các field và wire type của chúng. Trình biên dịch `fomoxac` đi kèm sinh một codec cho mỗi model, và package bọc mỗi codec trong một adapter, thứ mà phần còn lại của API làm việc cùng. Tham số RPC, state, input và dữ liệu reconcile đều là model.
+Model là một class C# mô tả một message, tức các field và wire type của chúng. Trình biên dịch `fomoxac` đi kèm sinh một codec cho mỗi model, và package bọc mỗi codec trong một adapter, thứ mà phần còn lại của API làm việc cùng.
+
+Package sinh các model mang RPC, state và input của behaviour, nên bạn không viết chúng. Bạn viết model cho dữ liệu có cấu trúc mà một tham số RPC hoặc một field state chứa, cho [raw message](messages.md), cho dữ liệu [xác thực](../connections/authentication.md) và [truyền file](../connections/transfer.md), và cho RPC và state của một [console server](../console-server/runtime.md) mà behaviour Unity không khai báo.
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
@@ -30,11 +32,16 @@ namespace MyGame.Network.Models
 }
 ```
 
-Sau khi biên dịch, package sinh `ShotNetCodec` và `ShotNetAdapter` trong Generated Folder, và bạn truyền adapter vào bất kỳ chỗ nào API yêu cầu một `IMessageCodec<Shot>`:
+Sau khi biên dịch, package sinh `ShotNetCodec` và `ShotNetAdapter` trong Generated Folder. Sau đó model có thể là type của một tham số RPC hoặc một field state, chúng đi bằng codec `net` của model:
 
 ```csharp
-SendServerRpc(ShotNetAdapter.Instance, new Shot { Weapon = 2, Direction = transform.forward });
+[ServerRpc]
+private void Fire(Shot shot)
+{
+}
 ```
+
+Ở chỗ API yêu cầu một `IMessageCodec<Shot>`, như với [raw message](messages.md), hãy truyền adapter `ShotNetAdapter.Instance`.
 
 ## Attribute <a href="#attributes" id="attributes"></a>
 
@@ -110,14 +117,14 @@ public class Status
 }
 ```
 
-Mỗi codec có message id và adapter riêng, ở đây là `StatusNetAdapter` và `StatusCompactAdapter`. RPC khai báo bằng attribute mà model có nhiều codec phải chỉ ra codec nó dùng bằng `Codec = "..."`.
+Mỗi codec có message id và adapter riêng, ở đây là `StatusNetAdapter` và `StatusCompactAdapter`. Tham số RPC hoặc field state có type `Status` dùng codec `net`, nên model dùng theo cách đó cần có codec này.
 
 ## Schema và tương thích <a href="#schema-and-compatibility" id="schema-and-compatibility"></a>
 
-Mỗi lần sinh code còn ghi `NetSchema.cs`, danh sách mọi message id và layout của chúng. Trong lúc handshake, client và server so sánh schema và từ chối kết nối bằng `HandshakeFailure.SchemaConflict` nếu chúng khác nhau, nên sau khi đổi một model, hãy build lại cả server lẫn client.
+Mỗi lần sinh code còn ghi `NetSchema.cs`, danh sách mọi message id và layout của chúng. Trong lúc handshake, client và server so schema của nhau, từng message một. Hai phiên bản của một model làm việc được với nhau khi các field của bản này là các field đầu tiên của bản kia, nên thêm property vào cuối model, hoặc bỏ các property cuối, vẫn giữ được kết nối với bản build cũ. Chèn, đổi thứ tự, đổi type hoặc đổi tên một property làm handshake thất bại với `HandshakeFailure.SchemaConflict`, nên sau thay đổi như vậy hãy build lại cả server lẫn client. Khi package sinh code, Console in một kết luận cho mỗi model đã đổi, bắt đầu bằng `COMPATIBLE:` hoặc `BREAKING:`.
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Ngoài các model của chính package và các model nó sinh cho RPC không tham số, chỉ những class trong Models Folder mới có codec. Binary `fomoxac` đi kèm cho Editor Windows x64, Linux x64 và macOS.
+Ngoài các model của chính package và các model nó sinh cho RPC, state và input, chỉ những class trong Models Folder mới có codec. Binary `fomoxac` đi kèm cho Editor Windows x64, Linux x64 và macOS.
 
-Model được dùng bởi [RPC](rpc.md), [state](../synchronization/state.md) và [input](../prediction/input.md). [Messaging API](../reference/messaging.md) liệt kê các type codec, và [tích hợp Editor](../advanced/editor-integration.md) mô tả bước sinh code.
+Model mang [RPC](rpc.md), [state](../synchronization/state.md), [input](../prediction/input.md) và [raw message](messages.md). [Messaging API](../reference/messaging.md) liệt kê các type codec, và [tích hợp Editor](../advanced/editor-integration.md) mô tả bước sinh code.

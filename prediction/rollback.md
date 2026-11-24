@@ -4,49 +4,55 @@ When a predicted object moves with a `Rigidbody` or `Rigidbody2D`, its result de
 
 ## Requirements
 
-The `RigidbodyPhysics` component of the `NetworkManager` must have Simulate Physics on, both on the server and on the clients, so that the manager steps physics once per tick (see [physics](../physics/overview.md#turning-it-on)). The predicted object must have its `Rigidbody` or `Rigidbody2D` on the same GameObject as its `NetworkObject`. `apply` moves the body through forces, impulses or velocity, and `capture` and `restore` read and write the body through `NetworkObject.Body` or `Body2D`:
+The `RigidbodyPhysics` component of the `NetworkManager` must have Simulate Physics on, both on the server and on the clients, so that the manager steps physics once per tick (see [physics](../physics/overview.md#turning-it-on)). The predicted object must have its `Rigidbody` or `Rigidbody2D` on the same GameObject as its `NetworkObject`. `OnApplyInput` moves the body through forces, impulses or velocity, and `OnCaptureState` and `OnRestoreState` copy the body to and from the reconcile fields through `NetworkObject.Body` or `Body2D`:
 
 ```csharp
-private void Apply(MoveInput input, InputContext context)
+[NetworkReconcile(Tolerance = 0.01f)]
+private float positionX;
+
+[NetworkReconcile(Tolerance = 0.01f)]
+private float positionZ;
+
+[NetworkReconcile(Tolerance = 0.05f)]
+private float velocityX;
+
+[NetworkReconcile(Tolerance = 0.05f)]
+private float velocityZ;
+
+protected override void OnApplyInput(InputContext context)
 {
-    var push = new System.Numerics.Vector3(input.X, 0f, input.Z) * pushStrength;
+    var push = new System.Numerics.Vector3(x, 0f, z) * pushStrength;
     NetworkObject.Body.AddImpulse(push);
 }
 
-private void Capture(PushState state)
+protected override void OnCaptureState()
 {
     BodyState body = NetworkObject.Body.State;
-    state.X = body.Position.X;
-    state.Z = body.Position.Z;
-    state.VelocityX = body.Velocity.X;
-    state.VelocityZ = body.Velocity.Z;
+    positionX = body.Position.X;
+    positionZ = body.Position.Z;
+    velocityX = body.Velocity.X;
+    velocityZ = body.Velocity.Z;
 }
 
-private void Restore(PushState state)
+protected override void OnRestoreState()
 {
     PhysicsBody body = NetworkObject.Body;
     BodyState current = body.State;
-    current.Position = new System.Numerics.Vector3(state.X, current.Position.Y, state.Z);
-    current.Velocity = new System.Numerics.Vector3(state.VelocityX, current.Velocity.Y, state.VelocityZ);
+    current.Position = new System.Numerics.Vector3(positionX, current.Position.Y, positionZ);
+    current.Velocity = new System.Numerics.Vector3(velocityX, current.Velocity.Y, velocityZ);
     body.State = current;
 }
-
-private static bool Matches(PushState server, PushState predicted) =>
-    Math.Abs(server.X - predicted.X) <= 0.01f
-    && Math.Abs(server.Z - predicted.Z) <= 0.01f
-    && Math.Abs(server.VelocityX - predicted.VelocityX) <= 0.05f
-    && Math.Abs(server.VelocityZ - predicted.VelocityZ) <= 0.05f;
 ```
 
-`PushState` is a model with four `f32` properties, `X`, `Z`, `VelocityX` and `VelocityZ`. `BodyState` and `PhysicsBody` are in `Fomoxa.Networking.Simulation`, and `Math` is `System.Math`. The example moves on the ground plane and leaves the vertical axis to gravity.
+`x` and `z` are the input fields of the [overview](overview.md), and `OnGatherInput` fills them as there. `BodyState` and `PhysicsBody` are in `Fomoxa.Networking.Simulation`. The example moves on the ground plane and leaves the vertical axis to gravity.
 
 ## Timeline
 
 Every tick, after stepping physics, the owner's client saves the state of each physics world that holds one of its predicted objects and records the state of each predicted behaviour. The history keeps Prediction History ticks (64 by default).
 
-<figure><img src="../.gitbook/assets/diagrams/physics-rollback.svg" alt="In the first run the client predicts ticks 0 to 4 and saves the physics worlds after each tick. The server state for tick 2 does not match. The correction loads tick 2 into every world of the group and restores the server state, then replays ticks 3 and 4: apply input, step the worlds, capture and save. A saved state holds position, rotation, velocity, angular velocity and sleep state of each dynamic body that is not a proxy. Contact data is not saved, so a replay can differ from the first run."><figcaption><p>A correction at T2 when the client has predicted up to T4.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/physics-rollback.svg" alt="In the first run the client predicts ticks 0 to 4 and saves the physics worlds after each tick. The server state for tick 2 does not match. The correction loads tick 2 into every world of the group and restores the server state, then replays ticks 3 and 4: apply the input, step the worlds, capture and save. A saved state holds position, rotation, velocity, angular velocity and sleep state of each dynamic body that is not a proxy. Contact data is not saved, so a replay can differ from the first run."><figcaption><p>A correction at T2 when the client has predicted up to T4.</p></figcaption></figure>
 
-For each tick of the replay, from T3 to T4, `apply` runs for every predicted object of the group and then each world steps once.
+For each tick of the replay, from T3 to T4, `OnApplyInput` runs for every predicted object of the group and then each world steps once.
 
 ## Rollback groups
 
@@ -68,7 +74,7 @@ For each world, a saved state holds the position, rotation, velocity, angular ve
 
 Spawns and despawns are not replayed either. Bodies created after a saved tick keep their current state when that tick is loaded, and bodies destroyed after it are not recreated.
 
-The physics engine's contact data is not saved, so a replay can differ from the first run even with identical input. Expect occasional corrections, and use tolerances in `matches`.
+The physics engine's contact data is not saved, so a replay can differ from the first run even with identical input. Expect occasional corrections, and give the reconcile fields a `Tolerance`.
 
 ## Contact events during a replay
 

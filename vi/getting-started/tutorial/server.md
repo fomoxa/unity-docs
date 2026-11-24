@@ -129,7 +129,7 @@ stateDiagram-v2
     Stopped --> [*]
 ```
 
-`Starting` bao gồm handshake của Fomoxa, trong đó client và server kiểm tra rằng cả hai được build từ cùng một bộ model. `Authenticating` là lúc một [authenticator](../../connections/authentication.md) kiểm tra client; tutorial này không có authenticator, nên server cho mọi client vào ngay. Message chỉ đi được khi client tới `Started`, nên launcher spawn player ở đúng thời điểm đó:
+`Starting` bao gồm handshake của Fomoxa, trong đó client và server so model của nhau. `Authenticating` là lúc một [authenticator](../../connections/authentication.md) kiểm tra client; tutorial này không có authenticator, nên server cho mọi client vào ngay. Message chỉ đi được khi client tới `Started`, nên launcher spawn player ở đúng thời điểm đó:
 
 ```mermaid
 sequenceDiagram

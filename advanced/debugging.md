@@ -6,9 +6,9 @@ The package logs with two prefixes. Messages from Editor steps, such as code gen
 
 ## Forgotten state marks
 
-A behaviour that registers its state with `onlyWhenDirty: true` must call `SetStateDirty()` after each change, or the change is not sent. In the Editor and in Development builds, the server checks these states every tick. When such a state has differed from what was last sent for State Mark Warning Seconds on the `NetworkManager` (2 by default) without a call to `SetStateDirty()`, the server logs a warning that names the behaviour, the object id and the GameObject. It warns once per object and still does not send the change.
+A behaviour whose class carries `[NetworkStateModel(OnlyWhenDirty = true)]` must call `SetStateDirty()` after each change, or the change is not sent. In the Editor and in Development builds, the server checks these states every tick. When such a state has differed from what was last sent for State Mark Warning Seconds on the `NetworkManager` (2 by default) without a call to `SetStateDirty()`, the server logs a warning that names the behaviour, the object id and the GameObject. It warns once per object and still does not send the change.
 
-Set the field to 0 to turn the check off. Release builds never run it, and a console server runs it only when `NetworkSettings.StateMarkWarning` is above zero, which it is not by default. [Marking changes](../synchronization/state.md#marking-changes) describes `onlyWhenDirty`.
+Set the field to 0 to turn the check off. Release builds never run it, and a console server runs it only when `NetworkSettings.StateMarkWarning` is above zero, which it is not by default. [Marking changes](../synchronization/state.md#marking-changes) describes `OnlyWhenDirty`.
 
 ## Events
 

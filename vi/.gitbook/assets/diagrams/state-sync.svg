@@ -5,7 +5,7 @@
   <text x="30.0" y="38.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Server, mỗi tick</text>
   <rect x="30.0" y="56.0" width="190.0" height="76.0" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.5"/>
   <text x="125.0" y="90.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">Code của bạn</text>
-  <text x="125.0" y="107.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#0F172A" text-anchor="middle">health.Current = 80</text>
+  <text x="125.0" y="107.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="12" font-weight="400" fill="#0F172A" text-anchor="middle">health = 80</text>
   <rect x="255.0" y="56.0" width="190.0" height="76.0" rx="10" fill="#E8F0FE" stroke="#2F6FEB" stroke-width="1.5"/>
   <text x="350.0" y="81.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#1E3A8A" text-anchor="middle">Encode</text>
   <text x="350.0" y="98.9" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">sau OnTick và</text>
@@ -27,10 +27,10 @@
   <text x="30.0" y="220.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="15" font-weight="700" fill="#1F2937" text-anchor="start">Mỗi client đang observe</text>
   <rect x="480.0" y="236.0" width="190.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
   <text x="575.0" y="267.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">Decode</text>
-  <text x="575.0" y="284.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">vào instance của bạn</text>
+  <text x="575.0" y="284.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">vào các field của bạn</text>
   <rect x="705.0" y="236.0" width="185.0" height="70.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
-  <text x="797.5" y="267.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">onChanged(previous)</text>
-  <text x="797.5" y="284.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">giá trị trước đó</text>
+  <text x="797.5" y="267.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">OnChanged</text>
+  <text x="797.5" y="284.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">giá trị trước và hiện tại</text>
   <path d="M 797.0 132.0 L 797.0 190.0 L 575.0 190.0 L 575.0 236.0" fill="none" stroke="#2F6FEB" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-2F6FEB)"/>
   <rect x="689.6" y="171.5" width="102.6" height="16.5" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
   <text x="740.9" y="183.0" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11.5" font-weight="500" fill="#2F6FEB" text-anchor="middle">reliable, có thứ tự</text>

@@ -64,7 +64,7 @@ sequenceDiagram
     participant SM as ServerManager
     Code->>Obj: Instantiate(prefab): Awake, OnEnable
     Code->>SM: Spawn(instance, owner)
-    SM->>Obj: OnRegisterRpcs, OnRegisterState, OnRegisterInput (chỉ ở lần spawn đầu của instance)
+    SM->>Obj: đăng ký RPC, state và input (chỉ ở lần spawn đầu của instance)
     Note over SM: chụp state ban đầu,<br/>đưa message spawn vào hàng đợi cho observer
     SM->>Obj: OnStartServer
     Note over Obj: ... các tick ...
@@ -85,7 +85,7 @@ sequenceDiagram
     participant CM as ClientManager
     participant Obj as Object
     CM->>Obj: spawn tới: tạo instance của prefab hoặc bật scene object (Awake, OnEnable)
-    CM->>Obj: OnRegisterRpcs, OnRegisterState, OnRegisterInput
+    CM->>Obj: đăng ký RPC, state và input
     Note over CM: áp state ban đầu
     CM->>Obj: OnStartClient (IsOwner đã đúng ở đây)
     Note over Obj: ... state thay đổi, RPC, transform ...

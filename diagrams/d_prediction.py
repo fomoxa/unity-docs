@@ -60,17 +60,17 @@ def reconcile_replay(language):
     canvas.box(x_of(11) - 10, 130, 120, 50, 'server', t('Server state', 'State của server'), ['T11'], title_size=12.5)
     canvas.arrow([(x_of(11) + 50, 130), (x_of(11) + 50, 98)], blue)
     canvas.text(x_of(11) + 130, 152, t('arrives while the client is at T14,', 'tới khi client đang ở T14,'), 12, 600, color=red)
-    canvas.text(x_of(11) + 130, 170, t('matches() returns false', 'matches() trả về false'), 12, 400, color=MUTED, mono=False)
+    canvas.text(x_of(11) + 130, 170, t('the states do not match', 'hai state không khớp'), 12, 400, color=MUTED, mono=False)
 
     canvas.text(30, 240, t('Corrected', 'Sau khi sửa'), 13, 700)
-    canvas.box(x_of(11), 216, 100, 44, 'server', 'restore', title_mono=True)
+    canvas.box(x_of(11), 216, 100, 44, 'server', t('Restore', 'Khôi phục'))
     for tick in range(12, 15):
         canvas.box(x_of(tick), 216, 100, 44, 'accent', f'T{tick}', ['replay'], title_mono=True)
     for tick in range(11, 14):
         canvas.arrow([(x_of(tick) + 100, 238), (x_of(tick + 1), 238)], accent)
     canvas.arrow([(x_of(11) + 50, 180), (x_of(11) + 50, 216)], blue)
-    canvas.text(30, 300, t('Each replayed tick calls apply(input, context) with context.Replaying = true, then capture.',
-                           'Mỗi tick replay gọi apply(input, context) với context.Replaying = true, rồi capture.'), 12, color=MUTED)
+    canvas.text(30, 300, t('Each replayed tick calls OnApplyInput(context) with context.Replaying = true, then OnCaptureState.',
+                           'Mỗi tick replay gọi OnApplyInput(context) với context.Replaying = true, rồi OnCaptureState.'), 12, color=MUTED)
     canvas.text(30, 318, t('Afterwards OnReconciled(11) runs and ReconcileCount goes up by one.',
                            'Sau đó OnReconciled(11) chạy và ReconcileCount tăng thêm một.'), 12, color=MUTED)
     return canvas
@@ -98,7 +98,7 @@ def physics_rollback(language):
     canvas.text(30, 204, t('Correction', 'Sửa'), 13, 700)
     canvas.box(x_of(2) - 20, 150, 145, 104, 'server', 'Load(T2)',
                [t('every world of the', 'mọi world của nhóm'), t('group goes back,', 'quay về T2,'),
-                t('then restore()', 'rồi restore()')], title_mono=True, title_size=13, body_size=11)
+                t('then OnRestoreState', 'rồi OnRestoreState')], title_mono=True, title_size=13, body_size=11)
     for tick in (3, 4):
         canvas.box(x_of(tick), 150, 105, 104, 'accent', f'T{tick}',
                    [t('apply input', 'apply input'), t('step worlds', 'step world'), t('capture, save', 'capture, lưu')],

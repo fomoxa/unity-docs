@@ -28,7 +28,7 @@
   <text x="492.5" y="182.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#1E3A8A" text-anchor="middle">Load(T2)</text>
   <text x="492.5" y="198.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">mọi world của nhóm</text>
   <text x="492.5" y="214.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">quay về T2,</text>
-  <text x="492.5" y="230.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">rồi restore()</text>
+  <text x="492.5" y="230.5" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">rồi OnRestoreState</text>
   <rect x="575.0" y="150.0" width="105.0" height="104.0" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
   <text x="627.5" y="182.6" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="13" font-weight="600" fill="#78350F" text-anchor="middle">T3</text>
   <text x="627.5" y="198.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="11" font-weight="400" fill="#6B7280" text-anchor="middle">apply input</text>

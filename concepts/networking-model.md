@@ -12,7 +12,7 @@ The server gives every connected client a peer id, a `ulong` that is never 0, be
 
 Everything the package sends is a model: a C# class marked with `[Network]` and `[Codec]` whose codec `fomoxac` generates. This holds for the package's own messages, such as spawn, despawn, state and transform messages, and for your RPC arguments, state and input.
 
-Each pair of a model and a codec has a message id, and the generated `NetSchema` lists every message id together with a fingerprint of its layout. During the handshake, Fomoxa.Net compares the client's schema with the server's. If they disagree, it refuses the connection with `HandshakeFailure.SchemaConflict`, so the client and the server must be built from the same models. [Models and codecs](../messaging/models.md) covers how to declare them.
+Each pair of a model and a codec has a message id, and the generated `NetSchema` lists every message id together with a fingerprint of its layout. During the handshake, Fomoxa.Net compares the client's schema with the server's, message by message. A model may have more fields at the end on one side than on the other; any other difference refuses the connection with `HandshakeFailure.SchemaConflict`. [Models and codecs](../messaging/models.md) covers how to declare them.
 
 ## Three kinds of message
 

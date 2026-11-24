@@ -26,7 +26,7 @@ Việc tính lại observer được trải trên Observer Interval tick, nên k
 
 Một rule mà kết quả không phụ thuộc chuyển động có thể trả false từ `RebuildsPeriodically`, khi đó server bỏ qua việc tính lại theo chu kỳ. Với [nhóm](../objects/observers.md#groups), server chỉ tính lại và chỉ hỏi rule về các cặp object và peer cùng nhóm, nên phần chi phí này tăng theo kích thước nhóm.
 
-Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi. Behaviour đăng ký state bằng `onlyWhenDirty` chỉ được encode sau khi nó gọi `SetStateDirty()`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes). [Collection](../synchronization/collections.md) không tốn gì ở tick mà nó không đổi: mỗi thao tác được encode một lần, lúc bạn gọi nó.
+Mọi behaviour có state được encode mỗi tick một lần để phát hiện thay đổi, nên nhiều object với state model lớn sẽ tốn thời gian encode kể cả khi không có gì thay đổi. Behaviour có `[NetworkStateModel(OnlyWhenDirty = true)]` chỉ được encode sau khi nó gọi `SetStateDirty()`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes). [Collection](../synchronization/collections.md) không tốn gì ở tick mà nó không đổi: mỗi thao tác được encode một lần, lúc bạn gọi nó.
 
 Transform được đọc sau mỗi tick, trừ khi server biết lúc nào chúng đổi. `NetworkTransform` trên object do [Rapier](../rapier/overview.md) mô phỏng, và entity console đồng bộ bằng `SyncTransform(sync, receiver)`, chỉ được đọc khi di chuyển, nên object đứng yên không thêm lần đọc nào. [NetworkTransform](../synchronization/transform.md#server-behavior) liệt kê những transform được đọc sau mỗi tick.
 

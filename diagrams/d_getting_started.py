@@ -54,17 +54,17 @@ def workflow(language):
     canvas = Canvas(920, 236, t('The four steps a game takes to use the package',
                                 'Bốn bước một game đi qua để dùng package'))
     cards = [
-        (t('Declare models', 'Khai báo model'),
-         [t('C# classes marked with', 'Class C# đánh dấu bằng'), t('[Network] and [Codec].', '[Network] và [Codec].'),
-          t('The package generates', 'Package sinh codec'), t('their codecs.', 'cho chúng.')],
-         'code'),
         (t('Add a NetworkManager', 'Thêm NetworkManager'),
          [t('One per scene, with a', 'Một cái cho mỗi scene,'), t('transport such as', 'kèm một transport như'),
           'UdpNetworkTransport.'],
          'neutral'),
+        (t('Write behaviours', 'Viết behaviour'),
+         [t('NetworkBehaviour scripts', 'Script NetworkBehaviour'), t('with RPCs and state fields.', 'có RPC và field state.'),
+          t('The package generates', 'Package sinh model'), t('their models and codecs.', 'và codec cho chúng.')],
+         'code'),
         (t('Make network prefabs', 'Tạo network prefab'),
-         [t('NetworkObject on the root,', 'NetworkObject ở root,'), t('NetworkBehaviour scripts', 'các script NetworkBehaviour'),
-          t('for the networked logic.', 'cho logic networking.')],
+         [t('NetworkObject on the root,', 'NetworkObject ở root,'), t('your behaviours on it', 'các behaviour của bạn'),
+          t('or its children.', 'trên nó hoặc con của nó.')],
          'neutral'),
         (t('Start and spawn', 'Khởi động và spawn'),
          [t('Start a server, a client', 'Khởi động server, client'), t('or a host from code. The', 'hoặc host từ code. Server'),
@@ -96,11 +96,11 @@ def code_generation(language):
     inputs = [
         (t('Your models', 'Model của bạn'), t('Models Folder of FomoxaSettings', 'Models Folder của FomoxaSettings')),
         (t('Package system models', 'System model của package'), t('copied to FomoxaSystemModels/', 'copy vào FomoxaSystemModels/')),
-        (t('RPC models', 'RPC model'), t('written to Generated/RpcModels/ for', 'viết vào Generated/RpcModels/ cho')),
+        (t('RPC and state models', 'Model RPC và state'), t('written to Generated/RpcModels/ and', 'viết vào Generated/RpcModels/ và')),
     ]
     for index, (title, body) in enumerate(inputs):
         y = 48 + index * 76
-        lines = [body] if index < 2 else [body, t('RPCs without a model', 'RPC không có model')]
+        lines = [body] if index < 2 else [body, t('StateModels/ from your behaviours', 'StateModels/ từ behaviour của bạn')]
         canvas.box(24, y, 250, 62, 'code', title, lines, align='left', title_size=13, body_size=11.5)
         canvas.arrow([(274, y + 31), (330, 142 + index * 18)], LINE)
 

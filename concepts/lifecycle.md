@@ -64,7 +64,7 @@ sequenceDiagram
     participant SM as ServerManager
     Code->>Obj: Instantiate(prefab): Awake, OnEnable
     Code->>SM: Spawn(instance, owner)
-    SM->>Obj: OnRegisterRpcs, OnRegisterState, OnRegisterInput (first spawn of this instance only)
+    SM->>Obj: register RPCs, state and input (first spawn of this instance only)
     Note over SM: captures the initial state,<br/>queues the spawn message to observers
     SM->>Obj: OnStartServer
     Note over Obj: ... ticks ...
@@ -85,7 +85,7 @@ sequenceDiagram
     participant CM as ClientManager
     participant Obj as The object
     CM->>Obj: spawn arrives: instantiate the prefab or activate the scene object (Awake, OnEnable)
-    CM->>Obj: OnRegisterRpcs, OnRegisterState, OnRegisterInput
+    CM->>Obj: register RPCs, state and input
     Note over CM: applies the initial state
     CM->>Obj: OnStartClient (IsOwner is valid here)
     Note over Obj: ... state changes, RPCs, transforms ...

@@ -57,7 +57,7 @@ Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `O
 
 | Callback | Phía | Thứ tự |
 |---|---|---|
-| `OnRegisterRpcs`, `OnRegisterState`, `OnRegisterInput` | Phía đầu tiên instance spawn | Một lần mỗi instance, trước callback start |
+| Đăng ký RPC, state và input | Phía đầu tiên instance spawn | Một lần mỗi instance, trước callback start |
 | `OnStartServer` | Server | Sau khi message spawn được đưa vào queue |
 | `OnStartClient` | Client | Sau khi state ban đầu được áp dụng |
 | `OnOwnerChangedServer(previousOwnerId)` | Server | Sau khi owner thay đổi |
@@ -71,11 +71,11 @@ Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `O
 
 | Callback | Đăng ký bằng | Chạy |
 |---|---|---|
-| RPC handler | Attribute hoặc `NetworkRpcs` | Khi RPC tới |
-| `onChanged(previous)` của state | `NetworkState.Use` | Trên client, sau mỗi thay đổi state |
-| `onChanged(operation, index hoặc key, old, new)` của collection | `NetworkState.Use` | Trên client, sau mỗi thao tác; một lần với `Reset` sau khi [khôi phục](../synchronization/collections.md#recovery) |
-| `gather`, `apply` | `NetworkInput.Use` | Xem [input](../prediction/input.md#apply) |
-| `capture`, `restore`, `matches` | `NetworkInput.Reconcile` | Xem [reconciliation](../prediction/reconciliation.md) |
+| Method RPC | `[ServerRpc]`, `[ClientRpc]` | Khi RPC tới |
+| `OnChanged(previous, current)` của state | `[NetworkState(OnChanged = ...)]` | Trên client, sau một thay đổi của field |
+| `OnChanged(operation, index hoặc key, old, new)` của collection | `[NetworkState(Index = ..., OnChanged = ...)]` | Trên client, sau mỗi thao tác; một lần với `Reset` sau khi [khôi phục](../synchronization/collections.md#recovery) |
+| `OnGatherInput`, `OnApplyInput` | Field `[NetworkInput]` | Xem [input](../prediction/input.md#apply) |
+| `OnCaptureState`, `OnRestoreState` | Field `[NetworkReconcile]` | Xem [reconciliation](../prediction/reconciliation.md) |
 | `ObserverRule.Observes` | Field Observer Rule | Trên server, khi observer được tính lại |
 | `OnServerAuthenticating`, `OnClientAuthenticating` và các handler của authenticator | Field Authenticator | Xem [xác thực](../connections/authentication.md) |
 | `ISceneLoader.Load`, `Unload` | `SceneRegistry.Register` | Khi một network scene được load hoặc unload |

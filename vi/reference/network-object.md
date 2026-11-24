@@ -57,37 +57,40 @@ Dù giá trị là gì, owner luôn observe object của nó, và network scene 
 | `OnOwnerChangedServer(ulong previousOwnerId)` | `public virtual` | Trên server sau khi đổi owner |
 | `OnOwnerChangedClient(ulong previousOwnerId)` | `public virtual` | Trên các client đang observe sau khi đổi owner |
 | `OnHostVisibility(bool visible)` | `protected virtual` | Trên host khi client của nó thôi hoặc bắt đầu observe object |
-| `OnRegisterRpcs(NetworkRpcs rpc)` | `protected virtual` | Một lần mỗi instance, ở lần spawn đầu tiên |
-| `OnRegisterState(NetworkState state)` | `protected virtual` | Một lần mỗi instance, ở lần spawn đầu tiên |
-| `OnRegisterInput(NetworkInput input)` | `protected virtual` | Một lần mỗi instance, ở lần spawn đầu tiên |
+| `OnGatherInput()` | `protected virtual` | Trên client của owner mỗi tick một lần, trước khi các field `[NetworkInput]` được chép |
+| `OnApplyInput(InputContext context)` | `protected virtual` | Sau khi input của một tick đã được ghi vào các field `[NetworkInput]` |
+| `OnCaptureState()` | `protected virtual` | Trước khi các field `[NetworkReconcile]` được chép |
+| `OnRestoreState()` | `protected virtual` | Sau khi state của server đã được ghi vào các field `[NetworkReconcile]` |
 | `OnReconciled(uint tick)` | `protected virtual` | Trên client của owner sau một lần sửa tại `tick` |
 
-`OnRegisterGeneratedRpcs` được source generator dùng và ẩn khỏi IntelliSense, nên đừng override nó.
+`OnRegisterGeneratedRpcs`, `OnRegisterGeneratedState` và `OnRegisterGeneratedInput` được source generator dùng và ẩn khỏi IntelliSense, nên đừng override chúng.
 
 ### Method gửi <a href="#send-methods" id="send-methods"></a>
 
-Mọi method gửi đều là `protected`.
+Mọi method gửi đều là `protected`. Với mỗi RPC, source generator thêm `Send<Method>ServerRpc(...)`, hoặc `Send<Method>ObserversRpc(...)` và `Send<Method>TargetRpc(ulong peerId, ...)`, nhận các tham số được gửi của RPC, như mô tả trong [RPC](../messaging/rpc.md#sending). Chúng gọi các member sau:
 
 | Member | Trả về |
 |---|---|
-| `SendServerRpc<T>(IMessageCodec<T> codec, T value)` | `SendResult` |
 | `SendServerRpc(string rpc)` | `SendResult` |
-| `SendObserversRpc<T>(IMessageCodec<T> codec, T value)` | `int`, số observer đã đưa vào queue |
-| `SendObserversRpc(string rpc)` | `int` |
-| `SendTargetRpc<T>(ulong peerId, IMessageCodec<T> codec, T value)` | `SendResult` |
+| `SendServerRpc<TValues>(string rpc, TValues values)` | `SendResult` |
+| `SendObserversRpc(string rpc)` | `int`, số observer đã đưa vào queue |
+| `SendObserversRpc<TValues>(string rpc, TValues values)` | `int` |
 | `SendTargetRpc(ulong peerId, string rpc)` | `SendResult` |
+| `SendTargetRpc<TValues>(ulong peerId, string rpc, TValues values)` | `SendResult` |
 
-Chúng ném `ArgumentNullException` với codec, giá trị hoặc tên là null, và `InvalidOperationException` khi object chưa spawn ở phía gửi. Với tên chưa có model được sinh, chúng cũng ném `InvalidOperationException`, kèm thông báo `... has no generated parameterless RPC model ...`.
+`values` là một giá trị, hoặc một tuple khi có nhiều giá trị. Các member ném `ArgumentNullException` khi tên là null hoặc một giá trị `string` hay model là null, `InvalidOperationException` khi object chưa spawn ở phía gửi hoặc RPC chưa có model được sinh (`... has no generated parameterless RPC model ...` hoặc `... has no generated RPC model for its parameters ...`), và `ArgumentException` khi `values` không có đúng type các tham số của RPC.
 
 ### State <a href="#state" id="state"></a>
 
-`protected void SetStateDirty()` đánh dấu state của behaviour là đã thay đổi, để server so sánh và gửi nó sau tick hiện tại. Nó chỉ có tác dụng với state đăng ký bằng `onlyWhenDirty`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes), và không làm gì trong trường hợp khác.
+`protected void SetStateDirty()` đánh dấu state của behaviour là đã thay đổi, để server so sánh và gửi nó sau tick hiện tại. Nó chỉ có tác dụng khi class mang `[NetworkStateModel(OnlyWhenDirty = true)]`, như mô tả trong [đánh dấu thay đổi](../synchronization/state.md#marking-changes), và không làm gì trong trường hợp khác.
 
 ## Type đăng ký <a href="#registration-types" id="registration-types"></a>
 
+`NetworkBehaviour` đăng ký RPC, state và input qua attribute. Các type dưới đây là API đăng ký của `EntityBehaviour`, mà [console server](../console-server/runtime.md) dùng.
+
 ### NetworkRpcs <a href="#networkrpcs" id="networkrpcs"></a>
 
-`public sealed class NetworkRpcs` được truyền vào `OnRegisterRpcs`, như mô tả trong [RPC](../messaging/rpc.md#registering-by-hand).
+`public sealed class NetworkRpcs` được truyền vào `EntityBehaviour.OnRegisterRpcs`.
 
 | Member | Mô tả |
 |---|---|
@@ -100,12 +103,12 @@ Chúng ném `ArgumentNullException` với codec, giá trị hoặc tên là null
 
 ### NetworkState <a href="#networkstate" id="networkstate"></a>
 
-`public sealed class NetworkState` được truyền vào `OnRegisterState`, như mô tả trong [state](../synchronization/state.md).
+`public sealed class NetworkState` được truyền vào `EntityBehaviour.OnRegisterState`.
 
 | Member | Mô tả |
 |---|---|
 | `Use<T>(IMessageCodec<T> codec, T instance, Action<T> onChanged = null, bool onlyWhenDirty = false) where T : class, new()` | Đăng ký state của behaviour. `onChanged` nhận giá trị trước đó. Với `onlyWhenDirty`, server chỉ so sánh state sau `SetStateDirty()`. |
-| `Use<T>(byte index, NetworkList<T> list, IMessageCodec<T> codec, NetworkListChanged<T> onChanged = null) where T : class, new()` | Đăng ký một list model dưới `index`, như mô tả trong [collection](../synchronization/collections.md). |
+| `Use<T>(byte index, NetworkList<T> list, IMessageCodec<T> codec, NetworkListChanged<T> onChanged = null) where T : class, new()` | Đăng ký một list model dưới `index`. |
 | `Use<T>(byte index, NetworkList<T> list, NetworkListChanged<T> onChanged = null)` | Đăng ký một list kiểu nguyên thuỷ. |
 | `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, IMessageCodec<TValue> codec, NetworkDictionaryChanged<TKey, TValue> onChanged = null) where TValue : class, new()` | Đăng ký một dictionary có value là model. |
 | `Use<TKey, TValue>(byte index, NetworkDictionary<TKey, TValue> dictionary, NetworkDictionaryChanged<TKey, TValue> onChanged = null)` | Đăng ký một dictionary có value kiểu nguyên thuỷ. |
@@ -126,7 +129,7 @@ Các type collection nằm trong `Fomoxa.Networking`. Thao tác và callback c�
 
 ### NetworkInput <a href="#networkinput" id="networkinput"></a>
 
-`public sealed class NetworkInput` được truyền vào `OnRegisterInput`, như mô tả trong [input](../prediction/input.md) và [reconciliation](../prediction/reconciliation.md).
+`public sealed class NetworkInput` được truyền vào `EntityBehaviour.OnRegisterInput`.
 
 | Member | Mô tả |
 |---|---|
