@@ -1,5 +1,46 @@
 # Ghi chú phát hành
 
+## 0.4.0 <a href="#040" id="040"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.4.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.4.0` |
+| `com.fomoxa.rpc` | 0.1.7; cần `com.fomoxa.networking` 0.4.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.7` |
+| `com.fomoxa.networking.rapier` | 0.2.6; cần `com.fomoxa.networking` 0.4.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.6` |
+| `com.fomoxa.networking.steam` | 0.1.2; cần `com.fomoxa.networking` 0.4.0 và Steamworks.NET 2025.165.0 trở lên | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.2` |
+
+`Fomoxa.Backend.Templates` 0.1.1, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.3.5 <a href="#upgrading-from-035" id="upgrading-from-035"></a>
+
+Nâng `com.fomoxa.rpc` lên 0.1.7, `com.fomoxa.networking.rapier` lên 0.2.6 và `com.fomoxa.networking.steam` lên 0.1.2 cùng lúc với package. Với package 0.4.0, `com.fomoxa.rpc` 0.1.6 báo lỗi khi sinh code, Rapier 0.2.5 ném lỗi phiên bản khi tạo world, còn Steam 0.1.1 ném lỗi phiên bản khi `NetworkManager` tạo transport.
+
+Một `NetworkBehaviour` giờ khai state và input bằng trường, khai đối số của RPC bằng tham số, và package sinh model. Code đăng ký model trên `NetworkBehaviour` không còn biên dịch. Thay nó như sau:
+
+| 0.3.5 | 0.4.0 |
+|---|---|
+| `OnRegisterState` với `state.Use(adapter, instance, onChanged)` | [Trường `[NetworkState]`](synchronization/state.md), `OnChanged` đặt tên callback |
+| `state.Use(..., onlyWhenDirty: true)` | `[NetworkStateModel(OnlyWhenDirty = true)]` trên class |
+| `state.Use(index, collection, ...)` | Một [trường tập hợp](synchronization/collections.md) với `[NetworkState(Index = n)]` |
+| `OnRegisterInput` với `input.Use(adapter, gather, apply)` | [Trường `[NetworkInput]`](prediction/input.md), `OnGatherInput` và `OnApplyInput` |
+| `input.Reconcile(adapter, capture, restore, matches)` | [Trường `[NetworkReconcile]`](prediction/reconciliation.md), `OnCaptureState` và `OnRestoreState`; `Tolerance` trên attribute thay cho `matches` |
+| `OnRegisterRpcs` và method `[NetworkRpc]` | Method `[ServerRpc]` và `[ClientRpc]` |
+| `SendServerRpc(adapter, model)`, `SendObserversRpc(adapter, model)`, `SendTargetRpc(peerId, adapter, model)` | [Method gửi](messaging/rpc.md#sending) được sinh, ví dụ `SendFireServerRpc(direction, weapon)` |
+
+Một RPC có tham số duy nhất là model giờ gửi một model sinh chứa model đó, trên `ReliableOrdered` trừ khi attribute chỉ kênh khác. Ở 0.3.5, nó gửi chính model đó, trên `[NetworkChannel]` của model.
+
+Editor ghi model sinh vào thư mục con `StateModels` và `RpcModels` của Generated Folder, và chặn Play mode và việc build player khi một model còn thiếu hoặc đã cũ.
+
+Giao thức và message của chính package không đổi, nhưng message của game đổi theo model sinh. Hãy cập nhật server và client của game cùng lúc, vì bản build làm với 0.3.5 có thể không kết nối được với bản làm với 0.4.0. [Server console](console-server/runtime.md) vẫn đăng ký model trên `EntityBehaviour` như ở 0.3.5; nếu nó dùng chung một behaviour với client Unity, nó dùng model mà Editor sinh.
+
+### Khai bằng trường <a href="#declaring-with-fields" id="declaring-with-fields"></a>
+
+- Trường state có thể mang mọi kiểu có kiểu dây, kể cả model. Tập hợp cũng là trường, nên một behaviour có thể giữ trường state và tập hợp cạnh nhau.
+- Một RPC nhận bao nhiêu tham số cũng được. Generator viết một method gửi có kiểu cho mỗi RPC, và đường gửi theo tên nhận các giá trị dưới dạng một đối số hoặc một tuple: `SendServerRpc(nameof(Fire), (direction, weapon))`.
+- Khi package sinh một model có trường đã đổi, Console hiện cảnh báo `[Fomoxa]` kèm một kết luận. `COMPATIBLE` nghĩa là bản build cũ của game vẫn kết nối được, `BREAKING` nghĩa là không. [Đổi trường](synchronization/state.md#changing-the-fields) liệt kê thay đổi nào giữ cho bản build cũ kết nối được.
+
 ## 0.3.5 <a href="#035" id="035"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

@@ -1,5 +1,46 @@
 # Release notes
 
+## 0.4.0
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.4.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.4.0` |
+| `com.fomoxa.rpc` | 0.1.7; needs `com.fomoxa.networking` 0.4.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.7` |
+| `com.fomoxa.networking.rapier` | 0.2.6; needs `com.fomoxa.networking` 0.4.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.2.6` |
+| `com.fomoxa.networking.steam` | 0.1.2; needs `com.fomoxa.networking` 0.4.0 and Steamworks.NET 2025.165.0 or later | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.2` |
+
+`Fomoxa.Backend.Templates` 0.1.1 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.3.5
+
+Update `com.fomoxa.rpc` to 0.1.7, `com.fomoxa.networking.rapier` to 0.2.6 and `com.fomoxa.networking.steam` to 0.1.2 together with the package. With the 0.4.0 package, `com.fomoxa.rpc` 0.1.6 reports an error when it generates code, Rapier 0.2.5 throws a version error when it creates its worlds, and Steam 0.1.1 throws one when the `NetworkManager` creates the transport.
+
+A `NetworkBehaviour` now declares its state and input as fields and its RPC arguments as parameters, and the package generates the models. Code that registers models on a `NetworkBehaviour` no longer compiles. Replace it as follows:
+
+| 0.3.5 | 0.4.0 |
+|---|---|
+| `OnRegisterState` with `state.Use(adapter, instance, onChanged)` | [`[NetworkState]` fields](synchronization/state.md), with `OnChanged` naming the callback |
+| `state.Use(..., onlyWhenDirty: true)` | `[NetworkStateModel(OnlyWhenDirty = true)]` on the class |
+| `state.Use(index, collection, ...)` | A [collection field](synchronization/collections.md) with `[NetworkState(Index = n)]` |
+| `OnRegisterInput` with `input.Use(adapter, gather, apply)` | [`[NetworkInput]` fields](prediction/input.md), `OnGatherInput` and `OnApplyInput` |
+| `input.Reconcile(adapter, capture, restore, matches)` | [`[NetworkReconcile]` fields](prediction/reconciliation.md), `OnCaptureState` and `OnRestoreState`; `Tolerance` on the attribute takes the place of `matches` |
+| `OnRegisterRpcs` and `[NetworkRpc]` methods | `[ServerRpc]` and `[ClientRpc]` methods |
+| `SendServerRpc(adapter, model)`, `SendObserversRpc(adapter, model)`, `SendTargetRpc(peerId, adapter, model)` | The generated [send methods](messaging/rpc.md#sending), such as `SendFireServerRpc(direction, weapon)` |
+
+An RPC whose only parameter is a model now sends a generated model that holds it, on `ReliableOrdered` unless the attribute names another channel. In 0.3.5 it sent the model itself, on the model's `[NetworkChannel]`.
+
+The Editor writes the generated models to the `StateModels` and `RpcModels` subfolders of the Generated Folder and blocks Play mode and player builds while one is missing or out of date.
+
+The protocol and the package's own messages did not change, but your game's messages change with the generated models. Update the server and the clients of your game together, because a build made with 0.3.5 may not connect to one made with 0.4.0. A [console server](console-server/runtime.md) still registers models on `EntityBehaviour` as in 0.3.5; if it shares a behaviour with Unity clients, it uses the models that the Editor generates.
+
+### Declaring with fields
+
+- A state field can be any type that has a wire type, including a model. Collections are fields too, so one behaviour can hold state fields and collections side by side.
+- An RPC takes any number of parameters. The generator writes a typed send method for each RPC, and sending by name takes the values as one argument or a tuple: `SendServerRpc(nameof(Fire), (direction, weapon))`.
+- When the package generates a model whose fields changed, the Console shows a `[Fomoxa]` warning with a verdict. `COMPATIBLE` means older builds of the game still connect, and `BREAKING` means they do not. [Changing the fields](synchronization/state.md#changing-the-fields) lists which changes keep older builds connected.
+
 ## 0.3.5
 
 This release ships these parts together:
