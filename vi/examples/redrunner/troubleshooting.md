@@ -42,7 +42,7 @@ Các bước kiểm tra chung nằm ở [prediction liên tục bị sửa](../.
 - Tick Rate là 50, khớp với fixed timestep 0.02 giây của project.
 - `PlayerMotion` có `RunSmoothVelocity`. Nếu thiếu, mỗi lần replay bắt đầu tăng tốc từ một giá trị khác và nhân vật trôi đi sau mỗi lần sửa.
 - `RedCharacter.Jump` kiểm tra mặt đất bằng `GroundCheck.Check ()` chứ không phải `IsGrounded`, giá trị cũ một frame trong lúc replay.
-- Nếu âm thanh hoặc particle khi nhảy phát hai lần, hãy kiểm tra `Apply` truyền `!context.Replaying` làm `effects`.
+- Nếu âm thanh hoặc particle khi nhảy phát hai lần, hãy kiểm tra `OnApplyInput` truyền `!context.Replaying` làm `effects`.
 - Ở host mode, nhân vật của chính host không được dự đoán và không bao giờ bị sửa, nên hãy test prediction với một server riêng.
 
 ## Người chơi bị giật hoặc trượt khi hồi sinh <a href="#a-player-snaps-or-slides-during-a-respawn" id="a-player-snaps-or-slides-during-a-respawn"></a>
@@ -62,7 +62,7 @@ Các cơ chế liên quan được mô tả trong [teleport](../../synchronizati
 Các cơ chế liên quan được mô tả trong [client](../../connections/client.md#connect-and-disconnect) và [input](../../prediction/input.md#on-the-server).
 
 - Nếu người chơi thoát bằng Home hoặc đóng game, client gửi `PeerLeave` và nhân vật phải bị despawn ngay. Nếu không, hãy sinh lại code bằng Tools > Fomoxa > Generate để `PeerLeave` được đăng ký.
-- Nếu client bị crash, server chờ heartbeat, khoảng 20 giây với giá trị mặc định. Nhân vật vẫn phải đứng yên sau 10 tick bị lặp; nếu không, hãy kiểm tra quy tắc `RepeatedTicks` trong `NetworkPlayer.Apply` mô tả ở [bước 08](offline-to-online/step-08-two-clients.md#stop-a-character-whose-player-vanished).
+- Nếu client bị crash, server chờ heartbeat, khoảng 20 giây với giá trị mặc định. Nhân vật vẫn phải đứng yên sau 10 tick bị lặp; nếu không, hãy kiểm tra quy tắc `RepeatedTicks` trong `NetworkPlayer.OnApplyInput` mô tả ở [bước 08](offline-to-online/step-08-two-clients.md#stop-a-character-whose-player-vanished).
 
 ## Ô địa chỉ không hiện chữ <a href="#the-address-field-shows-no-text" id="the-address-field-shows-no-text"></a>
 

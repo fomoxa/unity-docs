@@ -29,7 +29,7 @@ The scenes are built by the editor scripts, not by hand: **Tools > Demo > Rebuil
 | `PlayerCamera` | the chase camera behind your own character. Right mouse or Q and E rotate, the wheel zooms, platforms in the way pull the camera closer. Movement is relative to the camera yaw |
 | `PinnedCertificateCheck` | the TLS pin check: compares the SHA-256 of the certificate with `-tlspin:` |
 | `Models/Course.cs` | the platform layout and the movement and jump rules, shared with the server ([constants](../reference.md#8-gameplay-constants)) |
-| `Models/MoveInput.cs` | the input message, including `Jump` |
+| `Generated/StateModels/MoveInput.cs` | the input message, including `Jump`, which the Editor generates from the `[NetworkInput]` fields of `Player` |
 | `Models/Backend/*.cs`, `Rpc/Services.cs` | the network messages and service interfaces; `Generated/` holds the produced codecs |
 
 ## Command-line flags

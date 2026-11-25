@@ -23,13 +23,13 @@ Move, Jump, roll force with Time.deltaTime
 Online:
 Owner's client, every tick
   ↓
-Gather: read the keys into PlayerInput
+OnGatherInput: read the keys into the input fields
   ↓
 Fomoxa input frames
   ↓
 Server, at the input's tick
   ↓
-Apply: RedCharacter.Simulate with the tick length
+OnApplyInput: RedCharacter.Simulate with the tick length
 ```
 
 Ba điều khiến controller offline không chạy được trên server:
@@ -47,53 +47,24 @@ Ba điều khiến controller offline không chạy được trên server:
 
 ## Thiết kế <a href="#design" id="design"></a>
 
-Input của một tick là một model, `PlayerInput`, giữ trục ngang và hai nút. `NetworkPlayer` đăng ký nó trong `OnRegisterInput` với hai callback:
+Input của một tick là ba input field của `NetworkPlayer`: trục ngang và hai nút. Package gom chúng vào một model, `PlayerInput`, và gọi hai method của `NetworkPlayer`:
 
-| Callback | Chạy trên | Làm gì |
+| Method | Chạy trên | Làm gì |
 |---|---|---|
-| `Gather` | Client của owner, mỗi tick một lần | Điền `PlayerInput` từ các phím |
-| `Apply` | Server tại tick của input, và client của owner khi nó dự đoán | Gọi `RedCharacter.Simulate` |
+| `OnGatherInput` | Client của owner, mỗi tick một lần | Ghi các input field từ các phím |
+| `OnApplyInput` | Server tại tick của input, và client của owner khi nó dự đoán | Đọc các input field và gọi `RedCharacter.Simulate` |
 
 `RedCharacter.Simulate` là bước tick. Nó nhận trục, các nút, độ dài tick và việc có phát hiệu ứng hay không. Client chỉ gửi input, còn server quyết định nhân vật kết thúc ở đâu.
 
 ## File <a href="#files" id="files"></a>
 
 ```
-Assets/Scripts/RedRunner/Networking/Models/PlayerInput.cs
 Assets/Scripts/RedRunner/Characters/RedCharacter.cs
 Assets/Scripts/RedRunner/Utilities/GroundCheck.cs
 Assets/Scripts/RedRunner/Networking/NetworkPlayer.cs
 ```
 
 ## Hiện thực <a href="#implementation" id="implementation"></a>
-
-### Thêm input model <a href="#add-the-input-model" id="add-the-input-model"></a>
-
-```csharp
-using Fomoxa;
-
-namespace RedRunner.Networking.Models
-{
-    [Network]
-    [Codec("net")]
-    public class PlayerInput
-    {
-        [Network("f32")]
-        [Codec("net")]
-        public float Move { get; set; }
-
-        [Network("bool")]
-        [Codec("net")]
-        public bool Jump { get; set; }
-
-        [Network("bool")]
-        [Codec("net")]
-        public bool Roll { get; set; }
-    }
-}
-```
-
-Input model không cần `[NetworkChannel]`, vì package mang nó trong các input frame của riêng mình. Lưu file và để bộ sinh code ghi `PlayerInputNetAdapter` trước khi viết `NetworkPlayer`.
 
 ### Biến controller thành một bước tick <a href="#turn-the-controller-into-a-tick-step" id="turn-the-controller-into-a-tick-step"></a>
 
@@ -144,14 +115,25 @@ m_Rigidbody2D.AddForce ( new Vector2 ( Mathf.Sign ( transform.localScale.x ) * m
 
 ### Gather và apply <a href="#gather-and-apply" id="gather-and-apply"></a>
 
-Nửa phần input của `NetworkPlayer`, như đã commit:
+`NetworkPlayer` trở thành `partial` và đặt tên cho input model của nó, như `NetworkLevel` đặt tên cho state model ở bước 02:
 
 ```csharp
-protected override void OnRegisterInput(NetworkInput input)
-{
-    input.Use(PlayerInputNetAdapter.Instance, Gather, Apply);
-    input.Reconcile(PlayerMotionNetAdapter.Instance, Capture, Restore, Matches);
-}
+[RequireComponent(typeof(RedCharacter))]
+[NetworkInputModel("PlayerInput")]
+public sealed partial class NetworkPlayer : NetworkBehaviour
+```
+
+Nửa phần input của class, viết cho `com.fomoxa.networking` 0.4.0:
+
+```csharp
+[NetworkInput]
+private float move;
+
+[NetworkInput]
+private bool jump;
+
+[NetworkInput]
+private bool roll;
 
 private void Update()
 {
@@ -164,29 +146,31 @@ private void Update()
     m_RollPressed |= CrossPlatformInputManager.GetButtonDown("Roll");
 }
 
-private void Gather(PlayerInput input)
+protected override void OnGatherInput()
 {
     bool playing = GameManager.Singleton.gameRunning;
-    input.Move = playing ? CrossPlatformInputManager.GetAxis("Horizontal") : 0f;
-    input.Jump = playing && m_JumpPressed;
-    input.Roll = playing && m_RollPressed;
+    move = playing ? CrossPlatformInputManager.GetAxis("Horizontal") : 0f;
+    jump = playing && m_JumpPressed;
+    roll = playing && m_RollPressed;
     m_JumpPressed = false;
     m_RollPressed = false;
 }
 
-private void Apply(PlayerInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
     float tickDelta = (float)m_Game.Manager.TimeManager.TickDelta;
     bool fresh = !context.Repeated;
-    m_Character.Simulate(input.Move, fresh && input.Jump, fresh && input.Roll, tickDelta, !context.Replaying);
+    m_Character.Simulate(move, fresh && jump, fresh && roll, tickDelta, !context.Replaying);
 }
 ```
 
-`Update` chạy mỗi frame và giữ các lần bấm nút cho tới `Gather` tiếp theo, nên một lần bấm ngắn hơn một tick không bị mất. Khi màn hình tạm dừng đang mở, `gameRunning` là false và input trống, nên nhân vật dừng lại trong khi server và người chơi khác vẫn tiếp tục.
+Sau `OnGatherInput`, package copy ba field vào một `PlayerInput` và gửi nó đi. Trước `OnApplyInput`, nó copy input của tick trở lại các field, nên `OnApplyInput` đọc `move`, `jump` và `roll` và không bao giờ chạm vào model. Model sinh ra, `Networking/Generated/StateModels/PlayerInput.cs`, không có channel, vì package mang input trong các input frame của riêng mình.
 
-Trên server, `Apply` chạy tại tick mà input thuộc về. Khi không có input nào tới cho một tick, package lặp lại input cuối và đặt `InputContext.Repeated`, và bản port khi đó chỉ lặp lại trục di chuyển, không bao giờ lặp lại nhảy hay lăn. `InputContext.Replaying` được dùng ở bước 05. `NetworkPlayer.Awake` giờ lấy `RedCharacter` và tìm `NetworkGame` một lần, nên `m_Game` được gán trên mọi instance, kể cả instance của owner.
+`Update` chạy mỗi frame và giữ các lần bấm nút cho tới `OnGatherInput` tiếp theo, nên một lần bấm ngắn hơn một tick không bị mất. Khi màn hình tạm dừng đang mở, `gameRunning` là false và input trống, nên nhân vật dừng lại trong khi server và người chơi khác vẫn tiếp tục.
 
-Dòng `Reconcile` và ba callback của nó thuộc bước 05, dù chúng được viết trong cùng commit.
+Trên server, `OnApplyInput` chạy tại tick mà input thuộc về. Khi không có input nào tới cho một tick, package lặp lại input cuối và đặt `InputContext.Repeated`, và bản port khi đó chỉ lặp lại trục di chuyển, không bao giờ lặp lại nhảy hay lăn. `InputContext.Replaying` được dùng ở bước 05. `NetworkPlayer.Awake` giờ lấy `RedCharacter` và tìm `NetworkGame` một lần, nên `m_Game` được gán trên mọi instance, kể cả instance của owner.
+
+Các reconcile field của bước 05 được viết trong cùng commit.
 
 ## Test <a href="#test" id="test"></a>
 
@@ -205,4 +189,6 @@ Commit: 7799601
 Message: Predict the local character and send input through the network
 ```
 
-Xem [`7799601`](https://github.com/fomoxa/RedRunner/commit/7799601188dced2c0c67d27a452d50f8bf7c7566) trên GitHub, rồi tiếp tục với [bước 05: prediction và reconciliation](step-05-prediction-and-reconciliation.md).
+Xem [`7799601`](https://github.com/fomoxa/RedRunner/commit/7799601188dced2c0c67d27a452d50f8bf7c7566) trên GitHub. Commit đó khai báo `PlayerInput` bằng tay với API 0.3, và [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) chuyển nó sang các field.
+
+Tiếp tục với [bước 05: prediction và reconciliation](step-05-prediction-and-reconciliation.md).

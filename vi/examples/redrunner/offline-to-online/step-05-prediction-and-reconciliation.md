@@ -6,11 +6,11 @@ Sau bước này, nhân vật của owner di chuyển ngay trong frame phím đ�
 
 ## Điểm xuất phát <a href="#starting-point" id="starting-point"></a>
 
-Sau bước 04, `PlayerInput`, `Gather`, `Apply` và `RedCharacter.Simulate` đã tồn tại, và server chạy `Apply` tại tick của mỗi input.
+Sau bước 04, các input field, `OnGatherInput`, `OnApplyInput` và `RedCharacter.Simulate` đã tồn tại, và server chạy `OnApplyInput` tại tick của mỗi input.
 
 ## Vấn đề <a href="#problem" id="problem"></a>
 
-Nếu client chỉ gửi input rồi chờ, mỗi lần bấm phím sẽ hiện ra chậm một vòng round trip, nên client phải tự chạy `Apply` ngay trong tick nó thu thập input.
+Nếu client chỉ gửi input rồi chờ, mỗi lần bấm phím sẽ hiện ra chậm một vòng round trip, nên client phải tự chạy `OnApplyInput` ngay trong tick nó thu thập input.
 
 Kết quả của client sau đó có thể lệch khỏi kết quả của server, ví dụ khi một gói tới muộn một tick và server lặp lại input trước đó, hoặc khi hai physics engine làm tròn khác nhau. Client cần phát hiện độ lệch và quay về kết quả của server mà không mất các input đã áp dụng kể từ đó.
 
@@ -26,23 +26,23 @@ Kết quả của client sau đó có thể lệch khỏi kết quả của serv
 ## Thiết kế <a href="#design" id="design"></a>
 
 ```
-Owner's client                        Server
-Gather (tick T)
+Owner's client                               Server
+OnGatherInput (tick T)
   ↓
-Apply (prediction) ── input T ──→     Apply (tick T)
-  ↓                                     ↓
-Capture → history[T]                  Capture
-  ↓                                     ↓
-render at once           ←── motion T ──┘
+OnApplyInput (prediction) ── input T ──→     OnApplyInput (tick T)
+  ↓                                            ↓
+OnCaptureState → history[T]                  OnCaptureState
+  ↓                                            ↓
+render at once                  ←── motion T ──┘
   ↓
-Matches(server T, history[T])?
+server T within Tolerance of history[T]?
   yes → nothing
   no  → restore 2D physics to T
-        Restore(server motion)
-        Apply T+1 … now (Replaying = true)
+        server motion → fields, OnRestoreState
+        OnApplyInput T+1 … now (Replaying = true)
 ```
 
-Thứ client so sánh là một model thứ hai, `PlayerMotion`, giữ vị trí, vận tốc và vận tốc damping khi chạy. `NetworkPlayer` đăng ký nó bằng `input.Reconcile` với ba callback, `Capture`, `Restore` và `Matches`.
+Thứ client so sánh là một nhóm field thứ hai của `NetworkPlayer`, đánh dấu `[NetworkReconcile]`, giữ vị trí, vận tốc và vận tốc damping khi chạy. Package gom chúng vào model `PlayerMotion`. `OnCaptureState` copy body vào các field, `OnRestoreState` copy các field trở lại body, và `Tolerance` của từng field quyết định giá trị của server và giá trị dự đoán có khớp nhau hay không.
 
 Nhân vật là một `Rigidbody2D`, và scene có các body khác mà nhân vật chạm vào. Khi bật Simulate Physics trên `RigidbodyPhysics` của `Network Manager`, package lưu physics 2D của scene sau mỗi tick và khôi phục nó trước khi replay, nên lần replay bắt đầu từ đúng world mà server đã có.
 
@@ -51,7 +51,6 @@ Các client khác không dự đoán nhân vật này. Chúng thấy nó qua `Ne
 ## File <a href="#files" id="files"></a>
 
 ```
-Assets/Scripts/RedRunner/Networking/Models/PlayerMotion.cs
 Assets/Scripts/RedRunner/Networking/NetworkPlayer.cs
 Assets/Scripts/RedRunner/Networking/NetworkGame.cs
 Assets/Scripts/RedRunner/Characters/RedCharacter.cs
@@ -59,79 +58,66 @@ Assets/Scripts/RedRunner/Characters/RedCharacter.cs
 
 ## Hiện thực <a href="#implementation" id="implementation"></a>
 
-### Thêm motion model <a href="#add-the-motion-model" id="add-the-motion-model"></a>
+### Chụp, khôi phục và so sánh <a href="#capture-restore-and-compare" id="capture-restore-and-compare"></a>
+
+Class đặt tên cho reconcile model cạnh input model của nó:
 
 ```csharp
-using Fomoxa;
-
-namespace RedRunner.Networking.Models
-{
-    [Network]
-    [Codec("net")]
-    public class PlayerMotion
-    {
-        [Network("f32")]
-        [Codec("net")]
-        public float X { get; set; }
-
-        [Network("f32")]
-        [Codec("net")]
-        public float Y { get; set; }
-
-        [Network("f32")]
-        [Codec("net")]
-        public float VelocityX { get; set; }
-
-        [Network("f32")]
-        [Codec("net")]
-        public float VelocityY { get; set; }
-
-        [Network("f32")]
-        [Codec("net")]
-        public float RunSmoothVelocity { get; set; }
-    }
-}
+[RequireComponent(typeof(RedCharacter))]
+[NetworkInputModel("PlayerInput")]
+[NetworkReconcileModel("PlayerMotion")]
+public sealed partial class NetworkPlayer : NetworkBehaviour
 ```
 
-`RunSmoothVelocity` nằm trong model vì `Mathf.SmoothDamp` mang vận tốc của nó từ tick này sang tick sau. Nếu thiếu, lần replay sẽ bắt đầu tăng tốc từ một giá trị khác với server, và bị trôi. `RedCharacter` cung cấp field này dưới dạng property `RunSmoothVelocity` cho mục đích đó.
-
-### Chụp, khôi phục và so sánh <a href="#capture-restore-and-compare" id="capture-restore-and-compare"></a>
+Nửa phần reconcile của class:
 
 ```csharp
 private const float PositionTolerance = 0.01f;
 private const float VelocityTolerance = 0.05f;
 
-private void Capture(PlayerMotion motion)
+[NetworkReconcile(Tolerance = PositionTolerance)]
+private float x;
+
+[NetworkReconcile(Tolerance = PositionTolerance)]
+private float y;
+
+[NetworkReconcile(Tolerance = VelocityTolerance)]
+private float velocityX;
+
+[NetworkReconcile(Tolerance = VelocityTolerance)]
+private float velocityY;
+
+[NetworkReconcile(Tolerance = VelocityTolerance)]
+private float runSmoothVelocity;
+
+protected override void OnCaptureState()
 {
     BodyState2D state = NetworkObject.Body2D.State;
-    motion.X = state.Position.X;
-    motion.Y = state.Position.Y;
-    motion.VelocityX = state.Velocity.X;
-    motion.VelocityY = state.Velocity.Y;
-    motion.RunSmoothVelocity = m_Character.RunSmoothVelocity;
+    x = state.Position.X;
+    y = state.Position.Y;
+    velocityX = state.Velocity.X;
+    velocityY = state.Velocity.Y;
+    runSmoothVelocity = m_Character.RunSmoothVelocity;
 }
 
-private void Restore(PlayerMotion motion)
+protected override void OnRestoreState()
 {
     PhysicsBody2D body = NetworkObject.Body2D;
     BodyState2D state = body.State;
-    state.Position = new System.Numerics.Vector2(motion.X, motion.Y);
-    state.Velocity = new System.Numerics.Vector2(motion.VelocityX, motion.VelocityY);
+    state.Position = new System.Numerics.Vector2(x, y);
+    state.Velocity = new System.Numerics.Vector2(velocityX, velocityY);
     body.State = state;
-    m_Character.RunSmoothVelocity = motion.RunSmoothVelocity;
+    m_Character.RunSmoothVelocity = runSmoothVelocity;
 }
-
-private static bool Matches(PlayerMotion server, PlayerMotion predicted) =>
-    Math.Abs(server.X - predicted.X) <= PositionTolerance
-    && Math.Abs(server.Y - predicted.Y) <= PositionTolerance
-    && Math.Abs(server.VelocityX - predicted.VelocityX) <= VelocityTolerance
-    && Math.Abs(server.VelocityY - predicted.VelocityY) <= VelocityTolerance
-    && Math.Abs(server.RunSmoothVelocity - predicted.RunSmoothVelocity) <= VelocityTolerance;
 ```
+
+Package gọi `OnCaptureState` trước khi copy các field vào một `PlayerMotion`, và gọi `OnRestoreState` sau khi đã copy `PlayerMotion` của server vào các field. Hai state khớp nhau khi mọi field nằm trong `Tolerance` của nó so với giá trị của server; với `float`, đó là hiệu tuyệt đối.
+
+`runSmoothVelocity` là một reconcile field vì `Mathf.SmoothDamp` mang vận tốc của nó từ tick này sang tick sau. Nếu thiếu, lần replay sẽ bắt đầu tăng tốc từ một giá trị khác với server, và bị trôi. `RedCharacter` cung cấp giá trị này dưới dạng property `RunSmoothVelocity` cho mục đích đó.
 
 `NetworkObject.Body2D` là cách package nhìn vào `Rigidbody2D` của nhân vật, với vị trí và vận tốc `System.Numerics.Vector2`. Dung sai có thể nhỏ vì server và client chạy cùng physics trên cùng các khối.
 
-Trong lúc replay, `InputContext.Replaying` là true, và `Apply` từ bước 04 truyền `!context.Replaying` làm `effects`, nên một cú nhảy được replay thay đổi vận tốc mà không phát lại âm thanh, particle hay trigger lần thứ hai.
+Trong lúc replay, `InputContext.Replaying` là true, và `OnApplyInput` từ bước 04 truyền `!context.Replaying` làm `effects`, nên một cú nhảy được replay thay đổi vận tốc mà không phát lại âm thanh, particle hay trigger lần thứ hai.
 
 ### Đi theo người chơi cục bộ <a href="#follow-the-local-player" id="follow-the-local-player"></a>
 
@@ -190,4 +176,6 @@ Commit: 7799601
 Message: Predict the local character and send input through the network
 ```
 
-Xem [`7799601`](https://github.com/fomoxa/RedRunner/commit/7799601188dced2c0c67d27a452d50f8bf7c7566) trên GitHub, rồi tiếp tục với [bước 06: chết và hồi sinh](step-06-death-and-respawn.md).
+Xem [`7799601`](https://github.com/fomoxa/RedRunner/commit/7799601188dced2c0c67d27a452d50f8bf7c7566) trên GitHub. Commit đó khai báo `PlayerMotion` bằng tay với API 0.3 và so sánh nó trong một method `Matches`, còn [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) chuyển nó sang các field, mỗi field có một `Tolerance`.
+
+Tiếp tục với [bước 06: chết và hồi sinh](step-06-death-and-respawn.md).

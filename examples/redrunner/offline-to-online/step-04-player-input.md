@@ -23,13 +23,13 @@ Move, Jump, roll force with Time.deltaTime
 Online:
 Owner's client, every tick
   ↓
-Gather: read the keys into PlayerInput
+OnGatherInput: read the keys into the input fields
   ↓
 Fomoxa input frames
   ↓
 Server, at the input's tick
   ↓
-Apply: RedCharacter.Simulate with the tick length
+OnApplyInput: RedCharacter.Simulate with the tick length
 ```
 
 Three things keep the offline controller from running on the server:
@@ -47,53 +47,24 @@ Three things keep the offline controller from running on the server:
 
 ## Design
 
-The input of one tick is a model, `PlayerInput`, holding the horizontal axis and two buttons. `NetworkPlayer` registers it in `OnRegisterInput` with two callbacks:
+The input of one tick is three input fields of `NetworkPlayer`: the horizontal axis and two buttons. The package gathers them into a model, `PlayerInput`, and calls two methods of `NetworkPlayer`:
 
-| Callback | Runs on | Does |
+| Method | Runs on | Does |
 |---|---|---|
-| `Gather` | The owner's client, once per tick | Fills `PlayerInput` from the keys |
-| `Apply` | The server at the input's tick, and the owner's client when it predicts | Calls `RedCharacter.Simulate` |
+| `OnGatherInput` | The owner's client, once per tick | Writes the input fields from the keys |
+| `OnApplyInput` | The server at the input's tick, and the owner's client when it predicts | Reads the input fields and calls `RedCharacter.Simulate` |
 
 `RedCharacter.Simulate` is the tick step. It takes the axis, the buttons, the tick length and whether to play effects. The client only sends input, and the server decides where the character ends up.
 
 ## Files
 
 ```
-Assets/Scripts/RedRunner/Networking/Models/PlayerInput.cs
 Assets/Scripts/RedRunner/Characters/RedCharacter.cs
 Assets/Scripts/RedRunner/Utilities/GroundCheck.cs
 Assets/Scripts/RedRunner/Networking/NetworkPlayer.cs
 ```
 
 ## Implementation
-
-### Add the input model
-
-```csharp
-using Fomoxa;
-
-namespace RedRunner.Networking.Models
-{
-    [Network]
-    [Codec("net")]
-    public class PlayerInput
-    {
-        [Network("f32")]
-        [Codec("net")]
-        public float Move { get; set; }
-
-        [Network("bool")]
-        [Codec("net")]
-        public bool Jump { get; set; }
-
-        [Network("bool")]
-        [Codec("net")]
-        public bool Roll { get; set; }
-    }
-}
-```
-
-An input model needs no `[NetworkChannel]`, because the package carries it in its own input frames. Save the file and let the generator write `PlayerInputNetAdapter` before you write `NetworkPlayer`.
 
 ### Turn the controller into a tick step
 
@@ -144,14 +115,25 @@ m_Rigidbody2D.AddForce ( new Vector2 ( Mathf.Sign ( transform.localScale.x ) * m
 
 ### Gather and apply
 
-The input half of `NetworkPlayer`, as committed:
+`NetworkPlayer` becomes `partial` and names its input model, as `NetworkLevel` named its state model in step 02:
 
 ```csharp
-protected override void OnRegisterInput(NetworkInput input)
-{
-    input.Use(PlayerInputNetAdapter.Instance, Gather, Apply);
-    input.Reconcile(PlayerMotionNetAdapter.Instance, Capture, Restore, Matches);
-}
+[RequireComponent(typeof(RedCharacter))]
+[NetworkInputModel("PlayerInput")]
+public sealed partial class NetworkPlayer : NetworkBehaviour
+```
+
+The input half of the class, written for `com.fomoxa.networking` 0.4.0:
+
+```csharp
+[NetworkInput]
+private float move;
+
+[NetworkInput]
+private bool jump;
+
+[NetworkInput]
+private bool roll;
 
 private void Update()
 {
@@ -164,29 +146,31 @@ private void Update()
     m_RollPressed |= CrossPlatformInputManager.GetButtonDown("Roll");
 }
 
-private void Gather(PlayerInput input)
+protected override void OnGatherInput()
 {
     bool playing = GameManager.Singleton.gameRunning;
-    input.Move = playing ? CrossPlatformInputManager.GetAxis("Horizontal") : 0f;
-    input.Jump = playing && m_JumpPressed;
-    input.Roll = playing && m_RollPressed;
+    move = playing ? CrossPlatformInputManager.GetAxis("Horizontal") : 0f;
+    jump = playing && m_JumpPressed;
+    roll = playing && m_RollPressed;
     m_JumpPressed = false;
     m_RollPressed = false;
 }
 
-private void Apply(PlayerInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
     float tickDelta = (float)m_Game.Manager.TimeManager.TickDelta;
     bool fresh = !context.Repeated;
-    m_Character.Simulate(input.Move, fresh && input.Jump, fresh && input.Roll, tickDelta, !context.Replaying);
+    m_Character.Simulate(move, fresh && jump, fresh && roll, tickDelta, !context.Replaying);
 }
 ```
 
-`Update` runs every frame and keeps button presses until the next `Gather`, so a press shorter than a tick is not lost. While the pause screen is open, `gameRunning` is false and the input is empty, so the character stops while the server and the other players keep going.
+After `OnGatherInput` the package copies the three fields into a `PlayerInput` and sends it. Before `OnApplyInput` it copies the input of the tick back into the fields, so `OnApplyInput` reads `move`, `jump` and `roll` and never touches the model. The generated model, `Networking/Generated/StateModels/PlayerInput.cs`, has no channel, because the package carries input in its own input frames.
 
-On the server, `Apply` runs at the tick the input belongs to. When no input has arrived for a tick, the package repeats the last one and sets `InputContext.Repeated`, and the port then repeats only the axis, never a jump or a roll. `InputContext.Replaying` comes into play in step 05. `NetworkPlayer.Awake` now gets `RedCharacter` and finds `NetworkGame` once, so `m_Game` is set on every instance, the owner's included.
+`Update` runs every frame and keeps button presses until the next `OnGatherInput`, so a press shorter than a tick is not lost. While the pause screen is open, `gameRunning` is false and the input is empty, so the character stops while the server and the other players keep going.
 
-The `Reconcile` line and its three callbacks belong to step 05, although they were written in the same commit.
+On the server, `OnApplyInput` runs at the tick the input belongs to. When no input has arrived for a tick, the package repeats the last one and sets `InputContext.Repeated`, and the port then repeats only the axis, never a jump or a roll. `InputContext.Replaying` comes into play in step 05. `NetworkPlayer.Awake` now gets `RedCharacter` and finds `NetworkGame` once, so `m_Game` is set on every instance, the owner's included.
+
+The reconcile fields of step 05 were written in the same commit.
 
 ## Test
 
@@ -205,4 +189,6 @@ Commit: 7799601
 Message: Predict the local character and send input through the network
 ```
 
-View [`7799601`](https://github.com/fomoxa/RedRunner/commit/7799601188dced2c0c67d27a452d50f8bf7c7566) on GitHub, then continue with [step 05: prediction and reconciliation](step-05-prediction-and-reconciliation.md).
+View [`7799601`](https://github.com/fomoxa/RedRunner/commit/7799601188dced2c0c67d27a452d50f8bf7c7566) on GitHub. That commit declares `PlayerInput` by hand with the 0.3 API, and [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) moves it to fields.
+
+Continue with [step 05: prediction and reconciliation](step-05-prediction-and-reconciliation.md).

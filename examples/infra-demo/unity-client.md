@@ -20,8 +20,8 @@ Goal: Unity opens `MyGame/` and downloads all packages.
 `Packages/manifest.json` takes two packages straight from GitHub:
 
 ```json
-"com.fomoxa.networking": "https://github.com/fomoxa/com.fomoxa.networking.git#0.3.4",
-"com.fomoxa.rpc":        "https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.5"
+"com.fomoxa.networking": "https://github.com/fomoxa/com.fomoxa.networking.git#0.4.0",
+"com.fomoxa.rpc":        "https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.7"
 ```
 
 Unity calls `git` to clone them into `Library/PackageCache/`, and `packages-lock.json` pins the exact commits.
@@ -192,7 +192,7 @@ The rules: 18 platforms are arranged in a spiral, each 1.4 m higher than the las
 3. `Launcher.Start()` in `Game` takes the ticket (`MatchSession.TryTake`) and calls `ClientManager.StartConnection(address, port, ticket)` to connect over UDP through the gateway to the pod.
 4. Leaving the room (by button or by losing the connection) makes `MatchSession.ReturnToLobby` reload `Lobby`, still logged in.
 
-The main code is in `MyGame/Assets/Network/`: `RoomJoiner.cs`, `LobbyScreen.cs`, `MatchHudScreen.cs`, `MatchSession.cs`, `Launcher.cs`, `Player.cs`, `PlayerCamera.cs` and `BootRouter.cs`. Two files are shared with the server: `Models/Course.cs` (platform geometry and jump physics) and `Models/MoveInput.cs` (the input sent to the server).
+The main code is in `MyGame/Assets/Network/`: `RoomJoiner.cs`, `LobbyScreen.cs`, `MatchHudScreen.cs`, `MatchSession.cs`, `Launcher.cs`, `Player.cs`, `PlayerCamera.cs` and `BootRouter.cs`. Two files are shared with the server: `Models/Course.cs` (platform geometry and jump physics) and `Generated/StateModels/MoveInput.cs` (the input sent to the server, which the Unity Editor generates from the `[NetworkInput]` fields of `Player`).
 
 ## Editing the UI
 
@@ -209,7 +209,7 @@ Open a `.uxml` file in UI Builder (Window, UI Toolkit, UI Builder), or change co
 
 ## Regenerating code after changing a model or RPC
 
-Data exchanged over the network (login, rooms, scores, and `MoveInput`) is described by C# classes marked `[Network]`. The `fomoxac` tool reads them and generates the encode and decode code (`Generated/*.cs`). The backend and Unity each have their own generated tree, and the two must match:
+Data exchanged over the network (login, rooms, scores, and `MoveInput`) is described by C# classes marked `[Network]`. You write all of them except `MoveInput`, which the Unity Editor generates from the fields of `Player`. The `fomoxac` tool reads them and generates the encode and decode code (`Generated/*.cs`). The backend and Unity each have their own generated tree, and the two must match:
 
 | Tree | Models | Generated code | Settings |
 |---|---|---|---|

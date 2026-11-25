@@ -88,7 +88,6 @@ Assets/Scripts/RedRunner/Collectables/Chest.cs
 Assets/Scripts/RedRunner/GameManager.cs
 Assets/Scripts/RedRunner/Utilities/CameraController.cs
 Assets/Scripts/RedRunner/UI/UIScreen/StartScreen.cs
-Assets/Scripts/RedRunner/Networking/Models/PlayerState.cs
 Assets/Scripts/RedRunner/Networking/NetworkPlayer.cs
 Assets/Scenes/Play.unity
 ```
@@ -135,36 +134,27 @@ Ví dụ trên là `Saw`, và `Spike`, `Water`, `Mace` có cùng phép kiểm tr
 
 ### Giữ cái chết trong một state <a href="#keep-the-death-in-a-state" id="keep-the-death-in-a-state"></a>
 
+`NetworkPlayer` giữ cái chết trong hai state field và đặt tên cho model của chúng là `PlayerState`:
+
 ```csharp
-using Fomoxa;
-using Fomoxa.Networking;
-
-namespace RedRunner.Networking.Models
-{
-    [Network]
-    [Codec("net")]
-    [NetworkChannel("net", Channel.ReliableOrdered)]
-    public class PlayerState
-    {
-        [Network("bool")]
-        [Codec("net")]
-        public bool Dead { get; set; }
-
-        [Network("u8")]
-        [Codec("net")]
-        public byte Cause { get; set; }
-    }
-}
+[RequireComponent(typeof(RedCharacter))]
+[NetworkStateModel("PlayerState")]
+[NetworkInputModel("PlayerInput")]
+[NetworkReconcileModel("PlayerMotion")]
+public sealed partial class NetworkPlayer : NetworkBehaviour
 ```
 
-`NetworkPlayer` đăng ký state này cạnh input của nó và đặt các cờ khi nhân vật khởi động:
+```csharp
+[NetworkState(OnChanged = nameof(OnDeathChanged))]
+private bool dead;
+
+[NetworkState(OnChanged = nameof(OnCauseChanged))]
+private byte cause;
+```
+
+Nó đặt các cờ khi nhân vật khởi động:
 
 ```csharp
-protected override void OnRegisterState(NetworkState state)
-{
-    state.Use(PlayerStateNetAdapter.Instance, m_State, previous => ShowState());
-}
-
 public override void OnStartServer()
 {
     m_Character.DecidesDeath = true;
@@ -188,9 +178,13 @@ public override void OnStartClient()
 }
 ```
 
-`OnStopServer` hủy subscribe `ServerTick`. Callback của state nhận giá trị trước đó trong khi `m_State` đã giữ giá trị mới, nên `ShowState` đọc `m_State`:
+`OnStopServer` hủy subscribe `ServerTick`. Package ghi mọi field của một lần cập nhật trước khi gọi các method `OnChanged`, nên cả hai callback đều gọi `ShowState`, method đọc cả hai field:
 
 ```csharp
+private void OnDeathChanged(bool previous, bool current) => ShowState();
+
+private void OnCauseChanged(byte previous, byte current) => ShowState();
+
 private void ShowState()
 {
     if (m_Game.IsServer)
@@ -198,16 +192,18 @@ private void ShowState()
         return;
     }
 
-    if (m_State.Dead && !m_Character.IsDead.Value)
+    if (dead && !m_Character.IsDead.Value)
     {
-        m_Character.Die((DeathCause)m_State.Cause);
+        m_Character.Die((DeathCause)cause);
     }
-    else if (!m_State.Dead && m_Character.IsDead.Value)
+    else if (!dead && m_Character.IsDead.Value)
     {
         m_Character.Reset();
     }
 }
 ```
+
+Một cái chết đổi cả hai field trong một lần cập nhật, nên `ShowState` chạy hai lần, và lần gọi thứ hai thấy nhân vật đã chết nên không làm gì.
 
 ### Quyết định sau mỗi tick <a href="#decide-after-each-tick" id="decide-after-each-tick"></a>
 
@@ -217,7 +213,7 @@ private void ShowState()
 private void ServerTick()
 {
     TimeManager time = m_Game.Manager.TimeManager;
-    if (m_State.Dead)
+    if (dead)
     {
         if (time.Tick >= m_RespawnTick)
         {
@@ -234,8 +230,8 @@ private void ServerTick()
 
     if (m_Character.IsDead.Value)
     {
-        m_State.Dead = true;
-        m_State.Cause = (byte)m_Character.DeathCause;
+        dead = true;
+        cause = (byte)m_Character.DeathCause;
         m_RespawnTick = time.Tick + (uint)Mathf.CeilToInt(m_RespawnDelay * time.TickRate);
         Debug.Log($"[RedRunner] player {NetworkObject.OwnerId} died: {m_Character.DeathCause}");
     }
@@ -262,16 +258,16 @@ private void Respawn()
     body.State = state;
     m_NetworkTransform.Teleport();
     m_Character.RunSmoothVelocity = 0f;
-    m_State.Dead = false;
-    m_State.Cause = 0;
+    dead = false;
+    cause = 0;
 }
 ```
 
-`Reset` làm nhân vật sống lại và bật lại `Rigidbody2D` của nó. Sau đó body được đưa tới điểm spawn qua `NetworkObject.Body2D`, cùng cách nhìn vào body mà `Restore` dùng, và vận tốc damping khi chạy cũng được đặt lại, nên reconcile state tiếp theo khớp với một nhân vật đang đứng yên.
+`Reset` làm nhân vật sống lại và bật lại `Rigidbody2D` của nó. Sau đó body được đưa tới điểm spawn qua `NetworkObject.Body2D`, cùng cách nhìn vào body mà `OnRestoreState` dùng, và vận tốc damping khi chạy cũng được đặt lại, nên reconcile state tiếp theo khớp với một nhân vật đang đứng yên.
 
 Việc hồi sinh tới hai loại client theo cách khác nhau. Các client khác interpolate nhân vật, và `NetworkTransform.Teleport()` báo cho chúng biết lần di chuyển này là một cú nhảy, nên chúng xóa bộ đệm interpolation và đặt nhân vật ở điểm bắt đầu. `NetworkPlayer.Awake` giữ `NetworkTransform` trong `m_NetworkTransform` cho lời gọi này.
 
-Client của owner dự đoán nhân vật và không lấy vị trí từ `NetworkTransform`. Reconcile state tiếp theo từ server cách xa dự đoán của nó, `Matches` trả về false, và client khôi phục motion của server rồi replay. Việc hồi sinh được sửa như mọi khác biệt khác, không cần code riêng.
+Client của owner dự đoán nhân vật và không lấy vị trí từ `NetworkTransform`. Reconcile state tiếp theo từ server cách xa dự đoán của nó, vị trí nằm ngoài `Tolerance`, và client khôi phục motion của server rồi replay. Việc hồi sinh được sửa như mọi khác biệt khác, không cần code riêng.
 
 Dòng `Teleport()` được thêm sau, trong commit `c75cebd` ở bước 08, sau khi một bài kiểm tra phát hiện các client khác vẽ nhân vật trượt ngang qua level. Commit `a148ea7` chứa phần còn lại của method này.
 
@@ -320,7 +316,7 @@ Commit: a148ea7
 Message: Decide deaths on the server and respawn players at the start
 ```
 
-Xem [`a148ea7`](https://github.com/fomoxa/RedRunner/commit/a148ea70ca4eea0ec407c9cd85af57ca1acdf589) trên GitHub.
+Xem [`a148ea7`](https://github.com/fomoxa/RedRunner/commit/a148ea70ca4eea0ec407c9cd85af57ca1acdf589) trên GitHub. Commit đó khai báo `PlayerState` bằng tay với API 0.3, và [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) chuyển nó sang các field.
 
 Lời gọi `Teleport()` trong `Respawn` đến từ `c75cebd`, được liệt kê ở bước 08.
 

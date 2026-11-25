@@ -31,8 +31,8 @@ Offline game (2b675b5)
 | [01 Nền tảng network](step-01-network-foundation.md) | Unity 6000.5, package, sinh code, một `NetworkManager` trong `Play.unity` | [Cài đặt](../../../getting-started/installation.md), [NetworkManager](../../../connections/network-manager.md) |
 | [02 Level dùng chung](step-02-shared-level.md) | Một level hữu hạn dựng từ seed mà server giữ trong một state | [State](../../../synchronization/state.md), [Spawn](../../../objects/spawning.md#scene-objects) |
 | [03 Spawn người chơi](step-03-player-spawning.md) | Nhân vật trở thành network prefab; game khởi động dưới dạng server, host hoặc client | [Spawn](../../../objects/spawning.md), [Server](../../../connections/server.md), [Client](../../../connections/client.md) |
-| [04 Input của người chơi](step-04-player-input.md) | Input model và bước tick mà server áp dụng | [Input](../../../prediction/input.md), [Authority](../../../concepts/authority.md) |
-| [05 Prediction và reconciliation](step-05-prediction-and-reconciliation.md) | Motion model, rollback physics 2D, camera theo người chơi cục bộ | [Reconciliation](../../../prediction/reconciliation.md), [Rollback với physics](../../../prediction/rollback.md) |
+| [04 Input của người chơi](step-04-player-input.md) | Các input field và bước tick mà server áp dụng | [Input](../../../prediction/input.md), [Authority](../../../concepts/authority.md) |
+| [05 Prediction và reconciliation](step-05-prediction-and-reconciliation.md) | Các reconcile field, rollback physics 2D, camera theo người chơi cục bộ | [Reconciliation](../../../prediction/reconciliation.md), [Rollback với physics](../../../prediction/rollback.md) |
 | [06 Chết và hồi sinh](step-06-death-and-respawn.md) | Cái chết quyết định trên server, state của người chơi, hồi sinh bằng teleport | [State](../../../synchronization/state.md), [Teleport](../../../synchronization/transform.md#teleporting) |
 | [07 Chướng ngại di chuyển](step-07-moving-hazards.md) | Path follower được đặt theo số tick | [Tick và thời gian](../../../concepts/tick.md) |
 | [08 Hai client](step-08-two-clients.md) | Animation của nhân vật ở xa, người chơi rời đi hoặc bị crash | [NetworkTransform](../../../synchronization/transform.md), [Input](../../../prediction/input.md) |
@@ -52,6 +52,8 @@ Các bước được thực hiện thành các commit trên branch `master` c�
 | 07 | [`f277dad`](https://github.com/fomoxa/RedRunner/commit/f277dad4cc29eccef696158280185c9117a270ae) |
 | 08 | [`52e1696`](https://github.com/fomoxa/RedRunner/commit/52e1696b2e5b8db09e0178f827febf9ae712a02f), [`0edd3a4`](https://github.com/fomoxa/RedRunner/commit/0edd3a46a0f5bf48a76786e6242ea2f523e1ec21), [`c75cebd`](https://github.com/fomoxa/RedRunner/commit/c75cebdee36f6edfc3869964157bd45093eae543), [`c239d2a`](https://github.com/fomoxa/RedRunner/commit/c239d2a0988dcf2af5821b41f1ba7cc2f6372baf) |
 | 09 | [`7396f92`](https://github.com/fomoxa/RedRunner/commit/7396f9279b5796ffb35d97765cbe5cb1794d5357) |
+
+Commit của các bước 02 tới 06 dùng API 0.3, trong đó một `NetworkBehaviour` khai báo model bằng tay và đăng ký chúng trong `OnRegisterState` và `OnRegisterInput`. Các bước trình bày cùng code đó với các field của 0.4.0, và [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) là commit chuyển Red Runner sang chúng.
 
 Bước 04 và 05 dùng chung một commit, còn bước 08 trải trên bốn commit. Trong lịch sử, `7396f92` của bước 09 nằm giữa `52e1696` và `0edd3a4` của bước 08.
 

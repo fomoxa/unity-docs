@@ -107,12 +107,12 @@ Chùy có một `Rigidbody2D` kinematic, và `MovePosition` di chuyển nó tron
 ```csharp
 private void Build()
 {
-    if (m_State.Seed == 0 || m_Generator.IsBuilt)
+    if (seed == 0 || m_Generator.IsBuilt)
     {
         return;
     }
 
-    m_Generator.Build((int)m_State.Seed);
+    m_Generator.Build((int)seed);
     m_Followers = FindObjectsByType<PathFollower>(FindObjectsSortMode.None);
     m_Game.Manager.TimeManager.OnPreTick += MoveFollowers;
 }

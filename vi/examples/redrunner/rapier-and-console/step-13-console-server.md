@@ -46,7 +46,7 @@ Server~/PlayerEntity.cs
 
 ### Project <a href="#the-project" id="the-project"></a>
 
-`Server~/RedRunner.Server.csproj` biên dịch, dưới dạng mã nguồn: tầng 1 và backend console từ `com.fomoxa.networking`, `Runtime/Rapier` từ `com.fomoxa.networking.rapier`, và các thư mục `Models`, `Generated` và `Simulation` của game. Nó copy `LevelCatalogue.bytes`, các scene file thành `Scenes/<scene id>.fomoxascene` và các thư viện native của Rapier cạnh file chạy. Nó nhắm .NET 8 với C# 9 và coi warning là lỗi. Các thư mục package mặc định là bản clone nằm cạnh thư mục RedRunner:
+`Server~/RedRunner.Server.csproj` biên dịch, dưới dạng mã nguồn: tầng 1 và backend console từ `com.fomoxa.networking`, `Runtime/Rapier` từ `com.fomoxa.networking.rapier`, và các thư mục `Models`, `Generated` và `Simulation` của game. `Generated/StateModels` chứa các model mà Editor sinh từ field của `NetworkLevel` và `NetworkPlayer`, nên console server dùng cùng model với bản build Unity. Nó copy `LevelCatalogue.bytes`, các scene file thành `Scenes/<scene id>.fomoxascene` và các thư viện native của Rapier cạnh file chạy. Nó nhắm .NET 8 với C# 9 và coi warning là lỗi. Các thư mục package mặc định là bản clone nằm cạnh thư mục RedRunner:
 
 ```xml
 <Game>..</Game>
@@ -81,7 +81,7 @@ Runtime = StandaloneRuntime.Create(registry, settings, new UdpTransportFactory()
 `PlayerEntity` là một `StandaloneEntity` với hai behaviour, theo thứ tự `NetworkTransform` và `NetworkPlayer` của prefab:
 
 - `PlayerTransform` gửi tư thế bằng một `TransformSync` có thiết lập khớp `NetworkTransform` của prefab: bật vị trí và scale, tắt góc xoay. `PlayerEntity.Scale` trả về hướng nhìn làm scale X, khiến nhân vật quay đầu trên các client.
-- `PlayerBehaviour` đăng ký `PlayerInput`, model reconcile `PlayerMotion` và `PlayerState`, như `NetworkPlayer` làm. `Apply` của nó gọi `RunnerMotion.Simulate` trên `Body2D` của entity, còn tick server của nó gọi `RunnerContacts.Hazard` và kiểm tra rơi, rồi hồi sinh sau thời gian chờ bằng `PlayerEntity.Teleport()`.
+- `PlayerBehaviour` đăng ký `PlayerInput`, model reconcile `PlayerMotion` và `PlayerState` bằng `input.Use`, `input.Reconcile` và `state.Use`, API trên model mà console server giữ, với các model sinh từ field của `NetworkPlayer`. `Apply` của nó gọi `RunnerMotion.Simulate` trên `Body2D` của entity, còn tick server của nó gọi `RunnerContacts.Hazard` và kiểm tra rơi, rồi hồi sinh sau thời gian chờ bằng `PlayerEntity.Teleport()`.
 
 `PlayerEntity.TryGetBody2D` trả về body của người chơi trong catalogue, đặt tại vị trí của entity.
 

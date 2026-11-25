@@ -42,7 +42,7 @@ The general checks are under [prediction keeps correcting](../../getting-started
 - Tick Rate is 50, matching the project's fixed timestep of 0.02 seconds.
 - `PlayerMotion` includes `RunSmoothVelocity`. Without it, every replay starts the acceleration from a different value and the character drifts after each correction.
 - `RedCharacter.Jump` tests the ground with `GroundCheck.Check ()` rather than `IsGrounded`, which is a frame old during a replay.
-- If jump sounds or particles play twice, check that `Apply` passes `!context.Replaying` as `effects`.
+- If jump sounds or particles play twice, check that `OnApplyInput` passes `!context.Replaying` as `effects`.
 - In host mode the host's own character is not predicted and never corrects, so test prediction with a separate server.
 
 ## A player snaps or slides during a respawn
@@ -62,7 +62,7 @@ The mechanisms involved are described in [teleporting](../../synchronization/tra
 The mechanisms involved are described in [client](../../connections/client.md#connect-and-disconnect) and [input](../../prediction/input.md#on-the-server).
 
 - If the player quit with Home or by closing the game, the client sends `PeerLeave` and the character should despawn at once. If it does not, regenerate the code with Tools > Fomoxa > Generate so that `PeerLeave` is registered.
-- If the client crashed, the server waits for the heartbeat, about 20 seconds with the defaults. The character should still stand still after 10 repeated ticks; if it does not, check the `RepeatedTicks` rule in `NetworkPlayer.Apply` described in [step 08](offline-to-online/step-08-two-clients.md#stop-a-character-whose-player-vanished).
+- If the client crashed, the server waits for the heartbeat, about 20 seconds with the defaults. The character should still stand still after 10 repeated ticks; if it does not, check the `RepeatedTicks` rule in `NetworkPlayer.OnApplyInput` described in [step 08](offline-to-online/step-08-two-clients.md#stop-a-character-whose-player-vanished).
 
 ## The address field shows no text
 

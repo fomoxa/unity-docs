@@ -32,7 +32,7 @@ Chạy hai client làm lộ ra ba vấn đề:
 | Tốc độ animator sau khi hồi sinh | Di chuyển quá 2 đơn vị trong một frame được tính là teleport, và tốc độ bị giới hạn | `RedCharacter.LateUpdate` |
 | Trượt ngang qua level | `NetworkTransform.Teleport()` sau khi hồi sinh | `NetworkPlayer.Respawn`, bước 06 |
 | Người chơi đã thoát vẫn chạy | `ClientManager.StopConnection` gửi `PeerLeave`, và server despawn nhân vật ngay | Package |
-| Người chơi bị crash vẫn chạy | `Apply` bỏ trục di chuyển khi input đã bị lặp hơn 10 tick | `NetworkPlayer.Apply` |
+| Người chơi bị crash vẫn chạy | `OnApplyInput` bỏ trục di chuyển khi input đã bị lặp hơn 10 tick | `NetworkPlayer.OnApplyInput` |
 
 Hai dòng cuối là hai trường hợp khác nhau. Client chủ động dừng có thể báo cho server, nhưng client bị crash hoặc mất mạng thì không, nên server vẫn phải chờ heartbeat, và game quyết định nhân vật làm gì trong lúc đó.
 
@@ -78,23 +78,23 @@ Game không cần thay đổi gì cho trường hợp này. `NetworkGame.Leave` 
 
 ### Dừng nhân vật khi người chơi biến mất <a href="#stop-a-character-whose-player-vanished" id="stop-a-character-whose-player-vanished"></a>
 
-`InputContext.RepeatedTicks` cho `Apply` biết server đã lặp lại input cuối bao nhiêu tick liên tiếp:
+`InputContext.RepeatedTicks` cho `OnApplyInput` biết server đã lặp lại input cuối bao nhiêu tick liên tiếp:
 
 Trước:
 
 ```csharp
-m_Character.Simulate(input.Move, fresh && input.Jump, fresh && input.Roll, tickDelta, !context.Replaying);
+m_Character.Simulate(move, fresh && jump, fresh && roll, tickDelta, !context.Replaying);
 ```
 
 Sau:
 
 ```csharp
-private void Apply(PlayerInput input, InputContext context)
+protected override void OnApplyInput(InputContext context)
 {
     float tickDelta = (float)m_Game.Manager.TimeManager.TickDelta;
     bool fresh = !context.Repeated;
-    float move = context.RepeatedTicks > m_MaxRepeatedTicks ? 0f : input.Move;
-    m_Character.Simulate(move, fresh && input.Jump, fresh && input.Roll, tickDelta, !context.Replaying);
+    float axis = context.RepeatedTicks > m_MaxRepeatedTicks ? 0f : move;
+    m_Character.Simulate(axis, fresh && jump, fresh && roll, tickDelta, !context.Replaying);
 }
 ```
 

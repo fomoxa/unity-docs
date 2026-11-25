@@ -31,8 +31,8 @@ Offline game (2b675b5)
 | [01 Network foundation](step-01-network-foundation.md) | Unity 6000.5, the package, code generation, a `NetworkManager` in `Play.unity` | [Installation](../../../getting-started/installation.md), [NetworkManager](../../../connections/network-manager.md) |
 | [02 Shared level](step-02-shared-level.md) | A finite level built from a seed that the server keeps in a state | [State](../../../synchronization/state.md), [Spawning](../../../objects/spawning.md#scene-objects) |
 | [03 Player spawning](step-03-player-spawning.md) | The character becomes a network prefab; the game starts as a server, a host or a client | [Spawning](../../../objects/spawning.md), [Server](../../../connections/server.md), [Client](../../../connections/client.md) |
-| [04 Player input](step-04-player-input.md) | The input model and the tick step that the server applies | [Input](../../../prediction/input.md), [Authority](../../../concepts/authority.md) |
-| [05 Prediction and reconciliation](step-05-prediction-and-reconciliation.md) | The motion model, rollback of 2D physics, the camera on the local player | [Reconciliation](../../../prediction/reconciliation.md), [Rollback with physics](../../../prediction/rollback.md) |
+| [04 Player input](step-04-player-input.md) | The input fields and the tick step that the server applies | [Input](../../../prediction/input.md), [Authority](../../../concepts/authority.md) |
+| [05 Prediction and reconciliation](step-05-prediction-and-reconciliation.md) | The reconcile fields, rollback of 2D physics, the camera on the local player | [Reconciliation](../../../prediction/reconciliation.md), [Rollback with physics](../../../prediction/rollback.md) |
 | [06 Death and respawn](step-06-death-and-respawn.md) | Deaths on the server, a player state, teleporting respawns | [State](../../../synchronization/state.md), [Teleporting](../../../synchronization/transform.md#teleporting) |
 | [07 Moving hazards](step-07-moving-hazards.md) | Path followers placed by tick number | [Ticks and timing](../../../concepts/tick.md) |
 | [08 Two clients](step-08-two-clients.md) | Animation of remote characters, players who leave or crash | [NetworkTransform](../../../synchronization/transform.md), [Input](../../../prediction/input.md) |
@@ -52,6 +52,8 @@ The steps were made as commits on the `master` branch of [fomoxa/RedRunner](http
 | 07 | [`f277dad`](https://github.com/fomoxa/RedRunner/commit/f277dad4cc29eccef696158280185c9117a270ae) |
 | 08 | [`52e1696`](https://github.com/fomoxa/RedRunner/commit/52e1696b2e5b8db09e0178f827febf9ae712a02f), [`0edd3a4`](https://github.com/fomoxa/RedRunner/commit/0edd3a46a0f5bf48a76786e6242ea2f523e1ec21), [`c75cebd`](https://github.com/fomoxa/RedRunner/commit/c75cebdee36f6edfc3869964157bd45093eae543), [`c239d2a`](https://github.com/fomoxa/RedRunner/commit/c239d2a0988dcf2af5821b41f1ba7cc2f6372baf) |
 | 09 | [`7396f92`](https://github.com/fomoxa/RedRunner/commit/7396f9279b5796ffb35d97765cbe5cb1794d5357) |
+
+The commits of steps 02 to 06 use the 0.3 API, in which a `NetworkBehaviour` declares its models by hand and registers them in `OnRegisterState` and `OnRegisterInput`. The steps show the same code with the fields of 0.4.0, and [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) is the commit that moves Red Runner to them.
 
 Steps 04 and 05 share one commit, while step 08 spans four. In the history, `7396f92` from step 09 sits between `52e1696` and `0edd3a4` from step 08.
 

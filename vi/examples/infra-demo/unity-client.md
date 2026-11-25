@@ -23,8 +23,8 @@ Thao tác:
 Ý nghĩa: `Packages/manifest.json` khai báo hai package lấy thẳng từ GitHub:
 
 ```json
-"com.fomoxa.networking": "https://github.com/fomoxa/com.fomoxa.networking.git#0.3.4",
-"com.fomoxa.rpc":        "https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.5"
+"com.fomoxa.networking": "https://github.com/fomoxa/com.fomoxa.networking.git#0.4.0",
+"com.fomoxa.rpc":        "https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.7"
 ```
 
 Unity gọi `git` để clone chúng về `Library/PackageCache/`; commit chính xác được ghim trong `packages-lock.json`.
@@ -199,7 +199,7 @@ Luật chơi: 18 bục xếp xoắn ốc, mỗi bục cao hơn bục trước 1,
 4. Thoát phòng (nút, hoặc mất kết nối) → `MatchSession.ReturnToLobby` tải lại `Lobby`, vẫn đăng nhập.
 
 Mã chính (đều trong `MyGame/Assets/Network/`): `RoomJoiner.cs`, `LobbyScreen.cs`, `MatchHudScreen.cs`, `MatchSession.cs`, `Launcher.cs`, `Player.cs`, `PlayerCamera.cs`, `BootRouter.cs`;
-dùng chung với server: `Models/Course.cs` (hình học bục + vật lý nhảy), `Models/MoveInput.cs` (đầu vào gửi lên server).
+dùng chung với server: `Models/Course.cs` (hình học bục + vật lý nhảy), `Generated/StateModels/MoveInput.cs` (đầu vào gửi lên server, do Unity Editor sinh từ các trường `[NetworkInput]` của `Player`).
 
 ## Chỉnh giao diện <a href="#editing-the-ui" id="editing-the-ui"></a>
 
@@ -217,7 +217,7 @@ Sau khi sửa, chạy Tools → Demo → Add Lobby UI nếu cần gắn lại UI
 
 ## Sinh lại mã khi đổi model hoặc RPC <a href="#regenerating-code-after-changing-a-model-or-rpc" id="regenerating-code-after-changing-a-model-or-rpc"></a>
 
-Dữ liệu trao đổi qua mạng (đăng nhập, phòng, bảng điểm... và `MoveInput`) được mô tả bằng các lớp C# có thuộc tính `[Network]`. Công cụ `fomoxac`
+Dữ liệu trao đổi qua mạng (đăng nhập, phòng, bảng điểm... và `MoveInput`) được mô tả bằng các lớp C# có thuộc tính `[Network]`. Bạn tự viết tất cả các lớp này, trừ `MoveInput` do Unity Editor sinh từ các trường của `Player`. Công cụ `fomoxac`
 đọc chúng và sinh mã mã hoá/giải mã (`Generated/*.cs`). Backend và Unity có hai cây mã sinh riêng cần khớp nhau:
 
 | Cây | Model | Mã sinh | Cấu hình |

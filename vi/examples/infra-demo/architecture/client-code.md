@@ -29,7 +29,7 @@ Các scene được dựng bằng script editor, không dựng tay: **Tools > De
 | `PlayerCamera` | camera đuổi sau lưng nhân vật của bạn. Chuột phải hoặc Q và E để xoay, con lăn để zoom, bục chắn đường thì kéo camera lại gần. Di chuyển tính theo hướng camera |
 | `PinnedCertificateCheck` | kiểm tra pin TLS: so SHA-256 của chứng chỉ với `-tlspin:` |
 | `Models/Course.cs` | cách bố trí bục và luật di chuyển, nhảy, dùng chung với server ([hằng số](../reference.md#8-gameplay-constants)) |
-| `Models/MoveInput.cs` | message input, gồm `Jump` |
+| `Generated/StateModels/MoveInput.cs` | message input, gồm `Jump`, do Editor sinh từ các trường `[NetworkInput]` của `Player` |
 | `Models/Backend/*.cs`, `Rpc/Services.cs` | các message mạng và interface dịch vụ; `Generated/` chứa codec đã sinh |
 
 ## Cờ dòng lệnh <a href="#command-line-flags" id="command-line-flags"></a>

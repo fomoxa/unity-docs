@@ -11,10 +11,10 @@ This page describes the online game at the end of the [migration](offline-to-onl
                │                                         │
      Start screen: address               NetworkGame: -server, -port
                │                                         │
-     NetworkPlayer.Gather              OnRemoteConnectionState → Spawn
+     NetworkPlayer.OnGatherInput       OnRemoteConnectionState → Spawn
      (keys → PlayerInput)                                │
-               │                          NetworkPlayer.Apply at the tick
-     Apply (prediction)                     (RedCharacter.Simulate)
+               │                          NetworkPlayer.OnApplyInput at the tick
+     OnApplyInput (prediction)              (RedCharacter.Simulate)
      RedCharacter.Simulate                               │
                │                           2D physics step, enemy contacts
      Reconcile with PlayerMotion                         │
@@ -50,9 +50,9 @@ The `NetworkManager` uses Tick Rate 50, Timing Mode Tick, a `RigidbodyPhysics` w
 
 ## Models
 
-All models are in `Assets/Scripts/RedRunner/Networking/Models`, and the generated code is in `Networking/Generated` under the namespace `Generated`.
+The package generates these models from the fields of `NetworkLevel` and `NetworkPlayer`. They are in `Assets/Scripts/RedRunner/Networking/Generated/StateModels` under the namespace `FomoxaStateModels`, and the rest of the generated code is in `Networking/Generated` under the namespace `Generated`.
 
-| Model | Used as | Registered by | Carries |
+| Model | Used as | Fields of | Carries |
 |---|---|---|---|
 | `LevelState` | State | `NetworkLevel` | `Seed` |
 | `PlayerState` | State | `NetworkPlayer` | `Dead`, `Cause` |
@@ -63,13 +63,13 @@ The game uses no RPCs and no raw messages, and the positions of other players tr
 
 ## Server
 
-The server is authoritative for everything that affects more than one player. It picks the level seed in `NetworkLevel.OnStartServer`, and it decides which characters exist by spawning them in `NetworkGame.OnRemoteConnectionState` and despawning them with their owner. It moves every character by running `Apply` with the input that arrived for the tick.
+The server is authoritative for everything that affects more than one player. It picks the level seed in `NetworkLevel.OnStartServer`, and it decides which characters exist by spawning them in `NetworkGame.OnRemoteConnectionState` and despawning them with their owner. It moves every character by running `OnApplyInput` with the input that arrived for the tick.
 
 Deaths are decided on the server too, from enemy contacts during the physics step and from the fall check in `NetworkPlayer.ServerTick`, and so are respawns, which happen 100 ticks after a death or when a character passes `TerrainGenerator.EndX`. The server ignores coins and chests. A dedicated server caps its frame rate at 60 with `Application.targetFrameRate`.
 
 ## Client
 
-A client builds the level from the seed, predicts its own character and shows everything else as the server sends it. It gathers input once per tick in `NetworkPlayer.Gather` and predicts its own character, which `PlayerMotion` from the server corrects. Other characters are interpolated by `NetworkTransform` as kinematic bodies, and `ShowState` shows death effects and respawns when `PlayerState` changes. The camera, the background and the coins stay local, since only the local player affects them.
+A client builds the level from the seed, predicts its own character and shows everything else as the server sends it. It gathers input once per tick in `NetworkPlayer.OnGatherInput` and predicts its own character, which `PlayerMotion` from the server corrects. Other characters are interpolated by `NetworkTransform` as kinematic bodies, and `ShowState` shows death effects and respawns when `PlayerState` changes. The camera, the background and the coins stay local, since only the local player affects them.
 
 No character decides its own death on a client, so an enemy touched by a predicted or interpolated character does nothing there.
 
@@ -80,7 +80,7 @@ The following table follows the package's [order of one tick](../../concepts/tic
 | Step | Server | Owner's client |
 |---|---|---|
 | `OnPreTick` | `NetworkLevel` moves path followers to the server tick | `NetworkLevel` moves path followers to the prediction tick |
-| Input | `NetworkPlayer.Apply` for each character with the input for this tick | Reconcile, then `Gather` and `Apply` for its own character |
+| Input | `NetworkPlayer.OnApplyInput` for each character with the input for this tick | Reconcile, then `OnGatherInput` and `OnApplyInput` for its own character |
 | Physics | One 2D physics step; enemies call `Die` on characters with `DecidesDeath` | One 2D physics step |
 | After physics | Reconcile states (`PlayerMotion`) to each owner | Records `PlayerMotion` and saves physics for the tick |
 | `OnTick` | `NetworkPlayer.ServerTick`: death, fall, respawn, end block | |
@@ -101,7 +101,7 @@ A respawn moves a character across the level in one tick, and each part of the g
 | Case | What happens |
 |---|---|
 | The player clicks Home or quits | `ClientManager.StopConnection` sends `PeerLeave`; the server ends the peer and despawns the character at once |
-| The client crashes or loses its network | The server repeats the last input; after 10 repeated ticks `Apply` drops the axis and the character stands still; the heartbeat ends the session about 20 seconds later and the character despawns |
+| The client crashes or loses its network | The server repeats the last input; after 10 repeated ticks `OnApplyInput` drops the axis and the character stands still; the heartbeat ends the session about 20 seconds later and the character despawns |
 
 ## Not in the online game
 

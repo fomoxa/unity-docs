@@ -88,7 +88,6 @@ Assets/Scripts/RedRunner/Collectables/Chest.cs
 Assets/Scripts/RedRunner/GameManager.cs
 Assets/Scripts/RedRunner/Utilities/CameraController.cs
 Assets/Scripts/RedRunner/UI/UIScreen/StartScreen.cs
-Assets/Scripts/RedRunner/Networking/Models/PlayerState.cs
 Assets/Scripts/RedRunner/Networking/NetworkPlayer.cs
 Assets/Scenes/Play.unity
 ```
@@ -135,36 +134,27 @@ The example is `Saw`, and `Spike`, `Water` and `Mace` get the same check.
 
 ### Keep the death in a state
 
+`NetworkPlayer` keeps the death in two state fields and names their model `PlayerState`:
+
 ```csharp
-using Fomoxa;
-using Fomoxa.Networking;
-
-namespace RedRunner.Networking.Models
-{
-    [Network]
-    [Codec("net")]
-    [NetworkChannel("net", Channel.ReliableOrdered)]
-    public class PlayerState
-    {
-        [Network("bool")]
-        [Codec("net")]
-        public bool Dead { get; set; }
-
-        [Network("u8")]
-        [Codec("net")]
-        public byte Cause { get; set; }
-    }
-}
+[RequireComponent(typeof(RedCharacter))]
+[NetworkStateModel("PlayerState")]
+[NetworkInputModel("PlayerInput")]
+[NetworkReconcileModel("PlayerMotion")]
+public sealed partial class NetworkPlayer : NetworkBehaviour
 ```
 
-`NetworkPlayer` registers this state next to its input and sets the flags when the character starts:
+```csharp
+[NetworkState(OnChanged = nameof(OnDeathChanged))]
+private bool dead;
+
+[NetworkState(OnChanged = nameof(OnCauseChanged))]
+private byte cause;
+```
+
+It sets the flags when the character starts:
 
 ```csharp
-protected override void OnRegisterState(NetworkState state)
-{
-    state.Use(PlayerStateNetAdapter.Instance, m_State, previous => ShowState());
-}
-
 public override void OnStartServer()
 {
     m_Character.DecidesDeath = true;
@@ -188,9 +178,13 @@ public override void OnStartClient()
 }
 ```
 
-`OnStopServer` unsubscribes `ServerTick`. The state callback receives the previous value while `m_State` already holds the new one, so `ShowState` reads `m_State`:
+`OnStopServer` unsubscribes `ServerTick`. The package writes every field of an update before it calls the `OnChanged` methods, so both callbacks call `ShowState`, which reads both fields:
 
 ```csharp
+private void OnDeathChanged(bool previous, bool current) => ShowState();
+
+private void OnCauseChanged(byte previous, byte current) => ShowState();
+
 private void ShowState()
 {
     if (m_Game.IsServer)
@@ -198,16 +192,18 @@ private void ShowState()
         return;
     }
 
-    if (m_State.Dead && !m_Character.IsDead.Value)
+    if (dead && !m_Character.IsDead.Value)
     {
-        m_Character.Die((DeathCause)m_State.Cause);
+        m_Character.Die((DeathCause)cause);
     }
-    else if (!m_State.Dead && m_Character.IsDead.Value)
+    else if (!dead && m_Character.IsDead.Value)
     {
         m_Character.Reset();
     }
 }
 ```
+
+A death changes both fields in one update, so `ShowState` runs twice, and the second call finds the character already dead and does nothing.
 
 ### Decide after each tick
 
@@ -217,7 +213,7 @@ private void ShowState()
 private void ServerTick()
 {
     TimeManager time = m_Game.Manager.TimeManager;
-    if (m_State.Dead)
+    if (dead)
     {
         if (time.Tick >= m_RespawnTick)
         {
@@ -234,8 +230,8 @@ private void ServerTick()
 
     if (m_Character.IsDead.Value)
     {
-        m_State.Dead = true;
-        m_State.Cause = (byte)m_Character.DeathCause;
+        dead = true;
+        cause = (byte)m_Character.DeathCause;
         m_RespawnTick = time.Tick + (uint)Mathf.CeilToInt(m_RespawnDelay * time.TickRate);
         Debug.Log($"[RedRunner] player {NetworkObject.OwnerId} died: {m_Character.DeathCause}");
     }
@@ -262,16 +258,16 @@ private void Respawn()
     body.State = state;
     m_NetworkTransform.Teleport();
     m_Character.RunSmoothVelocity = 0f;
-    m_State.Dead = false;
-    m_State.Cause = 0;
+    dead = false;
+    cause = 0;
 }
 ```
 
-`Reset` revives the character and turns its `Rigidbody2D` back on. The body then moves to the spawn point through `NetworkObject.Body2D`, the same view of the body that `Restore` uses, and the run damping velocity resets as well, so the next reconcile state matches a character standing still.
+`Reset` revives the character and turns its `Rigidbody2D` back on. The body then moves to the spawn point through `NetworkObject.Body2D`, the same view of the body that `OnRestoreState` uses, and the run damping velocity resets as well, so the next reconcile state matches a character standing still.
 
 The respawn reaches the two kinds of client differently. Other clients interpolate the character, and `NetworkTransform.Teleport()` tells them that this move is a jump, so they clear their interpolation buffer and place the character at the start. `NetworkPlayer.Awake` keeps the `NetworkTransform` in `m_NetworkTransform` for this call.
 
-The owner's client predicts the character and does not take positions from `NetworkTransform`. Its next reconcile state from the server is far from its prediction, `Matches` returns false, and the client restores the server's motion and replays. The respawn is corrected like any other difference, without code of its own.
+The owner's client predicts the character and does not take positions from `NetworkTransform`. Its next reconcile state from the server is far from its prediction, the position is outside its `Tolerance`, and the client restores the server's motion and replays. The respawn is corrected like any other difference, without code of its own.
 
 The `Teleport()` line was added later, in commit `c75cebd` during step 08, after a check found other clients drawing the character sliding across the level. Commit `a148ea7` has the rest of this method.
 
@@ -320,7 +316,7 @@ Commit: a148ea7
 Message: Decide deaths on the server and respawn players at the start
 ```
 
-View [`a148ea7`](https://github.com/fomoxa/RedRunner/commit/a148ea70ca4eea0ec407c9cd85af57ca1acdf589) on GitHub.
+View [`a148ea7`](https://github.com/fomoxa/RedRunner/commit/a148ea70ca4eea0ec407c9cd85af57ca1acdf589) on GitHub. That commit declares `PlayerState` by hand with the 0.3 API, and [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) moves it to fields.
 
 The `Teleport()` call in `Respawn` comes from `c75cebd`, which is listed in step 08.
 

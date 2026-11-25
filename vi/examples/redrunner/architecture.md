@@ -11,10 +11,10 @@ Trang này mô tả game online ở cuối quá trình [chuyển đổi](offline
                │                                         │
      Start screen: address               NetworkGame: -server, -port
                │                                         │
-     NetworkPlayer.Gather              OnRemoteConnectionState → Spawn
+     NetworkPlayer.OnGatherInput       OnRemoteConnectionState → Spawn
      (keys → PlayerInput)                                │
-               │                          NetworkPlayer.Apply at the tick
-     Apply (prediction)                     (RedCharacter.Simulate)
+               │                          NetworkPlayer.OnApplyInput at the tick
+     OnApplyInput (prediction)              (RedCharacter.Simulate)
      RedCharacter.Simulate                               │
                │                           2D physics step, enemy contacts
      Reconcile with PlayerMotion                         │
@@ -50,9 +50,9 @@ Trang này mô tả game online ở cuối quá trình [chuyển đổi](offline
 
 ## Model <a href="#models" id="models"></a>
 
-Mọi model nằm trong `Assets/Scripts/RedRunner/Networking/Models`, và code sinh ra nằm trong `Networking/Generated` dưới namespace `Generated`.
+Package sinh các model này từ field của `NetworkLevel` và `NetworkPlayer`. Chúng nằm trong `Assets/Scripts/RedRunner/Networking/Generated/StateModels` dưới namespace `FomoxaStateModels`, và phần code sinh ra còn lại nằm trong `Networking/Generated` dưới namespace `Generated`.
 
-| Model | Dùng làm | Đăng ký bởi | Mang |
+| Model | Dùng làm | Field của | Mang |
 |---|---|---|---|
 | `LevelState` | State | `NetworkLevel` | `Seed` |
 | `PlayerState` | State | `NetworkPlayer` | `Dead`, `Cause` |
@@ -63,13 +63,13 @@ Game không dùng RPC hay raw message, và vị trí của người chơi khác 
 
 ## Server <a href="#server" id="server"></a>
 
-Server có authority với mọi thứ ảnh hưởng tới nhiều hơn một người chơi. Nó chọn seed của level trong `NetworkLevel.OnStartServer`, và quyết định nhân vật nào tồn tại bằng cách spawn chúng trong `NetworkGame.OnRemoteConnectionState` và despawn chúng cùng owner. Nó di chuyển mọi nhân vật bằng cách chạy `Apply` với input đã tới cho tick đó.
+Server có authority với mọi thứ ảnh hưởng tới nhiều hơn một người chơi. Nó chọn seed của level trong `NetworkLevel.OnStartServer`, và quyết định nhân vật nào tồn tại bằng cách spawn chúng trong `NetworkGame.OnRemoteConnectionState` và despawn chúng cùng owner. Nó di chuyển mọi nhân vật bằng cách chạy `OnApplyInput` với input đã tới cho tick đó.
 
 Cái chết cũng được quyết định trên server, từ contact với kẻ địch trong bước physics và từ phép kiểm tra rơi trong `NetworkPlayer.ServerTick`, và việc hồi sinh cũng vậy, diễn ra 100 tick sau khi chết hoặc khi nhân vật vượt qua `TerrainGenerator.EndX`. Server bỏ qua đồng xu và rương. Dedicated server giới hạn frame rate ở 60 bằng `Application.targetFrameRate`.
 
 ## Client <a href="#client" id="client"></a>
 
-Client dựng level từ seed, dự đoán nhân vật của mình và hiển thị mọi thứ khác theo những gì server gửi. Nó thu thập input mỗi tick một lần trong `NetworkPlayer.Gather` và dự đoán nhân vật của mình, được `PlayerMotion` từ server sửa lại. Nhân vật khác được `NetworkTransform` interpolate dưới dạng body kinematic, và `ShowState` hiển thị hiệu ứng chết và hồi sinh khi `PlayerState` thay đổi. Camera, nền và đồng xu chỉ ở cục bộ, vì chỉ người chơi cục bộ ảnh hưởng tới chúng.
+Client dựng level từ seed, dự đoán nhân vật của mình và hiển thị mọi thứ khác theo những gì server gửi. Nó thu thập input mỗi tick một lần trong `NetworkPlayer.OnGatherInput` và dự đoán nhân vật của mình, được `PlayerMotion` từ server sửa lại. Nhân vật khác được `NetworkTransform` interpolate dưới dạng body kinematic, và `ShowState` hiển thị hiệu ứng chết và hồi sinh khi `PlayerState` thay đổi. Camera, nền và đồng xu chỉ ở cục bộ, vì chỉ người chơi cục bộ ảnh hưởng tới chúng.
 
 Không nhân vật nào tự quyết định cái chết của mình trên client, nên kẻ địch bị một nhân vật được dự đoán hoặc interpolate chạm vào sẽ không làm gì ở đó.
 
@@ -80,7 +80,7 @@ Bảng sau đi theo [thứ tự một tick](../../concepts/tick.md#order-of-one-
 | Bước | Server | Client của owner |
 |---|---|---|
 | `OnPreTick` | `NetworkLevel` đưa các path follower tới tick của server | `NetworkLevel` đưa các path follower tới prediction tick |
-| Input | `NetworkPlayer.Apply` cho mỗi nhân vật với input của tick này | Reconcile, rồi `Gather` và `Apply` cho nhân vật của mình |
+| Input | `NetworkPlayer.OnApplyInput` cho mỗi nhân vật với input của tick này | Reconcile, rồi `OnGatherInput` và `OnApplyInput` cho nhân vật của mình |
 | Physics | Một bước physics 2D; kẻ địch gọi `Die` trên nhân vật có `DecidesDeath` | Một bước physics 2D |
 | Sau physics | Reconcile state (`PlayerMotion`) tới mỗi owner | Ghi lại `PlayerMotion` và lưu physics cho tick |
 | `OnTick` | `NetworkPlayer.ServerTick`: chết, rơi, hồi sinh, khối kết thúc | |
@@ -101,7 +101,7 @@ Hồi sinh đưa một nhân vật đi ngang qua cả level trong một tick, v�
 | Trường hợp | Điều gì xảy ra |
 |---|---|
 | Người chơi bấm Home hoặc thoát | `ClientManager.StopConnection` gửi `PeerLeave`; server kết thúc peer và despawn nhân vật ngay |
-| Client bị crash hoặc mất mạng | Server lặp lại input cuối; sau 10 tick bị lặp, `Apply` bỏ trục di chuyển và nhân vật đứng yên; heartbeat kết thúc session khoảng 20 giây sau và nhân vật bị despawn |
+| Client bị crash hoặc mất mạng | Server lặp lại input cuối; sau 10 tick bị lặp, `OnApplyInput` bỏ trục di chuyển và nhân vật đứng yên; heartbeat kết thúc session khoảng 20 giây sau và nhân vật bị despawn |
 
 ## Không có trong bản online <a href="#not-in-the-online-game" id="not-in-the-online-game"></a>
 
