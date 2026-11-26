@@ -174,6 +174,7 @@ A capsule's `HalfHeight` is half the distance between the centers of its two end
 | `void WorldsOf(Scene scene, List<IPhysicsSimulation> worlds)` | The worlds of a scene |
 | `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | The bodies that `NetworkObject.Body` and `Body2D` wrap |
 | `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | The bodies that `NetworkObject.Bodies` and `Bodies2D` wrap |
+| `PhysicsBody BodyOf(Transform part)`, `PhysicsBody2D Body2DOf(Transform part)` | The body the backend built for that GameObject of a network object, or `default` if it has none |
 | `StaticGroup AddStatic(Scene scene, IReadOnlyList<ColliderDesc> colliders)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | Adds a group of static colliders to a scene |
 | `StaticGroup AddStatic(GameObject root)`, `AddStatic2D(GameObject root)` | Adds the colliders under a GameObject |
 | `void RemoveStatic(StaticGroup group)` | Removes a group; removing it twice does nothing |

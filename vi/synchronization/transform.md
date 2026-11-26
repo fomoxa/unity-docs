@@ -63,9 +63,69 @@ Client khi đó nhảy thẳng tới giá trị mới thay vì nội suy qua qu�
 
 Với object có physics body, hãy đặt cả vị trí của body, như mô tả trong [NetworkBody](../physics/physics-body.md#teleporting).
 
+## Cho owner quyết định <a href="#letting-the-owner-decide" id="letting-the-owner-decide"></a>
+
+Có những object cần di chuyển trên màn hình của owner ngay khi người chơi bấm phím, mà không cần input và replay của [prediction](../concepts/prediction.md). Hãy bật Owner Authority trên `NetworkTransform` của chúng. Client của owner khi đó đọc transform của chính nó sau mỗi tick và gửi lên server, với cùng ngưỡng, bản cập nhật và bản chốt mà server dùng. Server hiển thị chuyển động của owner chậm tối đa Owner Interpolation Ticks (mặc định 1) so với mẫu mới nhất của owner, ghi nó vào object và chuyển tiếp cho mọi observer khác. Với 0, server áp mỗi mẫu ngay ở tick nó tới: không thêm độ trễ, nhưng độ giật của owner truyền nguyên sang mọi người khác.
+
+Owner Authority chỉ là giá trị ban đầu. Server đọc nó khi object spawn, và sau đó chỉ server đổi được `OwnerAuthority`, chẳng hạn để lấy lại một nhân vật trong lúc chạy cutscene. Đặt nó trên client sau khi spawn sẽ ném `InvalidOperationException`, và cờ trong build của client không có tác dụng. Object không có owner thì vẫn do server quyết.
+
+Client của owner biết mình được di chuyển object khi `IsOwnerSending` là `true`. Chỉ di chuyển transform lúc đó, vì mọi giá trị đặt trong lúc server quyết đều bị ghi đè:
+
+```csharp
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed class OwnerWalker : NetworkBehaviour
+{
+    [SerializeField] private float speed = 4f;
+
+    private void Update()
+    {
+        if (!GetComponent<NetworkTransform>().IsOwnerSending)
+        {
+            return;
+        }
+
+        var direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+        transform.position += direction * (speed * Time.deltaTime);
+    }
+}
+```
+
+Trên server, `Rigidbody`, `Rigidbody2D` hay body Rapier trên cùng GameObject thành kinematic trong lúc owner quyết, và server dời nó tới từng pose mà server áp. Body lấy lại loại cũ khi owner thôi quyết hoặc object bị despawn. Client của owner giữ body như bạn đã cấu hình. Nếu client đó cũng dự đoán physics, object vẫn là một proxy kinematic ở đó như mọi object khác mà client không dự đoán, nên hãy di chuyển nó qua transform.
+
+### Kiểm tra mẫu của owner <a href="#checking-the-owners-samples" id="checking-the-owners-samples"></a>
+
+Server vẫn có thể từ chối một mẫu. Hãy đặt `OwnerSampleFilter` trên server để xem từng mẫu trước khi nó được áp. Bộ lọc nhận mẫu cuối mà server đã nhận, mẫu đang tới với mọi phần được sync đã điền đủ, và số tick của owner giữa hai mẫu. Trả `false` để bỏ mẫu đang tới:
+
+```csharp
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed class SpeedLimit : NetworkBehaviour
+{
+    [SerializeField] private float maxSpeed = 6f;
+
+    public override void OnStartServer()
+    {
+        float tickSeconds = (float)NetworkManager.TimeManager.TickDelta;
+        GetComponent<NetworkTransform>().OwnerSampleFilter = (in NetworkTransformSample accepted, in NetworkTransformSample incoming, uint ticks) =>
+            ticks == 0 || Vector3.Distance(accepted.LocalPosition, incoming.LocalPosition) <= maxSpeed * ticks * tickSeconds;
+    }
+}
+```
+
+`ticks` bằng 0 ở mẫu đầu tiên sau khi owner bắt đầu quyết và ở lần owner teleport. Trong cả hai trường hợp, `accepted` là pose mà server đang có lúc đó. Mẫu bị bỏ không được áp và không được chuyển tiếp, và owner không được báo. Để đưa owner về chỗ server muốn, hãy đặt transform trên server rồi gọi `Teleport()`. Owner nhảy tới đó và gửi tiếp từ chỗ mới, còn server bỏ qua mọi thứ owner đã gửi trước khi nhận bản sửa. Bộ lọc chạy trong lúc server giao message của owner, nên exception mà nó ném là một [exception trong handler](../concepts/error-handling.md#exceptions-in-server-handlers): server phát `OnHandlerException` và đóng kết nối của owner, trừ khi một subscriber xoá `Disconnect`.
+
+Owner cũng gọi được `Teleport()`, sau khi tự đưa object của mình tới chỗ mới. Khi đó server áp mẫu đó ngay thay vì nội suy tới nó, và cho các client khác nhảy theo.
+
+### Không dùng cùng prediction <a href="#not-with-prediction" id="not-with-prediction"></a>
+
+Một object không thể vừa được dự đoán vừa do owner quyết, vì cả hai cùng ghi pose của owner. Build player sẽ thất bại khi một prefab hay scene object có `NetworkTransform` bật Owner Authority mà một behaviour bất kỳ của nó khai báo field `[NetworkInput]` hoặc `[NetworkReconcile]`. Lúc chạy, spawn một object như vậy với Owner Authority bật, hoặc bật nó sau đó, sẽ ném `InvalidOperationException` trên server.
+
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 
-<figure><img src="../.gitbook/assets/screenshots/network-transform-inspector.png" alt="Inspector của một NetworkTransform với giá trị mặc định: Sync Position và Sync Rotation bật, Sync Scale tắt, Position Threshold 0.01, Rotation Threshold 0.1, Scale Threshold 0.01, Interpolation Ticks 2, Visual None và Smoothing Time 0.1." width="460"><figcaption><p>Một NetworkTransform với giá trị mặc định.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/screenshots/network-transform-inspector.png" alt="Inspector của một NetworkTransform với giá trị mặc định: Sync Position và Sync Rotation bật, Sync Scale tắt, Position Threshold 0.01, Rotation Threshold 0.1, Scale Threshold 0.01, Interpolation Ticks 2, Visual None, Smoothing Time 0.1, Draw Corrections tắt, Correction Seconds 2, Owner Authority tắt và Owner Interpolation Ticks 1." width="460"><figcaption><p>Một NetworkTransform với giá trị mặc định.</p></figcaption></figure>
 
 | Field | Mặc định | Ý nghĩa |
 |---|---|---|
@@ -78,11 +138,13 @@ Với object có physics body, hãy đặt cả vị trí của body, như mô t
 | Interpolation Ticks | 2 | Số tick tối đa client hiển thị object chậm so với snapshot mới nhất |
 | Visual | không có | Transform con được làm mượt sau các lần sửa prediction |
 | Smoothing Time | 0.1 | Số giây để Visual quay về vị trí nghỉ |
+| Owner Authority | tắt | Cho client của owner quyết định transform, bắt đầu từ lúc spawn |
+| Owner Interpolation Ticks | 1 | Số tick của owner mà server áp chuyển động của owner chậm so với mẫu mới nhất của nó |
 
-`Visual` và `SmoothingTime` cũng có thể đặt từ code, còn các cờ sync và `InterpolationTicks` chỉ đọc được từ code.
+`Visual` và `SmoothingTime` cũng có thể đặt từ code, `OwnerAuthority` đặt được trên server, còn các cờ sync, `InterpolationTicks` và `OwnerInterpolationTicks` chỉ đọc được từ code.
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 
-Transform chỉ đi từ server tới client, và client chỉ có thể di chuyển một networked object cho người khác thấy thông qua RPC hoặc input. Giá trị được replicate trong không gian local, và việc đổi parent của object được replicate lúc chạy không được replicate. Chuyển động chưa rời giá trị gửi lần trước quá ngưỡng chỉ được gửi khi object dừng lại. Trên host, transform của server được hiển thị nguyên trạng, không có interpolation cho góc nhìn của host.
+Trừ khi bật Owner Authority, transform chỉ đi từ server tới client, và client chỉ có thể di chuyển một networked object cho người khác thấy thông qua RPC hoặc input. Giá trị được replicate trong không gian local, và việc đổi parent của object được replicate lúc chạy không được replicate. Chuyển động chưa rời giá trị gửi lần trước quá ngưỡng chỉ được gửi khi object dừng lại. Trên host, transform của server được hiển thị nguyên trạng, không có interpolation cho góc nhìn của host.
 
 [Replication](../concepts/replication.md) giải thích message transform nằm ở đâu so với các message khác, [tổng quan prediction](../prediction/overview.md) cho thấy `NetworkTransform` trên một nhân vật được dự đoán, và [tham chiếu component](../reference/components.md#networktransform) liệt kê các member của nó.

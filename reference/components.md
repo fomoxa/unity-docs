@@ -17,8 +17,16 @@ This page covers the components and assets in `Fomoxa.Unity` other than `Network
 | `LastCorrection` | `TransformCorrection?` | The last correction; `null` until the first one |
 | `DrawCorrections` | `bool` | Get and set. Draws corrections as gizmos in the Editor. |
 | `CorrectionSeconds` | `float` | Get and set; values below 0.1 become 0.1 |
+| `OwnerAuthority` | `bool` | Whether the owner's client decides the transform, see [letting the owner decide](../synchronization/transform.md#letting-the-owner-decide). Before spawn it sets the starting value; after spawn only the server can set it, and setting it on a client throws `InvalidOperationException`. Turning it on for an object whose behaviours predict throws `InvalidOperationException`. |
+| `OwnerInterpolationTicks` | `int` | Owner ticks behind the owner's newest sample that the server applies; read only |
+| `OwnerSampleFilter` | `NetworkOwnerSampleFilter` | Get and set on the server. Called for each sample of the owner before it is applied; returning `false` drops it. `null` accepts every sample. |
+| `IsOwnerSending` | `bool` | `true` on the owner's client while the server lets it decide; `false` on the server, on other clients and before spawn |
 
 `TransformCorrection` is a `public readonly struct` in `Fomoxa.Unity` with `uint Tick`, `Vector3 PositionBefore`, `PositionAfter`, `PositionOffset`, `Quaternion RotationBefore`, `RotationAfter` and `float RotationDegrees`.
+
+`public delegate bool NetworkOwnerSampleFilter(in NetworkTransformSample accepted, in NetworkTransformSample incoming, uint ticks)` in `Fomoxa.Unity` is the type of `OwnerSampleFilter`. `accepted` is the last sample the server accepted, or the server's pose for the first sample of a turn and for a teleport by the owner, when `ticks` is 0. Otherwise `ticks` is the number of the owner's ticks between the two samples.
+
+`NetworkTransformSample` is a `public readonly struct` in `Fomoxa.Unity` that views a Core `TransformSample` with Unity types: `uint Tick` (the owner's tick), `byte Mask` (bit 1 position, 2 rotation, 4 scale: the parts the owner sent in this sample), `Vector3 LocalPosition`, `Quaternion LocalRotation`, `Vector3 LocalScale`, `bool Settle`, `byte Generation`, the `TransformSample Core` it wraps, and a public constructor `NetworkTransformSample(TransformSample core)`. The parts missing from `Mask` hold the values of `accepted`.
 
 ## NetworkStatsDisplay
 

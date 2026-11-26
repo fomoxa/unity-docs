@@ -63,9 +63,69 @@ Clients then jump to the new values instead of interpolating across the distance
 
 For an object with a physics body, set the body's position as well, as described in [NetworkBody](../physics/physics-body.md#teleporting).
 
+## Letting the owner decide
+
+Some objects should move on the owner's screen the moment the player presses a key, without the input and replay of [prediction](../concepts/prediction.md). Turn on Owner Authority on their `NetworkTransform`. The owner's client then reads its own transform after every tick and sends it to the server with the same thresholds, updates and settle that the server uses. The server shows the owner's movement up to Owner Interpolation Ticks (1 by default) behind the owner's newest sample, writes it into the object and forwards it to every other observer. With 0 the server applies each sample on the tick it arrives, which adds no delay but passes the owner's jitter on to everyone else.
+
+Owner Authority is only the starting value. The server reads it when the object spawns, and only the server can change `OwnerAuthority` later, for example to take a character back during a cutscene. Setting it on a client after spawn throws `InvalidOperationException`, and the flag in a client build has no effect. An object without an owner stays with the server.
+
+The owner's client knows it may move the object while `IsOwnerSending` is true. Move the transform only then, because anything you set while the server decides is overwritten:
+
+```csharp
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed class OwnerWalker : NetworkBehaviour
+{
+    [SerializeField] private float speed = 4f;
+
+    private void Update()
+    {
+        if (!GetComponent<NetworkTransform>().IsOwnerSending)
+        {
+            return;
+        }
+
+        var direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0f, Input.GetAxisRaw("Vertical"));
+        transform.position += direction * (speed * Time.deltaTime);
+    }
+}
+```
+
+On the server, a `Rigidbody`, `Rigidbody2D` or Rapier body on the same GameObject becomes kinematic while the owner decides, and the server moves it to each pose it applies. The body gets its old kind back when the owner stops deciding or the object despawns. The owner's client keeps the body as you set it up. If that client also predicts physics, the object stays a kinematic proxy there like any other object it does not predict, so move it through its transform.
+
+### Checking the owner's samples
+
+The server can still refuse a sample. Set `OwnerSampleFilter` on the server to look at each sample before it is applied. It receives the last sample the server accepted, the incoming one with every synced part filled in, and the number of the owner's ticks between them. Return `false` to drop the incoming sample:
+
+```csharp
+using Fomoxa.Unity;
+using UnityEngine;
+
+public sealed class SpeedLimit : NetworkBehaviour
+{
+    [SerializeField] private float maxSpeed = 6f;
+
+    public override void OnStartServer()
+    {
+        float tickSeconds = (float)NetworkManager.TimeManager.TickDelta;
+        GetComponent<NetworkTransform>().OwnerSampleFilter = (in NetworkTransformSample accepted, in NetworkTransformSample incoming, uint ticks) =>
+            ticks == 0 || Vector3.Distance(accepted.LocalPosition, incoming.LocalPosition) <= maxSpeed * ticks * tickSeconds;
+    }
+}
+```
+
+`ticks` is 0 for the first sample after the owner starts deciding and for a teleport by the owner. In both cases `accepted` holds the pose the server has at that moment. A dropped sample is not applied or forwarded, and the owner is not told. To put the owner back where the server wants it, set the transform on the server and call `Teleport()`. The owner jumps there and goes on sending from the new place, and the server ignores whatever the owner sent before it got the correction. The filter runs while the server delivers the owner's message, so an exception thrown by it is a [handler exception](../concepts/error-handling.md#exceptions-in-server-handlers): the server raises `OnHandlerException` and closes the owner's connection unless a subscriber clears `Disconnect`.
+
+The owner can call `Teleport()` too, after moving its own object somewhere new. The server then applies that sample at once instead of interpolating to it, and makes the other clients jump.
+
+### Not with prediction
+
+An object cannot be both predicted and decided by its owner, because both would write the owner's pose. A player build fails when a prefab or a scene object has a `NetworkTransform` with Owner Authority on and any of its behaviours declares a `[NetworkInput]` or `[NetworkReconcile]` field. At run time, spawning such an object with Owner Authority on, or turning it on later, throws `InvalidOperationException` on the server.
+
 ## Configuration
 
-<figure><img src="../.gitbook/assets/screenshots/network-transform-inspector.png" alt="The Inspector of a NetworkTransform with its defaults: Sync Position and Sync Rotation on, Sync Scale off, Position Threshold 0.01, Rotation Threshold 0.1, Scale Threshold 0.01, Interpolation Ticks 2, Visual None and Smoothing Time 0.1." width="460"><figcaption><p>A NetworkTransform with its default values.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/screenshots/network-transform-inspector.png" alt="The Inspector of a NetworkTransform with its defaults: Sync Position and Sync Rotation on, Sync Scale off, Position Threshold 0.01, Rotation Threshold 0.1, Scale Threshold 0.01, Interpolation Ticks 2, Visual None, Smoothing Time 0.1, Draw Corrections off, Correction Seconds 2, Owner Authority off and Owner Interpolation Ticks 1." width="460"><figcaption><p>A NetworkTransform with its default values.</p></figcaption></figure>
 
 | Field | Default | Meaning |
 |---|---|---|
@@ -78,11 +138,13 @@ For an object with a physics body, set the body's position as well, as described
 | Interpolation Ticks | 2 | At most how many ticks behind the newest snapshot clients show the object |
 | Visual | none | A child transform that is smoothed after prediction corrections |
 | Smoothing Time | 0.1 | Seconds over which the Visual returns to its rest position |
+| Owner Authority | off | Let the owner's client decide the transform, starting at spawn |
+| Owner Interpolation Ticks | 1 | How many of the owner's ticks behind its newest sample the server applies the owner's movement |
 
-`Visual` and `SmoothingTime` can also be set from code, while the sync flags and `InterpolationTicks` are read-only there.
+`Visual` and `SmoothingTime` can also be set from code, and `OwnerAuthority` can be set on the server, while the sync flags, `InterpolationTicks` and `OwnerInterpolationTicks` are read-only there.
 
 ## Limitations
 
-Transforms flow from the server to clients only, and a client can move a networked object for others only through RPCs or input. Values are replicated in local space, and re-parenting a replicated object at run time is not replicated. Movement that stays within a threshold of the last sent value is only sent once the object stops. On a host, the server's transform is shown as it is, without interpolation for the host's own view.
+Unless Owner Authority is on, transforms flow from the server to clients only, and a client can move a networked object for others only through RPCs or input. Values are replicated in local space, and re-parenting a replicated object at run time is not replicated. Movement that stays within a threshold of the last sent value is only sent once the object stops. On a host, the server's transform is shown as it is, without interpolation for the host's own view.
 
 [Replication](../concepts/replication.md) explains how transform messages fit with the other messages, the [prediction overview](../prediction/overview.md) shows `NetworkTransform` on a predicted character, and the [components reference](../reference/components.md#networktransform) lists its members.

@@ -2,13 +2,13 @@
 
 The package is server-authoritative. The server holds the real game state and is the only side that can change what other players see. A client can only ask for a change, and the server decides whether it happens. A cheating client can therefore send bad requests, but it cannot change the world directly.
 
-<figure><img src="../.gitbook/assets/diagrams/authority.svg" alt="A client sends three kinds of message to the server. A server RPC is checked: the caller must own the object unless RequireOwnership is false. Input is checked: the sender must own the object and the tick must not be past or too far ahead. A raw message is not checked; its handler gets the sender's peer id. The package checks who sends, not what is sent. Only the server spawns, despawns, changes owners, changes state, moves objects, loads network scenes and chooses observers."><figcaption><p>The three ways a client can reach the server, and what the package checks on each.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/authority.svg" alt="A client sends four kinds of message to the server. A server RPC is checked: the caller must own the object unless RequireOwnership is false. Input is checked: the sender must own the object and the tick must not be past or too far ahead. A raw message is not checked; its handler gets the sender's peer id. An owner transform is checked: the sender must be the current owner and the server must let it decide, and OwnerSampleFilter can check the values. The package checks who sends, not what is sent. Only the server spawns, despawns, changes owners, changes state, loads network scenes and chooses observers. It also moves objects, unless it lets the owner decide a NetworkTransform."><figcaption><p>The four ways a client can reach the server, and what the package checks on each.</p></figcaption></figure>
 
 ## What only the server does
 
 Only the server spawns and despawns network objects and changes their owners. Calling `ServerManager.Spawn` on a process that is not running a server throws `the server is not started`.
 
-State models and [collections](../synchronization/collections.md) change on the server and flow to clients, never the other way. Changing a spawned collection on a client throws. The same holds for movement: `NetworkTransform` sends the server's transform to clients and does not send a client's transform changes, and only the server's `NetworkAnimator` parameters reach other players.
+State models and [collections](../synchronization/collections.md) change on the server and flow to clients, never the other way. Changing a spawned collection on a client throws. The same holds for movement: `NetworkTransform` sends the server's transform to clients and does not send a client's transform changes, unless the server lets the owner decide it as described below, and only the server's `NetworkAnimator` parameters reach other players.
 
 The server also loads and unloads network scenes, and decides which clients observe which objects.
 
@@ -19,12 +19,17 @@ The server also loads and unloads network scenes, and decides which clients obse
 | Server RPC | The caller must own the object, unless the RPC sets `RequireOwnership = false`. Calls from other peers are dropped with a warning. | [RPCs](../messaging/rpc.md) |
 | Input for a predicted object | The sender must own the object. Input from other peers is dropped with a warning. Input for ticks that are already past, or too far ahead, is dropped and counted. | [Input](../prediction/input.md) |
 | Raw message | Not checked. The handler receives the sender's peer id and must validate the content. | [Raw messages](../messaging/messages.md) |
+| The owner's transform, for a `NetworkTransform` with Owner Authority on | The sender must be the current owner, and the server must have let it decide. Samples from an earlier turn or from before a correction are dropped. `OwnerSampleFilter` can check the values. | [NetworkTransform](../synchronization/transform.md#letting-the-owner-decide) |
 
 The package checks who may send, but not whether the content is reasonable, such as a speed or a position. Validate arguments in the RPC or input handler on the server.
 
 ## Ownership is not authority
 
 An owner is the peer that an object belongs to, as a player character belongs to its player. Ownership lets that client call the object's server RPCs, and if the object has an input model, the owner also predicts it. The server still runs the object, and corrects the owner's prediction when it differs from the server's own result. [Ownership](../objects/ownership.md) describes how owners are assigned and changed.
+
+## When the owner decides a transform
+
+A `NetworkTransform` with Owner Authority on lets the owner's client decide that one transform, so the owner moves at once without prediction. The server still decides when the owner may do so, accepts samples only from the current owner, can drop any sample in `OwnerSampleFilter` and can put the owner back with `Teleport()`. Everything else about the object stays with the server. A cheating owner can move such an object wherever the filter lets it, and on the server, collisions and triggers then use that pose. Use it for objects where that is acceptable, or check the samples in the filter.
 
 ## Prediction stays server-authoritative
 

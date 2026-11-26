@@ -10,7 +10,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `TransportManager` | Class | [NetworkManager reference](network-manager.md#transportmanager) |
 | `NetworkObject` | Component | [Reference](network-object.md) |
 | `NetworkBehaviour` | Abstract component | [Reference](network-object.md#networkbehaviour) |
-| `NetworkTransform`, `NetworkAnimator`, `TransformCorrection` | Components, struct | [Components](components.md) |
+| `NetworkTransform`, `NetworkAnimator`, `TransformCorrection`, `NetworkTransformSample`, `NetworkOwnerSampleFilter` | Components, structs, delegate | [Components](components.md) |
 | `NetworkStatsDisplay`, `ScreenCorner` | Component, enum | [Components](components.md#networkstatsdisplay) |
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Components, interfaces | [Components](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Asset types, component | [Components](components.md#observers) |
@@ -42,7 +42,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interfaces, classes | [Authentication](../connections/authentication.md) |
 | `TransferTickets`, `IUsedTicketStore`, `MemoryUsedTicketStore` | Class, interface, class | [Server transfer](../connections/transfer.md#transfertickets) |
 | `ConnectTokens` | Class | [Encrypted UDP](../connections/transports/encrypted-udp.md#issuing-grants) |
-| `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Console backend reference](../console-server/reference.md) |
+| `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `ITransformWriter`, `TransformSample`, `TransformSync`, `TransformSyncSettings`, `OwnerSampleFilter` | Backend contract | [Console backend reference](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging
 

@@ -229,9 +229,9 @@ def tick_numbers(language):
 @diagram('authority')
 def authority(language):
     t = translator(language)
-    canvas = Canvas(920, 316, t('What a client can send and what the package checks', 'Client gửi được gì và package kiểm tra gì'))
-    canvas.box(30, 40, 150, 190, 'client', t('Client', 'Client'), [t('asks', 'xin phép')])
-    canvas.box(740, 40, 150, 190, 'server', t('Server', 'Server'), [t('decides', 'quyết định')])
+    canvas = Canvas(920, 400, t('What a client can send and what the package checks', 'Client gửi được gì và package kiểm tra gì'))
+    canvas.box(30, 40, 150, 256, 'client', t('Client', 'Client'), [t('asks', 'xin phép')])
+    canvas.box(740, 40, 150, 256, 'server', t('Server', 'Server'), [t('decides', 'quyết định')])
     paths = [
         ('server RPC', t('checked: the caller owns the object,', 'kiểm tra: người gọi là owner,'),
          t('unless RequireOwnership = false', 'trừ khi RequireOwnership = false'), 'client'),
@@ -239,6 +239,8 @@ def authority(language):
          t('and the tick is not past or too far ahead', 'và tick không quá cũ hay quá xa'), 'client'),
         (t('raw message', 'raw message'), t('not checked: the handler gets', 'không kiểm tra: handler nhận'),
          t('the sender\'s peer id', 'peer id của người gửi'), 'muted'),
+        (t('owner transform', 'owner transform'), t('checked: the sender is the current owner and the server', 'kiểm tra: người gửi là owner hiện tại và được server'),
+         t('lets it decide; OwnerSampleFilter can check the values', 'cho quyết định; OwnerSampleFilter kiểm tra được giá trị'), 'client'),
     ]
     for index, (name, first, second, kind) in enumerate(paths):
         y = 56 + index * 66
@@ -246,11 +248,14 @@ def authority(language):
         canvas.text(206, y + 2, name, 12.5, 700, color=INK, mono=index < 2)
         canvas.text(330, y + 2, first, 12, 400, color='#374151')
         canvas.text(330, y + 19, second, 12, 400, color=MUTED)
-    canvas.text(30, 266, t('The package checks who sends, not what is sent. Check values such as speeds and positions in your handler.',
+    canvas.text(30, 332, t('The package checks who sends, not what is sent. Check values such as speeds and positions in your handler.',
                            'Package kiểm tra ai gửi, không kiểm tra nội dung gửi. Hãy tự kiểm tra các giá trị như tốc độ, vị trí trong handler.'),
                 12.5, 600, color=KINDS['accent'][2])
-    canvas.text(30, 292, t('Only the server spawns, despawns, changes owners, changes state, moves objects, loads network scenes and chooses observers.',
-                           'Chỉ server spawn, despawn, đổi owner, đổi state, dời object, load network scene và chọn observer.'),
+    canvas.text(30, 358, t('Only the server spawns, despawns, changes owners, changes state, loads network scenes and chooses observers.',
+                           'Chỉ server spawn, despawn, đổi owner, đổi state, load network scene và chọn observer.'),
+                12.5, 400, color=MUTED)
+    canvas.text(30, 376, t('It also moves objects, unless it lets the owner decide a NetworkTransform.',
+                           'Server cũng dời object, trừ khi cho owner quyết định một NetworkTransform.'),
                 12.5, 400, color=MUTED)
     return canvas
 

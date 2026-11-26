@@ -17,8 +17,16 @@ Trang này nói về các component và asset trong `Fomoxa.Unity` ngoài `Netwo
 | `LastCorrection` | `TransformCorrection?` | Lần sửa gần nhất; `null` cho tới lần đầu |
 | `DrawCorrections` | `bool` | Get và set. Vẽ các lần sửa thành gizmo trong Editor. |
 | `CorrectionSeconds` | `float` | Get và set; giá trị dưới 0.1 thành 0.1 |
+| `OwnerAuthority` | `bool` | Client của owner có quyết định transform hay không, xem [cho owner quyết định](../synchronization/transform.md#letting-the-owner-decide). Trước khi spawn, nó đặt giá trị ban đầu; sau khi spawn chỉ server đặt được, và đặt trên client sẽ ném `InvalidOperationException`. Bật nó cho object có behaviour dự đoán sẽ ném `InvalidOperationException`. |
+| `OwnerInterpolationTicks` | `int` | Số tick của owner mà server áp chậm so với mẫu mới nhất của owner; chỉ đọc |
+| `OwnerSampleFilter` | `NetworkOwnerSampleFilter` | Get và set trên server. Được gọi cho mỗi mẫu của owner trước khi áp; trả `false` thì bỏ mẫu. `null` nhận mọi mẫu. |
+| `IsOwnerSending` | `bool` | `true` trên client của owner trong lúc server cho nó quyết định; `false` trên server, trên client khác và trước khi spawn |
 
 `TransformCorrection` là một `public readonly struct` trong `Fomoxa.Unity` với `uint Tick`, `Vector3 PositionBefore`, `PositionAfter`, `PositionOffset`, `Quaternion RotationBefore`, `RotationAfter` và `float RotationDegrees`.
+
+`public delegate bool NetworkOwnerSampleFilter(in NetworkTransformSample accepted, in NetworkTransformSample incoming, uint ticks)` trong `Fomoxa.Unity` là kiểu của `OwnerSampleFilter`. `accepted` là mẫu cuối mà server đã nhận, hoặc pose của server ở mẫu đầu tiên của một lượt và ở lần owner teleport, khi đó `ticks` bằng 0. Ngoài hai trường hợp đó, `ticks` là số tick của owner giữa hai mẫu.
+
+`NetworkTransformSample` là một `public readonly struct` trong `Fomoxa.Unity`, xem một `TransformSample` của Core bằng kiểu Unity: `uint Tick` (tick của owner), `byte Mask` (bit 1 vị trí, 2 góc xoay, 4 tỉ lệ: các phần owner gửi trong mẫu này), `Vector3 LocalPosition`, `Quaternion LocalRotation`, `Vector3 LocalScale`, `bool Settle`, `byte Generation`, `TransformSample Core` mà nó bọc, và hàm tạo công khai `NetworkTransformSample(TransformSample core)`. Các phần không có trong `Mask` mang giá trị của `accepted`.
 
 ## NetworkStatsDisplay <a href="#networkstatsdisplay" id="networkstatsdisplay"></a>
 

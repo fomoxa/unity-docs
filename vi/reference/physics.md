@@ -174,6 +174,7 @@ public interface IPhysicsSimulation
 | `void WorldsOf(Scene scene, List<IPhysicsSimulation> worlds)` | Các world của một scene |
 | `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | Các body mà `NetworkObject.Body` và `Body2D` bọc |
 | `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | Các body mà `NetworkObject.Bodies` và `Bodies2D` bọc |
+| `PhysicsBody BodyOf(Transform part)`, `PhysicsBody2D Body2DOf(Transform part)` | Body mà backend dựng cho đúng GameObject đó của một network object, hoặc `default` nếu GameObject không có body |
 | `StaticGroup AddStatic(Scene scene, IReadOnlyList<ColliderDesc> colliders)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | Thêm một nhóm collider tĩnh vào một scene |
 | `StaticGroup AddStatic(GameObject root)`, `AddStatic2D(GameObject root)` | Thêm các collider dưới một GameObject |
 | `void RemoveStatic(StaticGroup group)` | Gỡ một nhóm; gỡ hai lần không làm gì |

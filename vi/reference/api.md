@@ -10,7 +10,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `TransportManager` | Class | [Tham chiếu NetworkManager](network-manager.md#transportmanager) |
 | `NetworkObject` | Component | [Tham chiếu](network-object.md) |
 | `NetworkBehaviour` | Component trừu tượng | [Tham chiếu](network-object.md#networkbehaviour) |
-| `NetworkTransform`, `NetworkAnimator`, `TransformCorrection` | Component, struct | [Component](components.md) |
+| `NetworkTransform`, `NetworkAnimator`, `TransformCorrection`, `NetworkTransformSample`, `NetworkOwnerSampleFilter` | Component, struct, delegate | [Component](components.md) |
 | `NetworkStatsDisplay`, `ScreenCorner` | Component, enum | [Component](components.md#networkstatsdisplay) |
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Component, interface | [Component](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Type asset, component | [Component](components.md#observers) |
@@ -42,7 +42,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `IServerAuthenticator`, `IClientAuthenticator`, `ServerAuthentication`, `ClientAuthentication`, `ServerAuthenticationContext`, `ClientAuthenticationContext` | Interface, class | [Xác thực](../connections/authentication.md) |
 | `TransferTickets`, `IUsedTicketStore`, `MemoryUsedTicketStore` | Class, interface, class | [Chuyển server](../connections/transfer.md#transfertickets) |
 | `ConnectTokens` | Class | [UDP mã hóa](../connections/transports/encrypted-udp.md#issuing-grants) |
-| `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `TransformSample`, `TransformSync`, `TransformSyncSettings` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
+| `EntityBehaviour`, `EntityRecord`, `NetworkRuntime`, `NetworkSettings`, `NetworkBackends`, `NetworkLog`, `ITransformSource`, `ITransformReceiver`, `ITransformWriter`, `TransformSample`, `TransformSync`, `TransformSyncSettings`, `OwnerSampleFilter` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
 
 ## Fomoxa.Networking.Messaging <a href="#fomoxanetworkingmessaging" id="fomoxanetworkingmessaging"></a>
 

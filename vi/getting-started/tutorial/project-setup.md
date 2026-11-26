@@ -84,7 +84,7 @@ Class phải là `partial` vì package thêm method đó cùng code đăng ký R
 3. Kéo nó vào `Assets/Prefabs` để tạo prefab, rồi xóa nó khỏi scene.
 4. Chọn **Tools > Fomoxa > Assign Prefab Ids**.
 
-<figure><img src="../../.gitbook/assets/screenshots/player-prefab-inspector.png" alt="Inspector của prefab Player với ba component. Network Object có Prefab Id 172953456, Explicit Prefab Id tắt, Scene Object Id 0, Despawn With Owner bật và Visibility là Rule. Network Transform có Sync Position và Sync Rotation bật, Sync Scale tắt, các ngưỡng 0.01, 0.1 và 0.01, Interpolation Ticks 2, không có Visual và Smoothing Time 0.1. Player không có field nào." width="460"><figcaption><p>Prefab Player sau Assign Prefab Ids. Prefab Id của bạn sẽ là một số khác.</p></figcaption></figure>
+<figure><img src="../../.gitbook/assets/screenshots/player-prefab-inspector.png" alt="Inspector của prefab Player với ba component. Network Object có Prefab Id 172953456, Explicit Prefab Id tắt, Scene Object Id 0, Despawn With Owner bật và Visibility là Rule. Network Transform có Sync Position và Sync Rotation bật, Sync Scale tắt, các ngưỡng 0.01, 0.1 và 0.01, Interpolation Ticks 2, không có Visual, Smoothing Time 0.1, Draw Corrections tắt, Correction Seconds 2, Owner Authority tắt và Owner Interpolation Ticks 1. Player không có field nào." width="460"><figcaption><p>Prefab Player sau Assign Prefab Ids. Prefab Id của bạn sẽ là một số khác.</p></figcaption></figure>
 
 Bước cuối gán cho prefab một prefab id, con số server và client dùng để thống nhất cần spawn gì, và viết `Assets/Network/Generated/FomoxaPrefabList.asset`. Chọn prefab và kiểm tra **Prefab Id** khác 0. Package cũng tự chạy bước này mỗi khi bạn lưu prefab trong Editor, và trước mỗi lần build player.
 
