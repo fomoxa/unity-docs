@@ -11,6 +11,7 @@
 | `ServerState State` | `Stopped`, `Starting`, `Started` hoặc `Stopping` |
 | `ushort Port` | Port đã bind; 0 khi đã dừng |
 | `int PeerCount` | Số peer đã kết nối, kể cả peer chưa khởi động xong |
+| `PeerIds StartedPeers` | Id của các peer ở `Started`, tức các peer mà `Broadcast` gửi tới; xem [danh sách peer](#the-peer-list) |
 | `ConnectionState PeerState(ulong peerId)` | Trạng thái của một peer; `Stopped` khi không biết |
 | `void Disconnect(ulong peerId)` | Đóng kết nối của một peer ngay lập tức với `StopReason.LocalStop` |
 | `bool Kick(ulong peerId)` | Gửi các message đã xếp và một thông báo cho client, rồi đóng kết nối; client dừng với `ServerClosed` và không kết nối lại. Trả false khi peer không tồn tại hoặc đang bị đóng. |
@@ -22,6 +23,19 @@
 | `ServerTrafficStatistics Statistics` | [Bộ đếm lưu lượng](../advanced/debugging.md#traffic-counters) của mọi peer, với `Of(peerId)` cho một peer; `null` khi Collect Statistics tắt |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget của transport của peer; 0 khi không biết |
 | `IServerAuthenticator Authenticator` | Phía server của [bước xác thực](../connections/authentication.md). Đọc và ghi; đặt khi server đang chạy sẽ ném `InvalidOperationException`. |
+
+### Danh sách peer <a href="#the-peer-list" id="the-peer-list"></a>
+
+`StartedPeers` là một `PeerIds` trong `Fomoxa.Networking.Sessions`, một `IReadOnlyCollection<ulong>` có `Count` và `Contains(ulong peerId)`. Một peer vào danh sách khi tới `Started`, và rời danh sách ngay tại lời gọi kick, chuyển server hay từ chối nó, hoặc khi nó dừng. `foreach` trên danh sách không cấp phát.
+
+Danh sách là danh sách sống. Khi nó đổi trong lúc một vòng lặp đang duyệt, bước kế tiếp của vòng lặp ném `InvalidOperationException`, như `Dictionary`. Muốn kick hay chuyển server cho peer trong một vòng lặp thì chép danh sách ra trước:
+
+```csharp
+foreach (ulong peerId in new List<ulong>(manager.ServerManager.StartedPeers))
+{
+    manager.ServerManager.Kick(peerId);
+}
+```
 
 ## Object <a href="#objects" id="objects"></a>
 

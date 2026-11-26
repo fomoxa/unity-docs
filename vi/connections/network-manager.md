@@ -4,7 +4,7 @@
 
 <figure><img src="../.gitbook/assets/diagrams/network-manager-parts.svg" alt="Bên trái, một GameObject tên Network Manager chứa ba component: NetworkManager với tick rate, timing, hàng đợi và danh sách prefab, scene; UdpNetworkTransport gán vào field Transport; RigidbodyPhysics gán vào field Physics. Bên phải là các object mà NetworkManager dựng trong Awake: ServerManager, ClientManager, Prefabs, Scenes, TimeManager và TransportManager. CreateFactory() của component transport cấp factory cho TransportManager."><figcaption><p>Các component bạn thêm, và các object manager dựng từ chúng.</p></figcaption></figure>
 
-Package không có cách truy cập manager dạng static. Hãy giữ một tham chiếu tới nó, ví dụ trong một serialized field, và truy cập server và client qua tham chiếu đó.
+Package không có cách truy cập manager dạng static. Hãy giữ một tham chiếu tới nó, ví dụ trong một serialized field, và truy cập server và client qua tham chiếu đó. Một `NetworkBehaviour` tới được manager đã spawn object của nó qua thuộc tính `NetworkManager`.
 
 ## Thêm một NetworkManager <a href="#add-a-networkmanager" id="add-a-networkmanager"></a>
 

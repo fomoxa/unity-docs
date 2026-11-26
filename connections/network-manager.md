@@ -4,7 +4,7 @@
 
 <figure><img src="../.gitbook/assets/diagrams/network-manager-parts.svg" alt="On the left, a GameObject named Network Manager holds three components: NetworkManager with the tick rate, timing, queues and the prefab and scene lists, UdpNetworkTransport assigned to the Transport field, and RigidbodyPhysics assigned to the Physics field. On the right, the objects the NetworkManager sets up in Awake: ServerManager, ClientManager, Prefabs, Scenes, TimeManager and TransportManager. The transport component's CreateFactory() feeds TransportManager."><figcaption><p>The components you add, and the objects the manager sets up from them.</p></figcaption></figure>
 
-The package has no static access to a manager. Keep a reference to it, for example in a serialized field, and reach the server and the client through that reference.
+The package has no static access to a manager. Keep a reference to it, for example in a serialized field, and reach the server and the client through that reference. A `NetworkBehaviour` reaches the manager that spawned its object through its `NetworkManager` property.
 
 ## Add a NetworkManager
 

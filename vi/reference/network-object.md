@@ -12,6 +12,7 @@
 | `OwnerId` | `ulong` | Peer id của owner; 0 với server hoặc khi chưa spawn |
 | `IsOwner` | `bool` | True trên client sở hữu, kể cả client của host; false trên dedicated server |
 | `IsSpawned` | `bool` | Đã spawn trên server hoặc trên một client trong tiến trình này |
+| `NetworkManager` | `NetworkManager` | Manager đã spawn object, ở server hay ở client; cùng một manager cho cả hai phía của host. Có giá trị từ trước `OnStartServer`, `OnStartClient` tới sau `OnStopServer`, `OnStopClient`; null ngoài khoảng đó, kể cả trong `Awake` |
 | `DespawnWithOwner` | `bool` | Đọc và ghi. Despawn khi owner ngắt kết nối; nếu không, server nhận ownership. |
 | `Visibility` | `NetworkVisibility` | Đọc và ghi. `Rule`, `Everyone` hoặc `OwnerOnly`. |
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | Các behaviour của object theo thứ tự behaviour index; được điền khi spawn |
@@ -41,6 +42,7 @@ Dù giá trị là gì, owner luôn observe object của nó, và network scene 
 | Member | Type | Mô tả |
 |---|---|---|
 | `NetworkObject` | `NetworkObject` | Object chứa nó; null cho tới lần spawn đầu tiên |
+| `NetworkManager` | `NetworkManager` | `NetworkObject.NetworkManager`; null khi object chưa spawn |
 | `BehaviourIndex` | `byte` | Vị trí trong `NetworkObject.Behaviours` |
 | `IsPredicting` | `bool` | Client của owner đang dự đoán behaviour này |
 | `IsReplaying` | `bool` | Client đang replay input |

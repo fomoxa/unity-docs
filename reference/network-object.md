@@ -12,6 +12,7 @@
 | `OwnerId` | `ulong` | The owner's peer id; 0 for the server or when not spawned |
 | `IsOwner` | `bool` | True on the owning client, including a host's client; false on a dedicated server |
 | `IsSpawned` | `bool` | Spawned on the server or on a client in this process |
+| `NetworkManager` | `NetworkManager` | The manager that spawned the object, on the server or on the client; the same manager for both sides of a host. Set from before `OnStartServer` and `OnStartClient` until after `OnStopServer` and `OnStopClient`; null otherwise, `Awake` included |
 | `DespawnWithOwner` | `bool` | Get and set. Despawn when the owner disconnects; otherwise the server takes ownership. |
 | `Visibility` | `NetworkVisibility` | Get and set. `Rule`, `Everyone` or `OwnerOnly`. |
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | The object's behaviours in behaviour index order; filled at spawn |
@@ -41,6 +42,7 @@ Whatever the value, the owner always observes its objects, and network scenes re
 | Member | Type | Description |
 |---|---|---|
 | `NetworkObject` | `NetworkObject` | The owning object; null until its first spawn |
+| `NetworkManager` | `NetworkManager` | `NetworkObject.NetworkManager`; null while the object is not spawned |
 | `BehaviourIndex` | `byte` | Position in `NetworkObject.Behaviours` |
 | `IsPredicting` | `bool` | The owner's client predicts this behaviour |
 | `IsReplaying` | `bool` | The client replays input |

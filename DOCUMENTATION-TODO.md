@@ -9,20 +9,10 @@ Question: Should a client be able to read its own peer id? `ClientObjects.LocalP
 Why it matters: Games that compare `NetworkObject.OwnerId` with "me" have to use `IsOwner` instead. Documented as "the client does not expose its own peer id".
 Source examined: `Runtime/Core/ClientManager.cs`, `Runtime/Core/Objects/ClientObjects.cs`.
 
-### Reaching the NetworkManager from a NetworkBehaviour
-Question: Is there an intended way for a behaviour to reach its `NetworkManager` or `TimeManager`, for `TickDelta` in `apply`? `NetworkObject.Server` and `Client` are internal.
-Why it matters: The prediction example uses `FindAnyObjectByType<NetworkManager>()`, which can pick the wrong manager when a scene has several.
-Source examined: `Runtime/Unity/NetworkObject.cs`, `Runtime/Unity/NetworkBehaviour.cs`.
-
 ### Rejected input event
 Question: `ServerInputs.OnInputRejected` is public, but `ServerManager.Inputs` is internal, so game code cannot subscribe. Is that intended?
 Why it matters: Documented as "logged as a warning; no public event".
 Source examined: `Runtime/Core/Prediction/ServerInputs.cs`, `Runtime/Core/ServerManager.cs`.
-
-### Peer list on the server
-Question: Should `ServerManager` expose the ids of connected peers?
-Why it matters: Documented that games keep their own set from `OnRemoteConnectionState`.
-Source examined: `Runtime/Core/ServerManager.cs`, `Runtime/Core/Sessions/ServerSession.cs`.
 
 ### UDP listener limits in Fomoxa.Net
 Question: Does the bundled `Fomoxa.Net.dll` limit the number of UDP peers per listener (the `csharp` source has `PeerCeiling = 1024` and a per-peer queue of 64 datagrams)?

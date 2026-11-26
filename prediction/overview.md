@@ -28,13 +28,6 @@ public sealed partial class PredictedMover : NetworkBehaviour
     [NetworkReconcile(Tolerance = 0.01f)]
     private Vector3 position;
 
-    private NetworkManager manager;
-
-    private void Awake()
-    {
-        manager = FindAnyObjectByType<NetworkManager>();
-    }
-
     protected override void OnGatherInput()
     {
         x = Input.GetAxisRaw("Horizontal");
@@ -44,7 +37,7 @@ public sealed partial class PredictedMover : NetworkBehaviour
     protected override void OnApplyInput(InputContext context)
     {
         Vector3 direction = Vector3.ClampMagnitude(new Vector3(x, 0f, z), 1f);
-        transform.position += direction * speed * (float)manager.TimeManager.TickDelta;
+        transform.position += direction * speed * (float)NetworkManager.TimeManager.TickDelta;
     }
 
     protected override void OnCaptureState()
@@ -61,7 +54,7 @@ public sealed partial class PredictedMover : NetworkBehaviour
 
 The class must be `partial`. The package gathers the input fields into a model named `PredictedMoverInput` and the reconcile fields into `PredictedMoverReconcile`, both in the `StateModels` subfolder of the Generated Folder, and carries them inside its own messages. `Tolerance` lets each component of `position` differ by up to 0.01 before the client corrects itself.
 
-The example reads the legacy Input Manager; with the Input System package, read your input action in `OnGatherInput` instead.
+`NetworkManager` is the manager that spawned the object, so `OnApplyInput` reads the tick length from the right manager even when a scene has several. The example reads the legacy Input Manager; with the Input System package, read your input action in `OnGatherInput` instead.
 
 Put `NetworkObject`, `NetworkTransform` and `PredictedMover` on the player prefab, and spawn it with the player's peer id as its owner.
 

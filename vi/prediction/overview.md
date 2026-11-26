@@ -28,13 +28,6 @@ public sealed partial class PredictedMover : NetworkBehaviour
     [NetworkReconcile(Tolerance = 0.01f)]
     private Vector3 position;
 
-    private NetworkManager manager;
-
-    private void Awake()
-    {
-        manager = FindAnyObjectByType<NetworkManager>();
-    }
-
     protected override void OnGatherInput()
     {
         x = Input.GetAxisRaw("Horizontal");
@@ -44,7 +37,7 @@ public sealed partial class PredictedMover : NetworkBehaviour
     protected override void OnApplyInput(InputContext context)
     {
         Vector3 direction = Vector3.ClampMagnitude(new Vector3(x, 0f, z), 1f);
-        transform.position += direction * speed * (float)manager.TimeManager.TickDelta;
+        transform.position += direction * speed * (float)NetworkManager.TimeManager.TickDelta;
     }
 
     protected override void OnCaptureState()
@@ -61,7 +54,7 @@ public sealed partial class PredictedMover : NetworkBehaviour
 
 Class phải là `partial`. Package gom các field input vào một model tên `PredictedMoverInput` và các field reconcile vào `PredictedMoverReconcile`, cả hai trong thư mục con `StateModels` của Generated Folder, và mang chúng bên trong các message của riêng nó. `Tolerance` cho mỗi thành phần của `position` lệch tối đa 0.01 trước khi client tự sửa.
 
-Ví dụ đọc Input Manager cũ; với package Input System, hãy đọc input action của bạn trong `OnGatherInput`.
+`NetworkManager` là manager đã spawn object, nên `OnApplyInput` đọc độ dài tick từ đúng manager, kể cả khi scene có nhiều manager. Ví dụ đọc Input Manager cũ; với package Input System, hãy đọc input action của bạn trong `OnGatherInput`.
 
 Đặt `NetworkObject`, `NetworkTransform` và `PredictedMover` lên prefab người chơi, và spawn nó với peer id của người chơi làm owner.
 

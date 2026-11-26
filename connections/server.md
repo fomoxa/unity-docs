@@ -52,11 +52,12 @@ manager.ServerManager.OnRemoteConnectionState += args =>
 };
 ```
 
-A peer is `Starting` while the handshake runs, `Authenticating` while your [authenticator](authentication.md) checks it, and `Started` once it is let in. Without an authenticator, a peer passes `Authenticating` and reaches `Started` in the same update. Spawn a peer's objects at `Started`, since it cannot receive them earlier. The server does not expose a list of peer ids, so if you need one, keep your own set from these events. [Lifecycle](../concepts/lifecycle.md#server) shows the whole sequence for one client.
+A peer is `Starting` while the handshake runs, `Authenticating` while your [authenticator](authentication.md) checks it, and `Started` once it is let in. Without an authenticator, a peer passes `Authenticating` and reaches `Started` in the same update. Spawn a peer's objects at `Started`, since it cannot receive them earlier. `StartedPeers` holds the ids of the peers in `Started`, the peers that `Broadcast` sends to. [Lifecycle](../concepts/lifecycle.md#server) shows the whole sequence for one client.
 
 | Member | Purpose |
 |---|---|
 | `PeerCount` | Connected peers, including those that have not started yet |
+| `StartedPeers` | The ids of the started peers, the host's own client included |
 | `PeerState(peerId)` | A peer's `ConnectionState`; `Stopped` for an unknown peer |
 | `Disconnect(peerId)` | Closes a peer's connection at once; it stops with `LocalStop`, and the client sees the connection drop and reconnects |
 | `Kick(peerId)` | Tells the client it was kicked, then closes the connection; the peer stops with `LocalStop`, and the client stops with `ServerClosed` and does not reconnect |

@@ -11,6 +11,7 @@
 | `ServerState State` | `Stopped`, `Starting`, `Started` or `Stopping` |
 | `ushort Port` | The bound port; 0 while stopped |
 | `int PeerCount` | Connected peers, including those not started yet |
+| `PeerIds StartedPeers` | The ids of the peers in `Started`, the ones `Broadcast` sends to; see [the peer list](#the-peer-list) |
 | `ConnectionState PeerState(ulong peerId)` | A peer's state; `Stopped` when unknown |
 | `void Disconnect(ulong peerId)` | Closes a peer's connection at once with `StopReason.LocalStop` |
 | `bool Kick(ulong peerId)` | Sends the queued messages and a notice to the client, then closes the connection; the client stops with `ServerClosed` and does not reconnect. False when the peer is unknown or already closing. |
@@ -22,6 +23,19 @@
 | `ServerTrafficStatistics Statistics` | [Traffic counters](../advanced/debugging.md#traffic-counters) of every peer, with `Of(peerId)` for one peer; `null` when Collect Statistics is off |
 | `int FrameBudgetOf(ulong peerId)` | Frame budget of the peer's transport; 0 when unknown |
 | `IServerAuthenticator Authenticator` | The server side of the [authentication](../connections/authentication.md). Get and set; setting it while the server is running throws `InvalidOperationException`. |
+
+### The peer list
+
+`StartedPeers` is a `PeerIds` in `Fomoxa.Networking.Sessions`, an `IReadOnlyCollection<ulong>` with `Count` and `Contains(ulong peerId)`. A peer joins it when it reaches `Started` and leaves it at the call that kicks, transfers or rejects it, or when it stops. `foreach` over it does not allocate.
+
+The list is live. When it changes while a loop goes over it, the next step of the loop throws `InvalidOperationException`, as a `Dictionary` does. To kick or transfer peers in a loop, copy the list first:
+
+```csharp
+foreach (ulong peerId in new List<ulong>(manager.ServerManager.StartedPeers))
+{
+    manager.ServerManager.Kick(peerId);
+}
+```
 
 ## Objects
 

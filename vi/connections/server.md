@@ -52,11 +52,12 @@ manager.ServerManager.OnRemoteConnectionState += args =>
 };
 ```
 
-Một peer ở `Starting` trong lúc handshake chạy, ở `Authenticating` trong lúc [authenticator](authentication.md) của bạn kiểm tra nó, và tới `Started` khi được cho vào. Khi không có authenticator, peer đi qua `Authenticating` và tới `Started` trong cùng một lần cập nhật. Hãy spawn object của peer ở `Started`, vì trước đó nó chưa nhận được chúng. Server không cung cấp danh sách peer id, nên nếu cần, hãy tự giữ một tập từ các event này. [Vòng đời](../concepts/lifecycle.md#server) đưa ra toàn bộ trình tự cho một client.
+Một peer ở `Starting` trong lúc handshake chạy, ở `Authenticating` trong lúc [authenticator](authentication.md) của bạn kiểm tra nó, và tới `Started` khi được cho vào. Khi không có authenticator, peer đi qua `Authenticating` và tới `Started` trong cùng một lần cập nhật. Hãy spawn object của peer ở `Started`, vì trước đó nó chưa nhận được chúng. `StartedPeers` giữ id của các peer ở `Started`, tức các peer mà `Broadcast` gửi tới. [Vòng đời](../concepts/lifecycle.md#server) đưa ra toàn bộ trình tự cho một client.
 
 | Member | Mục đích |
 |---|---|
 | `PeerCount` | Số peer đã kết nối, kể cả peer chưa khởi động xong |
+| `StartedPeers` | Id của các peer đã khởi động, kể cả client của chính host |
 | `PeerState(peerId)` | `ConnectionState` của một peer; `Stopped` với peer không biết |
 | `Disconnect(peerId)` | Đóng kết nối của một peer ngay lập tức; nó dừng với `LocalStop`, còn client thấy kết nối rớt và kết nối lại |
 | `Kick(peerId)` | Báo cho client rằng nó bị kick, rồi đóng kết nối; peer dừng với `LocalStop`, còn client dừng với `ServerClosed` và không kết nối lại |
