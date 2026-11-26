@@ -39,7 +39,7 @@ Cả hai interface đều kế thừa `IPhysicsSimulation`. Chúng tách riêng 
 | Tạo body | `CreateBody(in BodyDesc)` | `CreateBody(in BodyDesc2D)` |
 | Gỡ, kiểm tra | `RemoveBody(BodyHandle)`, `Contains(BodyHandle)` | như trên |
 | Đọc | `GetBody` trả về `BodyState`, `GetKind`, `GetMass` | `GetBody` trả về `BodyState2D`, `GetKind`, `GetMass` |
-| Ghi | `SetBody(BodyHandle, in BodyState)` | `SetBody(BodyHandle, in BodyState2D)` |
+| Ghi | `SetBody(BodyHandle, in BodyState)`, `SetKind(BodyHandle, BodyKind)` | `SetBody(BodyHandle, in BodyState2D)`, `SetKind(BodyHandle, BodyKind)` |
 | Loại khỏi snapshot | `SetRewindable(BodyHandle, bool)` | như trên |
 | Lực | `AddForce`, `AddImpulse`, `AddTorque`, `AddTorqueImpulse`, `AddForceAtPoint`, `AddImpulseAtPoint` với `Vector3` | với `Vector2`, và mô-men kiểu `float` |
 | Truy vấn | `Raycast`, `ShapeCast` và `Overlap` với `QueryFilter` | như vậy, với `RayHit2D` |

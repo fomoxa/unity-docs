@@ -39,7 +39,7 @@ Both interfaces extend `IPhysicsSimulation`. They are separate because their sta
 | Create a body | `CreateBody(in BodyDesc)` | `CreateBody(in BodyDesc2D)` |
 | Remove, test | `RemoveBody(BodyHandle)`, `Contains(BodyHandle)` | same |
 | Read | `GetBody` returns `BodyState`, `GetKind`, `GetMass` | `GetBody` returns `BodyState2D`, `GetKind`, `GetMass` |
-| Write | `SetBody(BodyHandle, in BodyState)` | `SetBody(BodyHandle, in BodyState2D)` |
+| Write | `SetBody(BodyHandle, in BodyState)`, `SetKind(BodyHandle, BodyKind)` | `SetBody(BodyHandle, in BodyState2D)`, `SetKind(BodyHandle, BodyKind)` |
 | Exclude from snapshots | `SetRewindable(BodyHandle, bool)` | same |
 | Forces | `AddForce`, `AddImpulse`, `AddTorque`, `AddTorqueImpulse`, `AddForceAtPoint`, `AddImpulseAtPoint` with `Vector3` | with `Vector2`, and a `float` torque |
 | Queries | `Raycast`, `ShapeCast` and `Overlap` with a `QueryFilter` | same, with `RayHit2D` |

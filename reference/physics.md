@@ -106,6 +106,7 @@ public interface IPhysicsSimulation
 | `bool Contains(BodyHandle body)` | Whether the body exists |
 | `BodyState GetBody(BodyHandle body)`, `void SetBody(BodyHandle body, in BodyState state)` | Read and write the state |
 | `BodyKind GetKind(BodyHandle body)`, `float GetMass(BodyHandle body)` | Kind and mass |
+| `void SetKind(BodyHandle body, BodyKind kind)` | Changes the kind of a body. A 3D `Rigidbody` has no static kind: `UnityPhysicsWorld` throws `ArgumentException` for `BodyKind.Static` |
 | `void SetRewindable(BodyHandle body, bool rewindable)` | Includes or excludes the body from snapshots |
 | `void AddForce(BodyHandle body, Vector3 force)`, `void AddImpulse(BodyHandle body, Vector3 impulse)` | Forces |
 | `void AddTorque(BodyHandle body, Vector3 torque)`, `void AddTorqueImpulse(BodyHandle body, Vector3 torqueImpulse)` | Torques |

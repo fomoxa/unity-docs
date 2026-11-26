@@ -106,6 +106,7 @@ public interface IPhysicsSimulation
 | `bool Contains(BodyHandle body)` | Body có tồn tại hay không |
 | `BodyState GetBody(BodyHandle body)`, `void SetBody(BodyHandle body, in BodyState state)` | Đọc và ghi state |
 | `BodyKind GetKind(BodyHandle body)`, `float GetMass(BodyHandle body)` | Loại và khối lượng |
+| `void SetKind(BodyHandle body, BodyKind kind)` | Đổi loại của một body. `Rigidbody` 3D không có loại tĩnh: `UnityPhysicsWorld` ném `ArgumentException` với `BodyKind.Static` |
 | `void SetRewindable(BodyHandle body, bool rewindable)` | Đưa body vào hoặc loại khỏi snapshot |
 | `void AddForce(BodyHandle body, Vector3 force)`, `void AddImpulse(BodyHandle body, Vector3 impulse)` | Lực |
 | `void AddTorque(BodyHandle body, Vector3 torque)`, `void AddTorqueImpulse(BodyHandle body, Vector3 torqueImpulse)` | Mô-men |
