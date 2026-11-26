@@ -45,7 +45,7 @@ Registry của prefab và scene, việc load scene và các asset observer rule 
 
 Code của bạn chạy cùng với code mà package sinh ra trong project. Các message của chính package, như message spawn và transform, cũng là model: package copy chúng vào thư mục `FomoxaSystemModels` của project và sinh code cho chúng cùng lúc với model của bạn. Vì vậy mọi message game gửi đi đều thuộc một schema chung, và client với server so sánh schema đó trong lúc handshake.
 
-<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Model của bạn, system model của package và RPC model đi vào fomoxac, fomoxac ghi codec và NetSchema.cs. Package thêm adapter, FomoxaAdapters.cs và FomoxaUnityRegistration.cs, còn bước prefab và bước scene ghi danh sách của chúng. Khi khởi động, việc đăng ký điền FomoxaRegistry.Default, và NetworkManager đọc registry đó trong Awake."><figcaption><p>Model trở thành codec và đến được NetworkManager như thế nào.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Model của bạn, system model của package, RPC model, state model và message model đi vào fomoxac, fomoxac ghi codec và NetSchema.cs. Package thêm adapter, FomoxaAdapters.cs và FomoxaUnityRegistration.cs, còn bước prefab và bước scene ghi danh sách của chúng. Khi khởi động, việc đăng ký điền FomoxaRegistry.Default, và NetworkManager đọc registry đó trong Awake."><figcaption><p>Model trở thành codec và đến được NetworkManager như thế nào.</p></figcaption></figure>
 
 [Cài đặt](../getting-started/installation.md#how-code-generation-works) đi qua một lần sinh code, và [tích hợp Editor](../advanced/editor-integration.md) liệt kê mọi file sinh ra.
 

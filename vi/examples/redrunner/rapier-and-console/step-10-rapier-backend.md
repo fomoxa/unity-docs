@@ -27,7 +27,7 @@ Với `RigidbodyPhysics`, replay trên client của owner bắt đầu từ mộ
 
 `NetworkLevel` thêm level vào Rapier sau khi dựng các block từ seed, trên server và trên mọi client, theo thứ tự vị trí X của block. Mỗi block thành một nhóm tĩnh gồm các collider của nó. Các object `Rigidbody2D` không dynamic của block thành body không chủ: gai là body tĩnh, còn chùy và lưỡi cưa là body kinematic mà `NetworkLevel` đặt về vị trí của tick. Đồng xu và rương ở ngoài Rapier, vì chúng chỉ là đồ trang trí cục bộ.
 
-Nhân vật di chuyển qua `PhysicsBody2D` của nó. Việc kiểm tra chạm đất hỏi một sensor ở chân xem nó chạm collider nào, và server hỏi các collider của nhân vật xem chúng chạm hiểm họa nào. Để đổi một `RapierCollider` ngược về collider Unity nguồn, `NetworkLevel` giữ một bảng từ chỉ số tĩnh và handle của body tới các collider nguồn.
+Nhân vật di chuyển qua `NetworkBody2D` của nó. Việc kiểm tra chạm đất hỏi một sensor ở chân xem nó chạm collider nào, và server hỏi các collider của nhân vật xem chúng chạm hiểm họa nào. Để đổi một `RapierCollider` ngược về collider Unity nguồn, `NetworkLevel` giữ một bảng từ chỉ số tĩnh và handle của body tới các collider nguồn.
 
 ## File <a href="#files" id="files"></a>
 
@@ -73,7 +73,7 @@ private void AddToRapier(RapierPhysics rapier)
         AddBodies(rapier, block.gameObject);
     }
 
-    World = rapier.Scenes.WorldOf2D(m_Game.Manager.Scenes.IdOf(gameObject.scene.path));
+    World = rapier.Scenes.WorldOf2D(NetworkManager.Scenes.IdOf(gameObject.scene.path));
 }
 ```
 
@@ -91,13 +91,13 @@ follower.transform.position = position;
 
 ### Di chuyển nhân vật qua body của nó <a href="#move-the-character-through-its-body" id="move-the-character-through-its-body"></a>
 
-`RedCharacter` có thêm `BodySource` trả về `PhysicsBody2D` của nhân vật. Việc đọc ghi vận tốc và lực lăn đi qua body đó khi nó hợp lệ:
+`RedCharacter` có thêm `BodySource` trả về `NetworkBody2D` của nhân vật. Việc đọc ghi vận tốc và lực lăn đi qua body đó khi nó hợp lệ:
 
 ```csharp
-Fomoxa.Networking.Simulation.PhysicsBody2D body = BodySource ();
+Fomoxa.Unity.NetworkBody2D body = BodySource ();
 if ( body.IsValid )
 {
-    body.Velocity = new System.Numerics.Vector2 ( value.x, value.y );
+    body.Velocity = value;
     return;
 }
 ```

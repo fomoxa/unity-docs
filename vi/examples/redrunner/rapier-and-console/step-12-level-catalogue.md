@@ -97,8 +97,8 @@ public static BuiltLevel Build(LevelCatalogue catalogue, int seed, float tickDel
 `NetworkLevel` nay dựng level Rapier của nó như sau:
 
 ```csharp
-var physics = new RapierLevelPhysics(rapier, gameObject.scene, m_Game.Manager.Scenes.IdOf(gameObject.scene.path));
-m_Built = BuiltLevel.Build(Read(m_Catalogue.bytes), (int)seed, (float)m_Game.Manager.TimeManager.TickDelta, physics);
+var physics = new RapierLevelPhysics(rapier, gameObject.scene, NetworkManager.Scenes.IdOf(gameObject.scene.path));
+m_Built = BuiltLevel.Build(Read(m_Catalogue.bytes), (int)seed, (float)NetworkManager.TimeManager.TickDelta, physics);
 ```
 
 `RapierLevelPhysics` thêm collider và body bằng `rapier.AddStatic2D` và `rapier.AddBody2D`, và trả về `rapier.Scenes.WorldOf2D(sceneId)` làm world. Mỗi path follower của các block hiển thị được điều khiển bởi chu kỳ của body catalogue cùng chỉ số, nên thứ người chơi thấy di chuyển theo body Rapier. `NetworkLevel.SurfaceOf`, hàm mà `NetworkPlayer` truyền cho `RunnerContacts`, nay trả lời từ `BuiltLevel` thay vì tra collider Unity.

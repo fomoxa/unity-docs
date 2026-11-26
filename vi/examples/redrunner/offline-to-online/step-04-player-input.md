@@ -123,7 +123,7 @@ m_Rigidbody2D.AddForce ( new Vector2 ( Mathf.Sign ( transform.localScale.x ) * m
 public sealed partial class NetworkPlayer : NetworkBehaviour
 ```
 
-Nửa phần input của class, viết cho `com.fomoxa.networking` 0.4.0:
+Nửa phần input của class, viết cho `com.fomoxa.networking` 0.5.0:
 
 ```csharp
 [NetworkInput]
@@ -158,7 +158,7 @@ protected override void OnGatherInput()
 
 protected override void OnApplyInput(InputContext context)
 {
-    float tickDelta = (float)m_Game.Manager.TimeManager.TickDelta;
+    float tickDelta = (float)NetworkManager.TimeManager.TickDelta;
     bool fresh = !context.Repeated;
     m_Character.Simulate(move, fresh && jump, fresh && roll, tickDelta, !context.Replaying);
 }
@@ -168,7 +168,7 @@ Sau `OnGatherInput`, package copy ba field vào một `PlayerInput` và gửi n�
 
 `Update` chạy mỗi frame và giữ các lần bấm nút cho tới `OnGatherInput` tiếp theo, nên một lần bấm ngắn hơn một tick không bị mất. Khi màn hình tạm dừng đang mở, `gameRunning` là false và input trống, nên nhân vật dừng lại trong khi server và người chơi khác vẫn tiếp tục.
 
-Trên server, `OnApplyInput` chạy tại tick mà input thuộc về. Khi không có input nào tới cho một tick, package lặp lại input cuối và đặt `InputContext.Repeated`, và bản port khi đó chỉ lặp lại trục di chuyển, không bao giờ lặp lại nhảy hay lăn. `InputContext.Replaying` được dùng ở bước 05. `NetworkPlayer.Awake` giờ lấy `RedCharacter` và tìm `NetworkGame` một lần, nên `m_Game` được gán trên mọi instance, kể cả instance của owner.
+Trên server, `OnApplyInput` chạy tại tick mà input thuộc về. Khi không có input nào tới cho một tick, package lặp lại input cuối và đặt `InputContext.Repeated`, và bản port khi đó chỉ lặp lại trục di chuyển, không bao giờ lặp lại nhảy hay lăn. `InputContext.Replaying` được dùng ở bước 05. `OnApplyInput` đọc độ dài tick từ `NetworkManager`, manager đã spawn object, có giá trị trong mọi callback mạng nhưng chưa có trong `Awake`. `NetworkPlayer.Awake` giờ lấy `RedCharacter` và tìm `NetworkGame` một lần, nên `m_Game` được gán trên mọi instance, kể cả instance của owner.
 
 Các reconcile field của bước 05 được viết trong cùng commit.
 

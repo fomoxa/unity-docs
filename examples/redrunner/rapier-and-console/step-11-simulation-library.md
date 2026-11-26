@@ -80,7 +80,7 @@ Tools/PortChecks/Editor/PortLayout.cs
 public RunnerActions Simulate(PhysicsBody2D body, in RunnerSettings settings, float move, bool jump, bool roll, bool grounded, bool dead, float deltaTime)
 ```
 
-The facing direction, which used to be the sign of `transform.localScale.x`, is now `RunnerMotion.Facing`, and `RedCharacter` applies it to the scale for display. `NetworkPlayer` sets `BodySource` with either backend now, because the motion always goes through `PhysicsBody2D`; with `RigidbodyPhysics`, `NetworkObject.Body2D` is the character's PhysX body.
+The facing direction, which used to be the sign of `transform.localScale.x`, is now `RunnerMotion.Facing`, and `RedCharacter` applies it to the scale for display. `RedCharacter.Simulate` passes `body.Core`, the `PhysicsBody2D` of the character's `NetworkBody2D`, because `RunnerMotion` uses no Unity types, so that the console server of step 13 can compile it. `NetworkPlayer` sets `BodySource` with either backend now, because the motion always goes through the body; with `RigidbodyPhysics`, `NetworkObject.Body2D` is the character's PhysX body.
 
 ### Contacts
 

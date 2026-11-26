@@ -97,8 +97,8 @@ public static BuiltLevel Build(LevelCatalogue catalogue, int seed, float tickDel
 `NetworkLevel` now builds its Rapier level like this:
 
 ```csharp
-var physics = new RapierLevelPhysics(rapier, gameObject.scene, m_Game.Manager.Scenes.IdOf(gameObject.scene.path));
-m_Built = BuiltLevel.Build(Read(m_Catalogue.bytes), (int)seed, (float)m_Game.Manager.TimeManager.TickDelta, physics);
+var physics = new RapierLevelPhysics(rapier, gameObject.scene, NetworkManager.Scenes.IdOf(gameObject.scene.path));
+m_Built = BuiltLevel.Build(Read(m_Catalogue.bytes), (int)seed, (float)NetworkManager.TimeManager.TickDelta, physics);
 ```
 
 `RapierLevelPhysics` adds the colliders and bodies with `rapier.AddStatic2D` and `rapier.AddBody2D` and returns `rapier.Scenes.WorldOf2D(sceneId)` as the world. Each path follower of the displayed blocks is driven by the cycle of the catalogue body with the same index, so what the player sees moves with the Rapier body. `NetworkLevel.SurfaceOf`, which `NetworkPlayer` passes to `RunnerContacts`, now answers from `BuiltLevel` instead of looking up Unity colliders.

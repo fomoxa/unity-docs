@@ -20,7 +20,7 @@ The client's result can then drift from the server's, for example when a packet 
 - [Prediction overview](../../../prediction/overview.md)
 - [Reconciliation](../../../prediction/reconciliation.md)
 - [Rollback with physics](../../../prediction/rollback.md)
-- [PhysicsBody2D](../../../reference/physics.md#physicsbody2d)
+- [NetworkBody2D](../../../reference/physics.md#networkbody2d)
 - [Three tick numbers](../../../concepts/tick.md#three-tick-numbers)
 
 ## Design
@@ -92,20 +92,20 @@ private float runSmoothVelocity;
 
 protected override void OnCaptureState()
 {
-    BodyState2D state = NetworkObject.Body2D.State;
-    x = state.Position.X;
-    y = state.Position.Y;
-    velocityX = state.Velocity.X;
-    velocityY = state.Velocity.Y;
+    NetworkBodyState2D state = NetworkObject.Body2D.State;
+    x = state.Position.x;
+    y = state.Position.y;
+    velocityX = state.Velocity.x;
+    velocityY = state.Velocity.y;
     runSmoothVelocity = m_Character.RunSmoothVelocity;
 }
 
 protected override void OnRestoreState()
 {
-    PhysicsBody2D body = NetworkObject.Body2D;
-    BodyState2D state = body.State;
-    state.Position = new System.Numerics.Vector2(x, y);
-    state.Velocity = new System.Numerics.Vector2(velocityX, velocityY);
+    NetworkBody2D body = NetworkObject.Body2D;
+    NetworkBodyState2D state = body.State;
+    state.Position = new Vector2(x, y);
+    state.Velocity = new Vector2(velocityX, velocityY);
     body.State = state;
     m_Character.RunSmoothVelocity = runSmoothVelocity;
 }
@@ -115,7 +115,7 @@ The package calls `OnCaptureState` before it copies the fields into a `PlayerMot
 
 `runSmoothVelocity` is a reconcile field because `Mathf.SmoothDamp` carries its velocity from one tick to the next. Without it, a replay would start the acceleration from a different value than the server did, and drift. `RedCharacter` exposes the value as a `RunSmoothVelocity` property for this purpose.
 
-`NetworkObject.Body2D` is the package's view of the character's `Rigidbody2D`, with `System.Numerics.Vector2` positions and velocities. The tolerances can be small because the server and the client run the same physics on the same blocks.
+`NetworkObject.Body2D` is the package's view of the character's `Rigidbody2D`, with `Vector2` positions and velocities. The tolerances can be small because the server and the client run the same physics on the same blocks.
 
 During a replay `InputContext.Replaying` is true, and `OnApplyInput` from step 04 passes `!context.Replaying` as `effects`, so a replayed jump changes the velocity without playing the sound, the particles or the trigger a second time.
 

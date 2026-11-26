@@ -53,7 +53,7 @@ Các bước được thực hiện thành các commit trên branch `master` c�
 | 08 | [`52e1696`](https://github.com/fomoxa/RedRunner/commit/52e1696b2e5b8db09e0178f827febf9ae712a02f), [`0edd3a4`](https://github.com/fomoxa/RedRunner/commit/0edd3a46a0f5bf48a76786e6242ea2f523e1ec21), [`c75cebd`](https://github.com/fomoxa/RedRunner/commit/c75cebdee36f6edfc3869964157bd45093eae543), [`c239d2a`](https://github.com/fomoxa/RedRunner/commit/c239d2a0988dcf2af5821b41f1ba7cc2f6372baf) |
 | 09 | [`7396f92`](https://github.com/fomoxa/RedRunner/commit/7396f9279b5796ffb35d97765cbe5cb1794d5357) |
 
-Commit của các bước 02 tới 06 dùng API 0.3, trong đó một `NetworkBehaviour` khai báo model bằng tay và đăng ký chúng trong `OnRegisterState` và `OnRegisterInput`. Các bước trình bày cùng code đó với các field của 0.4.0, và [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) là commit chuyển Red Runner sang chúng.
+Commit của các bước 02 tới 06 dùng API 0.3, trong đó một `NetworkBehaviour` khai báo model bằng tay và đăng ký chúng trong `OnRegisterState` và `OnRegisterInput`. Các bước trình bày cùng code đó với các field của 0.4.0, và [`1c1ded1`](https://github.com/fomoxa/RedRunner/commit/1c1ded158105091902d8d352157856eacf0cbc73) là commit chuyển Red Runner sang chúng. Các trang cũng dùng body kiểu Unity của 0.5.0 và `NetworkManager` của behaviour trong callback mạng, mà [`207c0a6`](https://github.com/fomoxa/RedRunner/commit/207c0a6929fc9ae5460c688d96e54a9ac6a1a962) đưa vào Red Runner.
 
 Bước 04 và 05 dùng chung một commit, còn bước 08 trải trên bốn commit. Trong lịch sử, `7396f92` của bước 09 nằm giữa `52e1696` và `0edd3a4` của bước 08.
 

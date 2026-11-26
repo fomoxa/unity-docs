@@ -20,7 +20,7 @@ Kết quả của client sau đó có thể lệch khỏi kết quả của serv
 - [Tổng quan prediction](../../../prediction/overview.md)
 - [Reconciliation](../../../prediction/reconciliation.md)
 - [Rollback với physics](../../../prediction/rollback.md)
-- [PhysicsBody2D](../../../reference/physics.md#physicsbody2d)
+- [NetworkBody2D](../../../reference/physics.md#networkbody2d)
 - [Ba số tick](../../../concepts/tick.md#three-tick-numbers)
 
 ## Thiết kế <a href="#design" id="design"></a>
@@ -92,20 +92,20 @@ private float runSmoothVelocity;
 
 protected override void OnCaptureState()
 {
-    BodyState2D state = NetworkObject.Body2D.State;
-    x = state.Position.X;
-    y = state.Position.Y;
-    velocityX = state.Velocity.X;
-    velocityY = state.Velocity.Y;
+    NetworkBodyState2D state = NetworkObject.Body2D.State;
+    x = state.Position.x;
+    y = state.Position.y;
+    velocityX = state.Velocity.x;
+    velocityY = state.Velocity.y;
     runSmoothVelocity = m_Character.RunSmoothVelocity;
 }
 
 protected override void OnRestoreState()
 {
-    PhysicsBody2D body = NetworkObject.Body2D;
-    BodyState2D state = body.State;
-    state.Position = new System.Numerics.Vector2(x, y);
-    state.Velocity = new System.Numerics.Vector2(velocityX, velocityY);
+    NetworkBody2D body = NetworkObject.Body2D;
+    NetworkBodyState2D state = body.State;
+    state.Position = new Vector2(x, y);
+    state.Velocity = new Vector2(velocityX, velocityY);
     body.State = state;
     m_Character.RunSmoothVelocity = runSmoothVelocity;
 }
@@ -115,7 +115,7 @@ Package gọi `OnCaptureState` trước khi copy các field vào một `PlayerMo
 
 `runSmoothVelocity` là một reconcile field vì `Mathf.SmoothDamp` mang vận tốc của nó từ tick này sang tick sau. Nếu thiếu, lần replay sẽ bắt đầu tăng tốc từ một giá trị khác với server, và bị trôi. `RedCharacter` cung cấp giá trị này dưới dạng property `RunSmoothVelocity` cho mục đích đó.
 
-`NetworkObject.Body2D` là cách package nhìn vào `Rigidbody2D` của nhân vật, với vị trí và vận tốc `System.Numerics.Vector2`. Dung sai có thể nhỏ vì server và client chạy cùng physics trên cùng các khối.
+`NetworkObject.Body2D` là cách package nhìn vào `Rigidbody2D` của nhân vật, với vị trí và vận tốc `Vector2`. Dung sai có thể nhỏ vì server và client chạy cùng physics trên cùng các khối.
 
 Trong lúc replay, `InputContext.Replaying` là true, và `OnApplyInput` từ bước 04 truyền `!context.Replaying` làm `effects`, nên một cú nhảy được replay thay đổi vận tốc mà không phát lại âm thanh, particle hay trigger lần thứ hai.
 

@@ -117,7 +117,7 @@ In `Assets/Generation Settings.asset`, set Middle Blocks Count to 20 and End Blo
 
 ### Keep the seed on a network object
 
-`Assets/Scripts/RedRunner/Networking/NetworkLevel.cs`, written for `com.fomoxa.networking` 0.4.0:
+`Assets/Scripts/RedRunner/Networking/NetworkLevel.cs`, written for `com.fomoxa.networking` 0.5.0:
 
 ```csharp
 [NetworkStateModel("LevelState")]

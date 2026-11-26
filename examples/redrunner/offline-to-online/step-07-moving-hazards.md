@@ -114,12 +114,12 @@ private void Build()
 
     m_Generator.Build((int)seed);
     m_Followers = FindObjectsByType<PathFollower>(FindObjectsSortMode.None);
-    m_Game.Manager.TimeManager.OnPreTick += MoveFollowers;
+    NetworkManager.TimeManager.OnPreTick += MoveFollowers;
 }
 
 private void MoveFollowers()
 {
-    TimeManager time = m_Game.Manager.TimeManager;
+    TimeManager time = NetworkManager.TimeManager;
     uint tick = time.PredictionTick;
     float tickDelta = (float)time.TickDelta;
     foreach (PathFollower follower in m_Followers)

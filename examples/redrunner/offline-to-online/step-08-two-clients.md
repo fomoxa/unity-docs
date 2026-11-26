@@ -91,7 +91,7 @@ After:
 ```csharp
 protected override void OnApplyInput(InputContext context)
 {
-    float tickDelta = (float)m_Game.Manager.TimeManager.TickDelta;
+    float tickDelta = (float)NetworkManager.TimeManager.TickDelta;
     bool fresh = !context.Repeated;
     float axis = context.RepeatedTicks > m_MaxRepeatedTicks ? 0f : move;
     m_Character.Simulate(axis, fresh && jump, fresh && roll, tickDelta, !context.Replaying);

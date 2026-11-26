@@ -45,7 +45,7 @@ The prefab and scene registries, scene loading and the observer rule assets are 
 
 Your code works together with code that the package generates in your project. The package's own messages, such as spawn and transform messages, are models too: the package copies them into the project's `FomoxaSystemModels` folder and generates them together with yours. Every message the game sends therefore belongs to one schema, which the client and the server compare during the handshake.
 
-<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Your models, the package's system models and the RPC models go into fomoxac, which writes codecs and NetSchema.cs. The package adds adapters, FomoxaAdapters.cs and FomoxaUnityRegistration.cs, and the prefab and scene steps write their lists. At startup the registration fills FomoxaRegistry.Default, which NetworkManager reads in Awake."><figcaption><p>How models become codecs and reach a NetworkManager.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Your models, the package's system models and the RPC, state and message models go into fomoxac, which writes codecs and NetSchema.cs. The package adds adapters, FomoxaAdapters.cs and FomoxaUnityRegistration.cs, and the prefab and scene steps write their lists. At startup the registration fills FomoxaRegistry.Default, which NetworkManager reads in Awake."><figcaption><p>How models become codecs and reach a NetworkManager.</p></figcaption></figure>
 
 [Installation](../getting-started/installation.md#how-code-generation-works) walks through one generation, and [editor integration](../advanced/editor-integration.md) lists every generated file.
 

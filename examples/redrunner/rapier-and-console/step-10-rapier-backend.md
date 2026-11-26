@@ -27,7 +27,7 @@ With `RigidbodyPhysics`, a replay on the owner's client starts from a saved stat
 
 `NetworkLevel` adds the level to Rapier after it builds the blocks from the seed, on the server and on every client, in the order of the blocks' X position. Each block becomes a static group of its colliders. Its non-dynamic `Rigidbody2D` objects become unowned bodies: spikes are static bodies, and maces and saws are kinematic bodies that `NetworkLevel` moves to the position of the tick. Coins and chests stay out of Rapier, because they are local decoration.
 
-The character moves through its `PhysicsBody2D`. The ground check asks a foot sensor which colliders it touches, and the server asks the character's colliders which hazards they touch. To turn a `RapierCollider` back into the Unity collider it came from, `NetworkLevel` keeps a table from static index and body handle to the source colliders.
+The character moves through its `NetworkBody2D`. The ground check asks a foot sensor which colliders it touches, and the server asks the character's colliders which hazards they touch. To turn a `RapierCollider` back into the Unity collider it came from, `NetworkLevel` keeps a table from static index and body handle to the source colliders.
 
 ## Files
 
@@ -73,7 +73,7 @@ private void AddToRapier(RapierPhysics rapier)
         AddBodies(rapier, block.gameObject);
     }
 
-    World = rapier.Scenes.WorldOf2D(m_Game.Manager.Scenes.IdOf(gameObject.scene.path));
+    World = rapier.Scenes.WorldOf2D(NetworkManager.Scenes.IdOf(gameObject.scene.path));
 }
 ```
 
@@ -91,13 +91,13 @@ follower.transform.position = position;
 
 ### Move the character through its body
 
-`RedCharacter` gets a `BodySource` that returns the character's `PhysicsBody2D`. Its velocity reads and writes, and the roll force, go through that body when it is valid:
+`RedCharacter` gets a `BodySource` that returns the character's `NetworkBody2D`. Its velocity reads and writes, and the roll force, go through that body when it is valid:
 
 ```csharp
-Fomoxa.Networking.Simulation.PhysicsBody2D body = BodySource ();
+Fomoxa.Unity.NetworkBody2D body = BodySource ();
 if ( body.IsValid )
 {
-    body.Velocity = new System.Numerics.Vector2 ( value.x, value.y );
+    body.Velocity = value;
     return;
 }
 ```

@@ -123,7 +123,7 @@ m_Rigidbody2D.AddForce ( new Vector2 ( Mathf.Sign ( transform.localScale.x ) * m
 public sealed partial class NetworkPlayer : NetworkBehaviour
 ```
 
-The input half of the class, written for `com.fomoxa.networking` 0.4.0:
+The input half of the class, written for `com.fomoxa.networking` 0.5.0:
 
 ```csharp
 [NetworkInput]
@@ -158,7 +158,7 @@ protected override void OnGatherInput()
 
 protected override void OnApplyInput(InputContext context)
 {
-    float tickDelta = (float)m_Game.Manager.TimeManager.TickDelta;
+    float tickDelta = (float)NetworkManager.TimeManager.TickDelta;
     bool fresh = !context.Repeated;
     m_Character.Simulate(move, fresh && jump, fresh && roll, tickDelta, !context.Replaying);
 }
@@ -168,7 +168,7 @@ After `OnGatherInput` the package copies the three fields into a `PlayerInput` a
 
 `Update` runs every frame and keeps button presses until the next `OnGatherInput`, so a press shorter than a tick is not lost. While the pause screen is open, `gameRunning` is false and the input is empty, so the character stops while the server and the other players keep going.
 
-On the server, `OnApplyInput` runs at the tick the input belongs to. When no input has arrived for a tick, the package repeats the last one and sets `InputContext.Repeated`, and the port then repeats only the axis, never a jump or a roll. `InputContext.Replaying` comes into play in step 05. `NetworkPlayer.Awake` now gets `RedCharacter` and finds `NetworkGame` once, so `m_Game` is set on every instance, the owner's included.
+On the server, `OnApplyInput` runs at the tick the input belongs to. When no input has arrived for a tick, the package repeats the last one and sets `InputContext.Repeated`, and the port then repeats only the axis, never a jump or a roll. `InputContext.Replaying` comes into play in step 05. `OnApplyInput` reads the tick length from `NetworkManager`, the manager that spawned the object, which is set in every network callback but not yet in `Awake`. `NetworkPlayer.Awake` now gets `RedCharacter` and finds `NetworkGame` once, so `m_Game` is set on every instance, the owner's included.
 
 The reconcile fields of step 05 were written in the same commit.
 

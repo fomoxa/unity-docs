@@ -88,23 +88,29 @@ def workflow(language):
 @diagram('code-generation')
 def code_generation(language):
     t = lambda english, vietnamese: pick(language, english, vietnamese)
-    canvas = Canvas(920, 420, t('How the package generates code from models',
+    canvas = Canvas(920, 490, t('How the package generates code from models',
                                 'Package sinh code từ model như thế nào'))
     accent = STROKES['accent']
 
     canvas.text(24, 34, t('Inputs', 'Đầu vào'), 13, 700, color=MUTED)
     inputs = [
-        (t('Your models', 'Model của bạn'), t('Models Folder of FomoxaSettings', 'Models Folder của FomoxaSettings')),
-        (t('Package system models', 'System model của package'), t('copied to FomoxaSystemModels/', 'copy vào FomoxaSystemModels/')),
-        (t('RPC and state models', 'Model RPC và state'), t('written to Generated/RpcModels/ and', 'viết vào Generated/RpcModels/ và')),
+        (t('Your models', 'Model của bạn'),
+         [t('Models Folder of FomoxaSettings', 'Models Folder của FomoxaSettings')]),
+        (t('Package system models', 'System model của package'),
+         [t('copied to FomoxaSystemModels/', 'copy vào FomoxaSystemModels/')]),
+        (t('RPC and state models', 'Model RPC và state'),
+         [t('written to Generated/RpcModels/ and', 'viết vào Generated/RpcModels/ và'),
+          t('StateModels/ from your behaviours', 'StateModels/ từ behaviour của bạn')]),
+        (t('Message models', 'Model message'),
+         [t('written to Generated/MessageModels/', 'viết vào Generated/MessageModels/'),
+          t('from message and authenticator methods', 'từ method message và method xác thực')]),
     ]
-    for index, (title, body) in enumerate(inputs):
+    for index, (title, lines) in enumerate(inputs):
         y = 48 + index * 76
-        lines = [body] if index < 2 else [body, t('StateModels/ from your behaviours', 'StateModels/ từ behaviour của bạn')]
-        canvas.box(24, y, 250, 62, 'code', title, lines, align='left', title_size=13, body_size=11.5)
-        canvas.arrow([(274, y + 31), (330, 142 + index * 18)], LINE)
+        canvas.box(24, y, 262, 62, 'code', title, lines, align='left', title_size=13, body_size=11.5)
+        canvas.arrow([(286, y + 31), (330, 169 + index * 16)], LINE)
 
-    canvas.box(334, 128, 150, 64, 'accent', 'fomoxac', [t('model compiler', 'trình biên dịch model')], title_mono=True)
+    canvas.box(334, 161, 150, 64, 'accent', 'fomoxac', [t('model compiler', 'trình biên dịch model')], title_mono=True)
 
     canvas.text(560, 34, t('Generated Folder', 'Generated Folder'), 13, 700, color=MUTED)
     outputs = [
@@ -116,18 +122,18 @@ def code_generation(language):
         (t('prefab and scene steps', 'bước prefab và scene'), ['FomoxaPrefabList.asset, FomoxaPrefabs.cs',
                                                                'FomoxaSceneList.asset, FomoxaScenes.cs']),
     ]
-    y = 48
+    y = 60
     for index, (who, lines) in enumerate(outputs):
         h = 30 + len(lines) * 18
         canvas.rect(560, y, 336, h, '#FFFFFF', '#D1D5DB', 8)
         canvas.pill(574, y + 15, who, 'accent' if index == 0 else 'neutral', 10.5, anchor='start')
         canvas.lines(574, y + 44, lines, 11.5, color='#374151', mono=True, gap=18)
         if index < 2:
-            canvas.arrow([(484, 160), (556, y + h / 2)], accent if index == 0 else LINE)
+            canvas.arrow([(484, 193), (556, y + h / 2)], accent if index == 0 else LINE)
         y += h + 12
 
-    canvas.line(24, 306, 896, 306, '#E5E7EB')
-    canvas.text(24, 334, t('When Play Mode or a player starts', 'Khi Play Mode hoặc bản build khởi động'), 13, 700, color=MUTED)
+    canvas.line(24, 376, 896, 376, '#E5E7EB')
+    canvas.text(24, 404, t('When Play Mode or a player starts', 'Khi Play Mode hoặc bản build khởi động'), 13, 700, color=MUTED)
     steps = [
         ('FomoxaUnityRegistration', t('registers schema and codecs', 'đăng ký schema và codec')),
         ('FomoxaRegistry.Default', t('holds them for every manager', 'giữ chúng cho mọi manager')),
@@ -135,7 +141,7 @@ def code_generation(language):
     ]
     for index, (title, body) in enumerate(steps):
         x = 24 + index * 300
-        canvas.box(x, 348, 272, 56, 'server' if index == 2 else 'neutral', title, [body], title_mono=True, title_size=12.5)
+        canvas.box(x, 418, 272, 56, 'server' if index == 2 else 'neutral', title, [body], title_mono=True, title_size=12.5)
         if index < 2:
-            canvas.arrow([(x + 274, 376), (x + 298, 376)], LINE)
+            canvas.arrow([(x + 274, 446), (x + 298, 446)], LINE)
     return canvas

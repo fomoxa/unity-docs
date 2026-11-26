@@ -23,8 +23,8 @@ Thao tác:
 Ý nghĩa: `Packages/manifest.json` khai báo hai package lấy thẳng từ GitHub:
 
 ```json
-"com.fomoxa.networking": "https://github.com/fomoxa/com.fomoxa.networking.git#0.4.0",
-"com.fomoxa.rpc":        "https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.7"
+"com.fomoxa.networking": "https://github.com/fomoxa/com.fomoxa.networking.git#0.5.0",
+"com.fomoxa.rpc":        "https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.8"
 ```
 
 Unity gọi `git` để clone chúng về `Library/PackageCache/`; commit chính xác được ghim trong `packages-lock.json`.

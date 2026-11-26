@@ -159,7 +159,7 @@ public override void OnStartServer()
 {
     m_Character.DecidesDeath = true;
     m_Character.CollectsItems = false;
-    m_Game.Manager.TimeManager.OnTick += ServerTick;
+    NetworkManager.TimeManager.OnTick += ServerTick;
 }
 
 public override void OnStartClient()
@@ -212,7 +212,7 @@ A death changes both fields in one update, so `ShowState` runs twice, and the se
 ```csharp
 private void ServerTick()
 {
-    TimeManager time = m_Game.Manager.TimeManager;
+    TimeManager time = NetworkManager.TimeManager;
     if (dead)
     {
         if (time.Tick >= m_RespawnTick)
@@ -251,10 +251,10 @@ private void ServerTick()
 private void Respawn()
 {
     m_Character.Reset();
-    PhysicsBody2D body = NetworkObject.Body2D;
-    BodyState2D state = body.State;
-    state.Position = new System.Numerics.Vector2(m_Game.SpawnPoint.x, m_Game.SpawnPoint.y);
-    state.Velocity = System.Numerics.Vector2.Zero;
+    NetworkBody2D body = NetworkObject.Body2D;
+    NetworkBodyState2D state = body.State;
+    state.Position = m_Game.SpawnPoint;
+    state.Velocity = Vector2.zero;
     body.State = state;
     m_NetworkTransform.Teleport();
     m_Character.RunSmoothVelocity = 0f;

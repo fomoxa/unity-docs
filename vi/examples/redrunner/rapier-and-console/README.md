@@ -27,7 +27,7 @@ Cuối cùng game chơi vẫn như cũ. Thay đổi nằm bên dưới:
 | 12 | [`c44bcfe`](https://github.com/fomoxa/RedRunner/commit/c44bcfee259504c213a1542353a012b0f07d0805) Build the Rapier level from an exported level catalogue |
 | 13 | [`125e3b8`](https://github.com/fomoxa/RedRunner/commit/125e3b8f34182d77bb9184f1a5e192460354bc6b) Add a .NET console server without Unity |
 
-Các bước bắt đầu từ [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164d5624f171b64c8bfc6f029b12be2cfe41e27), điểm kết thúc của phần một. Khác với phần một, mỗi trang hiển thị code như ở commit của chính nó, và bước sau nêu rõ nó thay đổi gì.
+Các bước bắt đầu từ [`f164d56`](https://github.com/fomoxa/RedRunner/commit/f164d5624f171b64c8bfc6f029b12be2cfe41e27), điểm kết thúc của phần một. Khác với phần một, mỗi trang hiển thị code của commit của chính nó, chuyển sang API 0.5.0 mà [`207c0a6`](https://github.com/fomoxa/RedRunner/commit/207c0a6929fc9ae5460c688d96e54a9ac6a1a962) đưa vào Red Runner, và bước sau nêu rõ nó thay đổi gì.
 
 ## Yêu cầu <a href="#requirements" id="requirements"></a>
 

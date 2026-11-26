@@ -56,7 +56,7 @@ The models folder must exist before the first generation, even while it is empty
 
 The package generates code after every script compilation. You can also run it with **Tools > Fomoxa > Generate**.
 
-<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Your models, the package's system models and the RPC and state models go into fomoxac. fomoxac writes codecs, NetSchema.cs, Handshake.cs and Runtime.cs. The package then writes codecs for Unity types, adapters, FomoxaAdapters.cs and FomoxaUnityRegistration.cs. The prefab and scene steps write the prefab and scene lists. At startup FomoxaUnityRegistration fills FomoxaRegistry.Default, which NetworkManager reads in Awake."><figcaption><p>What one generation reads and writes, and how the result reaches a NetworkManager.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Your models, the package's system models, the RPC and state models and the message models of message and authenticator methods go into fomoxac. fomoxac writes codecs, NetSchema.cs, Handshake.cs and Runtime.cs. The package then writes codecs for Unity types, adapters, FomoxaAdapters.cs and FomoxaUnityRegistration.cs. The prefab and scene steps write the prefab and scene lists. At startup FomoxaUnityRegistration fills FomoxaRegistry.Default, which NetworkManager reads in Awake."><figcaption><p>What one generation reads and writes, and how the result reaches a NetworkManager.</p></figcaption></figure>
 
 A generation goes through these steps:
 

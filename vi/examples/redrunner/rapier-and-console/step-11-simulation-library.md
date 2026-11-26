@@ -80,7 +80,7 @@ Tools/PortChecks/Editor/PortLayout.cs
 public RunnerActions Simulate(PhysicsBody2D body, in RunnerSettings settings, float move, bool jump, bool roll, bool grounded, bool dead, float deltaTime)
 ```
 
-Hướng nhìn, trước đây là dấu của `transform.localScale.x`, nay là `RunnerMotion.Facing`, và `RedCharacter` áp nó vào scale để hiển thị. `NetworkPlayer` nay đặt `BodySource` với cả hai backend, vì chuyển động luôn đi qua `PhysicsBody2D`; với `RigidbodyPhysics`, `NetworkObject.Body2D` là body PhysX của nhân vật.
+Hướng nhìn, trước đây là dấu của `transform.localScale.x`, nay là `RunnerMotion.Facing`, và `RedCharacter` áp nó vào scale để hiển thị. `RedCharacter.Simulate` truyền `body.Core`, `PhysicsBody2D` của `NetworkBody2D` của nhân vật, vì `RunnerMotion` không dùng type của Unity, để server console của bước 13 biên dịch được nó. `NetworkPlayer` nay đặt `BodySource` với cả hai backend, vì chuyển động luôn đi qua body; với `RigidbodyPhysics`, `NetworkObject.Body2D` là body PhysX của nhân vật.
 
 ### Contact <a href="#contacts" id="contacts"></a>
 

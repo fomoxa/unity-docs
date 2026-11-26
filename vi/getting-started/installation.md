@@ -56,7 +56,7 @@ Thư mục model phải tồn tại trước lần sinh code đầu tiên, kể 
 
 Package sinh code sau mỗi lần biên dịch script. Bạn cũng có thể chạy nó bằng **Tools > Fomoxa > Generate**.
 
-<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Model của bạn, system model của package, RPC model và state model đi vào fomoxac. fomoxac ghi codec, NetSchema.cs, Handshake.cs và Runtime.cs. Sau đó package ghi codec cho type của Unity, adapter, FomoxaAdapters.cs và FomoxaUnityRegistration.cs. Bước prefab và bước scene ghi danh sách prefab và danh sách scene. Khi khởi động, FomoxaUnityRegistration điền FomoxaRegistry.Default, và NetworkManager đọc registry đó trong Awake."><figcaption><p>Một lần sinh code đọc gì, ghi gì, và kết quả đến được NetworkManager như thế nào.</p></figcaption></figure>
+<figure><img src="../.gitbook/assets/diagrams/code-generation.svg" alt="Model của bạn, system model của package, RPC model, state model và message model của các method message và method xác thực đi vào fomoxac. fomoxac ghi codec, NetSchema.cs, Handshake.cs và Runtime.cs. Sau đó package ghi codec cho type của Unity, adapter, FomoxaAdapters.cs và FomoxaUnityRegistration.cs. Bước prefab và bước scene ghi danh sách prefab và danh sách scene. Khi khởi động, FomoxaUnityRegistration điền FomoxaRegistry.Default, và NetworkManager đọc registry đó trong Awake."><figcaption><p>Một lần sinh code đọc gì, ghi gì, và kết quả đến được NetworkManager như thế nào.</p></figcaption></figure>
 
 Một lần sinh code đi qua các bước sau:
 
