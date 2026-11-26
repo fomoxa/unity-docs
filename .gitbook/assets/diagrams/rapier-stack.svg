@@ -7,7 +7,7 @@
   <text x="230.0" y="81.2" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">Game code</text>
   <text x="230.0" y="98.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">OnApplyInput, OnCaptureState, OnRestoreState, OnTick</text>
   <rect x="30.0" y="132.0" width="400.0" height="58.0" rx="10" fill="#E6F6EF" stroke="#0E9F6E" stroke-width="1.5"/>
-  <text x="230.0" y="157.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">PhysicsBody, PhysicsBody2D</text>
+  <text x="230.0" y="157.2" font-family="'JetBrains Mono', 'Cascadia Mono', Consolas, Menlo, monospace" font-size="14" font-weight="600" fill="#065F46" text-anchor="middle">NetworkBody, NetworkBody2D</text>
   <text x="230.0" y="174.6" font-family="Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="12" font-weight="400" fill="#6B7280" text-anchor="middle">unchanged</text>
   <path d="M 230.0 114.0 L 230.0 132.0" fill="none" stroke="#4B5563" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" marker-end="url(#arrow-4B5563)"/>
   <rect x="30.0" y="208.0" width="400.0" height="58.0" rx="10" fill="#F1EAFE" stroke="#7C3AED" stroke-width="1.5"/>

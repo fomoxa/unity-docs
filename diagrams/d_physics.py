@@ -5,10 +5,11 @@ from svg import Canvas, KINDS, LINE, MUTED, STROKES
 @diagram('physics-stack')
 def physics_stack(language):
     t = lambda english, vietnamese: pick(language, english, vietnamese)
-    canvas = Canvas(920, 470, t('The physics layers, from game code down to Unity',
+    canvas = Canvas(920, 530, t('The physics layers, from game code down to Unity',
                                 'Các tầng physics, từ code game xuống Unity'))
     rows = [
         ('code', t('Game code', 'Code game'), 'OnApplyInput, OnCaptureState, OnRestoreState, OnTick'),
+        ('host', t('Unity-typed physics API', 'API physics kiểu Unity'), 'NetworkBody, NetworkBody2D, NetworkRayHit'),
         ('client', t('Fomoxa physics API', 'API physics của Fomoxa'), 'PhysicsBody, PhysicsBody2D, PhysicsHistory'),
         ('server', 'IPhysicsSimulation', 'Step, CreateSnapshot, Save, Load'),
         ('server', 'IPhysicsWorld, IPhysicsWorld2D', t('bodies, forces, queries', 'body, lực, truy vấn')),
@@ -35,10 +36,11 @@ def physics_stack(language):
         canvas.text(754, (y1 + y2) / 2 - 2, label, 13, 700)
         canvas.text(754, (y1 + y2) / 2 + 16, sub, 11, 500, color=MUTED, mono=True)
 
-    bracket(1, 3, t('Layer 1', 'Tầng 1'), 'Fomoxa.Networking')
-    bracket(4, 5, t('Layer 2', 'Tầng 2'), 'Fomoxa.Unity')
-    canvas.text(30, 458, t('Layer 1 does not reference Unity, so its vectors are System.Numerics types.',
-                           'Tầng 1 không tham chiếu Unity, nên vector của nó là kiểu System.Numerics.'), 12, color=MUTED)
+    bracket(1, 1, t('Layer 2', 'Tầng 2'), 'Fomoxa.Unity')
+    bracket(2, 4, t('Layer 1', 'Tầng 1'), 'Fomoxa.Networking')
+    bracket(5, 6, t('Layer 2', 'Tầng 2'), 'Fomoxa.Unity')
+    canvas.text(30, 518, t('Layer 1 does not reference Unity, so its vectors are System.Numerics types. NetworkBody converts them for game code in Unity.',
+                           'Tầng 1 không tham chiếu Unity, nên vector của nó là kiểu System.Numerics. NetworkBody đổi chúng sang kiểu Unity cho code game.'), 12, color=MUTED)
     return canvas
 
 
@@ -137,7 +139,7 @@ def rapier_stack(language):
     canvas.text(30, 38, t('Unity client or server', 'Client hoặc server Unity'), 15, 700)
     left = [
         ('code', t('Game code', 'Code game'), 'OnApplyInput, OnCaptureState, OnRestoreState, OnTick'),
-        ('client', 'PhysicsBody, PhysicsBody2D', t('unchanged', 'không đổi')),
+        ('client', 'NetworkBody, NetworkBody2D', t('unchanged', 'không đổi')),
         ('host', 'RapierPhysics', t('one world per network scene and dimension', 'một world mỗi network scene và mỗi chiều')),
     ]
     for index, (kind, title, body) in enumerate(left):

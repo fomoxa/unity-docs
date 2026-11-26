@@ -1,5 +1,51 @@
 # Ghi chú phát hành
 
+## 0.5.0 <a href="#050" id="050"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.5.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.5.0` |
+| `com.fomoxa.rpc` | 0.1.8; cần `com.fomoxa.networking` 0.5.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.8` |
+| `com.fomoxa.networking.rapier` | 0.3.0; cần `com.fomoxa.networking` 0.5.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.3.0` |
+| `com.fomoxa.networking.steam` | 0.1.3; cần `com.fomoxa.networking` 0.5.0 và Steamworks.NET 2025.165.0 trở lên | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.3` |
+
+`Fomoxa.Backend.Templates` 0.1.1, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.4.0 <a href="#upgrading-from-040" id="upgrading-from-040"></a>
+
+Nâng `com.fomoxa.rpc` lên 0.1.8, `com.fomoxa.networking.rapier` lên 0.3.0 và `com.fomoxa.networking.steam` lên 0.1.3 cùng lúc với package. Với package 0.5.0, `com.fomoxa.rpc` 0.1.7 báo lỗi khi sinh code, Rapier 0.2.6 không biên dịch, còn Steam 0.1.2 ném lỗi phiên bản khi `NetworkManager` tạo transport.
+
+Package có thêm một message của chính nó, `TransformAuthority`, nên handshake thấy một schema khác. Server 0.5.0 không nhận client 0.4.0, và client 0.4.0 không vào được server 0.5.0, nên hãy cập nhật server và mọi bản build client cùng lúc. Lần sinh code đầu tiên sau khi cập nhật thêm message mới vào `FomoxaAdapters.cs`, thêm `MessageModels` vào danh sách `src` của `fomoxa.toml` và tạo thư mục `MessageModels` trong Generated Folder, kèm một file `.gitkeep`. Hãy commit các file này và build console server từ chúng. Console server build với code sinh cũ dừng ngay khi khởi động, với `no TransformAuthority codec is registered`.
+
+Code game trong Unity giờ làm việc với physics bằng kiểu UnityEngine. `NetworkObject.Body` và các thuộc tính liên quan trả kiểu mới, nên code dùng chúng với vector `System.Numerics` không còn biên dịch. Thay nó như sau:
+
+| 0.4.0 | 0.5.0 |
+|---|---|
+| `NetworkObject.Body` và `Body2D`, kiểu `PhysicsBody` và `PhysicsBody2D` | [`NetworkBody` và `NetworkBody2D`](physics/physics-body.md), với `Vector3`, `Quaternion` và `Vector2` |
+| `NetworkObject.Bodies` và `Bodies2D`, danh sách `PhysicsBody` và `PhysicsBody2D` | Danh sách `NetworkBody` và `NetworkBody2D` |
+| `BodyState` và `BodyState2D` từ `body.State` | `NetworkBodyState` và `NetworkBodyState2D` |
+| `Raycast`, `ShapeCast` và `Overlap` với giá trị `System.Numerics`, trả `RayHit` và `RayHit2D` | Cùng các lời gọi đó với giá trị Unity, trả `NetworkRayHit` và `NetworkRayHit2D`, xem [truy vấn physics](physics/queries.md) |
+| `BodyShape.Box` và `BodyShape2D.Box` với vector `System.Numerics` | `NetworkShapes.Box` và `NetworkShapes.Box2D` |
+| Rapier: `MoveCharacter`, `CreateJoint` và `AddEffector` với `PhysicsBody` hoặc `PhysicsBody2D` | Cùng các lời gọi đó với `NetworkBody` hoặc `NetworkBody2D` và vector Unity, xem [character controller](rapier/character-controller.md) và [effector](rapier/effectors.md) |
+| Rapier: constructor của `JointDesc`, `JointDesc.Rope` và `JointDesc.Spring` với giá trị `System.Numerics` | `NetworkJoints.Create`, `Rope` và `Spring`, cùng `Create2D`, `Rope2D` và `Spring2D`, xem [joint](rapier/joints.md) |
+
+`body.Core` trả `PhysicsBody` bên trong một `NetworkBody` cho code bạn dùng chung với console server, còn `new NetworkBody(physicsBody)` đi theo chiều ngược lại. Các method của `IPhysicsWorld` và `IPhysicsWorld2D` giữ kiểu `System.Numerics`, console server cũng vậy.
+
+Backend physics viết ngoài package có thêm member phải cài: `SetKind` trên `IPhysicsWorld` và `IPhysicsWorld2D`, `BodyOf(Transform)` và `Body2DOf(Transform)` trên `NetworkPhysics`. Code tự dựng `TransformProtocol` truyền codec của `TransformAuthority` vào đối số mới `authorityCodec`; `TransformProtocol.From(registry)` không đổi.
+
+Authenticator đăng ký model viết tay, như `JoinRequest` của trang authentication trước đây, vẫn chạy, vì `server.On` và `context.Send` không đổi. Khai message của chúng bằng method, như phần dưới, là tuỳ chọn.
+
+### Bổ sung <a href="#added" id="added"></a>
+
+- `NetworkTransform` bật Owner Authority lấy pose từ client owner. Server nội suy các mẫu của owner, ghi chúng vào object và chuyển tiếp cho các client khác, còn `OwnerSampleFilter` cho server bỏ một mẫu, ví dụ mẫu đi quá xa. Xem [cho owner quyết định](synchronization/transform.md#letting-the-owner-decide). Object có behaviour dự đoán không dùng được chế độ này.
+- [Raw message](messaging/messages.md) khai được bằng method `[ServerMessage]` và `[ClientMessage]` của một `NetworkMessageBehaviour`, và generator viết method gửi cho chúng. Không dùng component đó thì `ClientManager.Send<T>`, `ServerManager.Send<T>` và `ServerManager.Broadcast<T>` gửi một model bằng codec của nó, `MessageDispatcher.Register<T>` đưa cho handler một model đã giải mã, và `MessageDispatcher.Unregister` gỡ một handler.
+- Authenticator khai message theo cùng cách, bằng method [`[ServerAuthenticationMessage]` và `[ClientAuthenticationMessage]`](connections/authentication.md#declare-messages).
+- `NetworkObject.NetworkManager` và `NetworkBehaviour.NetworkManager` trả manager đã spawn object, còn `ServerManager.StartedPeers` liệt kê các peer đã start.
+- `ServerManager.OnInputRejected` và `OnServerRpcRejected` báo input và server RPC mà server bỏ vì người gửi không sở hữu object, xem [event message](reference/callbacks.md#message-events). Cảnh báo server ghi cho chúng ở 0.4.0 giờ chỉ xuất hiện khi không có gì đăng ký.
+- `PrefabRegistry.SetFactory` gán factory cho một prefab đã có trong danh sách, dù nó chạy trước hay sau `NetworkManager.Awake`. Xem [factory và pooling](objects/spawning.md#factories-and-pooling).
+
 ## 0.4.0 <a href="#040" id="040"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

@@ -91,11 +91,11 @@ Here `physics` is a `RapierScenes` with gravity (0, -9.81, 0), the same as the c
 
 ## Running it
 
-You need the .NET 8 SDK on Windows x64 or Linux x64. Clone the three repositories next to each other:
+You need the .NET 8 SDK on Windows x64 or Linux x64. Clone the three repositories next to each other, the two packages at the tags that Red Runner's `Packages/manifest.json` installs, so that the server and the clients run the same package code:
 
 ```
-git clone https://github.com/fomoxa/com.fomoxa.networking.git
-git clone https://github.com/fomoxa/networking-rapier.git
+git clone --branch 0.4.0 https://github.com/fomoxa/com.fomoxa.networking.git
+git clone --branch 0.2.6 https://github.com/fomoxa/networking-rapier.git
 git clone https://github.com/fomoxa/RedRunner.git
 ```
 

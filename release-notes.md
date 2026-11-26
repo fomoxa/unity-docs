@@ -1,5 +1,51 @@
 # Release notes
 
+## 0.5.0
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.5.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.5.0` |
+| `com.fomoxa.rpc` | 0.1.8; needs `com.fomoxa.networking` 0.5.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.8` |
+| `com.fomoxa.networking.rapier` | 0.3.0; needs `com.fomoxa.networking` 0.5.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.3.0` |
+| `com.fomoxa.networking.steam` | 0.1.3; needs `com.fomoxa.networking` 0.5.0 and Steamworks.NET 2025.165.0 or later | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.3` |
+
+`Fomoxa.Backend.Templates` 0.1.1 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.4.0
+
+Update `com.fomoxa.rpc` to 0.1.8, `com.fomoxa.networking.rapier` to 0.3.0 and `com.fomoxa.networking.steam` to 0.1.3 together with the package. With the 0.5.0 package, `com.fomoxa.rpc` 0.1.7 reports an error when it generates code, Rapier 0.2.6 does not compile, and Steam 0.1.2 throws a version error when the `NetworkManager` creates the transport.
+
+The package has a new message of its own, `TransformAuthority`, so the handshake sees a different schema. A 0.5.0 server does not accept a 0.4.0 client, and a 0.4.0 client cannot join a 0.5.0 server, so update the server and every client build at the same time. The first code generation after the update adds the new message to `FomoxaAdapters.cs`, adds `MessageModels` to the `src` list of `fomoxa.toml` and creates the `MessageModels` folder in the Generated Folder, with a `.gitkeep` file. Commit these files and build your console servers from them. A console server built with the old generated code stops as it starts, with `no TransformAuthority codec is registered`.
+
+Game code in Unity now handles physics with UnityEngine types. `NetworkObject.Body` and the related properties return new types, so code that uses them with `System.Numerics` vectors no longer compiles. Replace it as follows:
+
+| 0.4.0 | 0.5.0 |
+|---|---|
+| `NetworkObject.Body` and `Body2D`, of type `PhysicsBody` and `PhysicsBody2D` | [`NetworkBody` and `NetworkBody2D`](physics/physics-body.md), with `Vector3`, `Quaternion` and `Vector2` |
+| `NetworkObject.Bodies` and `Bodies2D`, lists of `PhysicsBody` and `PhysicsBody2D` | Lists of `NetworkBody` and `NetworkBody2D` |
+| `BodyState` and `BodyState2D` from `body.State` | `NetworkBodyState` and `NetworkBodyState2D` |
+| `Raycast`, `ShapeCast` and `Overlap` with `System.Numerics` values, returning `RayHit` and `RayHit2D` | The same calls with Unity values, returning `NetworkRayHit` and `NetworkRayHit2D`, see [physics queries](physics/queries.md) |
+| `BodyShape.Box` and `BodyShape2D.Box` with a `System.Numerics` vector | `NetworkShapes.Box` and `NetworkShapes.Box2D` |
+| Rapier: `MoveCharacter`, `CreateJoint` and `AddEffector` with a `PhysicsBody` or `PhysicsBody2D` | The same calls with a `NetworkBody` or `NetworkBody2D` and Unity vectors, see [character controller](rapier/character-controller.md) and [effectors](rapier/effectors.md) |
+| Rapier: the `JointDesc` constructor, `JointDesc.Rope` and `JointDesc.Spring` with `System.Numerics` values | `NetworkJoints.Create`, `Rope` and `Spring`, and `Create2D`, `Rope2D` and `Spring2D`, see [joints](rapier/joints.md) |
+
+`body.Core` returns the `PhysicsBody` inside a `NetworkBody` for code that you share with a console server, and `new NetworkBody(physicsBody)` goes the other way. The methods of `IPhysicsWorld` and `IPhysicsWorld2D` keep their `System.Numerics` types, and so does a console server.
+
+A physics backend written outside the package has new members to implement: `SetKind` on `IPhysicsWorld` and `IPhysicsWorld2D`, and `BodyOf(Transform)` and `Body2DOf(Transform)` on `NetworkPhysics`. Code that constructs a `TransformProtocol` itself passes the codec of `TransformAuthority` as the new `authorityCodec` argument; `TransformProtocol.From(registry)` did not change.
+
+Authenticators that register hand-written models, like the `JoinRequest` of the earlier authentication page, keep working, because `server.On` and `context.Send` did not change. Declaring their messages as methods, described below, is optional.
+
+### Added
+
+- A `NetworkTransform` with Owner Authority turned on takes its pose from the owner's client. The server interpolates the owner's samples, writes them into the object and forwards them to the other clients, and `OwnerSampleFilter` lets it reject a sample, for example one that moves too far. See [letting the owner decide](synchronization/transform.md#letting-the-owner-decide). An object whose behaviours predict cannot use it.
+- [Raw messages](messaging/messages.md) can be declared as `[ServerMessage]` and `[ClientMessage]` methods of a `NetworkMessageBehaviour`, and the generator writes their send methods. Without the component, `ClientManager.Send<T>`, `ServerManager.Send<T>` and `ServerManager.Broadcast<T>` send a model with its codec, `MessageDispatcher.Register<T>` hands the handler a decoded model, and `MessageDispatcher.Unregister` removes a handler.
+- An authenticator declares its messages the same way, with [`[ServerAuthenticationMessage]` and `[ClientAuthenticationMessage]`](connections/authentication.md#declare-messages) methods.
+- `NetworkObject.NetworkManager` and `NetworkBehaviour.NetworkManager` return the manager that spawned the object, and `ServerManager.StartedPeers` lists the peers that have started.
+- `ServerManager.OnInputRejected` and `OnServerRpcRejected` report input and server RPCs that the server dropped because the sender does not own the object, see [message events](reference/callbacks.md#message-events). The warning that the server logged for them in 0.4.0 now appears only while nothing is subscribed.
+- `PrefabRegistry.SetFactory` gives a prefab that is already in the list a factory, whether it runs before or after `NetworkManager.Awake`. See [factories and pooling](objects/spawning.md#factories-and-pooling).
+
 ## 0.4.0
 
 This release ships these parts together:

@@ -91,11 +91,11 @@ Runtime = StandaloneRuntime.Create(registry, settings, new UdpTransportFactory()
 
 ## Chạy thử <a href="#running-it" id="running-it"></a>
 
-Bạn cần .NET 8 SDK trên Windows x64 hoặc Linux x64. Clone ba repository cạnh nhau:
+Bạn cần .NET 8 SDK trên Windows x64 hoặc Linux x64. Clone ba repository cạnh nhau, hai package ở đúng tag mà `Packages/manifest.json` của Red Runner cài, để server và client chạy cùng code của package:
 
 ```
-git clone https://github.com/fomoxa/com.fomoxa.networking.git
-git clone https://github.com/fomoxa/networking-rapier.git
+git clone --branch 0.4.0 https://github.com/fomoxa/com.fomoxa.networking.git
+git clone --branch 0.2.6 https://github.com/fomoxa/networking-rapier.git
 git clone https://github.com/fomoxa/RedRunner.git
 ```
 
