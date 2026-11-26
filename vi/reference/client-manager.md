@@ -26,6 +26,7 @@
 | Member | Mô tả |
 |---|---|
 | `SendResult Send(uint messageId, ReadOnlySpan<byte> payload)` | Đưa một message gửi tới server vào queue; `NotConnected` khi đã dừng. Trước `Started`, message chờ trong queue. |
+| `SendResult Send<T>(IMessageCodec<T> codec, T value)` | Encode giá trị bằng codec rồi đưa vào queue như `Send(codec.MessageId, payload)`. Ném `ArgumentNullException` khi codec null. |
 | `SendResult SendToObject(uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Đưa một object message gửi tới server vào queue |
 | `MessageDispatcher Dispatcher` | Handler cho message tới |
 

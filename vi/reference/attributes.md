@@ -47,9 +47,20 @@ Trên `NetworkBehaviour`, method là `void M(...)` với tham số bất kỳ, v
 
 Trên `NetworkBehaviour`, method là `void M(...)` với tham số bất kỳ. Trên `EntityBehaviour`, method là `void M()` hoặc `void M(TModel value)`.
 
+## ServerMessageAttribute và ClientMessageAttribute <a href="#servermessageattribute-and-clientmessageattribute" id="servermessageattribute-and-clientmessageattribute"></a>
+
+`[ServerMessage]`, `[ServerMessage("ModelName")]`, `[ClientMessage]` và `[ClientMessage("ModelName")]`, trong namespace `Fomoxa.Unity`, đặt trên method của một `NetworkMessageBehaviour`. [Raw message](../messaging/messages.md#declaring-messages) giải thích cách dùng chúng.
+
+| Property | Type | Mặc định | Ý nghĩa |
+|---|---|---|---|
+| `Model` | `string` | `<Type><Method>` | Tên model được sinh; đặt qua constructor |
+| `Channel` | `Channel` | `ReliableOrdered` | Channel của message |
+
+Method `[ServerMessage]` là `void M(...)`, và tham số đầu tiên có type `ulong` nhận peer id của bên gửi. Method `[ClientMessage]` là `void M(...)`, và mọi tham số đều được gửi.
+
 ## NetworkTypeAttribute <a href="#networktypeattribute" id="networktypeattribute"></a>
 
-`[NetworkType("type")]`, trong namespace `Fomoxa.Networking`, đặt trên một tham số của RPC trên `NetworkBehaviour`. Chuỗi là wire type của tham số, viết giống đối số của `[Network("type")]`, ví dụ `"f16"` hoặc `"Array<u32>"`.
+`[NetworkType("type")]`, trong namespace `Fomoxa.Networking`, đặt trên một tham số của RPC trên `NetworkBehaviour` hoặc của message trên `NetworkMessageBehaviour`. Chuỗi là wire type của tham số, viết giống đối số của `[Network("type")]`, ví dụ `"f16"` hoặc `"Array<u32>"`.
 
 ## NetworkStateAttribute <a href="#networkstateattribute" id="networkstateattribute"></a>
 
@@ -98,6 +109,6 @@ Trên `NetworkBehaviour`, method là `void M(...)` với tham số bất kỳ. T
 
 ## Quy tắc <a href="#rules" id="rules"></a>
 
-Một method mang nhiều nhất một trong `[NetworkRpc]`, `[ServerRpc]` và `[ClientRpc]`, và một field mang nhiều nhất một trong `[NetworkState]`, `[NetworkInput]` và `[NetworkReconcile]`. Class có method RPC hoặc có field như vậy, của chính nó hay được kế thừa, phải là `partial`, mọi class chứa nó cũng vậy. Không có hai RPC nào trong project được trùng tên model, và hai state model, input model hay reconcile model cũng vậy.
+Một method mang nhiều nhất một trong `[NetworkRpc]`, `[ServerRpc]` và `[ClientRpc]`, và nhiều nhất một trong `[ServerMessage]` và `[ClientMessage]`. Một field mang nhiều nhất một trong `[NetworkState]`, `[NetworkInput]` và `[NetworkReconcile]`. Class có method RPC hoặc có field như vậy, của chính nó hay được kế thừa, phải là `partial`, mọi class chứa nó cũng vậy. Class có method message cũng phải `partial` như thế. Không có hai RPC nào trong project được trùng tên model, và hai state model, input model hay reconcile model cũng vậy. Tên model của một message phải khác tên của mọi model message, RPC và state khác.
 
-[RPC](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors) và [collection](../synchronization/collections.md#errors) liệt kê các lỗi biên dịch khi vi phạm quy tắc.
+[RPC](../messaging/rpc.md#compile-errors), [raw message](../messaging/messages.md#compile-errors), [state](../synchronization/state.md#errors) và [collection](../synchronization/collections.md#errors) liệt kê các lỗi biên dịch khi vi phạm quy tắc.

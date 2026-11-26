@@ -101,9 +101,13 @@ Các method về scene ném `InvalidOperationException` khi server đã dừng.
 | Member | Mô tả |
 |---|---|
 | `SendResult Send(ulong peerId, uint messageId, ReadOnlySpan<byte> payload)` | Đưa một message cho một peer vào queue |
+| `SendResult Send<T>(ulong peerId, IMessageCodec<T> codec, T value)` | Encode giá trị bằng codec rồi đưa vào queue cho một peer |
 | `SendResult SendToObject(ulong peerId, uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Đưa một object message cho một peer vào queue |
 | `int Broadcast(uint messageId, ReadOnlySpan<byte> payload)` | Đưa một message cho mọi peer đã khởi động vào queue; trả về số peer |
+| `int Broadcast<T>(IMessageCodec<T> codec, T value)` | Encode giá trị một lần rồi đưa vào queue cho mọi peer đã khởi động; trả về số peer |
 | `MessageDispatcher Dispatcher` | Handler cho message tới |
+
+Hai method generic ném `ArgumentNullException` khi codec null.
 
 ## Event <a href="#events" id="events"></a>
 

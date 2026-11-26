@@ -41,9 +41,9 @@ Namespace được sinh mang tên thư mục cuối của Generated Folder.
 Việc sinh code chạy sau mỗi lần biên dịch script, khi Editor load, và từ menu, nhưng không bao giờ chạy khi Play Mode đang khởi động hoặc đang chạy. Nó đi qua các bước sau:
 
 1. Copy các system model của package vào `FomoxaSystemModels/` ở gốc project.
-2. Ghi một model cho mỗi RPC vào `<Generated Folder>/RpcModels/`, và state model, input model, reconcile model của mọi behaviour có field `[NetworkState]`, `[NetworkInput]` hoặc `[NetworkReconcile]` vào `<Generated Folder>/StateModels/`.
+2. Ghi một model cho mỗi RPC vào `<Generated Folder>/RpcModels/`, và state model, input model, reconcile model của mọi behaviour có field `[NetworkState]`, `[NetworkInput]` hoặc `[NetworkReconcile]` vào `<Generated Folder>/StateModels/`, và một model cho mỗi method `[ServerMessage]`, `[ClientMessage]` vào `<Generated Folder>/MessageModels/`.
 3. Ghi `fomoxa.toml` từ settings.
-4. Chạy `fomoxac generate` đi kèm ở gốc project. Nó đọc Models Folder, `FomoxaSystemModels`, `RpcModels` và `StateModels`, rồi ghi các codec, `NetSchema.cs`, `Handshake.cs` và `Runtime.cs` vào Generated Folder, và các file schema vào `.fomoxa/`.
+4. Chạy `fomoxac generate` đi kèm ở gốc project. Nó đọc Models Folder, `FomoxaSystemModels`, `RpcModels`, `StateModels` và `MessageModels`, rồi ghi các codec, `NetSchema.cs`, `Handshake.cs` và `Runtime.cs` vào Generated Folder, và các file schema vào `.fomoxa/`.
 5. Ghi codec cho các type Unity mà model dùng vào `<Generated Folder>/UnityCodecs/`, và `.fomoxa/schema.inspect.json`, một bản copy của schema có mô tả các type đó cho công cụ inspect.
 6. Ghi một adapter cho mỗi codec, `<Model><Codec>Adapter.cs`.
 7. Ghi `FomoxaAdapters.cs`, file đăng ký schema, mọi system adapter, mọi channel đã khai báo và mọi RPC id, và `FomoxaUnityRegistration.cs`, file gọi nó khi player khởi động.
@@ -55,7 +55,7 @@ Lỗi và cảnh báo xuất hiện trong Console với tiền tố `[Fomoxa]`, 
 
 ## Source generator <a href="#source-generator" id="source-generator"></a>
 
-`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` là một Roslyn source generator mà Unity chạy cho mọi assembly tham chiếu `Fomoxa.Networking`. Vào mỗi behaviour `partial`, nó viết các method gửi và phần đăng ký các method `[ServerRpc]`, `[ClientRpc]`, cùng code đăng ký và chép các field `[NetworkState]`, `[NetworkInput]`, `[NetworkReconcile]`. Nó báo các lỗi `FOMOXA001` tới `FOMOXA022`, liệt kê trong [RPC](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors), [collection](../synchronization/collections.md#errors) và [input](../prediction/input.md#declaring).
+`Runtime/Core/Generators/Fomoxa.Networking.Generators.dll` là một Roslyn source generator mà Unity chạy cho mọi assembly tham chiếu `Fomoxa.Networking`. Vào mỗi behaviour `partial`, nó viết các method gửi và phần đăng ký các method `[ServerRpc]`, `[ClientRpc]`, cùng code đăng ký và chép các field `[NetworkState]`, `[NetworkInput]`, `[NetworkReconcile]`. Vào mỗi `NetworkMessageBehaviour` `partial`, nó viết các method gửi và phần đăng ký các method `[ServerMessage]`, `[ClientMessage]`. Nó báo các lỗi `FOMOXA001` tới `FOMOXA028`, liệt kê trong [RPC](../messaging/rpc.md#compile-errors), [raw message](../messaging/messages.md#compile-errors), [state](../synchronization/state.md#errors), [collection](../synchronization/collections.md#errors) và [input](../prediction/input.md#declaring).
 
 Phần đăng ký field cần model sinh ra của chúng, nên nó xuất hiện khi bước sinh code đã ghi model và Unity đã biên dịch lại.
 
@@ -105,7 +105,7 @@ Sau đó nó gán danh sách prefab và danh sách scene đã sinh cho mọi `Ne
 | `fomoxa.toml` | Có |
 | `FomoxaSystemModels/` | Có |
 | `.fomoxa/` | Có |
-| Generated Folder, kèm `RpcModels/`, `StateModels/`, `UnityCodecs/` và các scene file | Có |
+| Generated Folder, kèm `RpcModels/`, `StateModels/`, `MessageModels/`, `UnityCodecs/` và các scene file | Có |
 
 Commit các file này giúp một bản clone mới hoặc máy build biên dịch được mà không cần chạy bộ sinh code trước.
 

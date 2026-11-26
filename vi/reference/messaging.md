@@ -60,6 +60,8 @@ Mỗi adapter được sinh là một `public sealed class <Model><Codec>Adapter
 | Member | Mô tả |
 |---|---|
 | `void Register(uint messageId, PayloadHandler handler)` | Đăng ký handler cho plain message |
+| `void Register<T>(IMessageCodec<T> codec, Action<ulong, T> handler) where T : new()` | Đăng ký handler cho `codec.MessageId`, decode mọi message vào một instance tạo lúc đăng ký |
+| `void Unregister(uint messageId)` | Gỡ handler của một plain message; không làm gì khi id không có handler |
 | `void RegisterObject(uint messageId, ObjectPayloadHandler handler)` | Đăng ký handler cho object message |
 | `bool IsObjectMessage(uint messageId)` | Đã có object handler được đăng ký hay chưa |
 | `bool Dispatch(ulong peerId, uint messageId, ReadOnlyMemory<byte> data)` | Gọi handler; false khi không có. Được các session dùng. |
@@ -72,7 +74,19 @@ public delegate void PayloadHandler(ulong peerId, ReadOnlyMemory<byte> payload);
 public delegate void ObjectPayloadHandler(ulong peerId, uint objectId, byte behaviourIndex, ReadOnlyMemory<byte> body);
 ```
 
-`Register` và `RegisterObject` ném `HandlerRegistrationException` với id không có trong schema hoặc đã có handler.
+`Register` và `RegisterObject` ném `HandlerRegistrationException` với id không có trong schema hoặc đã có handler. `Register<T>` còn ném `ArgumentNullException` khi codec hoặc handler null.
+
+## NetworkMessageBehaviour <a href="#networkmessagebehaviour" id="networkmessagebehaviour"></a>
+
+`public abstract class NetworkMessageBehaviour : MonoBehaviour` trong `Fomoxa.Unity` là lớp gốc của component khai báo [raw message](../messaging/messages.md) bằng `[ServerMessage]` và `[ClientMessage]`. Class con phải là `partial`.
+
+| Member | Mô tả |
+|---|---|
+| `NetworkManager NetworkManager { get; set; }` | Manager mà dispatcher của nó giữ các handler, hiện là **Manager** trong Inspector. Gán khi component đang bật sẽ chuyển handler sang manager mới. |
+| `protected virtual void OnEnable()` | Khởi tạo manager rồi đăng ký handler lên `ServerManager.Dispatcher` và `ClientManager.Dispatcher` của nó. Ném `InvalidOperationException` khi manager trống, và `HandlerRegistrationException` khi một component khác đã xử lý một trong các message. |
+| `protected virtual void OnDisable()` | Gỡ các handler |
+
+Class con override `OnEnable` hoặc `OnDisable` thì gọi method của lớp gốc. Với mỗi message, generator thêm các method gửi `protected`: `Send<M>ServerMessage(...)` trả về `SendResult`, `Send<M>ClientMessage(ulong peerId, ...)` trả về `SendResult`, và `Broadcast<M>ClientMessage(...)` trả về số peer đã được đưa vào queue. Chúng ném `InvalidOperationException` khi manager trống hoặc model chưa được sinh.
 
 ## Exception <a href="#exceptions" id="exceptions"></a>
 

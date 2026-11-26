@@ -47,9 +47,20 @@ On a `NetworkBehaviour` the method is `void M(...)` with any parameters, and a f
 
 On a `NetworkBehaviour` the method is `void M(...)` with any parameters. On an `EntityBehaviour` it is `void M()` or `void M(TModel value)`.
 
+## ServerMessageAttribute and ClientMessageAttribute
+
+`[ServerMessage]`, `[ServerMessage("ModelName")]`, `[ClientMessage]` and `[ClientMessage("ModelName")]`, in the namespace `Fomoxa.Unity`, go on a method of a `NetworkMessageBehaviour`. [Raw messages](../messaging/messages.md#declaring-messages) explains how they are used.
+
+| Property | Type | Default | Meaning |
+|---|---|---|---|
+| `Model` | `string` | `<Type><Method>` | Name of the generated model; set with the constructor |
+| `Channel` | `Channel` | `ReliableOrdered` | Channel of the message |
+
+A `[ServerMessage]` method is `void M(...)`, and a first parameter of type `ulong` receives the sender's peer id. A `[ClientMessage]` method is `void M(...)`, and every parameter is sent.
+
 ## NetworkTypeAttribute
 
-`[NetworkType("type")]`, in the namespace `Fomoxa.Networking`, goes on a parameter of an RPC on a `NetworkBehaviour`. The string is the wire type of the parameter, written like the argument of `[Network("type")]`, for example `"f16"` or `"Array<u32>"`.
+`[NetworkType("type")]`, in the namespace `Fomoxa.Networking`, goes on a parameter of an RPC on a `NetworkBehaviour` or of a message on a `NetworkMessageBehaviour`. The string is the wire type of the parameter, written like the argument of `[Network("type")]`, for example `"f16"` or `"Array<u32>"`.
 
 ## NetworkStateAttribute
 
@@ -98,6 +109,6 @@ On a `NetworkBehaviour` the method is `void M(...)` with any parameters. On an `
 
 ## Rules
 
-A method carries at most one of `[NetworkRpc]`, `[ServerRpc]` and `[ClientRpc]`, and a field at most one of `[NetworkState]`, `[NetworkInput]` and `[NetworkReconcile]`. A class with RPC methods or with such fields, its own or inherited, must be `partial`, as must every class containing it. No two RPCs in the project can have the same model name, and no two state, input or reconcile models either.
+A method carries at most one of `[NetworkRpc]`, `[ServerRpc]` and `[ClientRpc]`, and at most one of `[ServerMessage]` and `[ClientMessage]`. A field carries at most one of `[NetworkState]`, `[NetworkInput]` and `[NetworkReconcile]`. A class with RPC methods or with such fields, its own or inherited, must be `partial`, as must every class containing it. A class with message methods must be `partial` in the same way. No two RPCs in the project can have the same model name, and no two state, input or reconcile models either. A message model name must differ from every other message, RPC and state model name.
 
-[RPCs](../messaging/rpc.md#compile-errors), [state](../synchronization/state.md#errors) and [collections](../synchronization/collections.md#errors) list the compile errors for broken rules.
+[RPCs](../messaging/rpc.md#compile-errors), [raw messages](../messaging/messages.md#compile-errors), [state](../synchronization/state.md#errors) and [collections](../synchronization/collections.md#errors) list the compile errors for broken rules.

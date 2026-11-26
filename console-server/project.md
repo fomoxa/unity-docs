@@ -66,12 +66,12 @@ A folder whose name ends in `~` is ignored by Unity, so `Server~` inside the Uni
 | `EnableDefaultCompileItems` false | The project lists its sources itself, so it does not pick up the Unity project's scripts |
 | `Core` | The folder of the package. The condition lets you pass another one with `-p:Core=<folder>` |
 | `Runtime/Core/**` and `Standalone~/**` | Layer 1 and the console backend, as source |
-| Models and Generated | Your models, the models generated from your behaviours in `RpcModels/` and `StateModels/`, the generated codecs and adapters, and the `FomoxaPrefabs` and `FomoxaScenes` constants |
+| Models and Generated | Your models, the models generated from your behaviours in `RpcModels/`, `StateModels/` and `MessageModels/`, the generated codecs and adapters, and the `FomoxaPrefabs` and `FomoxaScenes` constants |
 | `*.fomoxascene` | The scene files, copied to a `Scenes` folder next to the executable |
 | `Fomoxa.Attributes`, `Fomoxa.Net`, `Fomoxa.Net.WebSockets` | The bundled DLLs, referenced from the package |
 | `BouncyCastle.Cryptography` | The NuGet package of the BouncyCastle DLL in `Runtime/Plugins`, at the same version; encrypted UDP and client TLS use it |
 
-The generated `FomoxaUnityRegistration.cs` compiles to nothing outside Unity, so the console program calls `FomoxaAdapters.RegisterAll` itself, as the next page shows. Models that use Unity types such as `UnityEngine.Vector3`, and their codecs in `UnityCodecs/`, cannot compile without Unity. The same holds for a generated model whose RPC parameter or state field has a Unity type. Give the models, parameters and fields that the console server needs plain types instead.
+The generated `FomoxaUnityRegistration.cs` compiles to nothing outside Unity, so the console program calls `FomoxaAdapters.RegisterAll` itself, as the next page shows. Models that use Unity types such as `UnityEngine.Vector3`, and their codecs in `UnityCodecs/`, cannot compile without Unity. The same holds for a generated model whose RPC parameter, message parameter or state field has a Unity type. Give the models, parameters and fields that the console server needs plain types instead.
 
 ## Game code shared with Unity
 

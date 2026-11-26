@@ -16,6 +16,7 @@ The package ships the console backend as source in `Standalone~`, a folder that 
 | `NetworkObject` on a prefab | `StandaloneEntity` or a subclass, created by a factory registered for the prefab id |
 | `NetworkBehaviour` | `EntityBehaviour`, with the same callbacks and registrations |
 | `NetworkTransform` | `EntityBehaviour.SyncTransform` with a `TransformSync` |
+| `NetworkMessageBehaviour` | Handlers on `ServerManager.Dispatcher` and `Send` or `Broadcast` with the generated [message models](runtime.md#raw-messages) |
 | Network scenes and scene objects | Scene files read from a folder; scene objects are built from the file |
 | `RigidbodyPhysics` | No Unity physics. Physics comes from an `IPhysicsScenes` such as [Rapier](../rapier/overview.md)'s `RapierScenes` |
 

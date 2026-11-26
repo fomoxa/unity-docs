@@ -204,6 +204,17 @@ The loop above sleeps between frames so that the process does not spin. Each fra
 
 `SceneId` places the entity in a network scene, which limits its observers to the peers that loaded that scene, and selects its physics worlds.
 
+## Raw messages
+
+The console server handles the [raw messages](../messaging/messages.md) of a Unity `NetworkMessageBehaviour` with the models that the Editor generated for them in `MessageModels/`, which the console project compiles with the rest of the Generated Folder. Register a handler on `ServerManager.Dispatcher` for each `[ServerMessage]`, and send each `[ClientMessage]` with `ServerManager.Send` or `ServerManager.Broadcast` and the model's adapter. For the `Chat` component of that page, whose models are `ChatPost` and `ChatShow` in the namespace `FomoxaMessageModels`:
+
+```csharp
+runtime.ServerManager.Dispatcher.Register(ChatPostNetAdapter.Instance, (peerId, post) =>
+    runtime.ServerManager.Broadcast(ChatShowNetAdapter.Instance, new ChatShow { From = peerId, Text = post.Text }));
+```
+
+Register before `StartConnection`. The model's properties are the sent parameters, with an upper-case first letter. The handler receives the same model instance for every message, so copy the values you want to keep. A console client registers on `ClientManager.Dispatcher` and sends with `ClientManager.Send`.
+
 ## Scene objects and boot scenes
 
 A scene object is described by the scene file of its scene: its scene object id, its fingerprint, its pose, the full type names of its behaviours and its body. The console backend builds a `StandaloneEntity` for it with the behaviours that `StandaloneBehaviours` creates for those type names:

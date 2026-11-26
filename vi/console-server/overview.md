@@ -16,6 +16,7 @@ Package đóng gói backend console dưới dạng mã nguồn trong `Standalone
 | `NetworkObject` trên prefab | `StandaloneEntity` hoặc class con, do một factory đăng ký theo prefab id tạo ra |
 | `NetworkBehaviour` | `EntityBehaviour`, với cùng callback và cùng phần đăng ký |
 | `NetworkTransform` | `EntityBehaviour.SyncTransform` với một `TransformSync` |
+| `NetworkMessageBehaviour` | Handler trên `ServerManager.Dispatcher` và `Send` hoặc `Broadcast` với các [model message](runtime.md#raw-messages) được sinh |
 | Network scene và scene object | Scene file đọc từ một thư mục; scene object được dựng từ file |
 | `RigidbodyPhysics` | Không có physics của Unity. Physics đến từ một `IPhysicsScenes`, như `RapierScenes` của [Rapier](../rapier/overview.md) |
 

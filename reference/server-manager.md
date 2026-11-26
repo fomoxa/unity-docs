@@ -101,9 +101,13 @@ The scene methods throw `InvalidOperationException` while the server is stopped.
 | Member | Description |
 |---|---|
 | `SendResult Send(ulong peerId, uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for one peer |
+| `SendResult Send<T>(ulong peerId, IMessageCodec<T> codec, T value)` | Encodes the value with the codec and queues it for one peer |
 | `SendResult SendToObject(ulong peerId, uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Queues an object message for one peer |
 | `int Broadcast(uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for every started peer; returns the count |
+| `int Broadcast<T>(IMessageCodec<T> codec, T value)` | Encodes the value once and queues it for every started peer; returns the count |
 | `MessageDispatcher Dispatcher` | Handlers for incoming messages |
+
+The two generic methods throw `ArgumentNullException` for a null codec.
 
 ## Events
 

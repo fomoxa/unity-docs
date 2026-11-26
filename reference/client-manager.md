@@ -26,6 +26,7 @@
 | Member | Description |
 |---|---|
 | `SendResult Send(uint messageId, ReadOnlySpan<byte> payload)` | Queues a message for the server; `NotConnected` while stopped. Before `Started`, the message waits in the queue. |
+| `SendResult Send<T>(IMessageCodec<T> codec, T value)` | Encodes the value with the codec and queues it like `Send(codec.MessageId, payload)`. Throws `ArgumentNullException` for a null codec. |
 | `SendResult SendToObject(uint messageId, uint objectId, byte behaviourIndex, ReadOnlySpan<byte> body)` | Queues an object message for the server |
 | `MessageDispatcher Dispatcher` | Handlers for incoming messages |
 

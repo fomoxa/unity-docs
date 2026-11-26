@@ -204,6 +204,17 @@ Vòng lặp ở trên ngủ giữa các frame để tiến trình không quay v�
 
 `SceneId` đặt entity vào một network scene, giới hạn observer của nó ở các peer đã load scene đó, và chọn các physics world của nó.
 
+## Raw message <a href="#raw-messages" id="raw-messages"></a>
+
+Server console xử lý [raw message](../messaging/messages.md) của một `NetworkMessageBehaviour` Unity bằng các model mà Editor đã sinh cho chúng trong `MessageModels/`, được project console biên dịch cùng phần còn lại của Generated Folder. Đăng ký một handler trên `ServerManager.Dispatcher` cho mỗi `[ServerMessage]`, và gửi mỗi `[ClientMessage]` bằng `ServerManager.Send` hoặc `ServerManager.Broadcast` với adapter của model. Với component `Chat` của trang đó, có model `ChatPost` và `ChatShow` trong namespace `FomoxaMessageModels`:
+
+```csharp
+runtime.ServerManager.Dispatcher.Register(ChatPostNetAdapter.Instance, (peerId, post) =>
+    runtime.ServerManager.Broadcast(ChatShowNetAdapter.Instance, new ChatShow { From = peerId, Text = post.Text }));
+```
+
+Hãy đăng ký trước `StartConnection`. Property của model là các tham số được gửi, với chữ cái đầu viết hoa. Handler nhận cùng một instance model cho mọi message, nên hãy copy các giá trị bạn muốn giữ. Client console đăng ký trên `ClientManager.Dispatcher` và gửi bằng `ClientManager.Send`.
+
 ## Scene object và boot scene <a href="#scene-objects-and-boot-scenes" id="scene-objects-and-boot-scenes"></a>
 
 Một scene object được mô tả bởi scene file của scene chứa nó: scene object id, fingerprint, tư thế, tên đầy đủ của type các behaviour và body của nó. Backend console dựng một `StandaloneEntity` cho nó với các behaviour mà `StandaloneBehaviours` tạo cho những tên type đó:

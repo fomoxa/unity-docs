@@ -61,7 +61,7 @@ Package sinh code sau mỗi lần biên dịch script. Bạn cũng có thể ch�
 Một lần sinh code đi qua các bước sau:
 
 1. Package copy các model của chính nó, như message spawn và message transform, vào `FomoxaSystemModels/` ở thư mục gốc của project, để model của bạn và model của package tạo thành một schema chung.
-2. Với mỗi RPC, package viết một model vào `RpcModels/` trong Generated Folder, và với mỗi behaviour có field state hoặc field input, package viết model của chúng vào `StateModels/`.
+2. Với mỗi RPC, package viết một model vào `RpcModels/` trong Generated Folder, với mỗi behaviour có field state hoặc field input, package viết model của chúng vào `StateModels/`, và với mỗi raw message khai báo trên một `NetworkMessageBehaviour`, package viết một model vào `MessageModels/`.
 3. Package viết `fomoxa.toml` từ settings asset và chạy `fomoxac`. `fomoxac` viết codec cho mọi model, `NetSchema.cs` chứa message id và fingerprint, `Handshake.cs` và `Runtime.cs`.
 4. Package viết codec cho các type của Unity mà model của bạn dùng, như `Vector3`, vào `UnityCodecs/`. Thư mục này chỉ xuất hiện khi có model dùng type của Unity.
 5. Package viết một adapter cho mỗi codec, `FomoxaAdapters.cs` để đăng ký các adapter đó, và `FomoxaUnityRegistration.cs` để chạy việc đăng ký khi Play Mode hoặc bản build khởi động.

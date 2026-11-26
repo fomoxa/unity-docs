@@ -60,6 +60,8 @@ The generated `FomoxaAdapters.RegisterAll(FomoxaRegistry registry)` fills a regi
 | Member | Description |
 |---|---|
 | `void Register(uint messageId, PayloadHandler handler)` | Registers a handler for a plain message |
+| `void Register<T>(IMessageCodec<T> codec, Action<ulong, T> handler) where T : new()` | Registers a handler for `codec.MessageId` that decodes every message into one instance created at registration |
+| `void Unregister(uint messageId)` | Removes the handler of a plain message; does nothing when the id has none |
 | `void RegisterObject(uint messageId, ObjectPayloadHandler handler)` | Registers a handler for an object message |
 | `bool IsObjectMessage(uint messageId)` | Whether an object handler is registered |
 | `bool Dispatch(ulong peerId, uint messageId, ReadOnlyMemory<byte> data)` | Calls the handler; false when none. Used by the sessions. |
@@ -72,7 +74,19 @@ public delegate void PayloadHandler(ulong peerId, ReadOnlyMemory<byte> payload);
 public delegate void ObjectPayloadHandler(ulong peerId, uint objectId, byte behaviourIndex, ReadOnlyMemory<byte> body);
 ```
 
-`Register` and `RegisterObject` throw `HandlerRegistrationException` for an id that is not in the schema or already has a handler.
+`Register` and `RegisterObject` throw `HandlerRegistrationException` for an id that is not in the schema or already has a handler. `Register<T>` also throws `ArgumentNullException` for a null codec or handler.
+
+## NetworkMessageBehaviour
+
+`public abstract class NetworkMessageBehaviour : MonoBehaviour` in `Fomoxa.Unity` is the base of a component that declares [raw messages](../messaging/messages.md) with `[ServerMessage]` and `[ClientMessage]`. The derived class must be `partial`.
+
+| Member | Description |
+|---|---|
+| `NetworkManager NetworkManager { get; set; }` | The manager whose dispatchers hold the handlers, shown as **Manager** in the Inspector. Setting it while the component is enabled moves the handlers to the new manager. |
+| `protected virtual void OnEnable()` | Initializes the manager and registers the handlers on its `ServerManager.Dispatcher` and `ClientManager.Dispatcher`. Throws `InvalidOperationException` when the manager is empty, and `HandlerRegistrationException` when another component already handles one of the messages. |
+| `protected virtual void OnDisable()` | Removes the handlers |
+
+A subclass that overrides `OnEnable` or `OnDisable` calls the base method. For each message the generator adds `protected` send methods: `Send<M>ServerMessage(...)` returns a `SendResult`, `Send<M>ClientMessage(ulong peerId, ...)` returns a `SendResult`, and `Broadcast<M>ClientMessage(...)` returns the number of peers it was queued for. They throw `InvalidOperationException` when the manager is empty or the model has not been generated yet.
 
 ## Exceptions
 

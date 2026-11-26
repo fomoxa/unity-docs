@@ -66,12 +66,12 @@ Unity bỏ qua thư mục có tên kết thúc bằng `~`, nên `Server~` bên t
 | `EnableDefaultCompileItems` false | Project tự liệt kê mã nguồn của nó, nên không lấy nhầm script của project Unity |
 | `Core` | Thư mục của package. Điều kiện cho phép truyền thư mục khác bằng `-p:Core=<folder>` |
 | `Runtime/Core/**` và `Standalone~/**` | Tầng 1 và backend console, dưới dạng mã nguồn |
-| Models và Generated | Model của bạn, các model sinh ra từ behaviour của bạn trong `RpcModels/` và `StateModels/`, codec và adapter được sinh ra, cùng hằng số `FomoxaPrefabs` và `FomoxaScenes` |
+| Models và Generated | Model của bạn, các model sinh ra từ behaviour của bạn trong `RpcModels/`, `StateModels/` và `MessageModels/`, codec và adapter được sinh ra, cùng hằng số `FomoxaPrefabs` và `FomoxaScenes` |
 | `*.fomoxascene` | Các scene file, copy vào thư mục `Scenes` cạnh file chạy |
 | `Fomoxa.Attributes`, `Fomoxa.Net`, `Fomoxa.Net.WebSockets` | Các DLL đi kèm, tham chiếu từ package |
 | `BouncyCastle.Cryptography` | Gói NuGet của DLL BouncyCastle trong `Runtime/Plugins`, cùng phiên bản; UDP mã hoá và TLS phía client dùng nó |
 
-File `FomoxaUnityRegistration.cs` được sinh ra sẽ biên dịch thành rỗng bên ngoài Unity, nên chương trình console tự gọi `FomoxaAdapters.RegisterAll`, như trang sau cho thấy. Model dùng type của Unity như `UnityEngine.Vector3`, cùng codec của chúng trong `UnityCodecs/`, không biên dịch được khi không có Unity. Model sinh ra có tham số RPC hoặc field state mang type của Unity cũng vậy. Hãy cho các model, tham số và field mà server console cần dùng type thông thường.
+File `FomoxaUnityRegistration.cs` được sinh ra sẽ biên dịch thành rỗng bên ngoài Unity, nên chương trình console tự gọi `FomoxaAdapters.RegisterAll`, như trang sau cho thấy. Model dùng type của Unity như `UnityEngine.Vector3`, cùng codec của chúng trong `UnityCodecs/`, không biên dịch được khi không có Unity. Model sinh ra có tham số RPC, tham số message hoặc field state mang type của Unity cũng vậy. Hãy cho các model, tham số và field mà server console cần dùng type thông thường.
 
 ## Code game dùng chung với Unity <a href="#game-code-shared-with-unity" id="game-code-shared-with-unity"></a>
 
