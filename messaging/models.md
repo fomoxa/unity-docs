@@ -2,7 +2,7 @@
 
 A model is a C# class that describes a message, that is, its fields and their wire types. The bundled `fomoxac` compiler generates a codec for each model, and the package wraps each codec in an adapter, which is what the rest of the API works with.
 
-The package generates the models that carry the RPCs, state and input of your behaviours and the [raw messages](messages.md) of a `NetworkMessageBehaviour`, so you do not write those. You write a model for structured data that a parameter or a state field holds, for raw messages sent [through the managers](messages.md#sending-through-the-managers), for [authentication](../connections/authentication.md) and [transfer](../connections/transfer.md) data, and for the RPCs and state of a [console server](../console-server/runtime.md) that a Unity behaviour does not declare.
+The package generates the models that carry the RPCs, state and input of your behaviours and the messages of a `NetworkMessageBehaviour` or a `NetworkAuthenticator`, so you do not write those. You write a model for structured data that a parameter or a state field holds, for raw messages sent [through the managers](messages.md#sending-through-the-managers), and for the RPCs and state of a [console server](../console-server/runtime.md) that a Unity behaviour does not declare.
 
 ## Basic usage
 

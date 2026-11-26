@@ -112,28 +112,14 @@ Mặc định, `MemoryUsedTicketStore` giữ nonce trong bộ nhớ của một 
 Cả hai server dùng cùng một component authenticator. Phía client gửi vé; phía server kiểm tra nó với tên của server nó đang chạy:
 
 ```csharp
-[Network]
-[Codec("net")]
-[NetworkChannel("net", Channel.ReliableOrdered)]
-public class TransferRequest
-{
-    [Network("bytes")]
-    [Codec("net")]
-    public byte[] Ticket { get; set; }
-}
-```
-
-```csharp
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Fomoxa.Networking;
 using Fomoxa.Unity;
-using Generated;
-using MyGame.Network.Models;
 using UnityEngine;
 
-public sealed class ArenaTicketAuthenticator : NetworkAuthenticator
+public sealed partial class ArenaTicketAuthenticator : NetworkAuthenticator
 {
     [SerializeField] private string serverName;
     [SerializeField] private string ticketKey;
@@ -146,17 +132,13 @@ public sealed class ArenaTicketAuthenticator : NetworkAuthenticator
 
     public int ScoreOf(ulong peerId) => scores.TryGetValue(peerId, out int score) ? score : 0;
 
-    private static TransferRequestNetAdapter Codec => TransferRequestNetAdapter.Instance;
-
-    public override void RegisterServer(ServerAuthentication server) =>
-        server.On(Codec, OnTransferRequest);
-
     public override void OnClientAuthenticating(ClientAuthenticationContext context) =>
-        context.Send(Codec, new TransferRequest { Ticket = context.Ticket.ToArray() });
+        SendArriveServerAuthenticationMessage(context, context.Ticket.ToArray());
 
-    private void OnTransferRequest(ServerAuthenticationContext context, TransferRequest request)
+    [ServerAuthenticationMessage]
+    private void Arrive(ServerAuthenticationContext context, [NetworkType("bytes")] byte[] ticket)
     {
-        if (Tickets.TryVerify(request.Ticket, serverName, out ReadOnlyMemory<byte> data))
+        if (Tickets.TryVerify(ticket, serverName, out ReadOnlyMemory<byte> data))
         {
             scores[context.PeerId] = BitConverter.ToInt32(data.Span);
             context.Accept();
@@ -168,6 +150,8 @@ public sealed class ArenaTicketAuthenticator : NetworkAuthenticator
     }
 }
 ```
+
+Vé là một `byte[]`, không có wire type riêng, nên `[NetworkType("bytes")]` gửi nó dưới dạng byte. Client kết nối không qua chuyển server sẽ gửi một mảng rỗng.
 
 Server này chỉ cho vào client mang vé hợp lệ. Một lobby mà người chơi vào thẳng sẽ nhận cả vé rỗng, hoặc kiểm tra đăng nhập thay vào đó.
 

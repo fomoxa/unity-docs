@@ -18,8 +18,8 @@ sequenceDiagram
     Note over Client,Server: cả hai phía: Authenticating
     Server->>SAuth: OnServerAuthenticating(context)
     Client->>Auth: OnClientAuthenticating(context)
-    Auth->>Server: context.Send(JoinRequest)
-    Server->>SAuth: handler(context, request)
+    Auth->>Server: SendJoinServerAuthenticationMessage(context, code)
+    Server->>SAuth: Join(context, code)
     SAuth->>Server: context.Accept()
     Note over Server: peer: Started<br/>spawn các object của client
     Server->>Client: lời chấp nhận, rồi object và message
@@ -30,52 +30,28 @@ Khi một kết nối đang `Authenticating`, chỉ các model mà authenticator
 
 Khi server chấp nhận, peer chuyển sang `Started`. Server gửi những gì authenticator còn xếp trong queue, rồi lời chấp nhận và các object của client, rồi các message code của bạn đã xếp cho peer. Client chuyển sang `Started` khi lời chấp nhận tới.
 
-## Khai báo model <a href="#declare-a-model" id="declare-a-model"></a>
-
-Message của authenticator là [model](../messaging/models.md) bình thường. Hãy khai báo chúng là `ReliableOrdered`, vì một message không tin cậy bị mất sẽ để client chờ tới khi hết hạn xác thực.
-
-```csharp
-[Network]
-[Codec("net")]
-[NetworkChannel("net", Channel.ReliableOrdered)]
-public class JoinRequest
-{
-    [Network("string")]
-    [Codec("net")]
-    public string RoomCode { get; set; }
-}
-```
-
-Model đăng ký trên authenticator chỉ do authenticator xử lý. Message id của nó không thể có thêm handler trên một `Dispatcher`; đăng ký cả hai sẽ ném `HandlerRegistrationException`. Khi kết nối đã khởi động, model đó được coi là message không có handler.
-
 ## Viết một authenticator <a href="#write-an-authenticator" id="write-an-authenticator"></a>
 
-Trong Unity, hãy kế thừa component `NetworkAuthenticator` và override các method bạn cần. Authenticator dưới đây cho vào những client biết mã phòng:
+Trong Unity, hãy kế thừa `NetworkAuthenticator` bằng một component `partial`, khai báo các message nó trao đổi bằng method, và override các callback bạn cần. Authenticator dưới đây cho vào những client biết mã phòng:
 
 ```csharp
 using Fomoxa.Networking;
 using Fomoxa.Unity;
-using Generated;
-using MyGame.Network.Models;
 using UnityEngine;
 
-public sealed class RoomCodeAuthenticator : NetworkAuthenticator
+public sealed partial class RoomCodeAuthenticator : NetworkAuthenticator
 {
     [SerializeField] private string roomCode;
 
-    public string EnteredCode { get; set; }
-
-    private static JoinRequestNetAdapter Codec => JoinRequestNetAdapter.Instance;
-
-    public override void RegisterServer(ServerAuthentication server) =>
-        server.On(Codec, OnJoinRequest);
+    public string EnteredCode { get; set; } = "";
 
     public override void OnClientAuthenticating(ClientAuthenticationContext context) =>
-        context.Send(Codec, new JoinRequest { RoomCode = EnteredCode });
+        SendJoinServerAuthenticationMessage(context, EnteredCode);
 
-    private void OnJoinRequest(ServerAuthenticationContext context, JoinRequest request)
+    [ServerAuthenticationMessage]
+    private void Join(ServerAuthenticationContext context, string code)
     {
-        if (request.RoomCode == roomCode)
+        if (code == roomCode)
         {
             context.Accept();
         }
@@ -87,11 +63,13 @@ public sealed class RoomCodeAuthenticator : NetworkAuthenticator
 }
 ```
 
+Client gửi `Join` từ `OnClientAuthenticating`, và server chạy `Join` với context của peer đã gửi.
+
 | Method | Phía | Được gọi |
 |---|---|---|
-| `RegisterServer(ServerAuthentication server)` | Server | Một lần, khi authenticator được gán. Đăng ký các model client gửi bằng `server.On(codec, handler)`. |
+| `RegisterServer(ServerAuthentication server)` | Server | Một lần, khi authenticator được gán, sau khi các message đã khai báo được đăng ký. Đăng ký các model bạn tự viết bằng `server.On(codec, handler)`. |
 | `OnServerAuthenticating(ServerAuthenticationContext context)` | Server | Khi một peer chuyển sang `Authenticating` |
-| `RegisterClient(ClientAuthentication client)` | Client | Một lần, khi authenticator được gán. Đăng ký các model server gửi bằng `client.On(codec, handler)`. |
+| `RegisterClient(ClientAuthentication client)` | Client | Một lần, khi authenticator được gán, sau khi các message đã khai báo được đăng ký. Đăng ký các model bạn tự viết bằng `client.On(codec, handler)`. |
 | `OnClientAuthenticating(ClientAuthenticationContext context)` | Client | Khi client chuyển sang `Authenticating` |
 
 Lần xác thực của mỗi kết nối có context riêng. Server truyền context của peer vào `OnServerAuthenticating` và vào mọi handler của message từ peer đó, nên handler biết peer nào đã gửi.
@@ -99,12 +77,35 @@ Lần xác thực của mỗi kết nối có context riêng. Server truyền co
 | Member | Context | Mục đích |
 |---|---|---|
 | `PeerId` | Server | Peer đang được xác thực |
-| `Send(codec, value)` | Cả hai | Gửi một model sang phía kia; trả về một `SendResult` |
+| `Send(codec, value)` | Cả hai | Gửi một model bạn tự viết sang phía kia; trả về một `SendResult` |
 | `Accept()` | Server | Cho peer vào; trả về true |
 | `Reject()` | Server | Đóng kết nối của peer kèm lý do; trả về true |
 | `CancellationToken` | Cả hai | Bị huỷ khi lần xác thực này kết thúc, vì bất kỳ lý do nào |
 | `ConnectionData` | Server | Dữ liệu trong vé kết nối của client trên [UDP mã hóa](transports/encrypted-udp.md#in-the-authenticator); SteamID của client trên [Steam](transports/steam.md#connection-data); rỗng trên các transport khác |
 | `Ticket` | Client | Vé của một lần [chuyển server](transfer.md#the-ticket); rỗng khi kết nối không phải một lần chuyển |
+
+## Khai báo message <a href="#declare-messages" id="declare-messages"></a>
+
+| Attribute | Handler chạy trên | Chữ ký | Method gửi |
+|---|---|---|---|
+| `[ServerAuthenticationMessage]` | Server | `void M(ServerAuthenticationContext context, ...)` | `Send<M>ServerAuthenticationMessage(ClientAuthenticationContext context, ...)`, gọi ở client |
+| `[ClientAuthenticationMessage]` | Client | `void M(ClientAuthenticationContext context, ...)` | `Send<M>ClientAuthenticationMessage(ServerAuthenticationContext context, ...)`, gọi ở server |
+
+Cả hai attribute nằm trong namespace `Fomoxa.Unity`. Tham số đầu tiên của handler là context, các tham số còn lại được gửi. Chúng theo luật của [raw message](../messaging/messages.md#declaring-messages): bước Editor ghi một model đặt tên theo class và method, trong ví dụ là `RoomCodeAuthenticatorJoin`, vào `MessageModels/` trong namespace `FomoxaMessageModels`; đối số của attribute đổi tên nó, như `[ServerAuthenticationMessage("RoomJoin")]`; và tham số được gửi như [tham số RPC](../messaging/rpc.md#parameter-types). Các method gửi là `protected` và trả về `SendResult` của `context.Send`. Đối số `string` hoặc model không được là `null`. Gọi một method gửi trước khi model của nó được sinh sẽ ném `InvalidOperationException` với `<Type>.<Method> has no generated message model for its parameters; run Tools > Fomoxa > Generate`.
+
+Message đi trên `ReliableOrdered`. Hãy giữ nguyên như vậy: một message không tin cậy bị mất sẽ để client chờ tới khi hết hạn xác thực.
+
+Model đăng ký trên authenticator chỉ do authenticator xử lý. Message id của nó không thể có thêm handler trên một `Dispatcher`; đăng ký cả hai sẽ ném `HandlerRegistrationException`. Khi kết nối đã khởi động, model đó được coi là message không có handler.
+
+Source generator báo các lỗi biên dịch sau:
+
+| Id | Ý nghĩa |
+|---|---|
+| `FOMOXA029` | Method mang cả `[ServerAuthenticationMessage]` lẫn `[ClientAuthenticationMessage]` |
+| `FOMOXA030` | Method không nằm trong một `NetworkAuthenticator` |
+| `FOMOXA031` | Chữ ký không được hỗ trợ, kể cả khi tham số đầu tiên không phải context của phía chạy handler |
+| `FOMOXA032` | Class, hoặc một class chứa nó, không phải `partial` |
+| `FOMOXA033` | Một method gửi sẽ trùng tên một member đã có |
 
 ## Gắn vào NetworkManager <a href="#add-it-to-the-networkmanager" id="add-it-to-the-networkmanager"></a>
 
@@ -114,7 +115,7 @@ Manager gán authenticator trong `Awake`. Muốn gán từ code, hãy đặt `Se
 
 ## Từ chối và hết hạn <a href="#reject-and-time-out" id="reject-and-time-out"></a>
 
-`Reject()` đóng kết nối như [`Kick`](server.md#peers). Peer dừng với `StopReason.AuthenticationFailed`. Client dừng với `ServerClosed` và `CloseReason` là `AuthenticationFailed`, và nó không kết nối lại. Muốn nói rõ hơn với người chơi, ví dụ phòng đã đầy, hãy gửi một model của authenticator trước; nó tới trước lệnh đóng.
+`Reject()` đóng kết nối như [`Kick`](server.md#peers). Peer dừng với `StopReason.AuthenticationFailed`. Client dừng với `ServerClosed` và `CloseReason` là `AuthenticationFailed`, và nó không kết nối lại. Muốn nói rõ hơn với người chơi, ví dụ phòng đã đầy, hãy gửi một `[ClientAuthenticationMessage]` trước; nó tới trước lệnh đóng.
 
 Server cho mỗi kết nối **Authentication Timeout Seconds** (mặc định 30) để được chấp nhận. Hết thời gian đó, server đóng kết nối theo cùng cách, với `AuthenticationTimeout` vừa là lý do dừng vừa là lý do đóng. Giá trị 0 tắt giới hạn này.
 
@@ -142,3 +143,22 @@ Exception do một callback bạn đăng ký trên `CancellationToken` ném ra �
 ## Không dùng Unity <a href="#without-unity" id="without-unity"></a>
 
 [Console server](../console-server/overview.md) không có component `NetworkAuthenticator`. Hãy hiện thực `IServerAuthenticator` trong `Fomoxa.Networking` và gán nó vào `ServerManager.Authenticator` trước khi khởi động server. `IClientAuthenticator` là phần tương ứng ở client; `NetworkAuthenticator` hiện thực cả hai.
+
+Để xác thực client Unity, server console đăng ký các model mà Editor đã sinh cho authenticator Unity, được project console biên dịch cùng phần còn lại của Generated Folder. Với `RoomCodeAuthenticator` ở trên:
+
+```csharp
+public void RegisterServer(ServerAuthentication server) =>
+    server.On(RoomCodeAuthenticatorJoinNetAdapter.Instance, (context, join) =>
+    {
+        if (join.Code == roomCode)
+        {
+            context.Accept();
+        }
+        else
+        {
+            context.Reject();
+        }
+    });
+```
+
+Client console gửi cùng model đó bằng `context.Send(RoomCodeAuthenticatorJoinNetAdapter.Instance, new RoomCodeAuthenticatorJoin { Code = code })`.

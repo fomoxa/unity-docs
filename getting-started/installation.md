@@ -61,7 +61,7 @@ The package generates code after every script compilation. You can also run it w
 A generation goes through these steps:
 
 1. The package copies its own models, such as the spawn and transform messages, into `FomoxaSystemModels/` at the project root, so that your models and its models form one schema.
-2. For every RPC, it writes a model into `RpcModels/` inside the Generated Folder, for every behaviour with state or input fields, it writes their models into `StateModels/`, and for every raw message declared on a `NetworkMessageBehaviour`, it writes a model into `MessageModels/`.
+2. For every RPC, it writes a model into `RpcModels/` inside the Generated Folder, for every behaviour with state or input fields, it writes their models into `StateModels/`, and for every message declared on a `NetworkMessageBehaviour` or a `NetworkAuthenticator`, it writes a model into `MessageModels/`.
 3. It writes `fomoxa.toml` from the settings asset and runs `fomoxac`, which writes a codec for every model, `NetSchema.cs` with the message ids and fingerprints, `Handshake.cs` and `Runtime.cs`.
 4. It writes codecs for the Unity types your models use, such as `Vector3`, into `UnityCodecs/`. The folder only appears once a model uses a Unity type.
 5. It writes an adapter for every codec, `FomoxaAdapters.cs`, which registers them, and `FomoxaUnityRegistration.cs`, which runs that registration when Play Mode or a player starts.

@@ -2,7 +2,7 @@
 
 Model là một class C# mô tả một message, tức các field và wire type của chúng. Trình biên dịch `fomoxac` đi kèm sinh một codec cho mỗi model, và package bọc mỗi codec trong một adapter, thứ mà phần còn lại của API làm việc cùng.
 
-Package sinh các model mang RPC, state và input của behaviour, cùng [raw message](messages.md) của một `NetworkMessageBehaviour`, nên bạn không viết chúng. Bạn viết model cho dữ liệu có cấu trúc mà một tham số hoặc một field state chứa, cho raw message gửi [qua các manager](messages.md#sending-through-the-managers), cho dữ liệu [xác thực](../connections/authentication.md) và [truyền file](../connections/transfer.md), và cho RPC và state của một [console server](../console-server/runtime.md) mà behaviour Unity không khai báo.
+Package sinh các model mang RPC, state và input của behaviour, cùng message của một `NetworkMessageBehaviour` hay một `NetworkAuthenticator`, nên bạn không viết chúng. Bạn viết model cho dữ liệu có cấu trúc mà một tham số hoặc một field state chứa, cho raw message gửi [qua các manager](messages.md#sending-through-the-managers), và cho RPC và state của một [console server](../console-server/runtime.md) mà behaviour Unity không khai báo.
 
 ## Cách dùng cơ bản <a href="#basic-usage" id="basic-usage"></a>
 
