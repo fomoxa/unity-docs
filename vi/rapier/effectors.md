@@ -66,9 +66,11 @@ Lực và mô-men khớp Box2D tới bốn hoặc năm chữ số ở các bư�
 
 | Member | Thêm effector vào |
 |---|---|
-| `RapierScenes.AddEffector(INetworkEntity owner, PhysicsBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | Một body của network object hoặc của entity console |
+| `RapierScenes.AddEffector(INetworkEntity owner, NetworkBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | Một body của network object hoặc của entity console |
 | `RapierScenes.AddEffector(StaticGroup group, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | Một nhóm tĩnh do `RapierScenes.AddStatic2D` trả về |
-| `RapierScenes.AddEffector(PhysicsBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | Một body không network object nào sở hữu, như một bục di chuyển |
+| `RapierScenes.AddEffector(NetworkBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | Một body không network object nào sở hữu, như một bục di chuyển |
+
+Hai hàm nhận `NetworkBody2D` là extension method trong `Fomoxa.Unity.Rapier`. Console server truyền `PhysicsBody2D` cho cùng các hàm đó.
 
 `colliders` là chỉ số trong danh sách collider của mô tả body hoặc của nhóm. Mỗi lời gọi trả về một `EffectorHandle`. `RapierWorld2D.SetEffector(handle, desc)` đổi mô tả và giữ các collider, `RemoveEffector(handle)` gỡ effector, và gỡ body hay nhóm thì gỡ cả effector của nó. Collider đã có effector, chỉ số ngoài phạm vi hoặc mô tả không hợp lệ đều ném `ArgumentException`.
 

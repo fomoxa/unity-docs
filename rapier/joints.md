@@ -43,9 +43,9 @@ A `JointDesc` places the joint in each body's local space: an anchor point and a
 
 | Member | Description |
 |---|---|
-| `JointDesc(JointKind kind, Vector3 anchorA, Quaternion frameA, Vector3 anchorB, Quaternion frameB)` | `Fixed`, `Revolute`, `Prismatic` or `Spherical`. `JointDesc2D` takes `Vector2` anchors and angles, and has no `Spherical` |
-| `JointDesc.Rope(anchorA, anchorB, maxLength)` | A rope that keeps the distance at most `maxLength` |
-| `JointDesc.Spring(anchorA, anchorB, restLength, stiffness, damping)` | A spring towards `restLength` |
+| `NetworkJoints.Create(JointKind kind, Vector3 anchorA, Quaternion frameA, Vector3 anchorB, Quaternion frameB)` | `Fixed`, `Revolute`, `Prismatic` or `Spherical`. `NetworkJoints.Create2D` takes `Vector2` anchors and angles, and has no `Spherical` |
+| `NetworkJoints.Rope(anchorA, anchorB, maxLength)` | A rope that keeps the distance at most `maxLength` |
+| `NetworkJoints.Spring(anchorA, anchorB, restLength, stiffness, damping)` | A spring towards `restLength` |
 | `WithLimit(JointLimit)` | The angle range of a revolute joint, the distance range of a prismatic joint, the twist of a spherical joint, or the length range of a rope |
 | `WithSwingLimits(JointLimit y, JointLimit z)` | The swing of a spherical joint |
 | `WithMotor(JointMotorDesc)` | A motor on a revolute or prismatic joint |
@@ -54,22 +54,24 @@ A `JointDesc` places the joint in each body's local space: an anchor point and a
 
 `JointMotorDesc.Velocity(targetVelocity, damping, maxForce)` drives towards a speed and `JointMotorDesc.Position(targetPosition, stiffness, damping, maxForce)` towards a position. The motor force is `stiffness · (targetPosition − x) + damping · (targetVelocity − v)`, capped at `maxForce`. The type is named `JointMotorDesc` so that it does not clash with `UnityEngine.JointMotor` in files that use both namespaces.
 
+`NetworkJoints` in `Fomoxa.Unity.Rapier` builds a `JointDesc` from Unity's `Vector3` and `Quaternion`, and `Create2D`, `Rope2D` and `Spring2D` build a `JointDesc2D` from `Vector2`. A console server has no Unity, so it uses the `JointDesc` constructor, `JointDesc.Rope` and `JointDesc.Spring` with `System.Numerics` types.
+
 A door that swings on a hinge between 0 and 100 degrees and closes itself:
 
 ```csharp
-using System;
-using System.Numerics;
 using Fomoxa.Networking.Rapier;
-using Fomoxa.Networking.Simulation;
+using Fomoxa.Unity;
+using Fomoxa.Unity.Rapier;
+using UnityEngine;
 
-PhysicsBody door = networkObject.Body;
-var hinge = new JointDesc(JointKind.Revolute, new Vector3(-0.5f, 0f, 0f), Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathF.PI / 2f), hingePoint, Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathF.PI / 2f))
-    .WithLimit(new JointLimit(0f, 100f * MathF.PI / 180f))
+NetworkBody door = networkObject.Body;
+var hinge = NetworkJoints.Create(JointKind.Revolute, new Vector3(-0.5f, 0f, 0f), Quaternion.AngleAxis(90f, Vector3.forward), hingePoint, Quaternion.AngleAxis(90f, Vector3.forward))
+    .WithLimit(new JointLimit(0f, 100f * Mathf.Deg2Rad))
     .WithMotor(JointMotorDesc.Position(0f, 40f, 4f, 200f));
 JointHandle joint = rapier.Scenes.CreateJoint(networkObject, door, default, hinge);
 ```
 
-`rapier` is the `RapierPhysics` component of the `NetworkManager`. The second body is the world, so `hingePoint` is the hinge in world coordinates. Both frames turn the X axis of the joint onto the vertical axis, which makes the door swing around it. `RapierScenes.CreateJoint(INetworkEntity owner, PhysicsBody a, PhysicsBody b, in JointDesc desc)` checks that `a` is a body of `owner` and attaches the joint to it, so the joint goes away with the object. Change or remove it later through `rapier.Scenes.WorldOf(sceneId)`. A console server uses the same call with its `StandaloneEntity`.
+`rapier` is the `RapierPhysics` component of the `NetworkManager`. The second body is the world, so `hingePoint` is the hinge in world coordinates. Both frames turn the X axis of the joint onto the vertical axis, which makes the door swing around it. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` and the `NetworkBody2D` overload with a `JointDesc2D` check that `a` is a body of `owner` and attach the joint to it, so the joint goes away with the object. Change or remove it later through `rapier.Scenes.WorldOf(sceneId)`. A console server makes the same call with its `StandaloneEntity` and `PhysicsBody` values.
 
 ## Joints in a replay
 

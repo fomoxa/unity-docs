@@ -66,9 +66,11 @@ Forces and torques match Box2D to four or five digits in the first steps. Positi
 
 | Member | Adds an effector to |
 |---|---|
-| `RapierScenes.AddEffector(INetworkEntity owner, PhysicsBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | A body of a network object or console entity |
+| `RapierScenes.AddEffector(INetworkEntity owner, NetworkBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | A body of a network object or console entity |
 | `RapierScenes.AddEffector(StaticGroup group, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | A static group returned by `RapierScenes.AddStatic2D` |
-| `RapierScenes.AddEffector(PhysicsBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | A body that no network object owns, such as a moving platform |
+| `RapierScenes.AddEffector(NetworkBody2D body, IReadOnlyList<int> colliders, in EffectorDesc2D desc)` | A body that no network object owns, such as a moving platform |
+
+The two calls with a `NetworkBody2D` are extension methods in `Fomoxa.Unity.Rapier`. A console server passes a `PhysicsBody2D` to the same calls.
 
 `colliders` are indices into the colliders of the body description or of the group. Each call returns an `EffectorHandle`. `RapierWorld2D.SetEffector(handle, desc)` changes the description and keeps the colliders, `RemoveEffector(handle)` removes the effector, and removing the body or group removes its effectors. A collider that already has an effector, an index out of range or an invalid description throws `ArgumentException`.
 

@@ -26,7 +26,7 @@ Rapier also reports which bodies moved in each step. The server reads the transf
 
 <figure><img src="../.gitbook/assets/diagrams/rapier-stack.svg" alt="In a Unity client or server, game code with apply, capture, restore and OnTick uses PhysicsBody and PhysicsBody2D, which are unchanged, and those use RapierPhysics, with one world per network scene and dimension. In a console server without Unity, your console program with EntityBehaviour classes and the same models uses RapierScenes, which builds the same worlds from the same scene file. Both sit on the native library fomoxa_rapier, built from rapier3d and rapier2d 0.36.0 with enhanced-determinism. A snapshot holds the whole Rapier world, contacts included, so a replay gives the same ticks as the first run."><figcaption><p>Game code stays the same; only the layers under PhysicsBody change.</p></figcaption></figure>
 
-Game code keeps using `PhysicsBody` and `PhysicsBody2D`, input and reconcile models, and the contact components. What changes is underneath:
+Game code keeps using `NetworkBody` and `NetworkBody2D`, input and reconcile models, and the contact components. What changes is underneath:
 
 | | `RigidbodyPhysics` | `RapierPhysics` |
 |---|---|---|
@@ -46,7 +46,7 @@ The server and every client must use the same backend. A client whose backend di
 | Area | Page |
 |---|---|
 | Bodies and colliders, several bodies per network object, continuous collision | [Bodies and colliders](bodies.md) |
-| Rays, shape casts, overlaps, contact points, forces and torques | [Physics queries](../physics/queries.md) and [PhysicsBody](../physics/physics-body.md), the same API as `RigidbodyPhysics` |
+| Rays, shape casts, overlaps, contact points, forces and torques | [Physics queries](../physics/queries.md) and [NetworkBody](../physics/physics-body.md), the same API as `RigidbodyPhysics` |
 | Contact components | [Contact events](contacts.md) |
 | Unity joint components and joints created from code | [Joints](joints.md) |
 | Moving a kinematic character along walls, steps and slopes | [Character controller](character-controller.md) |

@@ -43,9 +43,9 @@ Joint chỉ được đọc một lần, khi dựng object. Đổi component joi
 
 | Member | Mô tả |
 |---|---|
-| `JointDesc(JointKind kind, Vector3 anchorA, Quaternion frameA, Vector3 anchorB, Quaternion frameB)` | `Fixed`, `Revolute`, `Prismatic` hoặc `Spherical`. `JointDesc2D` nhận điểm neo `Vector2` và góc, không có `Spherical` |
-| `JointDesc.Rope(anchorA, anchorB, maxLength)` | Dây giữ khoảng cách không quá `maxLength` |
-| `JointDesc.Spring(anchorA, anchorB, restLength, stiffness, damping)` | Lò xo kéo về `restLength` |
+| `NetworkJoints.Create(JointKind kind, Vector3 anchorA, Quaternion frameA, Vector3 anchorB, Quaternion frameB)` | `Fixed`, `Revolute`, `Prismatic` hoặc `Spherical`. `NetworkJoints.Create2D` nhận điểm neo `Vector2` và góc, không có `Spherical` |
+| `NetworkJoints.Rope(anchorA, anchorB, maxLength)` | Dây giữ khoảng cách không quá `maxLength` |
+| `NetworkJoints.Spring(anchorA, anchorB, restLength, stiffness, damping)` | Lò xo kéo về `restLength` |
 | `WithLimit(JointLimit)` | Khoảng góc của joint quay, khoảng cách của joint trượt, độ xoắn của joint cầu, hoặc khoảng độ dài của dây |
 | `WithSwingLimits(JointLimit y, JointLimit z)` | Swing của joint cầu |
 | `WithMotor(JointMotorDesc)` | Motor trên joint quay hoặc joint trượt |
@@ -54,22 +54,24 @@ Joint chỉ được đọc một lần, khi dựng object. Đổi component joi
 
 `JointMotorDesc.Velocity(targetVelocity, damping, maxForce)` đẩy về một vận tốc, `JointMotorDesc.Position(targetPosition, stiffness, damping, maxForce)` đẩy về một vị trí. Lực của motor là `stiffness · (targetPosition − x) + damping · (targetVelocity − v)`, chặn ở `maxForce`. Kiểu này tên là `JointMotorDesc` để không trùng `UnityEngine.JointMotor` trong tệp dùng cả hai namespace.
 
+`NetworkJoints` trong `Fomoxa.Unity.Rapier` tạo `JointDesc` từ `Vector3` và `Quaternion` của Unity, còn `Create2D`, `Rope2D` và `Spring2D` tạo `JointDesc2D` từ `Vector2`. Console server không có Unity nên dùng constructor của `JointDesc`, `JointDesc.Rope` và `JointDesc.Spring` với kiểu `System.Numerics`.
+
 Một cánh cửa quay trên bản lề trong khoảng 0 tới 100 độ và tự đóng lại:
 
 ```csharp
-using System;
-using System.Numerics;
 using Fomoxa.Networking.Rapier;
-using Fomoxa.Networking.Simulation;
+using Fomoxa.Unity;
+using Fomoxa.Unity.Rapier;
+using UnityEngine;
 
-PhysicsBody door = networkObject.Body;
-var hinge = new JointDesc(JointKind.Revolute, new Vector3(-0.5f, 0f, 0f), Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathF.PI / 2f), hingePoint, Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathF.PI / 2f))
-    .WithLimit(new JointLimit(0f, 100f * MathF.PI / 180f))
+NetworkBody door = networkObject.Body;
+var hinge = NetworkJoints.Create(JointKind.Revolute, new Vector3(-0.5f, 0f, 0f), Quaternion.AngleAxis(90f, Vector3.forward), hingePoint, Quaternion.AngleAxis(90f, Vector3.forward))
+    .WithLimit(new JointLimit(0f, 100f * Mathf.Deg2Rad))
     .WithMotor(JointMotorDesc.Position(0f, 40f, 4f, 200f));
 JointHandle joint = rapier.Scenes.CreateJoint(networkObject, door, default, hinge);
 ```
 
-`rapier` là component `RapierPhysics` của `NetworkManager`. Body thứ hai là thế giới, nên `hingePoint` là bản lề theo toạ độ thế giới. Cả hai khung xoay trục X của joint thành trục đứng, nên cửa quay quanh trục đó. `RapierScenes.CreateJoint(INetworkEntity owner, PhysicsBody a, PhysicsBody b, in JointDesc desc)` kiểm tra `a` là body của `owner` và gắn joint vào body đó, nên joint mất đi cùng object. Đổi hoặc gỡ joint sau đó qua `rapier.Scenes.WorldOf(sceneId)`. Console server gọi cùng hàm với `StandaloneEntity` của nó.
+`rapier` là component `RapierPhysics` của `NetworkManager`. Body thứ hai là thế giới, nên `hingePoint` là bản lề theo toạ độ thế giới. Cả hai khung xoay trục X của joint thành trục đứng, nên cửa quay quanh trục đó. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` và overload `NetworkBody2D` với `JointDesc2D` kiểm tra `a` là body của `owner` và gắn joint vào body đó, nên joint mất đi cùng object. Đổi hoặc gỡ joint sau đó qua `rapier.Scenes.WorldOf(sceneId)`. Console server gọi cùng hàm với `StandaloneEntity` của nó và các giá trị `PhysicsBody`.
 
 ## Joint khi replay <a href="#joints-in-a-replay" id="joints-in-a-replay"></a>
 

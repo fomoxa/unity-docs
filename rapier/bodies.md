@@ -66,7 +66,6 @@ The overloads of `BodyDescriptions.TryDescribe` and `TryDescribe2D` that take a 
 ```csharp
 using System.Collections.Generic;
 using Fomoxa.Networking.Rapier;
-using Fomoxa.Networking.Simulation;
 using Fomoxa.Unity;
 using Fomoxa.Unity.Rapier;
 using UnityEngine;
@@ -80,7 +79,7 @@ public sealed class FootSensor : NetworkBehaviour
 
     public bool Grounded(RapierPhysics rapier, uint sceneId)
     {
-        PhysicsBody2D body = NetworkObject.Body2D;
+        NetworkBody2D body = NetworkObject.Body2D;
         if (!body.IsValid || !BodyDescriptions.TryDescribe2D(gameObject, out _, sources))
         {
             return false;

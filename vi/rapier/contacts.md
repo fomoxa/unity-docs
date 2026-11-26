@@ -13,7 +13,7 @@ Các cặp này là một phần state của world, nên snapshot lưu chúng v�
 
 ## Điểm tiếp xúc <a href="#contact-points" id="contact-points"></a>
 
-`NetworkCollision.GetContactPoints` và `NetworkCollision2D.GetContactPoints` trả về điểm của các cặp tiếp xúc Rapier, ở 3D cũng như 2D, và `PhysicsBody.GetContactPoints`, `PhysicsBody2D.GetContactPoints` cũng vậy. Chúng gồm cả điểm nằm trong lề tiếp xúc của Rapier, có `Depth` âm. Snapshot giữ các tiếp xúc, nên sau `Load` các điểm là điểm của tick vừa nạp cho tới bước mô phỏng kế tiếp.
+`NetworkCollision.GetContactPoints` và `NetworkCollision2D.GetContactPoints` trả về điểm của các cặp tiếp xúc Rapier, ở 3D cũng như 2D, và `NetworkBody.GetContactPoints`, `NetworkBody2D.GetContactPoints` cũng vậy. Chúng gồm cả điểm nằm trong lề tiếp xúc của Rapier, có `Depth` âm. Snapshot giữ các tiếp xúc, nên sau `Load` các điểm là điểm của tick vừa nạp cho tới bước mô phỏng kế tiếp.
 
 ## Khác biệt so với RigidbodyPhysics <a href="#differences-from-rigidbodyphysics" id="differences-from-rigidbodyphysics"></a>
 

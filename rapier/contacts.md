@@ -13,7 +13,7 @@ The pairs are part of the world state, so a snapshot saves them and a replay res
 
 ## Contact points
 
-`NetworkCollision.GetContactPoints` and `NetworkCollision2D.GetContactPoints` return the points of the Rapier contact pairs, in 3D as well as in 2D, and so do `PhysicsBody.GetContactPoints` and `PhysicsBody2D.GetContactPoints`. They include points within Rapier's contact margin, whose `Depth` is negative. A snapshot holds the contacts, so after a `Load` the points are those of the loaded tick until the next step.
+`NetworkCollision.GetContactPoints` and `NetworkCollision2D.GetContactPoints` return the points of the Rapier contact pairs, in 3D as well as in 2D, and so do `NetworkBody.GetContactPoints` and `NetworkBody2D.GetContactPoints`. They include points within Rapier's contact margin, whose `Depth` is negative. A snapshot holds the contacts, so after a `Load` the points are those of the loaded tick until the next step.
 
 ## Differences from RigidbodyPhysics
 

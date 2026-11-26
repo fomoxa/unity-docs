@@ -40,8 +40,8 @@ public sealed partial class Walker : NetworkBehaviour
     protected override void OnApplyInput(InputContext context)
     {
         float seconds = (float)manager.TimeManager.TickDelta;
-        var desired = new System.Numerics.Vector2(x * speed, -fallSpeed) * seconds;
-        CharacterMove2D move = rapier.Scenes.MoveCharacter(NetworkObject, NetworkObject.Body2D, desired, seconds, Settings);
+        var desired = new Vector2(x * speed, -fallSpeed) * seconds;
+        NetworkCharacterMove2D move = rapier.Scenes.MoveCharacter(NetworkObject, NetworkObject.Body2D, desired, seconds, Settings);
         grounded = move.Grounded;
     }
 }
@@ -49,7 +49,7 @@ public sealed partial class Walker : NetworkBehaviour
 
 `x` là một field input như ở trang [input](../prediction/input.md); `manager` và `rapier` là `NetworkManager` và `RapierPhysics` của nó. Cho gọn, ví dụ rơi với tốc độ không đổi; game thường giữ vận tốc theo phương đứng trong state được dự đoán. Lời gọi tính body đi được bao xa và đặt chỗ đó làm vị trí kinematic kế tiếp, nên body tới đó trong bước mô phỏng của cùng tick và `Transform` theo sau. Gọi lần nữa trước bước mô phỏng thì độ dời được tính lại từ vị trí cũ và thay lần đầu.
 
-Kết quả cho biết chuyện gì đã xảy ra:
+Kết quả, ở đây là `NetworkCharacterMove2D` và ở 3D là `NetworkCharacterMove`, cho biết chuyện gì đã xảy ra:
 
 | Member | Ý nghĩa |
 |---|---|
@@ -57,7 +57,7 @@ Kết quả cho biết chuyện gì đã xảy ra:
 | `Grounded` | Cuối lần dời, nhân vật đứng trên một thứ gì đó |
 | `Sliding` | Lần dời đi xuống và nhân vật đứng trên dốc nghiêng hơn `MinSlopeSlideAngle` |
 
-`RapierScenes.MoveCharacter(INetworkEntity owner, PhysicsBody body, Vector3 desired, float seconds, in CharacterSettings settings)` và overload `PhysicsBody2D` kiểm tra `body` thuộc `owner`. Body không network object nào sở hữu thì di chuyển qua world của nó, `rapier.Scenes.WorldOf2D(sceneId).MoveCharacter(body.Handle, desired, seconds, settings)`. Cả hai đều có overload nhận thêm `QueryFilter` ở cuối. Console server gọi cùng các hàm với `StandaloneEntity` của nó.
+`RapierScenes.MoveCharacter(INetworkEntity owner, NetworkBody body, Vector3 desired, float seconds, in CharacterSettings settings)` và overload `NetworkBody2D` kiểm tra `body` thuộc `owner`. Body không network object nào sở hữu thì di chuyển qua world của nó, `rapier.Scenes.WorldOf2D(sceneId).MoveCharacter(body.Handle, desired, seconds, settings)`. Cả hai đều có overload nhận thêm `QueryFilter` ở cuối. Các hàm này nhận kiểu Unity và là extension method trong `Fomoxa.Unity.Rapier`. Console server không có Unity: nó gọi các overload của `RapierScenes` nhận `StandaloneEntity` của nó, một `PhysicsBody` và một vector `System.Numerics`, và nhận lại `CharacterMove` hoặc `CharacterMove2D` có cùng ba thành viên.
 
 ## Lần dời va chạm với gì <a href="#what-the-move-collides-with" id="what-the-move-collides-with"></a>
 

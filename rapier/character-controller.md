@@ -40,8 +40,8 @@ public sealed partial class Walker : NetworkBehaviour
     protected override void OnApplyInput(InputContext context)
     {
         float seconds = (float)manager.TimeManager.TickDelta;
-        var desired = new System.Numerics.Vector2(x * speed, -fallSpeed) * seconds;
-        CharacterMove2D move = rapier.Scenes.MoveCharacter(NetworkObject, NetworkObject.Body2D, desired, seconds, Settings);
+        var desired = new Vector2(x * speed, -fallSpeed) * seconds;
+        NetworkCharacterMove2D move = rapier.Scenes.MoveCharacter(NetworkObject, NetworkObject.Body2D, desired, seconds, Settings);
         grounded = move.Grounded;
     }
 }
@@ -49,7 +49,7 @@ public sealed partial class Walker : NetworkBehaviour
 
 `x` is an input field as in [input](../prediction/input.md); `manager` and `rapier` are the `NetworkManager` and its `RapierPhysics`. The fall here is a constant speed for brevity; a game usually keeps a vertical velocity in its predicted state. The call computes how far the body can go and sets that as its next kinematic position, so the body gets there during the step of the same tick and the `Transform` follows after it. Calling it again before the step computes the move again from the old position and replaces the first one.
 
-The result tells what happened:
+The result, a `NetworkCharacterMove2D` here and a `NetworkCharacterMove` in 3D, tells what happened:
 
 | Member | Meaning |
 |---|---|
@@ -57,7 +57,7 @@ The result tells what happened:
 | `Grounded` | The character stands on something at the end of the move |
 | `Sliding` | The move went down and the character stands on a slope steeper than `MinSlopeSlideAngle` |
 
-`RapierScenes.MoveCharacter(INetworkEntity owner, PhysicsBody body, Vector3 desired, float seconds, in CharacterSettings settings)` and the `PhysicsBody2D` overload check that `body` belongs to `owner`. A body that no network object owns moves through its world, `rapier.Scenes.WorldOf2D(sceneId).MoveCharacter(body.Handle, desired, seconds, settings)`. Both have overloads with a `QueryFilter` at the end. A console server makes the same calls with its `StandaloneEntity`.
+`RapierScenes.MoveCharacter(INetworkEntity owner, NetworkBody body, Vector3 desired, float seconds, in CharacterSettings settings)` and the `NetworkBody2D` overload check that `body` belongs to `owner`. A body that no network object owns moves through its world, `rapier.Scenes.WorldOf2D(sceneId).MoveCharacter(body.Handle, desired, seconds, settings)`. Both have overloads with a `QueryFilter` at the end. These calls take Unity types and are extension methods in `Fomoxa.Unity.Rapier`. A console server has no Unity: it calls the `RapierScenes` overloads that take its `StandaloneEntity`, a `PhysicsBody` and a `System.Numerics` vector, and gets back a `CharacterMove` or `CharacterMove2D` with the same three members.
 
 ## What the move collides with
 
