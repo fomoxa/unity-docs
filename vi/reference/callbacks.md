@@ -31,6 +31,8 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 | `OnReceiveDropped` | cả hai manager | `ReceiveDroppedArgs` | Một bundle nhận được, hoặc một model trong đó, không đọc được |
 | `OnHandlerException` | cả hai manager | `HandlerExceptionArgs` | Một message handler ném exception; server đóng kết nối của peer đó trừ khi một subscriber bỏ `Disconnect`, hoặc client dừng |
 | `OnObjectMismatch` | `ClientManager` | `ObjectMismatchArgs` | Client không áp dụng được một object message và dừng |
+| `OnInputRejected` | `ServerManager` | `InputRejectedArgs` | Server bỏ input từ peer không sở hữu object |
+| `OnServerRpcRejected` | `ServerManager` | `ServerRpcRejectedArgs` | Server bỏ một server RPC có `RequireOwnership` từ peer không sở hữu object |
 
 | Tham số | Member |
 |---|---|
@@ -38,8 +40,12 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 | `ReceiveDroppedArgs` | `ulong PeerId`, `int FrameLength` |
 | `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`, `bool Disconnect`; `Disconnect` ban đầu là `true`, đặt thành `false` thì peer được giữ sau khi một message handler trên server ném exception; server bỏ qua nó với authenticator, spawn data source và object factory, còn client bỏ qua nó; `MessageId` là 0 khi `OnServerAuthenticating`, `OnClientAuthenticating` hoặc một callback trên cancellation token của lần xác thực ném exception |
 | `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `uint SceneId` |
+| `InputRejectedArgs` | `ulong PeerId`, `uint ObjectId`, `byte BehaviourIndex` |
+| `ServerRpcRejectedArgs` | `ulong PeerId`, `uint ObjectId`, `byte BehaviourIndex`, `uint MessageId` |
 
-Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `OnHandlerException` log exception và `OnObjectMismatch` log một lỗi, nhưng chỉ khi không có handler nào subscribe.
+Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `OnHandlerException` log exception, `OnInputRejected` và `OnServerRpcRejected` log một cảnh báo, còn `OnObjectMismatch` log một lỗi, nhưng chỉ khi không có handler nào subscribe.
+
+Với `OnInputRejected` và `OnServerRpcRejected`, server đếm hay phạt được client gửi input hay RPC cho object mà nó không sở hữu, ví dụ `Kick` sau vài lần bị bỏ. Client trung thực cũng có thể gây ra hai event này: input hay RPC nó gửi ngay trước khi tin [đổi owner](../objects/ownership.md#setting-the-owner) tới nó sẽ đến server sau khi server đã giao object cho owner khác. Cả hai event chạy trong message handler của server, nên exception do người subscribe ném ra đi tới `OnHandlerException`.
 
 ## Tick event <a href="#tick-events" id="tick-events"></a>
 
@@ -80,7 +86,5 @@ Mặc định, Log Send Dropped và Log Receive Dropped log hai event đầu. `O
 | `OnServerAuthenticating`, `OnClientAuthenticating` và các handler của authenticator | Field Authenticator | Xem [xác thực](../connections/authentication.md) |
 | `ISceneLoader.Load`, `Unload` | `SceneRegistry.Register` | Khi một network scene được load hoặc unload |
 | `create`, `release` của prefab factory | `PrefabRegistry.Register` | Trên client, khi một object của prefab id đó spawn hoặc despawn |
-
-Input từ peer không sở hữu object được log dưới dạng cảnh báo, và `ServerManager` không cung cấp event cho trường hợp này.
 
 [Vòng đời](../concepts/lifecycle.md) cho thấy thứ tự các callback, và [lỗi và lý do dừng](errors.md) liệt kê các giá trị mà các event này mang.

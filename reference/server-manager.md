@@ -114,6 +114,8 @@ The scene methods throw `InvalidOperationException` while the server is stopped.
 | `OnSendDropped` | `SendDroppedArgs` |
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
 | `OnHandlerException` | `HandlerExceptionArgs`; logged when nobody subscribes; set `Disconnect` to `false` to keep the peer |
+| `OnInputRejected` | `InputRejectedArgs`; input from a peer that does not own the object; logged when nobody subscribes |
+| `OnServerRpcRejected` | `ServerRpcRejectedArgs`; a server RPC with `RequireOwnership` from a peer that does not own the object; logged when nobody subscribes |
 
 [Events and callbacks](callbacks.md) describes the event arguments.
 

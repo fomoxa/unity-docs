@@ -114,6 +114,8 @@ Các method về scene ném `InvalidOperationException` khi server đã dừng.
 | `OnSendDropped` | `SendDroppedArgs` |
 | `OnReceiveDropped` | `ReceiveDroppedArgs` |
 | `OnHandlerException` | `HandlerExceptionArgs`; được log khi không ai subscribe; đặt `Disconnect` thành `false` để giữ peer |
+| `OnInputRejected` | `InputRejectedArgs`; input từ peer không sở hữu object; được log khi không ai subscribe |
+| `OnServerRpcRejected` | `ServerRpcRejectedArgs`; server RPC có `RequireOwnership` từ peer không sở hữu object; được log khi không ai subscribe |
 
 [Event và callback](callbacks.md) mô tả các tham số event.
 

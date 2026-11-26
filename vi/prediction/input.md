@@ -112,7 +112,7 @@ Mỗi tick, client của owner gửi một input message unreliable cho mỗi be
 
 Server giữ các input nhận được theo object và behaviour, sắp theo tick. Nó chấp nhận input cho các tick từ tick hiện tại của nó tới tối đa Max Input Lead tick phía trước (mặc định 30). Message có input mới nhất dành cho một tick đã qua, hoặc xa hơn giới hạn đó, sẽ bị bỏ và được đếm trong `ServerManager.DroppedInputsOf(peerId)`.
 
-Ở mỗi tick, server áp dụng input của tick đó, và nếu không có input nào tới kịp, nó áp dụng lại input cuối với `Repeated` được đặt. Input từ peer không sở hữu object bị bỏ, và server log `Fomoxa dropped input to object <id> from peer <id>, which does not own the object`. Khi owner thay đổi hoặc object bị despawn, input đã đệm bị xóa.
+Ở mỗi tick, server áp dụng input của tick đó, và nếu không có input nào tới kịp, nó áp dụng lại input cuối với `Repeated` được đặt. Input từ peer không sở hữu object bị bỏ và không được đếm vào `DroppedInputsOf`. Thay vào đó server phát `ServerManager.OnInputRejected`, và khi không có gì subscribe thì log `Fomoxa dropped input to object <id> from peer <id>, which does not own the object`. [Event và callback](../reference/callbacks.md#message-events) giải thích vì sao client trung thực cũng có thể gây ra event này sau khi đổi owner. Khi owner thay đổi hoặc object bị despawn, input đã đệm bị xóa.
 
 Client cố gắng để mỗi input tới sớm Input Buffer tick (mặc định 2) trước khi server cần nó, như mô tả ở mục [đồng bộ đồng hồ](../concepts/tick.md#clock-synchronization).
 

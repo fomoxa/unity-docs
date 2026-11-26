@@ -93,7 +93,7 @@ RPC đi trên `ReliableOrdered` theo mặc định. Đặt channel khác trên a
 
 ### Ownership <a href="#ownership" id="ownership"></a>
 
-Server RPC chỉ chạy khi bên gọi sở hữu object. Server bỏ các lời gọi khác và log `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object`. Để client nào cũng gọi được, ví dụ trên một cánh cửa ai cũng mở được, hãy khai báo nó bằng `[ServerRpc(RequireOwnership = false)]`.
+Server RPC chỉ chạy khi bên gọi sở hữu object. Server bỏ các lời gọi khác và phát `ServerManager.OnServerRpcRejected` kèm peer, object, behaviour và message id của RPC. Khi không có gì subscribe, server log `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object` thay vào đó. Để client nào cũng gọi được, ví dụ trên một cánh cửa ai cũng mở được, hãy khai báo nó bằng `[ServerRpc(RequireOwnership = false)]`.
 
 ## Gửi <a href="#sending" id="sending"></a>
 

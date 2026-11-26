@@ -68,7 +68,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 
 | Type | Loại | Trang |
 |---|---|---|
-| `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObserverAddedArgs`, `SpawnResult` | Enum, tham số event | [Lỗi](errors.md), [Callback](callbacks.md) |
+| `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObserverAddedArgs`, `ServerRpcRejectedArgs`, `SpawnResult` | Enum, tham số event | [Lỗi](errors.md), [Callback](callbacks.md) |
 | `IServerEntityBackend`, `IClientEntityBackend`, `IServerSceneHost`, `ISceneHost`, `SceneFileFormat`, `SceneFileGeometry` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
 | `ServerObjects`, `ClientObjects`, `ServerScenes`, `ObjectTable`, `ObjectRow`, `SpawnedObject`, `SpawnData`, `SpawnSource`, `IObjectSpawner`, `ObjectProtocol`, `StateProtocol`, `CollectionProtocol`, `TransformProtocol`, `SceneProtocol`, `SpawnTransform` | Building block | |
 
@@ -77,7 +77,8 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | Type | Loại | Trang |
 |---|---|---|
 | `IClientPredictionBackend` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
-| `ClientClock`, `InputRejectedArgs`, `ClockEstimator`, `ClockProtocol`, `ClockSettings`, `ServerClock`, `ServerInputs`, `InputProtocol` | Building block | [Tick và thời gian](../concepts/tick.md) |
+| `InputRejectedArgs` | Tham số event | [Event và callback](callbacks.md) |
+| `ClientClock`, `ClockEstimator`, `ClockProtocol`, `ClockSettings`, `ServerClock`, `ServerInputs`, `InputProtocol` | Building block | [Tick và thời gian](../concepts/tick.md) |
 
 ## Fomoxa.Networking.Simulation <a href="#fomoxanetworkingsimulation" id="fomoxanetworkingsimulation"></a>
 

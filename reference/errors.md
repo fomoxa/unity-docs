@@ -124,8 +124,8 @@ A newer server may send a value this list does not have. The client keeps the va
 |---|---|
 | `Fomoxa dropped message 0x... (N bytes) to peer N: <reason>` | A queued message could not be sent |
 | `Fomoxa dropped N received bytes from peer N: a message bundle, or a model in it, could not be read` | A received bundle could not be read |
-| `Fomoxa dropped server RPC 0x... to object N from peer N, which does not own the object` | A server RPC with `RequireOwnership` from a non-owner |
-| `Fomoxa dropped input to object N from peer N, which does not own the object` | Input from a non-owner |
+| `Fomoxa dropped server RPC 0x... to object N from peer N, which does not own the object` | A server RPC with `RequireOwnership` from a non-owner, while nothing subscribes to `ServerManager.OnServerRpcRejected` |
+| `Fomoxa dropped input to object N from peer N, which does not own the object` | Input from a non-owner, while nothing subscribes to `ServerManager.OnInputRejected` |
 | `Fomoxa stopped the client: object mismatch <kind>, object N, prefab 0x..., scene object 0x...` | `OnObjectMismatch` without a subscriber |
 | `Fomoxa stopped the client: the TLS server <host> was rejected: <reason>` | The client refused the server's TLS certificate |
 | `Fomoxa stopped the client: the TLS server <host> ended the handshake with alert <alert>` | The server ended the TLS handshake with an alert |

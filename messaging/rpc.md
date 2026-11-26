@@ -93,7 +93,7 @@ An RPC travels on `ReliableOrdered` by default. Set another channel on the attri
 
 ### Ownership
 
-A server RPC only runs when the caller owns the object. The server drops other calls and logs `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object`. To let any client call it, for example on a door anyone can open, declare it with `[ServerRpc(RequireOwnership = false)]`.
+A server RPC only runs when the caller owns the object. The server drops other calls and raises `ServerManager.OnServerRpcRejected` with the peer, the object, the behaviour and the RPC's message id. While nothing subscribes, it logs `Fomoxa dropped server RPC 0x... to object <id> from peer <id>, which does not own the object` instead. To let any client call it, for example on a door anyone can open, declare it with `[ServerRpc(RequireOwnership = false)]`.
 
 ## Sending
 

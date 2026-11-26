@@ -124,8 +124,8 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 |---|---|
 | `Fomoxa dropped message 0x... (N bytes) to peer N: <reason>` | Một message trong queue không gửi được |
 | `Fomoxa dropped N received bytes from peer N: a message bundle, or a model in it, could not be read` | Một bundle nhận được không đọc được |
-| `Fomoxa dropped server RPC 0x... to object N from peer N, which does not own the object` | Server RPC có `RequireOwnership` được gọi từ peer không phải owner |
-| `Fomoxa dropped input to object N from peer N, which does not own the object` | Input từ peer không phải owner |
+| `Fomoxa dropped server RPC 0x... to object N from peer N, which does not own the object` | Server RPC có `RequireOwnership` được gọi từ peer không phải owner, khi không có gì subscribe `ServerManager.OnServerRpcRejected` |
+| `Fomoxa dropped input to object N from peer N, which does not own the object` | Input từ peer không phải owner, khi không có gì subscribe `ServerManager.OnInputRejected` |
 | `Fomoxa stopped the client: object mismatch <kind>, object N, prefab 0x..., scene object 0x...` | `OnObjectMismatch` không có subscriber |
 | `Fomoxa stopped the client: the TLS server <host> was rejected: <reason>` | Client từ chối chứng chỉ TLS của server |
 | `Fomoxa stopped the client: the TLS server <host> ended the handshake with alert <alert>` | Server kết thúc bước bắt tay TLS bằng một cảnh báo |

@@ -112,7 +112,7 @@ Each tick the owner's client sends one unreliable input message per behaviour. T
 
 The server keeps the inputs it receives per object and behaviour, sorted by tick. It accepts input for ticks from its current tick up to Max Input Lead ticks ahead (30 by default). A message whose newest input is for a tick that has already passed, or lies further ahead, is dropped and counted in `ServerManager.DroppedInputsOf(peerId)`.
 
-At each tick the server applies the input for that tick, and if none arrived in time, it applies the last input again with `Repeated` set. Input from a peer that does not own the object is dropped, and the server logs `Fomoxa dropped input to object <id> from peer <id>, which does not own the object`. When the owner changes or the object despawns, the buffered input is discarded.
+At each tick the server applies the input for that tick, and if none arrived in time, it applies the last input again with `Repeated` set. Input from a peer that does not own the object is dropped and not counted in `DroppedInputsOf`. The server raises `ServerManager.OnInputRejected` for it instead, and while nothing subscribes it logs `Fomoxa dropped input to object <id> from peer <id>, which does not own the object`. [Events and callbacks](../reference/callbacks.md#message-events) explains why an honest client can trigger it after an owner change. When the owner changes or the object despawns, the buffered input is discarded.
 
 The client aims to have each input arrive Input Buffer ticks (2 by default) before the server needs it, as described under [clock synchronization](../concepts/tick.md#clock-synchronization).
 

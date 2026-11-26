@@ -68,7 +68,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 
 | Type | Kind | Page |
 |---|---|---|
-| `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObserverAddedArgs`, `SpawnResult` | Enums, event arguments | [Errors](errors.md), [Callbacks](callbacks.md) |
+| `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObserverAddedArgs`, `ServerRpcRejectedArgs`, `SpawnResult` | Enums, event arguments | [Errors](errors.md), [Callbacks](callbacks.md) |
 | `IServerEntityBackend`, `IClientEntityBackend`, `IServerSceneHost`, `ISceneHost`, `SceneFileFormat`, `SceneFileGeometry` | Backend contract | [Console backend reference](../console-server/reference.md) |
 | `ServerObjects`, `ClientObjects`, `ServerScenes`, `ObjectTable`, `ObjectRow`, `SpawnedObject`, `SpawnData`, `SpawnSource`, `IObjectSpawner`, `ObjectProtocol`, `StateProtocol`, `CollectionProtocol`, `TransformProtocol`, `SceneProtocol`, `SpawnTransform` | Building blocks | |
 
@@ -77,7 +77,8 @@ This page lists the public types of the package by namespace. Types marked "buil
 | Type | Kind | Page |
 |---|---|---|
 | `IClientPredictionBackend` | Backend contract | [Console backend reference](../console-server/reference.md) |
-| `ClientClock`, `InputRejectedArgs`, `ClockEstimator`, `ClockProtocol`, `ClockSettings`, `ServerClock`, `ServerInputs`, `InputProtocol` | Building blocks | [Ticks and timing](../concepts/tick.md) |
+| `InputRejectedArgs` | Event arguments | [Events and callbacks](callbacks.md) |
+| `ClientClock`, `ClockEstimator`, `ClockProtocol`, `ClockSettings`, `ServerClock`, `ServerInputs`, `InputProtocol` | Building blocks | [Ticks and timing](../concepts/tick.md) |
 
 ## Fomoxa.Networking.Simulation
 

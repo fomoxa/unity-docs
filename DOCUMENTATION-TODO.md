@@ -9,11 +9,6 @@ Question: Should a client be able to read its own peer id? `ClientObjects.LocalP
 Why it matters: Games that compare `NetworkObject.OwnerId` with "me" have to use `IsOwner` instead. Documented as "the client does not expose its own peer id".
 Source examined: `Runtime/Core/ClientManager.cs`, `Runtime/Core/Objects/ClientObjects.cs`.
 
-### Rejected input event
-Question: `ServerInputs.OnInputRejected` is public, but `ServerManager.Inputs` is internal, so game code cannot subscribe. Is that intended?
-Why it matters: Documented as "logged as a warning; no public event".
-Source examined: `Runtime/Core/Prediction/ServerInputs.cs`, `Runtime/Core/ServerManager.cs`.
-
 ### UDP listener limits in Fomoxa.Net
 Question: Does the bundled `Fomoxa.Net.dll` limit the number of UDP peers per listener (the `csharp` source has `PeerCeiling = 1024` and a per-peer queue of 64 datagrams)?
 Why it matters: A real server capacity limit that the UDP page does not mention, because the bundled DLL was not inspected.
