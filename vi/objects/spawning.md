@@ -68,12 +68,11 @@ Mỗi client sau đó đặt instance của nó vào bản copy scene của riê
 
 ## Factory và pooling <a href="#factories-and-pooling" id="factories-and-pooling"></a>
 
-Một prefab id cũng có thể được đăng ký kèm factory thay cho prefab. Factory tạo và trả lại instance trên client, cho phép dùng pooling:
+Một prefab có thể có factory tạo và trả lại instance của nó trên client, cho phép dùng pooling:
 
 ```csharp
 using System.Collections.Generic;
 using Fomoxa.Unity;
-using Generated;
 using UnityEngine;
 
 public sealed class BulletPool : MonoBehaviour
@@ -85,7 +84,7 @@ public sealed class BulletPool : MonoBehaviour
 
     private void Start()
     {
-        manager.Prefabs.Register(FomoxaPrefabs.BulletId, FomoxaPrefabs.BulletFingerprint, Take, Return);
+        manager.Prefabs.SetFactory(bulletPrefab, Take, Return);
     }
 
     private NetworkObject Take(Vector3 position, Quaternion rotation)
@@ -104,11 +103,13 @@ public sealed class BulletPool : MonoBehaviour
 }
 ```
 
-Client gọi `Take` khi một message spawn của prefab id đó tới và `Return` khi object bị despawn. Hằng số fingerprint lấy từ `FomoxaPrefabs.cs` và phải khớp với prefab mà server spawn, và `Take` phải trả về một instance chưa được spawn.
+Client gọi `Take` khi một message spawn của prefab viên đạn tới và `Return` khi object bị despawn. `Take` phải trả về một instance chưa được spawn.
+
+`SetFactory` đọc prefab id và fingerprint từ chính prefab. Prefab có thể đã nằm trong Collected Prefabs hoặc field Prefabs, và `SetFactory` chạy trước hay sau `Awake` của `NetworkManager` đều cho cùng kết quả. Mỗi prefab có nhiều nhất một factory: gọi `SetFactory` lần nữa với factory khác sẽ ném `<prefab> already has a factory`.
 
 Factory chỉ áp dụng trên client. Trên server, `Spawn` vẫn nhận instance do bạn tạo, và `Despawn` hủy nó.
 
-Mỗi prefab id chỉ đăng ký được một lần, nên factory cho một prefab cũng có trong Collected Prefabs sẽ ném `prefab id 0x... is already registered`. Khi đó, hãy tắt Collect Prefabs và liệt kê các prefab còn lại trong field Prefabs, hoặc đăng ký factory trên một manager mà danh sách của nó không chứa prefab đó.
+Nếu client không có tham chiếu tới prefab, ví dụ vì nó nạp prefab sau từ Addressables, hãy đăng ký factory theo id: `manager.Prefabs.Register(FomoxaPrefabs.BulletId, FomoxaPrefabs.BulletFingerprint, Take, Return)`. Các hằng số lấy từ `FomoxaPrefabs.cs`, và fingerprint phải khớp với prefab mà server spawn. Prefab đăng ký theo id như vậy không được nằm thêm trong Collected Prefabs hay field Prefabs.
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 

@@ -50,6 +50,7 @@ Every member must be called from Unity's main thread, and the package does not c
 | `Contains(uint prefabId)` | Whether the id is registered |
 | `Register(NetworkObject prefab)` | Registers a prefab by its Prefab Id. Throws for id 0, for an id registered to another prefab, and for an invalid hierarchy. Registering the same prefab again does nothing. |
 | `Register(uint prefabId, uint fingerprint, Func<Vector3, Quaternion, NetworkObject> create, Action<NetworkObject> release = null)` | Registers a factory for a prefab id. Throws for id 0 and for an id registered to something else. |
+| `SetFactory(NetworkObject prefab, Func<Vector3, Quaternion, NetworkObject> create, Action<NetworkObject> release = null)` | Gives a prefab a factory, registering the prefab first if it is not registered yet. A prefab that a list registers later keeps the factory. Throws like `Register(prefab)`, for a missing `create`, and for a second, different factory. Setting the same factory again does nothing. The factory runs on clients only. |
 
 ## SceneRegistry
 

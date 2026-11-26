@@ -68,12 +68,11 @@ Each client then puts its instance into its own copy of the scene.
 
 ## Factories and pooling
 
-A prefab id can also be registered with a factory instead of a prefab. The factory creates and releases the instances on clients, which makes pooling possible:
+A prefab can have a factory that creates and releases its instances on clients, which makes pooling possible:
 
 ```csharp
 using System.Collections.Generic;
 using Fomoxa.Unity;
-using Generated;
 using UnityEngine;
 
 public sealed class BulletPool : MonoBehaviour
@@ -85,7 +84,7 @@ public sealed class BulletPool : MonoBehaviour
 
     private void Start()
     {
-        manager.Prefabs.Register(FomoxaPrefabs.BulletId, FomoxaPrefabs.BulletFingerprint, Take, Return);
+        manager.Prefabs.SetFactory(bulletPrefab, Take, Return);
     }
 
     private NetworkObject Take(Vector3 position, Quaternion rotation)
@@ -104,11 +103,13 @@ public sealed class BulletPool : MonoBehaviour
 }
 ```
 
-The client calls `Take` when a spawn of that prefab id arrives and `Return` when the object despawns. The fingerprint constant comes from `FomoxaPrefabs.cs` and must match the prefab the server spawns, and `Take` must return an instance that is not spawned.
+The client calls `Take` when a spawn of the bullet prefab arrives and `Return` when the object despawns. `Take` must return an instance that is not spawned.
+
+`SetFactory` reads the prefab id and the fingerprint from the prefab. The prefab can already be in Collected Prefabs or in the Prefabs field, and `SetFactory` works the same whether it runs before or after the `NetworkManager`'s `Awake`. A prefab has at most one factory: calling `SetFactory` again with a different factory throws `<prefab> already has a factory`.
 
 The factory only applies on clients. On the server, `Spawn` still takes an instance you created, and `Despawn` destroys it.
 
-Each prefab id can be registered only once, so a factory for a prefab that is also in Collected Prefabs throws `prefab id 0x... is already registered`. In that case, turn Collect Prefabs off and list the other prefabs in the Prefabs field, or register the factory on a manager whose lists do not contain that prefab.
+If the client has no reference to the prefab, for example because it loads the prefab later from Addressables, register the factory by id: `manager.Prefabs.Register(FomoxaPrefabs.BulletId, FomoxaPrefabs.BulletFingerprint, Take, Return)`. The constants come from `FomoxaPrefabs.cs`, and the fingerprint must match the prefab the server spawns. A prefab registered by id this way cannot also be in Collected Prefabs or the Prefabs field.
 
 ## Limitations
 

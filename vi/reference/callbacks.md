@@ -85,6 +85,6 @@ Với `OnInputRejected` và `OnServerRpcRejected`, server đếm hay phạt đư
 | `ObserverRule.Observes` | Field Observer Rule | Trên server, khi observer được tính lại |
 | `OnServerAuthenticating`, `OnClientAuthenticating` và các handler của authenticator | Field Authenticator | Xem [xác thực](../connections/authentication.md) |
 | `ISceneLoader.Load`, `Unload` | `SceneRegistry.Register` | Khi một network scene được load hoặc unload |
-| `create`, `release` của prefab factory | `PrefabRegistry.Register` | Trên client, khi một object của prefab id đó spawn hoặc despawn |
+| `create`, `release` của prefab factory | `PrefabRegistry.SetFactory`, `PrefabRegistry.Register` | Trên client, khi một object của prefab id đó spawn hoặc despawn |
 
 [Vòng đời](../concepts/lifecycle.md) cho thấy thứ tự các callback, và [lỗi và lý do dừng](errors.md) liệt kê các giá trị mà các event này mang.

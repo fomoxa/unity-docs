@@ -50,6 +50,7 @@ Mọi member phải được gọi từ main thread của Unity, và package kh�
 | `Contains(uint prefabId)` | Id đã được đăng ký hay chưa |
 | `Register(NetworkObject prefab)` | Đăng ký một prefab theo Prefab Id của nó. Ném exception với id 0, id đã đăng ký cho prefab khác, và hierarchy không hợp lệ. Đăng ký lại cùng prefab không có tác dụng. |
 | `Register(uint prefabId, uint fingerprint, Func<Vector3, Quaternion, NetworkObject> create, Action<NetworkObject> release = null)` | Đăng ký một factory cho một prefab id. Ném exception với id 0 và id đã đăng ký cho thứ khác. |
+| `SetFactory(NetworkObject prefab, Func<Vector3, Quaternion, NetworkObject> create, Action<NetworkObject> release = null)` | Gắn factory cho một prefab, đăng ký prefab trước nếu nó chưa được đăng ký. Prefab mà một danh sách đăng ký sau đó vẫn giữ factory. Ném exception như `Register(prefab)`, khi thiếu `create`, và khi gắn factory thứ hai khác factory đã có. Gắn lại đúng factory đó không làm gì. Factory chỉ chạy trên client. |
 
 ## SceneRegistry <a href="#sceneregistry" id="sceneregistry"></a>
 

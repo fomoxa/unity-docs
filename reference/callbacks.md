@@ -85,6 +85,6 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 | `ObserverRule.Observes` | Observer Rule field | On the server, when observers are recalculated |
 | `OnServerAuthenticating`, `OnClientAuthenticating` and the authenticator's handlers | Authenticator field | See [authentication](../connections/authentication.md) |
 | `ISceneLoader.Load`, `Unload` | `SceneRegistry.Register` | When a network scene is loaded or unloaded |
-| Prefab factory `create`, `release` | `PrefabRegistry.Register` | On clients, when an object of that prefab id spawns or despawns |
+| Prefab factory `create`, `release` | `PrefabRegistry.SetFactory`, `PrefabRegistry.Register` | On clients, when an object of that prefab id spawns or despawns |
 
 [Lifecycle](../concepts/lifecycle.md) shows the callbacks in order, and [errors and stop reasons](errors.md) lists the values these events carry.

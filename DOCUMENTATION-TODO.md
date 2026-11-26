@@ -14,11 +14,6 @@ Question: Does the bundled `Fomoxa.Net.dll` limit the number of UDP peers per li
 Why it matters: A real server capacity limit that the UDP page does not mention, because the bundled DLL was not inspected.
 Source examined: `Runtime/Plugins/Fomoxa.Net.dll` (binary only).
 
-### Factories for collected prefabs
-Question: Is the intended way to register a pooling factory for a prefab that the Editor collects to turn Collect Prefabs off?
-Why it matters: `PrefabRegistry.Register(prefabId, ...)` throws when the prefab is already registered from Collected Prefabs. Documented as a limitation in `core/spawning.md`.
-Source examined: `Runtime/Unity/PrefabRegistry.cs`, `Runtime/Unity/NetworkManager.cs`.
-
 ## Missing implementation
 
 ### Lockstep, match replay, deterministic RNG, state hashing
