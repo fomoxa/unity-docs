@@ -21,30 +21,30 @@ private float velocityZ;
 
 protected override void OnApplyInput(InputContext context)
 {
-    var push = new System.Numerics.Vector3(x, 0f, z) * pushStrength;
+    Vector3 push = new Vector3(x, 0f, z) * pushStrength;
     NetworkObject.Body.AddImpulse(push);
 }
 
 protected override void OnCaptureState()
 {
-    BodyState body = NetworkObject.Body.State;
-    positionX = body.Position.X;
-    positionZ = body.Position.Z;
-    velocityX = body.Velocity.X;
-    velocityZ = body.Velocity.Z;
+    NetworkBodyState body = NetworkObject.Body.State;
+    positionX = body.Position.x;
+    positionZ = body.Position.z;
+    velocityX = body.Velocity.x;
+    velocityZ = body.Velocity.z;
 }
 
 protected override void OnRestoreState()
 {
-    PhysicsBody body = NetworkObject.Body;
-    BodyState current = body.State;
-    current.Position = new System.Numerics.Vector3(positionX, current.Position.Y, positionZ);
-    current.Velocity = new System.Numerics.Vector3(velocityX, current.Velocity.Y, velocityZ);
+    NetworkBody body = NetworkObject.Body;
+    NetworkBodyState current = body.State;
+    current.Position = new Vector3(positionX, current.Position.y, positionZ);
+    current.Velocity = new Vector3(velocityX, current.Velocity.y, velocityZ);
     body.State = current;
 }
 ```
 
-`x` và `z` là các field input của trang [tổng quan](overview.md), và `OnGatherInput` điền chúng như ở đó. `BodyState` và `PhysicsBody` nằm trong `Fomoxa.Networking.Simulation`. Ví dụ di chuyển trên mặt phẳng nền và để trục dọc cho trọng lực.
+`x` và `z` là các field input của trang [tổng quan](overview.md), và `OnGatherInput` điền chúng như ở đó. `NetworkBody` và `NetworkBodyState` nằm trong `Fomoxa.Unity` và dùng `Vector3` của Unity. Ví dụ di chuyển trên mặt phẳng nền và để trục dọc cho trọng lực.
 
 ## Dòng thời gian <a href="#timeline" id="timeline"></a>
 
@@ -84,4 +84,4 @@ Dữ liệu contact của physics engine không được lưu, nên một lần 
 
 Server không lưu hay load physics mà chỉ step mỗi world một lần mỗi tick. Host không dự đoán object của chính nó nên không bao giờ rollback.
 
-Rollback mở rộng [reconciliation](reconciliation.md) sang physics. [Tổng quan physics](../physics/overview.md) và [PhysicsBody](../physics/physics-body.md) mô tả các body liên quan, và [mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao rollback physics của Unity chỉ gần đúng.
+Rollback mở rộng [reconciliation](reconciliation.md) sang physics. [Tổng quan physics](../physics/overview.md) và [NetworkBody](../physics/physics-body.md) mô tả các body liên quan, và [mô phỏng tất định](../concepts/deterministic-simulation.md) giải thích vì sao rollback physics của Unity chỉ gần đúng.

@@ -1,10 +1,10 @@
 # Tổng quan physics
 
-Package có thể chạy physics 3D và 2D của Unity theo tick của network. Khi bật mô phỏng physics, `NetworkManager` step physics mỗi tick một lần, client giữ các body nó không dự đoán ở vị trí được replicate, và prediction có thể rollback physics. Code game truy cập body của một network object qua các type riêng của package, `PhysicsBody` và `PhysicsBody2D`.
+Package có thể chạy physics 3D và 2D của Unity theo tick của network. Khi bật mô phỏng physics, `NetworkManager` step physics mỗi tick một lần, client giữ các body nó không dự đoán ở vị trí được replicate, và prediction có thể rollback physics. Code game truy cập body của một network object qua các type riêng của package, `NetworkBody` và `NetworkBody2D`, nhận và trả các type vector của Unity.
 
 <figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Bảy tầng từ trên xuống. Code game, với apply, capture, restore và OnTick. API physics của Fomoxa: PhysicsBody, PhysicsBody2D và PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save và Load. IPhysicsWorld và IPhysicsWorld2D: body, lực và truy vấn. Ba tầng này là tầng 1, trong Fomoxa.Networking. Component physics, NetworkPhysics và RigidbodyPhysics, và hiện thực world, UnityPhysicsWorld và UnityPhysicsWorld2D, là tầng 2, trong Fomoxa.Unity. Dưới cùng là Unity với PhysicsScene và PhysicsScene2D. Tầng 1 không tham chiếu Unity, nên vector của nó là kiểu System.Numerics."><figcaption><p>Code game tới physics của Unity thế nào.</p></figcaption></figure>
 
-Code dùng `PhysicsBody` không phụ thuộc vào API `Rigidbody` của Unity.
+Code dùng `NetworkBody` không phụ thuộc vào API `Rigidbody` của Unity, nên chạy nguyên vẹn dưới [backend Rapier](../rapier/overview.md).
 
 ## Bật tính năng <a href="#turning-it-on" id="turning-it-on"></a>
 
@@ -48,7 +48,7 @@ Proxy cho phép body được dự đoán va chạm với object của người 
 
 ## Body <a href="#bodies" id="bodies"></a>
 
-`NetworkObject.Body` trả về một `PhysicsBody` cho `Rigidbody` của object, và `NetworkObject.Body2D` trả về một `PhysicsBody2D` cho `Rigidbody2D` của nó. Component body phải nằm trên cùng GameObject với `NetworkObject`. [PhysicsBody](physics-body.md) mô tả cả hai type, còn [truy vấn physics](queries.md) nói về tia, shape cast, overlap và điểm tiếp xúc.
+`NetworkObject.Body` trả về một `NetworkBody` cho `Rigidbody` của object, và `NetworkObject.Body2D` trả về một `NetworkBody2D` cho `Rigidbody2D` của nó. Component body phải nằm trên cùng GameObject với `NetworkObject`. [NetworkBody](physics-body.md) mô tả cả hai type, còn [truy vấn physics](queries.md) nói về tia, shape cast, overlap và điểm tiếp xúc.
 
 ## Nhiều body <a href="#several-bodies" id="several-bodies"></a>
 
@@ -85,4 +85,4 @@ Khi Simulate Physics tắt, Unity step physics theo fixed timestep của nó, đ
 
 Physics của Unity không tất định giữa các máy, và state đã lưu không chứa dữ liệu contact, nên rollback chỉ gần đúng, như [rollback với physics](../prediction/rollback.md) giải thích. Joint, character controller và wheel collider không được lưu hay khôi phục. [Backend Rapier](../rapier/overview.md) lưu toàn bộ world, kể cả joint.
 
-Các trang [PhysicsBody](physics-body.md) và [contact event](contacts.md) nói về những gì code game dùng, còn [kiến trúc physics](architecture.md) mô tả các interface bên dưới.
+Các trang [NetworkBody](physics-body.md) và [contact event](contacts.md) nói về những gì code game dùng, còn [kiến trúc physics](architecture.md) mô tả các interface bên dưới.

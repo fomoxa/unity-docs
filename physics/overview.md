@@ -1,10 +1,10 @@
 # Physics overview
 
-The package can run Unity's 3D and 2D physics on the network tick. With physics simulation on, the `NetworkManager` steps physics once per tick, a client keeps the bodies it does not predict at their replicated positions, and prediction can roll physics back. Game code reaches a network object's body through the package's own types, `PhysicsBody` and `PhysicsBody2D`.
+The package can run Unity's 3D and 2D physics on the network tick. With physics simulation on, the `NetworkManager` steps physics once per tick, a client keeps the bodies it does not predict at their replicated positions, and prediction can roll physics back. Game code reaches a network object's body through the package's own types, `NetworkBody` and `NetworkBody2D`, which take and return Unity's vector types.
 
 <figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Seven levels from top to bottom. Game code, with apply, capture, restore and OnTick. The Fomoxa physics API: PhysicsBody, PhysicsBody2D and PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save and Load. IPhysicsWorld and IPhysicsWorld2D: bodies, forces and queries. These three form layer 1, in Fomoxa.Networking. The physics component, NetworkPhysics and RigidbodyPhysics, and the world implementation, UnityPhysicsWorld and UnityPhysicsWorld2D, form layer 2, in Fomoxa.Unity. At the bottom is Unity with PhysicsScene and PhysicsScene2D. Layer 1 does not reference Unity, so its vectors are System.Numerics types."><figcaption><p>How game code reaches Unity physics.</p></figcaption></figure>
 
-Code that uses `PhysicsBody` does not depend on Unity's `Rigidbody` API.
+Code that uses `NetworkBody` does not depend on Unity's `Rigidbody` API, so it runs unchanged under the [Rapier backend](../rapier/overview.md).
 
 ## Turning it on
 
@@ -48,7 +48,7 @@ Proxies let predicted bodies collide with other players' objects at the position
 
 ## Bodies
 
-`NetworkObject.Body` returns a `PhysicsBody` for the object's `Rigidbody`, and `NetworkObject.Body2D` a `PhysicsBody2D` for its `Rigidbody2D`. The body component must be on the same GameObject as the `NetworkObject`. [PhysicsBody](physics-body.md) describes both types, and [physics queries](queries.md) covers rays, shape casts, overlaps and contact points.
+`NetworkObject.Body` returns a `NetworkBody` for the object's `Rigidbody`, and `NetworkObject.Body2D` a `NetworkBody2D` for its `Rigidbody2D`. The body component must be on the same GameObject as the `NetworkObject`. [NetworkBody](physics-body.md) describes both types, and [physics queries](queries.md) covers rays, shape casts, overlaps and contact points.
 
 ## Several bodies
 
@@ -85,4 +85,4 @@ With Simulate Physics off, Unity steps physics on its own fixed timestep, indepe
 
 Unity physics is not deterministic across machines, and a saved state does not include contact data, so rollback is approximate, as [rollback with physics](../prediction/rollback.md) explains. Joints, character controllers and wheel colliders are not saved or restored. The [Rapier backend](../rapier/overview.md) saves the whole world, joints included.
 
-The [PhysicsBody](physics-body.md) and [contact events](contacts.md) pages cover what game code uses, and [physics architecture](architecture.md) describes the interfaces underneath.
+The [NetworkBody](physics-body.md) and [contact events](contacts.md) pages cover what game code uses, and [physics architecture](architecture.md) describes the interfaces underneath.

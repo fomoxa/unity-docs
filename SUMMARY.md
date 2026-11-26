@@ -79,7 +79,7 @@
 ## Physics
 
 * [Overview](physics/overview.md)
-* [PhysicsBody](physics/physics-body.md)
+* [NetworkBody](physics/physics-body.md)
 * [Physics queries](physics/queries.md)
 * [Contact events](physics/contacts.md)
 * [Physics architecture](physics/architecture.md)

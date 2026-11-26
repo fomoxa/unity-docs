@@ -20,6 +20,7 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport`, `SimulatedNetworkTransport` | Components | [Components](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Components | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics worlds, helper | [Physics API](physics.md#unity-worlds) |
+| `NetworkBody`, `NetworkBody2D`, `NetworkBodyState`, `NetworkBodyState2D`, `NetworkRayHit`, `NetworkRayHit2D`, `NetworkShapes`, `NetworkPhysicsQueries` | Structs, static classes | [Physics API](physics.md#networkbody) |
 
 ## Fomoxa.Networking (layer 1, assembly Fomoxa.Networking)
 

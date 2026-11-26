@@ -1,6 +1,54 @@
 # Physics API reference
 
-Unless stated otherwise, the types on this page are in the namespace `Fomoxa.Networking.Simulation` and the assembly `Fomoxa.Networking`, and their vectors and quaternions are `System.Numerics` types. The [physics overview](../physics/overview.md), [PhysicsBody](../physics/physics-body.md) and [physics architecture](../physics/architecture.md) guides explain how they are used.
+The first four sections cover the types in `Fomoxa.Unity` that game code uses, with UnityEngine vectors. Unless stated otherwise, the other types on this page are in the namespace `Fomoxa.Networking.Simulation` and the assembly `Fomoxa.Networking`, and their vectors and quaternions are `System.Numerics` types. The [physics overview](../physics/overview.md), [NetworkBody](../physics/physics-body.md) and [physics architecture](../physics/architecture.md) guides explain how they are used.
+
+## NetworkBody
+
+`public readonly struct NetworkBody` in `Fomoxa.Unity`, with the constructor `NetworkBody(PhysicsBody core)`. Its vectors and quaternions are UnityEngine types; each member converts them and calls `Core`.
+
+| Member | Type | Description |
+|---|---|---|
+| `IsValid` | `bool` | The world exists and contains the body |
+| `Handle` | `BodyHandle` | The body's handle in its world |
+| `Core` | `PhysicsBody` | The same body with `System.Numerics` types |
+| `Position` | `Vector3` | Get and set |
+| `Rotation` | `Quaternion` | Get and set |
+| `Velocity` | `Vector3` | Get and set; written only to a dynamic body |
+| `AngularVelocity` | `Vector3` | Radians per second. Get and set; written only to a dynamic body. |
+| `Mass` | `float` | |
+| `IsKinematic` | `bool` | |
+| `State` | `NetworkBodyState` | Get and set all four at once |
+| `AddForce(Vector3 force)`, `AddImpulse(Vector3 impulse)`, `AddTorque(Vector3 torque)`, `AddTorqueImpulse(Vector3 torqueImpulse)`, `AddForceAtPoint(Vector3 force, Vector3 point)`, `AddImpulseAtPoint(Vector3 impulse, Vector3 point)` | `void` | As on `PhysicsBody` |
+| `GetContactPoints(BodyHandle other, List<NetworkContactPoint> into)` | `int` | Clears `into`, adds the contact points with `other` (`default` for static geometry) and returns their number; an overload takes `in QueryFilter filter` before `into`. Throws `ArgumentNullException` for a null list |
+
+## NetworkBody2D
+
+`public readonly struct NetworkBody2D` in `Fomoxa.Unity`, with the constructor `NetworkBody2D(PhysicsBody2D core)`. It has the same members as `NetworkBody`, but with `Vector2` positions, velocities, forces and points, a `float` rotation in radians, a `float` angular velocity in radians per second, `float` torques, `NetworkBodyState2D`, `NetworkContactPoint2D` and a `PhysicsBody2D` `Core`.
+
+## Unity state, hit and shape types
+
+| Type | Members |
+|---|---|
+| `public struct NetworkBodyState` | Fields `Vector3 Position`, `Quaternion Rotation`, `Vector3 Velocity`, `Vector3 AngularVelocity` |
+| `public struct NetworkBodyState2D` | Fields `Vector2 Position`, `float Rotation`, `Vector2 Velocity`, `float AngularVelocity` |
+| `public readonly struct NetworkRayHit` | `BodyHandle Body`, `Vector3 Point`, `Vector3 Normal`, `float Distance` |
+| `public readonly struct NetworkRayHit2D` | `BodyHandle Body`, `Vector2 Point`, `Vector2 Normal`, `float Distance` |
+| `public static class NetworkShapes` | `BodyShape Box(Vector3 halfExtents)`, `BodyShape2D Box2D(Vector2 halfExtents)` |
+
+All five are in `Fomoxa.Unity`. [`NetworkContactPoint` and `NetworkContactPoint2D`](components.md#contact-components) are described with the contact components.
+
+## Query extensions
+
+`public static class NetworkPhysicsQueries` in `Fomoxa.Unity` adds the queries of `IPhysicsWorld` and `IPhysicsWorld2D` with UnityEngine types, so they work with every world, Rapier's included:
+
+| Method on `IPhysicsWorld` | Description |
+|---|---|
+| `bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, in QueryFilter filter, out NetworkRayHit hit)` | First hit along a ray; an overload without `filter` uses `QueryFilter.All` |
+| `bool ShapeCast(in BodyShape shape, Vector3 position, Quaternion rotation, Vector3 direction, float maxDistance, in QueryFilter filter, out NetworkRayHit hit)` | First hit of a box, sphere or capsule moving along a direction |
+| `int Overlap(in BodyShape shape, Vector3 position, Quaternion rotation, in QueryFilter filter, BodyHandle[] results)` | Bodies overlapping a box, sphere or capsule; returns how many were written |
+| `int Overlap(Vector3 center, float radius, BodyHandle[] results)` | Bodies overlapping a sphere, with `QueryFilter.All` |
+
+The methods on `IPhysicsWorld2D` take `Vector2` values, a `float` rotation, `BodyShape2D` and `NetworkRayHit2D`; the radius overload uses a circle.
 
 ## PhysicsBody
 
@@ -123,12 +171,12 @@ A capsule's `HalfHeight` is half the distance between the centers of its two end
 | `PhysicsBackend Backend` | The backend the component implements |
 | `bool Simulates` | Whether the manager steps physics with this component |
 | `void WorldsOf(Scene scene, List<IPhysicsSimulation> worlds)` | The worlds of a scene |
-| `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | What `NetworkObject.Body` and `Body2D` return |
-| `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | What `NetworkObject.Bodies` and `Bodies2D` return |
+| `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | The bodies that `NetworkObject.Body` and `Body2D` wrap |
+| `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | The bodies that `NetworkObject.Bodies` and `Bodies2D` wrap |
 | `StaticGroup AddStatic(Scene scene, IReadOnlyList<ColliderDesc> colliders)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | Adds a group of static colliders to a scene |
 | `StaticGroup AddStatic(GameObject root)`, `AddStatic2D(GameObject root)` | Adds the colliders under a GameObject |
 | `void RemoveStatic(StaticGroup group)` | Removes a group; removing it twice does nothing |
-| `PhysicsBody AddBody(Scene scene, in BodyDesc body)`, `PhysicsBody2D AddBody2D(Scene, in BodyDesc2D)` | Adds a body that no network object owns |
+| `PhysicsBody AddBody(Scene scene, in BodyDesc body)`, `PhysicsBody2D AddBody2D(Scene, in BodyDesc2D)` | Adds a body that no network object owns; `new NetworkBody(…)` views it with Unity types |
 | `void RemoveBody(PhysicsBody body)`, `void RemoveBody2D(PhysicsBody2D body)` | Removes such a body |
 
 The other abstract members (`Begin`, `Release`, `HistoryOf`, `PlaceProxy`, `EndProxy`, `ForgetDestroyedProxies`, `WorldsToStep`, `TrackerOf`) are called by the `NetworkManager`.

@@ -77,7 +77,7 @@ private void Land(Collider2D other)
 }
 ```
 
-Disabled and trigger colliders of the component add no points, and a trigger `other` has none. Under `RigidbodyPhysics`, `NetworkCollision2D` reads the contacts of Unity's 2D physics, while `NetworkCollision` returns no points, because Unity reports 3D contact points only inside collision callbacks. The Rapier backend returns points in 3D and 2D. To ask about two bodies instead of two colliders, use [`PhysicsBody.GetContactPoints`](queries.md#contact-points).
+Disabled and trigger colliders of the component add no points, and a trigger `other` has none. Under `RigidbodyPhysics`, `NetworkCollision2D` reads the contacts of Unity's 2D physics, while `NetworkCollision` returns no points, because Unity reports 3D contact points only inside collision callbacks. The Rapier backend returns points in 3D and 2D. To ask about two bodies instead of two colliders, use [`NetworkBody.GetContactPoints`](queries.md#contact-points).
 
 ## Configuration
 

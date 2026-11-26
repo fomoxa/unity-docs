@@ -79,7 +79,7 @@
 ## Physics
 
 * [Tổng quan](physics/overview.md)
-* [PhysicsBody](physics/physics-body.md)
+* [NetworkBody](physics/physics-body.md)
 * [Truy vấn physics](physics/queries.md)
 * [Contact event](physics/contacts.md)
 * [Kiến trúc physics](physics/architecture.md)

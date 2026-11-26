@@ -1,6 +1,54 @@
 # Tham chiếu Physics API
 
-Trừ khi có ghi chú khác, các type trên trang này nằm trong namespace `Fomoxa.Networking.Simulation` và assembly `Fomoxa.Networking`, và vector cùng quaternion của chúng là các type `System.Numerics`. Các hướng dẫn [tổng quan physics](../physics/overview.md), [PhysicsBody](../physics/physics-body.md) và [kiến trúc physics](../physics/architecture.md) giải thích cách dùng chúng.
+Bốn mục đầu nói về các type trong `Fomoxa.Unity` mà code game dùng, với vector của UnityEngine. Trừ khi có ghi chú khác, các type còn lại trên trang này nằm trong namespace `Fomoxa.Networking.Simulation` và assembly `Fomoxa.Networking`, và vector cùng quaternion của chúng là các type `System.Numerics`. Các hướng dẫn [tổng quan physics](../physics/overview.md), [NetworkBody](../physics/physics-body.md) và [kiến trúc physics](../physics/architecture.md) giải thích cách dùng chúng.
+
+## NetworkBody <a href="#networkbody" id="networkbody"></a>
+
+`public readonly struct NetworkBody` trong `Fomoxa.Unity`, với constructor `NetworkBody(PhysicsBody core)`. Vector và quaternion của nó là type của UnityEngine; mỗi member đổi chúng rồi gọi `Core`.
+
+| Member | Type | Mô tả |
+|---|---|---|
+| `IsValid` | `bool` | World tồn tại và chứa body |
+| `Handle` | `BodyHandle` | Handle của body trong world của nó |
+| `Core` | `PhysicsBody` | Cùng body đó với type `System.Numerics` |
+| `Position` | `Vector3` | Đọc và ghi |
+| `Rotation` | `Quaternion` | Đọc và ghi |
+| `Velocity` | `Vector3` | Đọc và ghi; chỉ ghi vào body dynamic |
+| `AngularVelocity` | `Vector3` | Radian mỗi giây. Đọc và ghi; chỉ ghi vào body dynamic. |
+| `Mass` | `float` | |
+| `IsKinematic` | `bool` | |
+| `State` | `NetworkBodyState` | Đọc và ghi cả bốn cùng lúc |
+| `AddForce(Vector3 force)`, `AddImpulse(Vector3 impulse)`, `AddTorque(Vector3 torque)`, `AddTorqueImpulse(Vector3 torqueImpulse)`, `AddForceAtPoint(Vector3 force, Vector3 point)`, `AddImpulseAtPoint(Vector3 impulse, Vector3 point)` | `void` | Như trên `PhysicsBody` |
+| `GetContactPoints(BodyHandle other, List<NetworkContactPoint> into)` | `int` | Xoá `into`, thêm các điểm tiếp xúc với `other` (`default` cho geometry tĩnh) rồi trả về số điểm; một overload nhận `in QueryFilter filter` trước `into`. Ném `ArgumentNullException` khi danh sách là null |
+
+## NetworkBody2D <a href="#networkbody2d" id="networkbody2d"></a>
+
+`public readonly struct NetworkBody2D` trong `Fomoxa.Unity`, với constructor `NetworkBody2D(PhysicsBody2D core)`. Nó có cùng member với `NetworkBody`, nhưng vị trí, vận tốc, lực và điểm là `Vector2`, góc xoay là `float` theo radian, vận tốc góc là `float` theo radian mỗi giây, mô-men là `float`, cùng `NetworkBodyState2D`, `NetworkContactPoint2D` và `Core` kiểu `PhysicsBody2D`.
+
+## Type state, kết quả truy vấn và hình của Unity <a href="#unity-state-hit-and-shape-types" id="unity-state-hit-and-shape-types"></a>
+
+| Type | Member |
+|---|---|
+| `public struct NetworkBodyState` | Trường `Vector3 Position`, `Quaternion Rotation`, `Vector3 Velocity`, `Vector3 AngularVelocity` |
+| `public struct NetworkBodyState2D` | Trường `Vector2 Position`, `float Rotation`, `Vector2 Velocity`, `float AngularVelocity` |
+| `public readonly struct NetworkRayHit` | `BodyHandle Body`, `Vector3 Point`, `Vector3 Normal`, `float Distance` |
+| `public readonly struct NetworkRayHit2D` | `BodyHandle Body`, `Vector2 Point`, `Vector2 Normal`, `float Distance` |
+| `public static class NetworkShapes` | `BodyShape Box(Vector3 halfExtents)`, `BodyShape2D Box2D(Vector2 halfExtents)` |
+
+Cả năm nằm trong `Fomoxa.Unity`. [`NetworkContactPoint` và `NetworkContactPoint2D`](components.md#contact-components) được mô tả cùng các component contact.
+
+## Extension truy vấn <a href="#query-extensions" id="query-extensions"></a>
+
+`public static class NetworkPhysicsQueries` trong `Fomoxa.Unity` thêm các truy vấn của `IPhysicsWorld` và `IPhysicsWorld2D` với type của UnityEngine, nên chúng chạy với mọi world, kể cả world của Rapier:
+
+| Method trên `IPhysicsWorld` | Mô tả |
+|---|---|
+| `bool Raycast(Vector3 origin, Vector3 direction, float maxDistance, in QueryFilter filter, out NetworkRayHit hit)` | Lần trúng đầu tiên dọc theo tia; một overload không có `filter` dùng `QueryFilter.All` |
+| `bool ShapeCast(in BodyShape shape, Vector3 position, Quaternion rotation, Vector3 direction, float maxDistance, in QueryFilter filter, out NetworkRayHit hit)` | Lần trúng đầu tiên của hộp, cầu hoặc viên nang di chuyển theo một hướng |
+| `int Overlap(in BodyShape shape, Vector3 position, Quaternion rotation, in QueryFilter filter, BodyHandle[] results)` | Các body chồng lên hộp, cầu hoặc viên nang; trả về số đã ghi |
+| `int Overlap(Vector3 center, float radius, BodyHandle[] results)` | Các body chồng lên hình cầu, với `QueryFilter.All` |
+
+Các method trên `IPhysicsWorld2D` nhận giá trị `Vector2`, góc xoay `float`, `BodyShape2D` và `NetworkRayHit2D`; overload theo bán kính dùng hình tròn.
 
 ## PhysicsBody <a href="#physicsbody" id="physicsbody"></a>
 
@@ -123,12 +171,12 @@ public interface IPhysicsSimulation
 | `PhysicsBackend Backend` | Backend mà component hiện thực |
 | `bool Simulates` | Manager có step physics bằng component này hay không |
 | `void WorldsOf(Scene scene, List<IPhysicsSimulation> worlds)` | Các world của một scene |
-| `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | Thứ mà `NetworkObject.Body` và `Body2D` trả về |
-| `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | Thứ mà `NetworkObject.Bodies` và `Bodies2D` trả về |
+| `PhysicsBody BodyOf(NetworkObject)`, `PhysicsBody2D Body2DOf(NetworkObject)` | Các body mà `NetworkObject.Body` và `Body2D` bọc |
+| `IReadOnlyList<PhysicsBody> BodiesOf(NetworkObject)`, `IReadOnlyList<PhysicsBody2D> Bodies2DOf(NetworkObject)` | Các body mà `NetworkObject.Bodies` và `Bodies2D` bọc |
 | `StaticGroup AddStatic(Scene scene, IReadOnlyList<ColliderDesc> colliders)`, `AddStatic2D(Scene, IReadOnlyList<ColliderDesc2D>)` | Thêm một nhóm collider tĩnh vào một scene |
 | `StaticGroup AddStatic(GameObject root)`, `AddStatic2D(GameObject root)` | Thêm các collider dưới một GameObject |
 | `void RemoveStatic(StaticGroup group)` | Gỡ một nhóm; gỡ hai lần không làm gì |
-| `PhysicsBody AddBody(Scene scene, in BodyDesc body)`, `PhysicsBody2D AddBody2D(Scene, in BodyDesc2D)` | Thêm một body không thuộc network object nào |
+| `PhysicsBody AddBody(Scene scene, in BodyDesc body)`, `PhysicsBody2D AddBody2D(Scene, in BodyDesc2D)` | Thêm một body không thuộc network object nào; `new NetworkBody(…)` xem nó với type của Unity |
 | `void RemoveBody(PhysicsBody body)`, `void RemoveBody2D(PhysicsBody2D body)` | Gỡ body như vậy |
 
 Các member trừu tượng còn lại (`Begin`, `Release`, `HistoryOf`, `PlaceProxy`, `EndProxy`, `ForgetDestroyedProxies`, `WorldsToStep`, `TrackerOf`) do `NetworkManager` gọi.

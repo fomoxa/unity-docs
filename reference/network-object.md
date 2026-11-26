@@ -16,10 +16,10 @@
 | `DespawnWithOwner` | `bool` | Get and set. Despawn when the owner disconnects; otherwise the server takes ownership. |
 | `Visibility` | `NetworkVisibility` | Get and set. `Rule`, `Everyone` or `OwnerOnly`. |
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | The object's behaviours in behaviour index order; filled at spawn |
-| `Body` | `PhysicsBody` | The body of the `Rigidbody` on this GameObject, from the physics component of the `NetworkManager`; invalid when there is none or the object is not spawned |
-| `Body2D` | `PhysicsBody2D` | The body of the `Rigidbody2D` on this GameObject; invalid when its Simulated is off |
-| `Bodies` | `IReadOnlyList<PhysicsBody>` | Every body of the object, the body on this GameObject first; empty before the spawn. See [several bodies](../physics/overview.md#several-bodies) |
-| `Bodies2D` | `IReadOnlyList<PhysicsBody2D>` | The same for `Rigidbody2D` |
+| `Body` | `NetworkBody` | The body of the `Rigidbody` on this GameObject, from the physics component of the `NetworkManager`; invalid when there is none or the object is not spawned |
+| `Body2D` | `NetworkBody2D` | The body of the `Rigidbody2D` on this GameObject; invalid when its Simulated is off |
+| `Bodies` | `IReadOnlyList<NetworkBody>` | Every body of the object, the body on this GameObject first; empty before the spawn. See [several bodies](../physics/overview.md#several-bodies) |
+| `Bodies2D` | `IReadOnlyList<NetworkBody2D>` | The same for `Rigidbody2D` |
 
 ### NetworkVisibility
 
@@ -149,4 +149,4 @@ The collection types are in `Fomoxa.Networking`. Their operations and callbacks 
 | `RepeatedTicks` | `uint` | When repeated, the ticks since the reused input's tick; otherwise 0 |
 | `Replaying` | `bool` | The call is part of a replay on the owner's client |
 
-The other components are listed in the [components reference](components.md). The [ServerManager reference](server-manager.md) covers spawning and ownership, and the [physics API](physics.md) covers `PhysicsBody`.
+The other components are listed in the [components reference](components.md). The [ServerManager reference](server-manager.md) covers spawning and ownership, and the [physics API](physics.md) covers `NetworkBody`.

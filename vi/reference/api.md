@@ -20,6 +20,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport`, `SimulatedNetworkTransport` | Component | [Component](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Component | [Physics API](physics.md#physics-components) |
 | `UnityPhysicsWorld`, `UnityPhysicsWorld2D`, `BodyDescriptions` | Physics world, helper | [Physics API](physics.md#unity-worlds) |
+| `NetworkBody`, `NetworkBody2D`, `NetworkBodyState`, `NetworkBodyState2D`, `NetworkRayHit`, `NetworkRayHit2D`, `NetworkShapes`, `NetworkPhysicsQueries` | Struct, static class | [Physics API](physics.md#networkbody) |
 
 ## Fomoxa.Networking (tầng 1, assembly Fomoxa.Networking) <a href="#fomoxanetworking-layer-1-assembly-fomoxanetworking" id="fomoxanetworking-layer-1-assembly-fomoxanetworking"></a>
 

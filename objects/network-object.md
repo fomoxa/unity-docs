@@ -41,7 +41,7 @@ Put a `NetworkObject` on the root of every prefab that the server spawns, such a
 | `IsOwner` | True on the client that owns the object, including a host's client |
 | `IsSpawned` | True while spawned on the server or on a client of this process |
 | `Behaviours` | The object's `NetworkBehaviour` components, in behaviour index order |
-| `Body`, `Body2D` | The object's physics body, see [PhysicsBody](../physics/physics-body.md) |
+| `Body`, `Body2D` | The object's physics body, see [NetworkBody](../physics/physics-body.md) |
 
 `IsOwner` can only be true on a client. On a dedicated server it is always false, even for objects the server owns.
 

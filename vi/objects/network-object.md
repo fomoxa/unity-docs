@@ -41,7 +41,7 @@
 | `IsOwner` | True trên client sở hữu object, kể cả client của host |
 | `IsSpawned` | True khi đang spawn trên server hoặc trên một client của tiến trình này |
 | `Behaviours` | Các component `NetworkBehaviour` của object, theo thứ tự behaviour index |
-| `Body`, `Body2D` | Physics body của object, xem [PhysicsBody](../physics/physics-body.md) |
+| `Body`, `Body2D` | Physics body của object, xem [NetworkBody](../physics/physics-body.md) |
 
 `IsOwner` chỉ có thể true trên client. Trên dedicated server nó luôn false, kể cả với object do server sở hữu.
 

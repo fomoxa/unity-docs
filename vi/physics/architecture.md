@@ -1,12 +1,12 @@
 # Kiến trúc physics
 
-Trang này mô tả các interface physics ở tầng 1 và component physics của Unity ở tầng 2. Code game thường chỉ cần [`PhysicsBody`](physics-body.md), nên hãy đọc tiếp nếu muốn hiểu rollback hoạt động thế nào hoặc muốn dùng trực tiếp các interface.
+Trang này mô tả các interface physics ở tầng 1 và component physics của Unity ở tầng 2. Code game thường chỉ cần [`NetworkBody`](physics-body.md), nên hãy đọc tiếp nếu muốn hiểu rollback hoạt động thế nào hoặc muốn dùng trực tiếp các interface.
 
 ## Các tầng <a href="#layers" id="layers"></a>
 
 <figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Bảy tầng từ trên xuống. Code game, với apply, capture, restore và OnTick. API physics của Fomoxa: PhysicsBody, PhysicsBody2D và PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save và Load. IPhysicsWorld và IPhysicsWorld2D: body, lực và truy vấn. Ba tầng này là tầng 1, trong Fomoxa.Networking. Component physics, NetworkPhysics và RigidbodyPhysics, và hiện thực world, UnityPhysicsWorld và UnityPhysicsWorld2D, là tầng 2, trong Fomoxa.Unity. Dưới cùng là Unity với PhysicsScene và PhysicsScene2D. Tầng 1 không tham chiếu Unity, nên vector của nó là kiểu System.Numerics."><figcaption><p>Các tầng physics và assembly chứa chúng.</p></figcaption></figure>
 
-Tầng 1 không tham chiếu Unity, nên vector của nó là các type `System.Numerics`, và các world của Unity ánh xạ chúng sang physics của Unity.
+Tầng 1 không tham chiếu Unity, nên vector của nó là các type `System.Numerics`, và các world của Unity ánh xạ chúng sang physics của Unity. Tầng 2 đặt type của Unity lên trên cho code game: `NetworkBody`, `NetworkBody2D` và state của chúng, `NetworkRayHit` và `NetworkRayHit2D`, `NetworkShapes`, và các extension method truy vấn trong `NetworkPhysicsQueries`. Chúng đổi từng giá trị rồi gọi tầng 1.
 
 ## Quy tắc của một world <a href="#the-rule-of-a-world" id="the-rule-of-a-world"></a>
 
@@ -47,7 +47,7 @@ Cả hai interface đều kế thừa `IPhysicsSimulation`. Chúng tách riêng 
 
 Các interface dùng một tập nhỏ type dữ liệu. `BodyHandle` là một id mờ có `IsValid` là false với giá trị mặc định. `BodyKind` là một trong `Dynamic`, `Kinematic` và `Static`. Các hình dạng là `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) và `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). Một `ColliderDesc` hoặc `ColliderDesc2D` đặt một hình dạng kèm `ColliderMaterial`, layer và cờ trigger, còn `BodyDesc` và `BodyDesc2D` mô tả một body mới theo loại, các collider, vị trí, góc xoay, khối lượng và một `BodyMotion` hoặc `BodyMotion2D` (khóa trục, trọng lực, damping, va chạm liên tục). Các type còn lại là `BodyState` và `BodyState2D`, `RayHit` và `RayHit2D`, `QueryFilter`, cùng `ContactPointInfo` và `ContactPointInfo2D`. [Truy vấn physics](queries.md) mô tả các quy tắc mà mọi backend theo cho truy vấn và điểm tiếp xúc. [Tham chiếu physics API](../reference/physics.md) liệt kê member của chúng.
 
-`PhysicsBody` và `PhysicsBody2D` bọc một world và một handle, nên code game không phải làm việc với handle.
+`PhysicsBody` và `PhysicsBody2D` bọc một world và một handle, nên code không phải làm việc với handle. `NetworkBody` và `NetworkBody2D` bọc chúng thêm một lần với type của Unity, và property `Core` của chúng trả body tầng 1.
 
 ## PhysicsHistory <a href="#physicshistory" id="physicshistory"></a>
 

@@ -1,12 +1,12 @@
 # Physics architecture
 
-This page describes the physics interfaces in layer 1 and the Unity physics component in layer 2. Game code normally only needs [`PhysicsBody`](physics-body.md), so read on if you want to understand how rollback works or to use the interfaces directly.
+This page describes the physics interfaces in layer 1 and the Unity physics component in layer 2. Game code normally only needs [`NetworkBody`](physics-body.md), so read on if you want to understand how rollback works or to use the interfaces directly.
 
 ## Layers
 
 <figure><img src="../.gitbook/assets/diagrams/physics-stack.svg" alt="Seven levels from top to bottom. Game code, with apply, capture, restore and OnTick. The Fomoxa physics API: PhysicsBody, PhysicsBody2D and PhysicsHistory. IPhysicsSimulation: Step, CreateSnapshot, Save and Load. IPhysicsWorld and IPhysicsWorld2D: bodies, forces and queries. These three form layer 1, in Fomoxa.Networking. The physics component, NetworkPhysics and RigidbodyPhysics, and the world implementation, UnityPhysicsWorld and UnityPhysicsWorld2D, form layer 2, in Fomoxa.Unity. At the bottom is Unity with PhysicsScene and PhysicsScene2D. Layer 1 does not reference Unity, so its vectors are System.Numerics types."><figcaption><p>The physics layers and the assemblies they live in.</p></figcaption></figure>
 
-Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, and the Unity worlds map them to Unity's physics.
+Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, and the Unity worlds map them to Unity's physics. Layer 2 puts Unity types on top for game code: `NetworkBody`, `NetworkBody2D` and their states, `NetworkRayHit` and `NetworkRayHit2D`, `NetworkShapes`, and the query extension methods in `NetworkPhysicsQueries`. They convert each value and call layer 1.
 
 ## The rule of a world
 
@@ -47,7 +47,7 @@ Both interfaces extend `IPhysicsSimulation`. They are separate because their sta
 
 The interfaces use a small set of data types. `BodyHandle` is an opaque id whose `IsValid` is false for the default value. `BodyKind` is one of `Dynamic`, `Kinematic` and `Static`. The shapes are `BodyShape` (`Box`, `Sphere`, `Capsule`, `ConvexHull`, `TriangleMesh`) and `BodyShape2D` (`Box`, `Circle`, `Capsule`, `ConvexPolygon`, `Polyline`). A `ColliderDesc` or `ColliderDesc2D` places a shape with a `ColliderMaterial`, a layer and a trigger flag, and `BodyDesc` and `BodyDesc2D` describe a new body by kind, colliders, position, rotation, mass and a `BodyMotion` or `BodyMotion2D` (axis locks, gravity, damping, continuous collision). The remaining types are `BodyState` and `BodyState2D`, `RayHit` and `RayHit2D`, `QueryFilter`, and `ContactPointInfo` and `ContactPointInfo2D`. [Physics queries](queries.md) describes the rules every backend follows for queries and contact points. The [physics API reference](../reference/physics.md) lists their members.
 
-`PhysicsBody` and `PhysicsBody2D` wrap a world and a handle, so game code does not have to deal with handles.
+`PhysicsBody` and `PhysicsBody2D` wrap a world and a handle, so code does not have to deal with handles. `NetworkBody` and `NetworkBody2D` wrap them again with Unity types, and their `Core` property returns the layer 1 body.
 
 ## PhysicsHistory
 

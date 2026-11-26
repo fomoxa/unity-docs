@@ -30,7 +30,7 @@ Server chỉ đọc transform, nên bạn có thể di chuyển nó bằng bất
 
 Server đọc thường xuyên tới đâu là tuỳ physics backend. Với [Rapier](../rapier/overview.md), `NetworkTransform` trên GameObject của `NetworkObject` chỉ được đọc khi có gì đó làm nó đổi: Rapier báo body của object đang di chuyển, parent của nó di chuyển hoặc đổi sang parent khác, z của object 2D đổi, hoặc `Teleport()` được gọi. Khi không còn gì đổi, server đọc tiếp sau mỗi tick tới khi đã gửi bản settle, rồi thôi đọc. Mọi `NetworkTransform` khác được đọc sau mỗi tick: với `RigidbodyPhysics`, trên GameObject con, trên object không có body, và trên mọi object bật Sync Scale, vì body không quyết định scale.
 
-Khi Rapier mô phỏng một object, hãy di chuyển nó qua [PhysicsBody](../physics/physics-body.md) của nó. Rapier ghi pose của body vào `Transform` sau mỗi bước, nên vị trí chỉ đặt trên `Transform` sẽ bị ghi đè.
+Khi Rapier mô phỏng một object, hãy di chuyển nó qua [NetworkBody](../physics/physics-body.md) của nó. Rapier ghi pose của body vào `Transform` sau mỗi bước, nên vị trí chỉ đặt trên `Transform` sẽ bị ghi đè.
 
 ## Hành vi trên client <a href="#client-behavior" id="client-behavior"></a>
 
@@ -61,7 +61,7 @@ GetComponent<NetworkTransform>().Teleport();
 
 Client khi đó nhảy thẳng tới giá trị mới thay vì nội suy qua quãng đường, và bỏ qua các bản cập nhật có từ trước teleport mà tới muộn. `Teleport()` không làm gì trên client hoặc trước khi object được spawn.
 
-Với object có physics body, hãy đặt cả vị trí của body, như mô tả trong [PhysicsBody](../physics/physics-body.md#teleporting).
+Với object có physics body, hãy đặt cả vị trí của body, như mô tả trong [NetworkBody](../physics/physics-body.md#teleporting).
 
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 

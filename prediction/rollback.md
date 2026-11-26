@@ -21,30 +21,30 @@ private float velocityZ;
 
 protected override void OnApplyInput(InputContext context)
 {
-    var push = new System.Numerics.Vector3(x, 0f, z) * pushStrength;
+    Vector3 push = new Vector3(x, 0f, z) * pushStrength;
     NetworkObject.Body.AddImpulse(push);
 }
 
 protected override void OnCaptureState()
 {
-    BodyState body = NetworkObject.Body.State;
-    positionX = body.Position.X;
-    positionZ = body.Position.Z;
-    velocityX = body.Velocity.X;
-    velocityZ = body.Velocity.Z;
+    NetworkBodyState body = NetworkObject.Body.State;
+    positionX = body.Position.x;
+    positionZ = body.Position.z;
+    velocityX = body.Velocity.x;
+    velocityZ = body.Velocity.z;
 }
 
 protected override void OnRestoreState()
 {
-    PhysicsBody body = NetworkObject.Body;
-    BodyState current = body.State;
-    current.Position = new System.Numerics.Vector3(positionX, current.Position.Y, positionZ);
-    current.Velocity = new System.Numerics.Vector3(velocityX, current.Velocity.Y, velocityZ);
+    NetworkBody body = NetworkObject.Body;
+    NetworkBodyState current = body.State;
+    current.Position = new Vector3(positionX, current.Position.y, positionZ);
+    current.Velocity = new Vector3(velocityX, current.Velocity.y, velocityZ);
     body.State = current;
 }
 ```
 
-`x` and `z` are the input fields of the [overview](overview.md), and `OnGatherInput` fills them as there. `BodyState` and `PhysicsBody` are in `Fomoxa.Networking.Simulation`. The example moves on the ground plane and leaves the vertical axis to gravity.
+`x` and `z` are the input fields of the [overview](overview.md), and `OnGatherInput` fills them as there. `NetworkBody` and `NetworkBodyState` are in `Fomoxa.Unity` and use Unity's `Vector3`. The example moves on the ground plane and leaves the vertical axis to gravity.
 
 ## Timeline
 
@@ -84,4 +84,4 @@ The physics engine's contact data is not saved, so a replay can differ from the 
 
 The server does not save or load physics and simply steps each world once per tick. A host does not predict its own objects and so never rolls back.
 
-Rollback extends [reconciliation](reconciliation.md) to physics. The [physics overview](../physics/overview.md) and [PhysicsBody](../physics/physics-body.md) describe the bodies involved, and [deterministic simulation](../concepts/deterministic-simulation.md) explains why rollback of Unity physics is approximate.
+Rollback extends [reconciliation](reconciliation.md) to physics. The [physics overview](../physics/overview.md) and [NetworkBody](../physics/physics-body.md) describe the bodies involved, and [deterministic simulation](../concepts/deterministic-simulation.md) explains why rollback of Unity physics is approximate.

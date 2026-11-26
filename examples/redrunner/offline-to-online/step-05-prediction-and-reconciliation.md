@@ -20,7 +20,7 @@ The client's result can then drift from the server's, for example when a packet 
 - [Prediction overview](../../../prediction/overview.md)
 - [Reconciliation](../../../prediction/reconciliation.md)
 - [Rollback with physics](../../../prediction/rollback.md)
-- [PhysicsBody2D](../../../physics/physics-body.md#physicsbody2d)
+- [PhysicsBody2D](../../../reference/physics.md#physicsbody2d)
 - [Three tick numbers](../../../concepts/tick.md#three-tick-numbers)
 
 ## Design

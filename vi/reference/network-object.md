@@ -16,10 +16,10 @@
 | `DespawnWithOwner` | `bool` | Đọc và ghi. Despawn khi owner ngắt kết nối; nếu không, server nhận ownership. |
 | `Visibility` | `NetworkVisibility` | Đọc và ghi. `Rule`, `Everyone` hoặc `OwnerOnly`. |
 | `Behaviours` | `IReadOnlyList<NetworkBehaviour>` | Các behaviour của object theo thứ tự behaviour index; được điền khi spawn |
-| `Body` | `PhysicsBody` | Body của `Rigidbody` trên GameObject này, lấy từ component physics của `NetworkManager`; không hợp lệ khi không có hoặc object chưa spawn |
-| `Body2D` | `PhysicsBody2D` | Body của `Rigidbody2D` trên GameObject này; không hợp lệ khi nó tắt Simulated |
-| `Bodies` | `IReadOnlyList<PhysicsBody>` | Mọi body của object, body trên GameObject này đứng đầu; rỗng trước khi spawn. Xem [nhiều body](../physics/overview.md#several-bodies) |
-| `Bodies2D` | `IReadOnlyList<PhysicsBody2D>` | Như trên với `Rigidbody2D` |
+| `Body` | `NetworkBody` | Body của `Rigidbody` trên GameObject này, lấy từ component physics của `NetworkManager`; không hợp lệ khi không có hoặc object chưa spawn |
+| `Body2D` | `NetworkBody2D` | Body của `Rigidbody2D` trên GameObject này; không hợp lệ khi nó tắt Simulated |
+| `Bodies` | `IReadOnlyList<NetworkBody>` | Mọi body của object, body trên GameObject này đứng đầu; rỗng trước khi spawn. Xem [nhiều body](../physics/overview.md#several-bodies) |
+| `Bodies2D` | `IReadOnlyList<NetworkBody2D>` | Như trên với `Rigidbody2D` |
 
 ### NetworkVisibility <a href="#networkvisibility" id="networkvisibility"></a>
 
@@ -149,4 +149,4 @@ Các type collection nằm trong `Fomoxa.Networking`. Thao tác và callback c�
 | `RepeatedTicks` | `uint` | Khi bị lặp, số tick kể từ tick của input được dùng lại; ngoài ra là 0 |
 | `Replaying` | `bool` | Lời gọi là một phần của lần replay trên client của owner |
 
-Các component khác được liệt kê trong [tham chiếu component](components.md). [Tham chiếu ServerManager](server-manager.md) nói về spawn và ownership, và [physics API](physics.md) nói về `PhysicsBody`.
+Các component khác được liệt kê trong [tham chiếu component](components.md). [Tham chiếu ServerManager](server-manager.md) nói về spawn và ownership, và [physics API](physics.md) nói về `NetworkBody`.

@@ -20,7 +20,7 @@ Kết quả của client sau đó có thể lệch khỏi kết quả của serv
 - [Tổng quan prediction](../../../prediction/overview.md)
 - [Reconciliation](../../../prediction/reconciliation.md)
 - [Rollback với physics](../../../prediction/rollback.md)
-- [PhysicsBody2D](../../../physics/physics-body.md#physicsbody2d)
+- [PhysicsBody2D](../../../reference/physics.md#physicsbody2d)
 - [Ba số tick](../../../concepts/tick.md#three-tick-numbers)
 
 ## Thiết kế <a href="#design" id="design"></a>

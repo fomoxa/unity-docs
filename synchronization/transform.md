@@ -30,7 +30,7 @@ The server only reads the transform, so you can move it any way you like, whethe
 
 How often it reads depends on the physics backend. With [Rapier](../rapier/overview.md), a `NetworkTransform` on the GameObject of the `NetworkObject` is read only when something changed it: Rapier reports the object's body moving, its parent moved or changed, the z of a 2D object changed, or `Teleport()` was called. Once nothing changes any more, the server keeps reading it after every tick until it has sent the settle, then stops reading it. Every other `NetworkTransform` is read after every tick: with `RigidbodyPhysics`, on a child GameObject, on an object without a body, and on any object with Sync Scale on, because the body does not decide the scale.
 
-When Rapier simulates an object, move it through its [PhysicsBody](../physics/physics-body.md). Rapier writes the body's pose to the `Transform` after every step, so a position set on the `Transform` alone is overwritten.
+When Rapier simulates an object, move it through its [NetworkBody](../physics/physics-body.md). Rapier writes the body's pose to the `Transform` after every step, so a position set on the `Transform` alone is overwritten.
 
 ## Client behavior
 
@@ -61,7 +61,7 @@ GetComponent<NetworkTransform>().Teleport();
 
 Clients then jump to the new values instead of interpolating across the distance, and ignore updates from before the teleport that arrive late. `Teleport()` does nothing on a client or before the object has spawned.
 
-For an object with a physics body, set the body's position as well, as described in [PhysicsBody](../physics/physics-body.md#teleporting).
+For an object with a physics body, set the body's position as well, as described in [NetworkBody](../physics/physics-body.md#teleporting).
 
 ## Configuration
 

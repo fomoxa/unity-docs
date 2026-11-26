@@ -77,7 +77,7 @@ private void Land(Collider2D other)
 }
 ```
 
-Collider đang tắt và trigger collider của component không góp điểm nào, và `other` là trigger thì không có điểm. Dưới `RigidbodyPhysics`, `NetworkCollision2D` đọc tiếp xúc của physics 2D trong Unity, còn `NetworkCollision` không trả điểm nào, vì Unity chỉ báo điểm tiếp xúc 3D bên trong callback va chạm. Backend Rapier trả điểm ở cả 3D và 2D. Để hỏi về hai body thay vì hai collider, hãy dùng [`PhysicsBody.GetContactPoints`](queries.md#contact-points).
+Collider đang tắt và trigger collider của component không góp điểm nào, và `other` là trigger thì không có điểm. Dưới `RigidbodyPhysics`, `NetworkCollision2D` đọc tiếp xúc của physics 2D trong Unity, còn `NetworkCollision` không trả điểm nào, vì Unity chỉ báo điểm tiếp xúc 3D bên trong callback va chạm. Backend Rapier trả điểm ở cả 3D và 2D. Để hỏi về hai body thay vì hai collider, hãy dùng [`NetworkBody.GetContactPoints`](queries.md#contact-points).
 
 ## Cấu hình <a href="#configuration" id="configuration"></a>
 
