@@ -14,7 +14,8 @@ Các type của backend console nằm trong namespace `Fomoxa.Networking.Standal
 |---|---|---|
 | `PrefabId` | `uint` | Prefab id đưa vào constructor; 0 với scene object |
 | `SceneObjectId` | `ulong` | Scene object id của một scene object; nếu không thì 0 |
-| `SceneId` | `uint` | Đọc và ghi. Scene mà entity thuộc về; 0 nếu không có |
+| `Scene` | `NetworkScene` | Đọc và ghi. Bản network scene mà entity thuộc về; `default` nếu không có |
+| `SceneId` | `uint` | Đọc và ghi. Scene có physics world mà entity dùng khi `Scene` là `default`; trường hợp còn lại backend đặt nó theo `Scene` |
 | `DespawnWithOwner` | `bool` | Đọc và ghi; mặc định true |
 | `Visibility` | `NetworkVisibility` | Đọc và ghi; mặc định `Rule` |
 | `EntityBehaviours` | `IReadOnlyList<EntityBehaviour>` | Các behaviour, theo thứ tự behaviour index |
@@ -78,10 +79,10 @@ Trên client console, factory phải trả về một entity chưa spawn.
 
 | Interface | Namespace | Vai trò |
 |---|---|---|
-| `IServerEntityBackend` | `Fomoxa.Networking.Objects` | Kiểm tra spawn, cho fingerprint và scene id, chuẩn bị, kích hoạt và kết thúc entity trên server |
-| `IServerSceneHost` | `Fomoxa.Networking.Objects` | Load và unload scene trên server, đưa ra scene object của boot scene, liệt kê scene object của một scene |
+| `IServerEntityBackend` | `Fomoxa.Networking.Objects` | Kiểm tra spawn, cho fingerprint và bản network scene của một entity, chuẩn bị, kích hoạt và kết thúc entity trên server |
+| `IServerSceneHost` | `Fomoxa.Networking.Objects` | Load và unload các bản scene trên server, đưa ra scene object của boot scene, liệt kê scene object của một bản |
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Tạo entity cho các lần spawn, đặt scene object, kết thúc entity và ẩn hoặc hiện chúng trên host |
-| `ISceneHost` | `Fomoxa.Networking.Objects` | Load và unload scene trên client |
+| `ISceneHost` | `Fomoxa.Networking.Objects` | Load và unload các bản scene trên client |
 | `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | Các world và history của entity được dự đoán, proxy, và lúc bắt đầu, kết thúc một lần sửa; `EndCorrection(entity, tick)` nhận tick của state bị sửa |
 | `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics cho vòng tick, physics theo scene id cho backend console, và phần báo entity vừa di chuyển (không bắt buộc) để server bỏ qua transform đứng yên |
 

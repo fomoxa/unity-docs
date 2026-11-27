@@ -1,36 +1,42 @@
 # Network scenes
 
-A network scene is a scene that the server loads additively, both on itself and on selected clients. A scene can be global, meaning it is loaded for every client, or loaded only for chosen peers, such as the players inside one dungeon. Objects in a network scene, including objects spawned into it, only reach peers that have loaded it.
+A network scene is a scene that the server loads additively, both on itself and on selected clients. Each load creates an instance of the scene asset, and the server can hold several instances of one asset at the same time, such as one copy of a dungeon for each group of players. An instance is either global, meaning every client loads it, or loaded only for chosen peers. Objects in an instance, including objects spawned into it, only reach peers that have loaded that instance.
 
 The scene a game starts with is not a network scene. Both sides open it the usual way, and its scene objects are visible to every peer that passes the observer rules.
 
 ## Scene ids
 
-The server and the clients identify a network scene by its scene id, a 32-bit hash of the scene asset's GUID. The Editor writes the ids into two files. `FomoxaSceneList.asset` holds the id and path of every scene in the Build Profiles scene list and is refreshed whenever that list or a scene asset changes. `FomoxaScenes.cs` holds a constant `<SceneName>Id` for every scene asset under `Assets`, including scenes outside the build list.
+A scene id names a scene asset: it is a 32-bit hash of the asset's GUID. The Editor writes the ids into two files. `FomoxaSceneList.asset` holds the id and path of every scene in the Build Profiles scene list and is refreshed whenever that list or a scene asset changes. `FomoxaScenes.cs` holds a constant `<SceneName>Id` for every scene asset under `Assets`, including scenes outside the build list.
 
 Assign `FomoxaSceneList.asset` to Collected Scenes on the `NetworkManager`. The manager then registers each listed scene with a loader that calls `SceneManager.LoadSceneAsync(path, LoadSceneMode.Additive)` and `UnloadSceneAsync`, and `NetworkManager.Scenes.IdOf("Assets/Scenes/Arena.unity")` returns the id of a listed scene, or 0 for one that is not listed.
+
+## Instances
+
+A `NetworkScene` names one loaded instance. The server hands out instance ids counting up from 1 and never reuses one while it runs, so an instance that was unloaded is not confused with a later instance of the same asset. `default(NetworkScene)` means no network scene. The load calls take scene ids and return `NetworkScene` values, and every other scene call takes a `NetworkScene`.
 
 ## Load a scene for everyone
 
 ```csharp
-manager.ServerManager.Scenes.LoadGlobal(new[] { FomoxaScenes.ArenaId });
+NetworkScene arena = manager.ServerManager.Scenes.LoadGlobal(new[] { FomoxaScenes.ArenaId })[0];
 ```
 
-The server starts loading the scene and, in the same call, tells every started peer to load it, so the server and the clients load in parallel. A peer that connects later loads every global scene when it starts. `LoadGlobal(sceneIds, replace: true)` unloads the current global scenes before loading the new ones.
+The server starts loading the scene and, in the same call, tells every started peer to load it, so the server and the clients load in parallel. A peer that connects later loads every global scene when it starts. A scene asset has at most one global instance: calling `LoadGlobal` for an asset that already has one returns that instance and sends nothing. `LoadGlobal(sceneIds, replace: true)` unloads the current global instances before loading the new ones.
 
-`UnloadGlobal(sceneIds)` unloads global scenes and throws for an id that is not a global scene.
+`UnloadGlobal(scenes)` unloads global instances and throws for one that is not global.
 
 ## Load a scene for some peers
 
 ```csharp
-int added = manager.ServerManager.Scenes.LoadForPeers(FomoxaScenes.DungeonId, new[] { peerA, peerB });
+NetworkScene dungeon = manager.ServerManager.Scenes.Load(FomoxaScenes.DungeonId, new[] { peerA, peerB });
 ```
 
-`LoadForPeers` returns the number of peers it added, skipping peers that are not started or already have the scene. The server loads the scene for itself the first time any peer gets it.
+`Load` always creates a new instance, even when the asset already has one, so two groups that each call it get two separate dungeons. The list of peers can be empty. Peers that are not started are skipped. Keep the returned `NetworkScene` with your room or match, because the later calls need it.
 
-`UnloadForPeers(sceneId, peerIds)` removes the scene from those peers, and once the last peer is removed, the server despawns the scene's objects and unloads it. `Unload(sceneId)` removes a per-peer scene from every peer at once.
+`AddPeers(dungeon, peerIds)` and `RemovePeers(dungeon, peerIds)` change who has the instance and return how many peers they added or removed. A peer that is removed gets the despawns of the instance's objects, then the unload. The instance stays loaded on the server even when no peer has it any more, and when its last peer disconnects. `Unload(dungeon)` despawns its objects, unloads it on its peers and then unloads it on the server.
 
-A scene is either global or per peer, never both. `LoadForPeers` throws for a global scene, and `LoadGlobal` with a per-peer scene turns it into a global one.
+A global instance and a per-peer instance are always two different instances. `AddPeers`, `RemovePeers` and `Unload` throw for a global instance, and `UnloadGlobal` throws for a per-peer one.
+
+Every load call takes an optional `ScenePhysics`. With the default, `Shared`, the instance uses the default physics world, so a scene asset can have only one `Shared` instance at a time, and a second instance needs `ScenePhysics.Own`. Loading a `Shared` instance of an asset whose previous instance is still unloading waits until that unload has finished.
 
 ## Objects in network scenes
 
@@ -39,39 +45,54 @@ sequenceDiagram
     participant Code as Your code
     participant Server
     participant Client as Client of peer A
-    Code->>Server: LoadForPeers(DungeonId, peerA)
+    Code->>Server: Load(DungeonId, peerA)
     Server->>Client: scene load
     Note over Server: loads Dungeon additively,<br/>then spawns its scene objects
     Note over Client: loads Dungeon additively
     Client->>Server: scene loaded
     Note over Server: peer A now passes the scene check,<br/>its observers are rebuilt
-    Server->>Client: spawns of the objects in Dungeon it observes
+    Server->>Client: spawns of the objects in that instance it observes
 ```
 
-When the server finishes loading a network scene, it spawns the scene objects in it, and when it unloads the scene, it despawns every object in it.
+When the server finishes loading an instance, it spawns the scene objects in it, and when it unloads the instance, it despawns every object in it. Each instance has its own copies of the scene objects, so the same scene object id can be spawned once in every instance.
 
-An object the server spawns into a network scene, by moving it there before `Spawn`, only reaches peers that have loaded the scene, as shown in [spawning](spawning.md#spawning-into-a-network-scene). A peer starts observing such an object only after its client reports that it has finished loading the scene.
+An object the server spawns into an instance, by moving it into that instance's `Scene` before `Spawn`, only reaches peers that have loaded the instance, as shown in [spawning](spawning.md#spawning-into-a-network-scene). A peer starts observing such an object only after its client reports that it has finished loading the instance.
 
 ## Server events and queries
 
 | Member | Meaning |
 |---|---|
-| `OnLoaded(uint sceneId)` | The server finished loading a network scene |
-| `OnLoadFailed(uint sceneId, Exception exception)` | The server could not load it; the exception is also logged |
-| `Global` | The global scene ids |
-| `Contains(sceneId)` | The scene is global or loaded for some peer |
-| `IsGlobal(sceneId)` | The scene is global |
-| `HasLoaded(peerId, sceneId)` | The peer's client reported the scene as loaded |
-| `PeersOf(sceneId)` | Peers that have the scene |
-| `TryGetScene(sceneId, out Scene scene)` | The Unity `Scene` the server loaded |
+| `OnLoaded(NetworkScene scene)` | The server finished loading an instance |
+| `OnLoadFailed(NetworkScene scene, Exception exception)` | The server could not load it; the exception is also logged |
+| `OnUnloaded(NetworkScene scene)` | The server finished unloading an instance |
+| `OnPeerLoaded(ulong peerId, NetworkScene scene)` | A peer's client reported an instance as loaded |
+| `Global` | The global instances |
+| `Contains(scene)` | The instance exists |
+| `IsGlobal(scene)` | The instance is global |
+| `HasLoaded(peerId, scene)` | The peer's client reported the instance as loaded |
+| `PeersOf(scene)` | Peers that have the instance |
+| `ScenesOf(peerId)` | Instances the peer has |
+| `InstancesOf(sceneId)` | Instances of a scene asset |
+| `SceneIdOf(scene)` | The scene id of an instance, or 0 |
+| `TryGetScene(scene, out Scene unityScene)` | The Unity `Scene` the server loaded for the instance |
 
 All of these members are on `ServerManager.Scenes`.
 
 ## On the client
 
-The client loads and unloads scenes one at a time, in the order the server asked for them, and reports each finished load to the server. If a load fails, the client logs the exception and stops with `PrefabMismatch`, raising `OnObjectMismatch` with the kind `UnknownScene`. When the connection stops, the client keeps the scenes it has loaded.
+The client loads and unloads instances one at a time, in the order the server asked for them, and reports each finished load to the server. If a load fails, the client logs the exception and stops with `PrefabMismatch`, raising `OnObjectMismatch` with the kind `UnknownScene`. When the connection stops, the client keeps the instances it has loaded. After a reconnect it keeps an instance only when the server lists it again with the same instance id, scene id and physics mode, and replaces it otherwise.
 
-A host's client uses the scenes the server loaded instead of loading them again.
+`ClientManager.Scenes` has the client side of the queries and events:
+
+| Member | Meaning |
+|---|---|
+| `OnLoadStarted(NetworkScene scene, uint sceneId)` | The client started loading an instance |
+| `OnLoaded(NetworkScene scene)` | The client finished loading an instance |
+| `OnUnloaded(NetworkScene scene)` | The client finished unloading an instance |
+| `SceneIdOf(scene)` | The scene id of an instance the client has or is loading, or 0 |
+| `TryGetScene(scene, out Scene unityScene)` | The Unity `Scene` the client loaded for the instance |
+
+A host's client uses the instances the server loaded instead of loading them again, and its `TryGetScene` returns the server's `Scene`.
 
 ## Custom loaders
 
@@ -102,10 +123,10 @@ public sealed class ArenaLoader : ISceneLoader
 manager.Scenes.Register(FomoxaScenes.ArenaId, new ArenaLoader());
 ```
 
-A loader calls `loaded` with the loaded scene or `failed` with an exception, and calls `unloaded` once unloading is done. Register it before the server or the client needs the scene, because `LoadGlobal` and `LoadForPeers` throw `scene 0x... is not in the scene registry` for an unregistered id. Scene id 0 cannot be registered.
+A loader calls `loaded` with the loaded scene or `failed` with an exception, and calls `unloaded` once unloading is done. Register it before the server or the client needs the scene, because `LoadGlobal` and `Load` throw `scene 0x... is not in the scene registry` for an unregistered id. Scene id 0 cannot be registered.
 
 ## Limitations
 
-Each side loads a given scene asset at most once at a time. All scene loading is additive, and the package neither switches the active scene nor unloads the starting scene.
+All scene loading is additive, and the package neither switches the active scene nor unloads the starting scene. A peer can have several instances, including two instances of the same asset.
 
 Network scenes take part in the [observer](observers.md) decision and in [spawning](spawning.md), and the [ServerManager reference](../reference/server-manager.md) lists the scene members.

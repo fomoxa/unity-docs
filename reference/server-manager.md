@@ -77,24 +77,30 @@ A peer leaves all its groups when it disconnects, an object leaves all its group
 
 ## Scenes
 
-The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Networking` with these members:
+The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Networking` with these members. A `NetworkScene` is a readonly struct in `Fomoxa.Networking` that names one loaded instance; its `Id` is the raw value, and `default` means no network scene. `ScenePhysics` is an enum with `Shared` and `Own`.
 
 | Member | Description |
 |---|---|
-| `void LoadGlobal(IReadOnlyList<uint> sceneIds, bool replace = false)` | Loads scenes for every peer; `replace` unloads the current global scenes first. Throws for an unregistered id. |
-| `void UnloadGlobal(IReadOnlyList<uint> sceneIds)` | Unloads global scenes. Throws for an id that is not global. |
-| `int LoadForPeers(uint sceneId, IReadOnlyList<ulong> peerIds)` | Loads a scene for some peers; returns how many were added. Throws for a global scene or an unregistered id. |
-| `int UnloadForPeers(uint sceneId, IReadOnlyList<ulong> peerIds)` | Removes a per-peer scene from some peers; returns how many were removed |
-| `void Unload(uint sceneId)` | Removes a per-peer scene from every peer |
-| `IReadOnlyList<uint> Global` | Global scene ids |
-| `bool Contains(uint sceneId)`, `bool IsGlobal(uint sceneId)` | Whether the scene is in use, and whether it is global |
-| `bool HasLoaded(ulong peerId, uint sceneId)` | Whether the peer reported the scene as loaded |
-| `IReadOnlyCollection<ulong> PeersOf(uint sceneId)` | Peers that have the scene |
-| `bool TryGetScene(uint sceneId, out Scene scene)` | The `Scene` the server loaded; an extension method in `Fomoxa.Unity` |
-| `event Action<uint> OnLoaded` | The server finished loading a scene |
-| `event Action<uint, Exception> OnLoadFailed` | The server failed to load a scene |
+| `IReadOnlyList<NetworkScene> LoadGlobal(IReadOnlyList<uint> sceneIds, bool replace = false, ScenePhysics physics = ScenePhysics.Shared)` | Loads scenes for every peer and returns their global instances, one for each id; an asset that already has a global instance returns it. `replace` unloads the current global instances first. Throws for an unregistered id. |
+| `void UnloadGlobal(IReadOnlyList<NetworkScene> scenes)` | Unloads global instances. Throws for an instance that is not global. |
+| `NetworkScene Load(uint sceneId, IReadOnlyList<ulong> peerIds, ScenePhysics physics = ScenePhysics.Shared)` | Creates a new instance for some peers, which may be none. Throws for an unregistered id. |
+| `int AddPeers(NetworkScene scene, IReadOnlyList<ulong> peerIds)` | Gives a per-peer instance to more peers; returns how many were added |
+| `int RemovePeers(NetworkScene scene, IReadOnlyList<ulong> peerIds)` | Removes a per-peer instance from some peers; returns how many were removed. The instance stays loaded. |
+| `void Unload(NetworkScene scene)` | Unloads a per-peer instance from its peers and from the server |
+| `IReadOnlyList<NetworkScene> Global` | Global instances |
+| `bool Contains(NetworkScene scene)`, `bool IsGlobal(NetworkScene scene)` | Whether the instance exists, and whether it is global |
+| `bool HasLoaded(ulong peerId, NetworkScene scene)` | Whether the peer reported the instance as loaded |
+| `IReadOnlyCollection<ulong> PeersOf(NetworkScene scene)` | Peers that have the instance |
+| `IReadOnlyList<NetworkScene> ScenesOf(ulong peerId)` | Instances the peer has |
+| `IReadOnlyList<NetworkScene> InstancesOf(uint sceneId)` | Instances of a scene asset |
+| `uint SceneIdOf(NetworkScene scene)` | The scene id of an instance; 0 when the instance does not exist |
+| `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | The `Scene` the server loaded for the instance; an extension method in `Fomoxa.Unity` |
+| `event Action<NetworkScene> OnLoaded` | The server finished loading an instance |
+| `event Action<NetworkScene, Exception> OnLoadFailed` | The server failed to load an instance |
+| `event Action<NetworkScene> OnUnloaded` | The server finished unloading an instance |
+| `event Action<ulong, NetworkScene> OnPeerLoaded` | A peer reported an instance as loaded |
 
-The scene methods throw `InvalidOperationException` while the server is stopped.
+An unknown instance, or an instance of the wrong kind for the call, throws `ArgumentException`. A second `Shared` instance of a scene asset throws `ArgumentException`; give it `ScenePhysics.Own`. The scene methods throw `InvalidOperationException` while the server is stopped.
 
 ## Messages
 

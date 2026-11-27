@@ -77,24 +77,30 @@ Peer rời mọi nhóm của nó khi ngắt kết nối, object rời mọi nhó
 
 ## Scene <a href="#scenes" id="scenes"></a>
 
-Property `Scenes` trả về một `NetworkScenes`, type trong `Fomoxa.Networking` có các member sau:
+Property `Scenes` trả về một `NetworkScenes`, type trong `Fomoxa.Networking` có các member sau. `NetworkScene` là một readonly struct trong `Fomoxa.Networking` chỉ một bản đã load; `Id` là giá trị thô, và `default` nghĩa là không có network scene. `ScenePhysics` là enum có `Shared` và `Own`.
 
 | Member | Mô tả |
 |---|---|
-| `void LoadGlobal(IReadOnlyList<uint> sceneIds, bool replace = false)` | Load scene cho mọi peer; `replace` unload các global scene hiện tại trước. Ném exception với id chưa đăng ký. |
-| `void UnloadGlobal(IReadOnlyList<uint> sceneIds)` | Unload các global scene. Ném exception với id không phải global. |
-| `int LoadForPeers(uint sceneId, IReadOnlyList<ulong> peerIds)` | Load một scene cho một số peer; trả về số peer đã thêm. Ném exception với global scene hoặc id chưa đăng ký. |
-| `int UnloadForPeers(uint sceneId, IReadOnlyList<ulong> peerIds)` | Gỡ một scene theo peer khỏi một số peer; trả về số peer đã gỡ |
-| `void Unload(uint sceneId)` | Gỡ một scene theo peer khỏi mọi peer |
-| `IReadOnlyList<uint> Global` | Các global scene id |
-| `bool Contains(uint sceneId)`, `bool IsGlobal(uint sceneId)` | Scene có đang được dùng không, và có phải global không |
-| `bool HasLoaded(ulong peerId, uint sceneId)` | Peer đã báo load xong scene hay chưa |
-| `IReadOnlyCollection<ulong> PeersOf(uint sceneId)` | Các peer có scene |
-| `bool TryGetScene(uint sceneId, out Scene scene)` | `Scene` mà server đã load; một extension method trong `Fomoxa.Unity` |
-| `event Action<uint> OnLoaded` | Server đã load xong một scene |
-| `event Action<uint, Exception> OnLoadFailed` | Server không load được một scene |
+| `IReadOnlyList<NetworkScene> LoadGlobal(IReadOnlyList<uint> sceneIds, bool replace = false, ScenePhysics physics = ScenePhysics.Shared)` | Load scene cho mọi peer và trả về các bản global, mỗi id một bản; asset đã có bản global thì trả về bản đó. `replace` unload các bản global hiện tại trước. Ném exception với id chưa đăng ký. |
+| `void UnloadGlobal(IReadOnlyList<NetworkScene> scenes)` | Unload các bản global. Ném exception với bản không phải global. |
+| `NetworkScene Load(uint sceneId, IReadOnlyList<ulong> peerIds, ScenePhysics physics = ScenePhysics.Shared)` | Tạo một bản mới cho một số peer, có thể không có peer nào. Ném exception với id chưa đăng ký. |
+| `int AddPeers(NetworkScene scene, IReadOnlyList<ulong> peerIds)` | Giao một bản theo peer cho thêm peer; trả về số peer đã thêm |
+| `int RemovePeers(NetworkScene scene, IReadOnlyList<ulong> peerIds)` | Gỡ một bản theo peer khỏi một số peer; trả về số peer đã gỡ. Bản vẫn được load. |
+| `void Unload(NetworkScene scene)` | Unload một bản theo peer khỏi các peer của nó và khỏi server |
+| `IReadOnlyList<NetworkScene> Global` | Các bản global |
+| `bool Contains(NetworkScene scene)`, `bool IsGlobal(NetworkScene scene)` | Bản có tồn tại không, và có phải global không |
+| `bool HasLoaded(ulong peerId, NetworkScene scene)` | Peer đã báo load xong bản hay chưa |
+| `IReadOnlyCollection<ulong> PeersOf(NetworkScene scene)` | Các peer có bản |
+| `IReadOnlyList<NetworkScene> ScenesOf(ulong peerId)` | Các bản mà peer có |
+| `IReadOnlyList<NetworkScene> InstancesOf(uint sceneId)` | Các bản của một scene asset |
+| `uint SceneIdOf(NetworkScene scene)` | Scene id của một bản; 0 khi bản không tồn tại |
+| `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | `Scene` mà server đã load cho bản; một extension method trong `Fomoxa.Unity` |
+| `event Action<NetworkScene> OnLoaded` | Server đã load xong một bản |
+| `event Action<NetworkScene, Exception> OnLoadFailed` | Server không load được một bản |
+| `event Action<NetworkScene> OnUnloaded` | Server đã unload xong một bản |
+| `event Action<ulong, NetworkScene> OnPeerLoaded` | Một peer đã báo load xong một bản |
 
-Các method về scene ném `InvalidOperationException` khi server đã dừng.
+Bản không tồn tại, hoặc bản sai loại với lời gọi, ném `ArgumentException`. Bản `Shared` thứ hai của một scene asset ném `ArgumentException`; hãy cho nó `ScenePhysics.Own`. Các method về scene ném `InvalidOperationException` khi server đã dừng.
 
 ## Message <a href="#messages" id="messages"></a>
 

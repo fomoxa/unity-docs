@@ -53,10 +53,10 @@ The client must have the same scene open, with scene objects that have the same 
 
 ## Spawning into a network scene
 
-An object spawned in a network scene only reaches the peers that have loaded that scene. To spawn one there, move the instance into the scene before calling `Spawn`:
+An object spawned in a network scene only reaches the peers that have loaded that scene instance. To spawn one there, move the object into the instance's `Scene` before calling `Spawn`. `arenaInstance` is the `NetworkScene` that `LoadGlobal` or `Load` returned:
 
 ```csharp
-if (manager.ServerManager.Scenes.TryGetScene(FomoxaScenes.ArenaId, out Scene arena))
+if (manager.ServerManager.Scenes.TryGetScene(arenaInstance, out Scene arena))
 {
     NetworkObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
     SceneManager.MoveGameObjectToScene(enemy.gameObject, arena);
@@ -64,7 +64,7 @@ if (manager.ServerManager.Scenes.TryGetScene(FomoxaScenes.ArenaId, out Scene are
 }
 ```
 
-Each client then puts its instance into its own copy of the scene.
+Each client then puts its copy of the object into its own copy of that instance.
 
 ## Factories and pooling
 

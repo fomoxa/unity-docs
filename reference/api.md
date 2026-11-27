@@ -29,7 +29,8 @@ This page lists the public types of the package by namespace. Types marked "buil
 | `ServerManager` | Class | [Reference](server-manager.md) |
 | `ClientManager` | Class | [Reference](client-manager.md) |
 | `TimeManager`, `TimingMode` | Class, enum | [Reference](time-manager.md) |
-| `NetworkScenes` | Class | [ServerManager reference](server-manager.md#scenes) |
+| `NetworkScenes`, `NetworkScene`, `ScenePhysics` | Class, struct, enum | [ServerManager reference](server-manager.md#scenes) |
+| `ClientScenes` | Class | [ClientManager reference](client-manager.md#clientscenes) |
 | `NetworkVisibility` | Enum | [NetworkObject reference](network-object.md) |
 | `NetworkRpcs`, `NetworkState`, `NetworkInput`, `InputContext` | Registration types | [Reference](network-object.md#registration-types) |
 | `NetworkList<T>`, `NetworkDictionary<TKey, TValue>`, `NetworkSet<T>`, `NetworkCollections`, `NetworkListOperation`, `NetworkDictionaryOperation`, `NetworkSetOperation`, `NetworkListChanged<T>`, `NetworkDictionaryChanged<TKey, TValue>`, `NetworkSetChanged<T>` | Collection types | [Collections](../synchronization/collections.md) |

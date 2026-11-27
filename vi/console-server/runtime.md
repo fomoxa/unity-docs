@@ -200,9 +200,9 @@ Vòng lặp ở trên ngủ giữa các frame để tiến trình không quay v�
 
 ## Spawn <a href="#spawning" id="spawning"></a>
 
-`ServerManager.Spawn(entity, ownerId)` spawn một `StandaloneEntity` giống cách nó spawn một `NetworkObject` trong Unity. Hãy đặt `Position`, `Rotation`, `Scale`, `SceneId`, `DespawnWithOwner` và `Visibility` trước lời gọi, vì message spawn mang chúng. `Despawn` và `ChangeOwner` hoạt động như trong Unity. Server từ chối entity không phải `StandaloneEntity`, và prefab id chưa đăng ký với `StandalonePrefabs`.
+`ServerManager.Spawn(entity, ownerId)` spawn một `StandaloneEntity` giống cách nó spawn một `NetworkObject` trong Unity. Hãy đặt `Position`, `Rotation`, `Scale`, `Scene`, `SceneId`, `DespawnWithOwner` và `Visibility` trước lời gọi, vì message spawn mang chúng. `Despawn` và `ChangeOwner` hoạt động như trong Unity. Server từ chối entity không phải `StandaloneEntity`, và prefab id chưa đăng ký với `StandalonePrefabs`.
 
-`SceneId` đặt entity vào một network scene, giới hạn observer của nó ở các peer đã load scene đó, và chọn các physics world của nó.
+`Scene` đặt entity vào một bản network scene, giới hạn observer của nó ở các peer đã load bản đó, và cũng chọn các physics world của scene của bản đó. `SceneId` chọn các physics world của entity nằm ngoài network scene, như entity của một boot scene.
 
 ## Raw message <a href="#raw-messages" id="raw-messages"></a>
 

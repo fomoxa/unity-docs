@@ -29,7 +29,8 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `ServerManager` | Class | [Tham chiếu](server-manager.md) |
 | `ClientManager` | Class | [Tham chiếu](client-manager.md) |
 | `TimeManager`, `TimingMode` | Class, enum | [Tham chiếu](time-manager.md) |
-| `NetworkScenes` | Class | [Tham chiếu ServerManager](server-manager.md#scenes) |
+| `NetworkScenes`, `NetworkScene`, `ScenePhysics` | Class, struct, enum | [Tham chiếu ServerManager](server-manager.md#scenes) |
+| `ClientScenes` | Class | [Tham chiếu ClientManager](client-manager.md#clientscenes) |
 | `NetworkVisibility` | Enum | [Tham chiếu NetworkObject](network-object.md) |
 | `NetworkRpcs`, `NetworkState`, `NetworkInput`, `InputContext` | Type đăng ký | [Tham chiếu](network-object.md#registration-types) |
 | `NetworkList<T>`, `NetworkDictionary<TKey, TValue>`, `NetworkSet<T>`, `NetworkCollections`, `NetworkListOperation`, `NetworkDictionaryOperation`, `NetworkSetOperation`, `NetworkListChanged<T>`, `NetworkDictionaryChanged<TKey, TValue>`, `NetworkSetChanged<T>` | Type collection | [Collection](../synchronization/collections.md) |

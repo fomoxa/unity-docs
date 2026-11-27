@@ -14,7 +14,8 @@ The console backend types are in the namespace `Fomoxa.Networking.Standalone` an
 |---|---|---|
 | `PrefabId` | `uint` | The prefab id given to the constructor; 0 for scene objects |
 | `SceneObjectId` | `ulong` | The scene object id of a scene object; 0 otherwise |
-| `SceneId` | `uint` | Get and set. The scene the entity belongs to; 0 for none |
+| `Scene` | `NetworkScene` | Get and set. The network scene instance the entity belongs to; `default` for none |
+| `SceneId` | `uint` | Get and set. The scene whose physics worlds the entity uses when `Scene` is `default`; the backend sets it from `Scene` otherwise |
 | `DespawnWithOwner` | `bool` | Get and set; true by default |
 | `Visibility` | `NetworkVisibility` | Get and set; `Rule` by default |
 | `EntityBehaviours` | `IReadOnlyList<EntityBehaviour>` | The behaviours, in behaviour index order |
@@ -78,10 +79,10 @@ On a console client, the factory must return an entity that is not spawned.
 
 | Interface | Namespace | Role |
 |---|---|---|
-| `IServerEntityBackend` | `Fomoxa.Networking.Objects` | Validates spawns, gives fingerprints and scene ids, prepares, activates and ends entities on the server |
-| `IServerSceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scenes on the server, presents boot scene objects, lists the scene objects of a scene |
+| `IServerEntityBackend` | `Fomoxa.Networking.Objects` | Validates spawns, gives fingerprints and the network scene instance of an entity, prepares, activates and ends entities on the server |
+| `IServerSceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scene instances on the server, presents boot scene objects, lists the scene objects of an instance |
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Creates entities for spawns, places scene objects, ends entities and hides or shows them on a host |
-| `ISceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scenes on a client |
+| `ISceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scene instances on a client |
 | `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | The worlds and histories of predicted entities, proxies, and the start and end of a correction; `EndCorrection(entity, tick)` gets the tick of the corrected state |
 | `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics for the tick loop, physics by scene id for the console backend, and the optional report of moved entities that lets the server skip resting transforms |
 

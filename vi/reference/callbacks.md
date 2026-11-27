@@ -39,7 +39,7 @@ Mọi event và callback đều được phát trên main thread của Unity, t�
 | `SendDroppedArgs` | `ulong PeerId`, `uint MessageId`, `int PayloadLength`, `SendStatus Reason` |
 | `ReceiveDroppedArgs` | `ulong PeerId`, `int FrameLength` |
 | `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`, `bool Disconnect`; `Disconnect` ban đầu là `true`, đặt thành `false` thì peer được giữ sau khi một message handler trên server ném exception; server bỏ qua nó với authenticator, spawn data source và object factory, còn client bỏ qua nó; `MessageId` là 0 khi `OnServerAuthenticating`, `OnClientAuthenticating` hoặc một callback trên cancellation token của lần xác thực ném exception |
-| `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `uint SceneId` |
+| `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `NetworkScene Scene` |
 | `InputRejectedArgs` | `ulong PeerId`, `uint ObjectId`, `byte BehaviourIndex` |
 | `ServerRpcRejectedArgs` | `ulong PeerId`, `uint ObjectId`, `byte BehaviourIndex`, `uint MessageId` |
 
@@ -53,7 +53,7 @@ Với `OnInputRejected` và `OnServerRpcRejected`, server đếm hay phạt đư
 
 ## Scene event <a href="#scene-events" id="scene-events"></a>
 
-`ServerManager.Scenes` có `OnLoaded(uint sceneId)` và `OnLoadFailed(uint sceneId, Exception exception)`.
+`ServerManager.Scenes` có `OnLoaded(NetworkScene scene)`, `OnLoadFailed(NetworkScene scene, Exception exception)`, `OnUnloaded(NetworkScene scene)` và `OnPeerLoaded(ulong peerId, NetworkScene scene)`. `ClientManager.Scenes` có `OnLoadStarted(NetworkScene scene, uint sceneId)`, `OnLoaded(NetworkScene scene)` và `OnUnloaded(NetworkScene scene)`.
 
 ## Contact event <a href="#contact-events" id="contact-events"></a>
 

@@ -200,9 +200,9 @@ The loop above sleeps between frames so that the process does not spin. Each fra
 
 ## Spawning
 
-`ServerManager.Spawn(entity, ownerId)` spawns a `StandaloneEntity` the same way it spawns a `NetworkObject` in Unity. Set `Position`, `Rotation`, `Scale`, `SceneId`, `DespawnWithOwner` and `Visibility` before the call, because the spawn message carries them. `Despawn` and `ChangeOwner` work as in Unity. The server rejects an entity that is not a `StandaloneEntity`, and a prefab id that is not registered with `StandalonePrefabs`.
+`ServerManager.Spawn(entity, ownerId)` spawns a `StandaloneEntity` the same way it spawns a `NetworkObject` in Unity. Set `Position`, `Rotation`, `Scale`, `Scene`, `SceneId`, `DespawnWithOwner` and `Visibility` before the call, because the spawn message carries them. `Despawn` and `ChangeOwner` work as in Unity. The server rejects an entity that is not a `StandaloneEntity`, and a prefab id that is not registered with `StandalonePrefabs`.
 
-`SceneId` places the entity in a network scene, which limits its observers to the peers that loaded that scene, and selects its physics worlds.
+`Scene` places the entity in a network scene instance, which limits its observers to the peers that loaded that instance, and also selects the physics worlds of that instance's scene. `SceneId` selects the physics worlds of an entity outside network scenes, such as an entity of a boot scene.
 
 ## Raw messages
 

@@ -20,6 +20,19 @@
 |---|---|
 | `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Objects spawned on this client, by object id; each value is a `NetworkObject` in Unity |
 | `bool IsReplaying` | True while the client replays input during reconciliation |
+| `ClientScenes Scenes` | The network scene instances of this client, described below |
+
+### ClientScenes
+
+`public sealed class ClientScenes`, a type in `Fomoxa.Networking`, reached through `ClientManager.Scenes`.
+
+| Member | Description |
+|---|---|
+| `uint SceneIdOf(NetworkScene scene)` | The scene id of an instance the client has loaded or is loading; 0 otherwise |
+| `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | The `Scene` the client loaded for the instance, or the server's `Scene` on a host; an extension method in `Fomoxa.Unity` |
+| `event Action<NetworkScene, uint> OnLoadStarted` | The client started loading an instance of the scene id |
+| `event Action<NetworkScene> OnLoaded` | The client finished loading an instance |
+| `event Action<NetworkScene> OnUnloaded` | The client finished unloading an instance |
 
 ## Messages
 

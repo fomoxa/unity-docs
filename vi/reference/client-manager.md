@@ -20,6 +20,19 @@
 |---|---|
 | `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Các object đã spawn trên client này, theo object id; trong Unity mỗi giá trị là một `NetworkObject` |
 | `bool IsReplaying` | True khi client đang replay input trong lúc reconciliation |
+| `ClientScenes Scenes` | Các bản network scene của client này, mô tả bên dưới |
+
+### ClientScenes <a href="#clientscenes" id="clientscenes"></a>
+
+`public sealed class ClientScenes`, type trong `Fomoxa.Networking`, lấy qua `ClientManager.Scenes`.
+
+| Member | Mô tả |
+|---|---|
+| `uint SceneIdOf(NetworkScene scene)` | Scene id của một bản client đã load hoặc đang load; trường hợp còn lại là 0 |
+| `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | `Scene` mà client đã load cho bản, hoặc `Scene` của server trên host; một extension method trong `Fomoxa.Unity` |
+| `event Action<NetworkScene, uint> OnLoadStarted` | Client bắt đầu load một bản của scene id |
+| `event Action<NetworkScene> OnLoaded` | Client đã load xong một bản |
+| `event Action<NetworkScene> OnUnloaded` | Client đã unload xong một bản |
 
 ## Message <a href="#messages" id="messages"></a>
 

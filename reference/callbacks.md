@@ -39,7 +39,7 @@ Every event and callback is raised on Unity's main thread, either from the `Netw
 | `SendDroppedArgs` | `ulong PeerId`, `uint MessageId`, `int PayloadLength`, `SendStatus Reason` |
 | `ReceiveDroppedArgs` | `ulong PeerId`, `int FrameLength` |
 | `HandlerExceptionArgs` | `ulong PeerId`, `uint MessageId`, `Exception Exception`, `bool Disconnect`; `Disconnect` starts as `true`, and setting it to `false` keeps the peer after a server message handler threw; the server ignores it for the authenticator, spawn data sources and object factories, and the client ignores it; `MessageId` is 0 when `OnServerAuthenticating`, `OnClientAuthenticating` or a callback on the authentication's cancellation token threw |
-| `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `uint SceneId` |
+| `ObjectMismatchArgs` | `ObjectMismatchKind Kind`, `uint ObjectId`, `uint PrefabId`, `ulong SceneObjectId`, `NetworkScene Scene` |
 | `InputRejectedArgs` | `ulong PeerId`, `uint ObjectId`, `byte BehaviourIndex` |
 | `ServerRpcRejectedArgs` | `ulong PeerId`, `uint ObjectId`, `byte BehaviourIndex`, `uint MessageId` |
 
@@ -53,7 +53,7 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 
 ## Scene events
 
-`ServerManager.Scenes` has `OnLoaded(uint sceneId)` and `OnLoadFailed(uint sceneId, Exception exception)`.
+`ServerManager.Scenes` has `OnLoaded(NetworkScene scene)`, `OnLoadFailed(NetworkScene scene, Exception exception)`, `OnUnloaded(NetworkScene scene)` and `OnPeerLoaded(ulong peerId, NetworkScene scene)`. `ClientManager.Scenes` has `OnLoadStarted(NetworkScene scene, uint sceneId)`, `OnLoaded(NetworkScene scene)` and `OnUnloaded(NetworkScene scene)`.
 
 ## Contact events
 

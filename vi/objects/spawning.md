@@ -53,10 +53,10 @@ Client phải mở cùng scene đó, với các scene object có cùng id và c�
 
 ## Spawn vào một network scene <a href="#spawning-into-a-network-scene" id="spawning-into-a-network-scene"></a>
 
-Object spawn trong một network scene chỉ tới các peer đã load scene đó. Để spawn vào đó, hãy chuyển instance vào scene trước khi gọi `Spawn`:
+Object spawn trong một network scene chỉ tới các peer đã load bản đó của scene. Để spawn vào đó, hãy chuyển object vào `Scene` của bản trước khi gọi `Spawn`. `arenaInstance` là `NetworkScene` mà `LoadGlobal` hoặc `Load` trả về:
 
 ```csharp
-if (manager.ServerManager.Scenes.TryGetScene(FomoxaScenes.ArenaId, out Scene arena))
+if (manager.ServerManager.Scenes.TryGetScene(arenaInstance, out Scene arena))
 {
     NetworkObject enemy = Instantiate(enemyPrefab, position, Quaternion.identity);
     SceneManager.MoveGameObjectToScene(enemy.gameObject, arena);
@@ -64,7 +64,7 @@ if (manager.ServerManager.Scenes.TryGetScene(FomoxaScenes.ArenaId, out Scene are
 }
 ```
 
-Mỗi client sau đó đặt instance của nó vào bản copy scene của riêng mình.
+Mỗi client sau đó đặt object của nó vào bản scene đó ở phía mình.
 
 ## Factory và pooling <a href="#factories-and-pooling" id="factories-and-pooling"></a>
 
