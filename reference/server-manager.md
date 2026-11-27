@@ -95,6 +95,7 @@ The `Scenes` property returns a `NetworkScenes`, a type in `Fomoxa.Networking` w
 | `IReadOnlyList<NetworkScene> InstancesOf(uint sceneId)` | Instances of a scene asset |
 | `uint SceneIdOf(NetworkScene scene)` | The scene id of an instance; 0 when the instance does not exist |
 | `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | The `Scene` the server loaded for the instance; an extension method in `Fomoxa.Unity` |
+| `bool TryGetNetworkScene(Scene unityScene, out NetworkScene scene)` | The instance a `Scene` the server loaded belongs to; false for other scenes; an extension method in `Fomoxa.Unity` |
 | `event Action<NetworkScene> OnLoaded` | The server finished loading an instance |
 | `event Action<NetworkScene, Exception> OnLoadFailed` | The server failed to load an instance |
 | `event Action<NetworkScene> OnUnloaded` | The server finished unloading an instance |

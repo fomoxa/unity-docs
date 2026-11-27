@@ -63,6 +63,6 @@ Every member must be called from Unity's main thread, and the package does not c
 | `IdOf(string path)` | The id of a scene of Collected Scenes by its build path; 0 when unknown |
 | `Register(uint sceneId, ISceneLoader loader)` | Registers a loader. Throws for id 0 and for an id already registered. |
 
-`ISceneLoader` has two methods, `void Load(Action<Scene> loaded, Action<Exception> failed)` and `void Unload(Scene scene, Action unloaded)`.
+`ISceneLoader` has two methods, `void Load(SceneLoadRequest request, Action<float> progress, Action<Scene> loaded, Action<Exception> failed)` and `void Unload(Scene scene, Action unloaded)`. `SceneLoadRequest` has `NetworkScene Scene`, `uint SceneId` and `LocalPhysicsMode Physics`; the loader loads with `Physics` and passes the exact `Scene` of that load to `loaded`, as [custom loaders](../objects/scenes.md#custom-loaders) describes.
 
 The sub-managers are documented in the [ServerManager](server-manager.md), [ClientManager](client-manager.md) and [TimeManager](time-manager.md) references, and the registry in the [messaging API](messaging.md).

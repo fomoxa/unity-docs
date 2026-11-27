@@ -15,7 +15,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 | `NetworkCollision`, `NetworkTrigger`, `NetworkCollision2D`, `NetworkTrigger2D`, `IContactQuery`, `IContactQuery2D` | Component, interface | [Component](components.md#contact-components) |
 | `ObserverRule`, `DistanceRule`, `ObserverRange` | Type asset, component | [Component](components.md#observers) |
 | `NetworkAuthenticator` | Component trừu tượng | [Xác thực](../connections/authentication.md) |
-| `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `NetworkScenesExtensions` | Class, interface, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
+| `PrefabRegistry`, `SceneRegistry`, `ISceneLoader`, `SceneLoadRequest`, `NetworkScenesExtensions` | Class, interface, struct, extension method | [Tham chiếu NetworkManager](network-manager.md#prefabregistry) |
 | `NetworkPrefabList`, `NetworkSceneList` | Type asset được sinh | [Tích hợp Editor](../advanced/editor-integration.md) |
 | `NetworkTransport`, `UdpNetworkTransport`, `EncryptedUdpNetworkTransport`, `EncryptedWebSocketNetworkTransport`, `TcpNetworkTransport`, `WebSocketNetworkTransport`, `MultiNetworkTransport`, `SimulatedNetworkTransport` | Component | [Component](components.md#transports) |
 | `NetworkPhysics`, `RigidbodyPhysics` | Component | [Physics API](physics.md#physics-components) |

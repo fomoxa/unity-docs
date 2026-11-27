@@ -14,6 +14,8 @@ Tầng 1 không tham chiếu Unity, nên vector của nó là các type `System.
 
 World là một simulation state của physics engine. Với `RigidbodyPhysics`, đó là một `PhysicsScene` hoặc một `PhysicsScene2D`, dùng chung bởi mọi scene Unity sử dụng nó. Một `NetworkManager` sở hữu việc step một world, và không manager nào khác trong tiến trình step world đó.
 
+Chỉ chế độ physics của lần load quyết định body của một scene vào world nào. Bản network scene load với `ScenePhysics.Own` nhận `LocalPhysicsMode.Physics3D | LocalPhysicsMode.Physics2D` nên có world riêng; mọi scene khác vào world mặc định. Observer rule và nhóm chỉ lọc peer nào nhận một object, còn các object nằm trong một world vẫn va chạm với nhau dù thuộc nhóm nào. Khi Simulate Physics tắt, Unity step world mặc định còn `NetworkManager` step world của các bản `Own` nó đã load, như trang [network scene](../objects/scenes.md#physics-of-an-instance) mô tả.
+
 Chủ sở hữu step world mỗi tick một lần. Một lần replay step lại world, nhưng chỉ sau khi đã load một state cũ hơn. Do đó rollback làm việc theo world và theo nhóm world, không bao giờ theo object, như mô tả ở mục [rollback group](../prediction/rollback.md#rollback-groups).
 
 ## IPhysicsSimulation <a href="#iphysicssimulation" id="iphysicssimulation"></a>

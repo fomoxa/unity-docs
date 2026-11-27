@@ -29,7 +29,7 @@ Hãy đặt tick rate bằng tần số mà physics của game đã được tin
 
 ## Một world, một chủ <a href="#one-world-one-owner" id="one-world-one-owner"></a>
 
-World là một physics scene của Unity, hoặc `PhysicsScene` 3D hoặc `PhysicsScene2D` của các scene dùng nó. Nhiều scene dùng chung một world trừ khi chúng được load với physics cục bộ riêng.
+World là một physics scene của Unity, hoặc `PhysicsScene` 3D hoặc `PhysicsScene2D` của các scene dùng nó. Nhiều scene dùng chung một world trừ khi chúng được load với physics cục bộ riêng. Một [bản network scene](../objects/scenes.md#physics-of-an-instance) load với `ScenePhysics.Own` có world 3D và 2D riêng, nên hai phòng của cùng một map trong một server không va chạm nhau. Với `Shared`, giá trị mặc định, bản vào world mặc định.
 
 Mỗi world có một simulation state và được step bởi đúng một `NetworkManager`, đúng một lần mỗi tick. Manager đầu tiên step một world sẽ sở hữu nó, và mọi manager khác trong cùng tiến trình để yên world đó, nên một server manager và một client manager trong cùng tiến trình không bao giờ step cùng một physics hai lần.
 

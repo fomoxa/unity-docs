@@ -53,7 +53,7 @@ Với `OnInputRejected` và `OnServerRpcRejected`, server đếm hay phạt đư
 
 ## Scene event <a href="#scene-events" id="scene-events"></a>
 
-`ServerManager.Scenes` có `OnLoaded(NetworkScene scene)`, `OnLoadFailed(NetworkScene scene, Exception exception)`, `OnUnloaded(NetworkScene scene)` và `OnPeerLoaded(ulong peerId, NetworkScene scene)`. `ClientManager.Scenes` có `OnLoadStarted(NetworkScene scene, uint sceneId)`, `OnLoaded(NetworkScene scene)` và `OnUnloaded(NetworkScene scene)`.
+`ServerManager.Scenes` có `OnLoaded(NetworkScene scene)`, `OnLoadFailed(NetworkScene scene, Exception exception)`, `OnUnloaded(NetworkScene scene)` và `OnPeerLoaded(ulong peerId, NetworkScene scene)`. `ClientManager.Scenes` có `OnLoadStarted(NetworkScene scene, uint sceneId)`, `OnLoadProgress(NetworkScene scene, float progress)`, `OnLoaded(NetworkScene scene)` và `OnUnloaded(NetworkScene scene)`. `OnLoadProgress` phát từ callback `progress` của loader trong lúc bản đó là lần load đang chạy, giá trị được kẹp vào khoảng 0 tới 1.
 
 ## Contact event <a href="#contact-events" id="contact-events"></a>
 

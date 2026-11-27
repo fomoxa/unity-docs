@@ -30,7 +30,9 @@
 |---|---|
 | `uint SceneIdOf(NetworkScene scene)` | The scene id of an instance the client has loaded or is loading; 0 otherwise |
 | `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | The `Scene` the client loaded for the instance, or the server's `Scene` on a host; an extension method in `Fomoxa.Unity` |
+| `bool TryGetNetworkScene(Scene unityScene, out NetworkScene scene)` | The instance a `Scene` of the client belongs to, or of the server on a host; an extension method in `Fomoxa.Unity` |
 | `event Action<NetworkScene, uint> OnLoadStarted` | The client started loading an instance of the scene id |
+| `event Action<NetworkScene, float> OnLoadProgress` | The loader reported progress for the instance being loaded, clamped to 0 to 1; never raised on a host |
 | `event Action<NetworkScene> OnLoaded` | The client finished loading an instance |
 | `event Action<NetworkScene> OnUnloaded` | The client finished unloading an instance |
 

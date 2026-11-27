@@ -63,6 +63,6 @@ Mọi member phải được gọi từ main thread của Unity, và package kh�
 | `IdOf(string path)` | Id của một scene trong Collected Scenes theo đường dẫn build; 0 khi không biết |
 | `Register(uint sceneId, ISceneLoader loader)` | Đăng ký một loader. Ném exception với id 0 và id đã đăng ký. |
 
-`ISceneLoader` có hai method, `void Load(Action<Scene> loaded, Action<Exception> failed)` và `void Unload(Scene scene, Action unloaded)`.
+`ISceneLoader` có hai method, `void Load(SceneLoadRequest request, Action<float> progress, Action<Scene> loaded, Action<Exception> failed)` và `void Unload(Scene scene, Action unloaded)`. `SceneLoadRequest` có `NetworkScene Scene`, `uint SceneId` và `LocalPhysicsMode Physics`; loader load với `Physics` và truyền đúng `Scene` của lần load đó cho `loaded`, như mục [loader tùy chỉnh](../objects/scenes.md#custom-loaders) mô tả.
 
 Các manager con được tài liệu hóa trong các tham chiếu [ServerManager](server-manager.md), [ClientManager](client-manager.md) và [TimeManager](time-manager.md), còn registry trong [messaging API](messaging.md).

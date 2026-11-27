@@ -8,7 +8,7 @@ Scene mà game khởi động cùng không phải network scene. Hai bên mở n
 
 Scene id chỉ một scene asset: đó là hash 32 bit của asset GUID. Editor ghi các id vào hai file. `FomoxaSceneList.asset` chứa id và đường dẫn của mọi scene trong Scene List của Build Profiles và được làm mới mỗi khi danh sách đó hoặc một scene asset thay đổi. `FomoxaScenes.cs` chứa một hằng số `<SceneName>Id` cho mọi scene asset dưới `Assets`, kể cả scene nằm ngoài danh sách build.
 
-Gán `FomoxaSceneList.asset` vào Collected Scenes trên `NetworkManager`. Manager sau đó đăng ký mỗi scene trong danh sách với một loader gọi `SceneManager.LoadSceneAsync(path, LoadSceneMode.Additive)` và `UnloadSceneAsync`, và `NetworkManager.Scenes.IdOf("Assets/Scenes/Arena.unity")` trả về id của một scene trong danh sách, hoặc 0 nếu scene không có trong đó.
+Gán `FomoxaSceneList.asset` vào Collected Scenes trên `NetworkManager`. Manager sau đó đăng ký mỗi scene trong danh sách với một loader load nó theo kiểu additive bằng `SceneManager.LoadSceneAsync` và unload bằng `UnloadSceneAsync`, và `NetworkManager.Scenes.IdOf("Assets/Scenes/Arena.unity")` trả về id của một scene trong danh sách, hoặc 0 nếu scene không có trong đó.
 
 ## Bản <a href="#instances" id="instances"></a>
 
@@ -36,7 +36,22 @@ NetworkScene dungeon = manager.ServerManager.Scenes.Load(FomoxaScenes.DungeonId,
 
 Một bản global và một bản theo peer luôn là hai bản khác nhau. `AddPeers`, `RemovePeers` và `Unload` ném exception với bản global, còn `UnloadGlobal` ném exception với bản theo peer.
 
-Mọi lời gọi load nhận thêm một `ScenePhysics` tùy chọn. Với giá trị mặc định `Shared`, bản dùng physics world mặc định, nên một scene asset chỉ có một bản `Shared` tại một thời điểm, và bản thứ hai cần `ScenePhysics.Own`. Load một bản `Shared` của asset có bản trước đó vẫn đang unload sẽ chờ tới khi unload xong.
+## Physics của một bản <a href="#physics-of-an-instance" id="physics-of-an-instance"></a>
+
+Mọi lời gọi load nhận thêm một `ScenePhysics` tùy chọn. Với giá trị mặc định `Shared`, collider và rigidbody của bản vào physics world mặc định. Khi đó hai bản `Shared` của một map sẽ chồng lên nhau và va chạm với nhau, nên một scene asset chỉ có một bản `Shared` tại một thời điểm, và load bản thứ hai ném `ArgumentException`. Load một bản `Shared` của asset có bản trước đó vẫn đang unload sẽ chờ tới khi unload xong.
+
+`ScenePhysics.Own` load bản với `LocalPhysicsMode.Physics3D | LocalPhysicsMode.Physics2D`, nên bản có physics world 3D và 2D riêng. Dùng nó cho mọi phòng khi một process server chạy nhiều phòng của cùng một map:
+
+```csharp
+NetworkScene red = manager.ServerManager.Scenes.Load(FomoxaScenes.ArenaId, redPeers, ScenePhysics.Own);
+NetworkScene blue = manager.ServerManager.Scenes.Load(FomoxaScenes.ArenaId, bluePeers, ScenePhysics.Own);
+```
+
+Client load mỗi bản với chế độ server đã chọn. Raycast hay truy vấn overlap chỉ thấy collider của một world, nên hãy truy vấn qua world của bản, ví dụ `unityScene.GetPhysicsScene().Raycast(...)`, chứ không qua `Physics.Raycast` tĩnh, vốn chỉ thấy world mặc định.
+
+Unity không bao giờ tự step world của scene load với `LocalPhysicsMode`. Khi backend Rigidbody không mô phỏng physics (Simulate Physics tắt, mặc định), mỗi `NetworkManager` step world của các bản `Own` nó đã load, theo chế độ mô phỏng của Unity: sau bước của chính Unity ở mỗi fixed update với `Time.fixedDeltaTime` khi `Physics.simulationMode` (hoặc `Physics2D.simulationMode`) là `FixedUpdate`, mỗi frame một lần với `Time.deltaTime` khi là `Update`, và không step khi là `Script`, vì game ở chế độ đó tự step physics. Khi bật Simulate Physics, package step mọi world mỗi tick một lần, kể cả bản `Own`.
+
+Observer rule và [nhóm](observers.md#groups) quyết định peer nào thấy một object. Chúng không tách physics: object của hai phòng chung một world vẫn va chạm với nhau.
 
 ## Object trong network scene <a href="#objects-in-network-scenes" id="objects-in-network-scenes"></a>
 
@@ -75,6 +90,7 @@ Object mà server spawn vào một bản, bằng cách chuyển nó vào `Scene`
 | `InstancesOf(sceneId)` | Các bản của một scene asset |
 | `SceneIdOf(scene)` | Scene id của một bản, hoặc 0 |
 | `TryGetScene(scene, out Scene unityScene)` | `Scene` của Unity mà server đã load cho bản |
+| `TryGetNetworkScene(unityScene, out NetworkScene scene)` | Bản mà một `Scene` của Unity ở server thuộc về |
 
 Mọi member này nằm trên `ServerManager.Scenes`.
 
@@ -87,12 +103,14 @@ Client load và unload từng bản một, theo thứ tự server yêu cầu, v�
 | Member | Ý nghĩa |
 |---|---|
 | `OnLoadStarted(NetworkScene scene, uint sceneId)` | Client bắt đầu load một bản |
+| `OnLoadProgress(NetworkScene scene, float progress)` | Loader báo tiến độ, từ 0 tới 1, của bản đang load |
 | `OnLoaded(NetworkScene scene)` | Client đã load xong một bản |
 | `OnUnloaded(NetworkScene scene)` | Client đã unload xong một bản |
 | `SceneIdOf(scene)` | Scene id của một bản client đã load hoặc đang load, hoặc 0 |
 | `TryGetScene(scene, out Scene unityScene)` | `Scene` của Unity mà client đã load cho bản |
+| `TryGetNetworkScene(unityScene, out NetworkScene scene)` | Bản mà một `Scene` của Unity ở client thuộc về |
 
-Client của host dùng các bản server đã load thay vì load lại, và `TryGetScene` của nó trả về `Scene` của server.
+Client của host dùng các bản server đã load thay vì load lại, nên không phát tiến độ, và `TryGetScene`, `TryGetNetworkScene` của nó trả lời bằng scene của server.
 
 ## Loader tùy chỉnh <a href="#custom-loaders" id="custom-loaders"></a>
 
@@ -100,30 +118,60 @@ Scene không có trong danh sách build, như một scene Addressables, cần lo
 
 ```csharp
 using System;
+using System.Collections.Generic;
 using Fomoxa.Unity;
-using Generated;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-public sealed class ArenaLoader : ISceneLoader
+public sealed class AddressableSceneLoader : ISceneLoader
 {
-    public void Load(Action<Scene> loaded, Action<Exception> failed)
+    private readonly string address;
+    private readonly Dictionary<Scene, AsyncOperationHandle<SceneInstance>> handles = new Dictionary<Scene, AsyncOperationHandle<SceneInstance>>();
+
+    public AddressableSceneLoader(string address)
     {
-        var operation = SceneManager.LoadSceneAsync("Arena", LoadSceneMode.Additive);
-        operation.completed += _ => loaded(SceneManager.GetSceneByName("Arena"));
+        this.address = address;
+    }
+
+    public void Load(SceneLoadRequest request, Action<float> progress, Action<Scene> loaded, Action<Exception> failed)
+    {
+        var parameters = new LoadSceneParameters(LoadSceneMode.Additive, request.Physics);
+        Addressables.LoadSceneAsync(address, parameters).Completed += handle =>
+        {
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                failed(handle.OperationException ?? new InvalidOperationException($"{address} did not load"));
+                return;
+            }
+
+            Scene scene = handle.Result.Scene;
+            handles[scene] = handle;
+            loaded(scene);
+        };
     }
 
     public void Unload(Scene scene, Action unloaded)
     {
-        SceneManager.UnloadSceneAsync(scene).completed += _ => unloaded();
+        if (!handles.Remove(scene, out AsyncOperationHandle<SceneInstance> handle))
+        {
+            unloaded();
+            return;
+        }
+
+        Addressables.UnloadSceneAsync(handle).Completed += _ => unloaded();
     }
 }
 ```
 
 ```csharp
-manager.Scenes.Register(FomoxaScenes.ArenaId, new ArenaLoader());
+manager.Scenes.Register(FomoxaScenes.ArenaId, new AddressableSceneLoader("Arena"));
 ```
 
-Loader gọi `loaded` với scene đã load hoặc `failed` với một exception, và gọi `unloaded` khi unload xong. Hãy đăng ký nó trước khi server hoặc client cần scene, vì `LoadGlobal` và `Load` ném `scene 0x... is not in the scene registry` với id chưa đăng ký. Scene id 0 không đăng ký được.
+`SceneLoadRequest` mang bản (`Scene`), scene id (`SceneId`) và `LocalPhysicsMode` cần dùng khi load (`Physics`). Loader phải load với `request.Physics` và gọi `loaded` với đúng `Scene` mà lần load này tạo ra, ở đây là `SceneInstance.Scene`. Đừng tìm scene bằng `SceneManager.GetSceneByName` hay `GetSceneByPath`: khi đã load hai bản của một asset, cả hai hàm đều trả về bản đầu. Loader gọi `failed` với một exception khi load thất bại, có thể gọi `progress` với giá trị từ 0 tới 1 trong lúc load, và gọi `unloaded` khi unload xong. Ví dụ trên không báo tiến độ; loader cần thanh tiến độ thì đọc `handle.PercentComplete` mỗi frame rồi chuyển tiếp.
+
+Hãy đăng ký loader trước khi server hoặc client cần scene, vì `LoadGlobal` và `Load` ném `scene 0x... is not in the scene registry` với id chưa đăng ký. Scene id 0 không đăng ký được. Loader dựng sẵn cho danh sách build load với `request.Physics` và lấy scene từ `SceneManager.sceneLoaded` của chính lần load đó; một scene cùng đường dẫn mà code khác load đúng lúc đó có thể bị nhận nhầm.
 
 ## Giới hạn <a href="#limitations" id="limitations"></a>
 

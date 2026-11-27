@@ -14,6 +14,8 @@ Layer 1 does not reference Unity, so its vectors are `System.Numerics` types, an
 
 A world is one simulation state of the physics engine. With `RigidbodyPhysics` that is one `PhysicsScene` or one `PhysicsScene2D`, shared by every Unity scene that uses it. One `NetworkManager` owns the stepping of a world, and no other manager in the process steps it.
 
+Only the physics mode of a load decides which world a scene's bodies join. A network scene instance loaded with `ScenePhysics.Own` gets `LocalPhysicsMode.Physics3D | LocalPhysicsMode.Physics2D` and so its own worlds; every other scene joins the default worlds. Observer rules and groups only filter which peers receive an object, and objects that sit in one world collide whatever group they are in. When Simulate Physics is off, Unity steps the default worlds and the `NetworkManager` steps the worlds of the `Own` instances it loaded, as [network scenes](../objects/scenes.md#physics-of-an-instance) describes.
+
 The owner steps the world once per tick. A replay steps it again, but only after loading an earlier state. Rollback therefore works per world and per group of worlds, never per object, as described under [rollback groups](../prediction/rollback.md#rollback-groups).
 
 ## IPhysicsSimulation

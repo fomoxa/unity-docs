@@ -8,7 +8,7 @@ The scene a game starts with is not a network scene. Both sides open it the usua
 
 A scene id names a scene asset: it is a 32-bit hash of the asset's GUID. The Editor writes the ids into two files. `FomoxaSceneList.asset` holds the id and path of every scene in the Build Profiles scene list and is refreshed whenever that list or a scene asset changes. `FomoxaScenes.cs` holds a constant `<SceneName>Id` for every scene asset under `Assets`, including scenes outside the build list.
 
-Assign `FomoxaSceneList.asset` to Collected Scenes on the `NetworkManager`. The manager then registers each listed scene with a loader that calls `SceneManager.LoadSceneAsync(path, LoadSceneMode.Additive)` and `UnloadSceneAsync`, and `NetworkManager.Scenes.IdOf("Assets/Scenes/Arena.unity")` returns the id of a listed scene, or 0 for one that is not listed.
+Assign `FomoxaSceneList.asset` to Collected Scenes on the `NetworkManager`. The manager then registers each listed scene with a loader that loads it additively with `SceneManager.LoadSceneAsync` and unloads it with `UnloadSceneAsync`, and `NetworkManager.Scenes.IdOf("Assets/Scenes/Arena.unity")` returns the id of a listed scene, or 0 for one that is not listed.
 
 ## Instances
 
@@ -36,7 +36,22 @@ NetworkScene dungeon = manager.ServerManager.Scenes.Load(FomoxaScenes.DungeonId,
 
 A global instance and a per-peer instance are always two different instances. `AddPeers`, `RemovePeers` and `Unload` throw for a global instance, and `UnloadGlobal` throws for a per-peer one.
 
-Every load call takes an optional `ScenePhysics`. With the default, `Shared`, the instance uses the default physics world, so a scene asset can have only one `Shared` instance at a time, and a second instance needs `ScenePhysics.Own`. Loading a `Shared` instance of an asset whose previous instance is still unloading waits until that unload has finished.
+## Physics of an instance
+
+Every load call takes an optional `ScenePhysics`. With the default, `Shared`, the instance's colliders and rigidbodies join the default physics world. Two `Shared` instances of one map would then overlap and collide with each other, so a scene asset can have only one `Shared` instance at a time and loading a second one throws `ArgumentException`. Loading a `Shared` instance of an asset whose previous instance is still unloading waits until that unload has finished.
+
+`ScenePhysics.Own` loads the instance with `LocalPhysicsMode.Physics3D | LocalPhysicsMode.Physics2D`, which gives it its own 3D and 2D physics worlds. Use it for every room when one server process runs several rooms of the same map:
+
+```csharp
+NetworkScene red = manager.ServerManager.Scenes.Load(FomoxaScenes.ArenaId, redPeers, ScenePhysics.Own);
+NetworkScene blue = manager.ServerManager.Scenes.Load(FomoxaScenes.ArenaId, bluePeers, ScenePhysics.Own);
+```
+
+Clients load each instance with the mode the server chose. A raycast or overlap query only sees the colliders of one world, so query through the instance's world, for example `unityScene.GetPhysicsScene().Raycast(...)`, and not through the static `Physics.Raycast`, which only sees the default world.
+
+Unity never steps the worlds of scenes loaded with `LocalPhysicsMode` by itself. When the Rigidbody backend does not simulate physics (Simulate Physics is off, the default), each `NetworkManager` steps the worlds of the `Own` instances it loaded, following Unity's simulation mode: after Unity's own step in every fixed update with `Time.fixedDeltaTime` when `Physics.simulationMode` (or `Physics2D.simulationMode`) is `FixedUpdate`, once a frame with `Time.deltaTime` when it is `Update`, and not at all when it is `Script`, because a game in that mode steps physics itself. When Simulate Physics is on, the package steps every world once a tick, `Own` instances included.
+
+Observer rules and [groups](observers.md#groups) decide which peers see an object. They do not separate physics: objects of two rooms that share a world still collide.
 
 ## Objects in network scenes
 
@@ -75,6 +90,7 @@ An object the server spawns into an instance, by moving it into that instance's 
 | `InstancesOf(sceneId)` | Instances of a scene asset |
 | `SceneIdOf(scene)` | The scene id of an instance, or 0 |
 | `TryGetScene(scene, out Scene unityScene)` | The Unity `Scene` the server loaded for the instance |
+| `TryGetNetworkScene(unityScene, out NetworkScene scene)` | The instance a Unity `Scene` of the server belongs to |
 
 All of these members are on `ServerManager.Scenes`.
 
@@ -87,12 +103,14 @@ The client loads and unloads instances one at a time, in the order the server as
 | Member | Meaning |
 |---|---|
 | `OnLoadStarted(NetworkScene scene, uint sceneId)` | The client started loading an instance |
+| `OnLoadProgress(NetworkScene scene, float progress)` | The loader reported progress, from 0 to 1, for the instance being loaded |
 | `OnLoaded(NetworkScene scene)` | The client finished loading an instance |
 | `OnUnloaded(NetworkScene scene)` | The client finished unloading an instance |
 | `SceneIdOf(scene)` | The scene id of an instance the client has or is loading, or 0 |
 | `TryGetScene(scene, out Scene unityScene)` | The Unity `Scene` the client loaded for the instance |
+| `TryGetNetworkScene(unityScene, out NetworkScene scene)` | The instance a Unity `Scene` of the client belongs to |
 
-A host's client uses the instances the server loaded instead of loading them again, and its `TryGetScene` returns the server's `Scene`.
+A host's client uses the instances the server loaded instead of loading them again, so it raises no progress, and its `TryGetScene` and `TryGetNetworkScene` answer with the server's scenes.
 
 ## Custom loaders
 
@@ -100,30 +118,60 @@ A scene that is not in the build list, such as an Addressables scene, needs a lo
 
 ```csharp
 using System;
+using System.Collections.Generic;
 using Fomoxa.Unity;
-using Generated;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-public sealed class ArenaLoader : ISceneLoader
+public sealed class AddressableSceneLoader : ISceneLoader
 {
-    public void Load(Action<Scene> loaded, Action<Exception> failed)
+    private readonly string address;
+    private readonly Dictionary<Scene, AsyncOperationHandle<SceneInstance>> handles = new Dictionary<Scene, AsyncOperationHandle<SceneInstance>>();
+
+    public AddressableSceneLoader(string address)
     {
-        var operation = SceneManager.LoadSceneAsync("Arena", LoadSceneMode.Additive);
-        operation.completed += _ => loaded(SceneManager.GetSceneByName("Arena"));
+        this.address = address;
+    }
+
+    public void Load(SceneLoadRequest request, Action<float> progress, Action<Scene> loaded, Action<Exception> failed)
+    {
+        var parameters = new LoadSceneParameters(LoadSceneMode.Additive, request.Physics);
+        Addressables.LoadSceneAsync(address, parameters).Completed += handle =>
+        {
+            if (handle.Status != AsyncOperationStatus.Succeeded)
+            {
+                failed(handle.OperationException ?? new InvalidOperationException($"{address} did not load"));
+                return;
+            }
+
+            Scene scene = handle.Result.Scene;
+            handles[scene] = handle;
+            loaded(scene);
+        };
     }
 
     public void Unload(Scene scene, Action unloaded)
     {
-        SceneManager.UnloadSceneAsync(scene).completed += _ => unloaded();
+        if (!handles.Remove(scene, out AsyncOperationHandle<SceneInstance> handle))
+        {
+            unloaded();
+            return;
+        }
+
+        Addressables.UnloadSceneAsync(handle).Completed += _ => unloaded();
     }
 }
 ```
 
 ```csharp
-manager.Scenes.Register(FomoxaScenes.ArenaId, new ArenaLoader());
+manager.Scenes.Register(FomoxaScenes.ArenaId, new AddressableSceneLoader("Arena"));
 ```
 
-A loader calls `loaded` with the loaded scene or `failed` with an exception, and calls `unloaded` once unloading is done. Register it before the server or the client needs the scene, because `LoadGlobal` and `Load` throw `scene 0x... is not in the scene registry` for an unregistered id. Scene id 0 cannot be registered.
+`SceneLoadRequest` carries the instance (`Scene`), the scene id (`SceneId`) and the `LocalPhysicsMode` to load with (`Physics`). A loader must load with `request.Physics` and call `loaded` with the exact `Scene` that this load produced, here `SceneInstance.Scene`. Do not look the scene up with `SceneManager.GetSceneByName` or `GetSceneByPath`: with two instances of one asset loaded, both return the first. The loader calls `failed` with an exception when the load fails, may call `progress` with values from 0 to 1 while it loads, and calls `unloaded` once unloading is done. The example reports no progress; a loader that wants a progress bar polls `handle.PercentComplete` every frame and passes it on.
+
+Register a loader before the server or the client needs the scene, because `LoadGlobal` and `Load` throw `scene 0x... is not in the scene registry` for an unregistered id. Scene id 0 cannot be registered. The built-in loader for the build list loads with `request.Physics` and takes the scene from `SceneManager.sceneLoaded` of its own load; a scene with the same path that other code loads at the same moment can be mistaken for it.
 
 ## Limitations
 

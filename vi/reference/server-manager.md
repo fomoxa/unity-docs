@@ -95,6 +95,7 @@ Property `Scenes` trả về một `NetworkScenes`, type trong `Fomoxa.Networkin
 | `IReadOnlyList<NetworkScene> InstancesOf(uint sceneId)` | Các bản của một scene asset |
 | `uint SceneIdOf(NetworkScene scene)` | Scene id của một bản; 0 khi bản không tồn tại |
 | `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | `Scene` mà server đã load cho bản; một extension method trong `Fomoxa.Unity` |
+| `bool TryGetNetworkScene(Scene unityScene, out NetworkScene scene)` | Bản mà một `Scene` server đã load thuộc về; false với scene khác; một extension method trong `Fomoxa.Unity` |
 | `event Action<NetworkScene> OnLoaded` | Server đã load xong một bản |
 | `event Action<NetworkScene, Exception> OnLoadFailed` | Server không load được một bản |
 | `event Action<NetworkScene> OnUnloaded` | Server đã unload xong một bản |

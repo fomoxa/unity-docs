@@ -29,7 +29,7 @@ Set the tick rate to the rate your game's physics was tuned for. A project tuned
 
 ## One world, one owner
 
-A world is one Unity physics scene, either the 3D `PhysicsScene` or the 2D `PhysicsScene2D` of the scenes that use it. Several scenes share one world unless they are loaded with their own local physics.
+A world is one Unity physics scene, either the 3D `PhysicsScene` or the 2D `PhysicsScene2D` of the scenes that use it. Several scenes share one world unless they are loaded with their own local physics. A [network scene instance](../objects/scenes.md#physics-of-an-instance) loaded with `ScenePhysics.Own` has its own 3D and 2D worlds, so two rooms of the same map in one server do not collide. With `Shared`, the default, the instance joins the default world.
 
 Each world has one simulation state and is stepped by exactly one `NetworkManager`, exactly once per tick. The first manager that steps a world owns it, and any other manager in the same process leaves it alone, so a server manager and a client manager in one process never step the same physics twice.
 

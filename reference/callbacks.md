@@ -53,7 +53,7 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 
 ## Scene events
 
-`ServerManager.Scenes` has `OnLoaded(NetworkScene scene)`, `OnLoadFailed(NetworkScene scene, Exception exception)`, `OnUnloaded(NetworkScene scene)` and `OnPeerLoaded(ulong peerId, NetworkScene scene)`. `ClientManager.Scenes` has `OnLoadStarted(NetworkScene scene, uint sceneId)`, `OnLoaded(NetworkScene scene)` and `OnUnloaded(NetworkScene scene)`.
+`ServerManager.Scenes` has `OnLoaded(NetworkScene scene)`, `OnLoadFailed(NetworkScene scene, Exception exception)`, `OnUnloaded(NetworkScene scene)` and `OnPeerLoaded(ulong peerId, NetworkScene scene)`. `ClientManager.Scenes` has `OnLoadStarted(NetworkScene scene, uint sceneId)`, `OnLoadProgress(NetworkScene scene, float progress)`, `OnLoaded(NetworkScene scene)` and `OnUnloaded(NetworkScene scene)`. `OnLoadProgress` is raised from the loader's `progress` callback while the instance is the load in progress, with the value clamped to 0 to 1.
 
 ## Contact events
 

@@ -30,7 +30,9 @@
 |---|---|
 | `uint SceneIdOf(NetworkScene scene)` | Scene id của một bản client đã load hoặc đang load; trường hợp còn lại là 0 |
 | `bool TryGetScene(NetworkScene scene, out Scene unityScene)` | `Scene` mà client đã load cho bản, hoặc `Scene` của server trên host; một extension method trong `Fomoxa.Unity` |
+| `bool TryGetNetworkScene(Scene unityScene, out NetworkScene scene)` | Bản mà một `Scene` của client thuộc về, hoặc của server trên host; một extension method trong `Fomoxa.Unity` |
 | `event Action<NetworkScene, uint> OnLoadStarted` | Client bắt đầu load một bản của scene id |
+| `event Action<NetworkScene, float> OnLoadProgress` | Loader báo tiến độ của bản đang load, kẹp vào khoảng 0 tới 1; không bao giờ phát trên host |
 | `event Action<NetworkScene> OnLoaded` | Client đã load xong một bản |
 | `event Action<NetworkScene> OnUnloaded` | Client đã unload xong một bản |
 
