@@ -36,11 +36,11 @@ NetworkRuntime runtime = StandaloneRuntime.Create(
 
 `NetworkSettings.PhysicsBackend` must be `Rapier`, because the server tells each client its backend and a client with `RapierPhysics` stops with `PhysicsBackendMismatch` otherwise. Use the gravity of the clients' `RapierPhysics`. Dispose the `RapierScenes` when the program ends, after `ServerManager.StopConnection()`, to free the native worlds.
 
-`RapierScenes` keeps one world per scene id and dimension. The scene file of each boot scene and of each network scene that loads adds its static colliders, its layer collision matrices and the [2D effectors](../rapier/effectors.md) of its static colliders to the worlds of that scene.
+`RapierScenes` keeps one world per scene instance and dimension, keyed by `NetworkScene`. When the server loads an instance, the scene file of its scene adds its static colliders, its layer collision matrices and the [2D effectors](../rapier/effectors.md) of its static colliders to the worlds of that instance, so two rooms of one map get two worlds, and unloading the instance disposes them. Boot scenes and entities outside network scenes use the worlds of `default(NetworkScene)`, which plays the part of Unity's default physics world: the files of all boot scenes add their geometry to it. The layer collision matrices come from the project settings, so every scene file of one build carries the same ones.
 
 ## Bodies of entities
 
-When an entity spawns, the console backend asks it for its body and adds that body to the worlds of the entity's `SceneId`:
+When an entity spawns, the console backend asks it for its body and adds that body to the worlds of the entity's `Scene`, or to the default worlds when `Scene` is `default`:
 
 - A scene object uses the body described in its scene file, which the Editor wrote from its colliders and `Rigidbody` or `Rigidbody2D`.
 - A prefab entity overrides `TryGetBody` or `TryGetBody2D` and returns a `BodyDesc` or `BodyDesc2D`. The backend places it at the entity's position and rotation.
@@ -79,7 +79,7 @@ Scene objects take their child bodies from the scene file, which the Editor writ
 
 ## Level geometry and unowned bodies
 
-`RapierScenes` has the same runtime members as `NetworkPhysics`, by scene id instead of `Scene`: `AddStatic(sceneId, colliders)`, `AddStatic2D`, `RemoveStatic`, `AddBody(sceneId, body)`, `AddBody2D`, `RemoveBody` and `RemoveBody2D`. `WorldOf(sceneId)` and `WorldOf2D(sceneId)` return the worlds, whose `Touching` method reads contact sets as described in [Rapier bodies and colliders](../rapier/bodies.md#reading-the-worlds). Build runtime geometry in the same order as the clients do.
+`RapierScenes` has the same runtime members as `NetworkPhysics`, by `NetworkScene` instead of `Scene`: `AddStatic(scene, colliders)`, `AddStatic2D`, `RemoveStatic`, `AddBody(scene, body)`, `AddBody2D`, `RemoveBody` and `RemoveBody2D`. `WorldOf(scene)` and `WorldOf2D(scene)` return the worlds, `WorldOf(default)` the default ones, whose `Touching` method reads contact sets as described in [Rapier bodies and colliders](../rapier/bodies.md#reading-the-worlds). Build runtime geometry in the same order as the clients do.
 
 The console backend does not run the contact event components, which are Unity components. Server rules that depend on contacts read the contact sets of the worlds.
 

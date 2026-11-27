@@ -14,8 +14,7 @@ The console backend types are in the namespace `Fomoxa.Networking.Standalone` an
 |---|---|---|
 | `PrefabId` | `uint` | The prefab id given to the constructor; 0 for scene objects |
 | `SceneObjectId` | `ulong` | The scene object id of a scene object; 0 otherwise |
-| `Scene` | `NetworkScene` | Get and set. The network scene instance the entity belongs to; `default` for none |
-| `SceneId` | `uint` | Get and set. The scene whose physics worlds the entity uses when `Scene` is `default`; the backend sets it from `Scene` otherwise |
+| `Scene` | `NetworkScene` | Get and set. The network scene instance the entity belongs to, which also selects its physics worlds; `default` for none, with the default physics worlds |
 | `DespawnWithOwner` | `bool` | Get and set; true by default |
 | `Visibility` | `NetworkVisibility` | Get and set; `Rule` by default |
 | `EntityBehaviours` | `IReadOnlyList<EntityBehaviour>` | The behaviours, in behaviour index order |
@@ -84,6 +83,6 @@ On a console client, the factory must return an entity that is not spawned.
 | `IClientEntityBackend` | `Fomoxa.Networking.Objects` | Creates entities for spawns, places scene objects, ends entities and hides or shows them on a host |
 | `ISceneHost` | `Fomoxa.Networking.Objects` | Loads and unloads scene instances on a client |
 | `IClientPredictionBackend` | `Fomoxa.Networking.Prediction` | The worlds and histories of predicted entities, proxies, and the start and end of a correction; `EndCorrection(entity, tick)` gets the tick of the corrected state |
-| `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics for the tick loop, physics by scene id for the console backend, and the optional report of moved entities that lets the server skip resting transforms |
+| `IPhysicsWorlds`, `IPhysicsScenes`, `IPhysicsMotion` | `Fomoxa.Networking.Simulation` | Physics for the tick loop, physics by scene instance for the console backend, and the optional report of moved entities that lets the server skip resting transforms |
 
 `NetworkRuntime(FomoxaRegistry registry, NetworkSettings settings, ITransportFactory transport, NetworkBackends backends, Func<TimeSpan> clock, NetworkLog log)` is the constructor.

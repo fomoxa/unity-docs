@@ -36,11 +36,11 @@ NetworkRuntime runtime = StandaloneRuntime.Create(
 
 `NetworkSettings.PhysicsBackend` phải là `Rapier`, vì server báo cho mỗi client backend của nó và client có `RapierPhysics` sẽ dừng với `PhysicsBackendMismatch` nếu không khớp. Hãy dùng trọng lực của `RapierPhysics` trên client. Dispose `RapierScenes` khi chương trình kết thúc, sau `ServerManager.StopConnection()`, để giải phóng các world native.
 
-`RapierScenes` giữ một world cho mỗi scene id và mỗi chiều. Scene file của mỗi boot scene và của mỗi network scene được load thêm các collider tĩnh, ma trận va chạm layer và [effector 2D](../rapier/effectors.md) trên collider tĩnh của nó vào các world của scene đó.
+`RapierScenes` giữ một world cho mỗi bản scene và mỗi chiều, khóa theo `NetworkScene`. Khi server load một bản, scene file của scene đó thêm các collider tĩnh, ma trận va chạm layer và [effector 2D](../rapier/effectors.md) trên collider tĩnh của nó vào các world của bản, nên hai phòng của một map có hai world, và unload bản thì giải phóng các world đó. Boot scene và entity nằm ngoài network scene dùng các world của `default(NetworkScene)`, giữ vai world mặc định của Unity: file của mọi boot scene đều thêm geometry vào đó. Ma trận va chạm layer lấy từ cài đặt của project, nên mọi scene file của một bản build mang cùng một ma trận.
 
 ## Body của entity <a href="#bodies-of-entities" id="bodies-of-entities"></a>
 
-Khi một entity spawn, backend console hỏi nó về body và thêm body đó vào các world của `SceneId` của entity:
+Khi một entity spawn, backend console hỏi nó về body và thêm body đó vào các world của `Scene` của entity, hoặc vào các world mặc định khi `Scene` là `default`:
 
 - Scene object dùng body được mô tả trong scene file, do Editor ghi từ collider và `Rigidbody` hoặc `Rigidbody2D` của nó.
 - Entity từ prefab override `TryGetBody` hoặc `TryGetBody2D` và trả về một `BodyDesc` hoặc `BodyDesc2D`. Backend đặt nó tại vị trí và góc xoay của entity.
@@ -79,7 +79,7 @@ Scene object lấy body con từ scene file, do Editor ghi từ các component `
 
 ## Geometry level và body không chủ <a href="#level-geometry-and-unowned-bodies" id="level-geometry-and-unowned-bodies"></a>
 
-`RapierScenes` có cùng các member lúc chạy như `NetworkPhysics`, theo scene id thay vì `Scene`: `AddStatic(sceneId, colliders)`, `AddStatic2D`, `RemoveStatic`, `AddBody(sceneId, body)`, `AddBody2D`, `RemoveBody` và `RemoveBody2D`. `WorldOf(sceneId)` và `WorldOf2D(sceneId)` trả về các world, mà method `Touching` của chúng đọc tập contact như mô tả trong [body và collider của Rapier](../rapier/bodies.md#reading-the-worlds). Hãy dựng geometry lúc chạy theo cùng thứ tự như client.
+`RapierScenes` có cùng các member lúc chạy như `NetworkPhysics`, theo `NetworkScene` thay vì `Scene`: `AddStatic(scene, colliders)`, `AddStatic2D`, `RemoveStatic`, `AddBody(scene, body)`, `AddBody2D`, `RemoveBody` và `RemoveBody2D`. `WorldOf(scene)` và `WorldOf2D(scene)` trả về các world, `WorldOf(default)` trả về world mặc định, mà method `Touching` của chúng đọc tập contact như mô tả trong [body và collider của Rapier](../rapier/bodies.md#reading-the-worlds). Hãy dựng geometry lúc chạy theo cùng thứ tự như client.
 
 Backend console không chạy các component contact event, vì chúng là component của Unity. Luật server phụ thuộc contact thì đọc tập contact của các world.
 

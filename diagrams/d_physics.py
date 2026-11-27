@@ -140,7 +140,7 @@ def rapier_stack(language):
     left = [
         ('code', t('Game code', 'Code game'), 'OnApplyInput, OnCaptureState, OnRestoreState, OnTick'),
         ('client', 'NetworkBody, NetworkBody2D', t('unchanged', 'không đổi')),
-        ('host', 'RapierPhysics', t('one world per network scene and dimension', 'một world mỗi network scene và mỗi chiều')),
+        ('host', 'RapierPhysics', t('one world per scene instance and dimension', 'một world mỗi bản scene và mỗi chiều')),
     ]
     for index, (kind, title, body) in enumerate(left):
         y = 56 + index * 76

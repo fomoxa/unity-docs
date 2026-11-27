@@ -48,7 +48,7 @@ When a network scene loads, `RapierPhysics` reads its scene file and adds the sc
 
 ## Reading the worlds
 
-`RapierPhysics.Scenes` returns the `RapierScenes` that holds the worlds, or null before the `NetworkManager` has run its `Awake`. `WorldOf(sceneId)` and `WorldOf2D(sceneId)` return the `RapierWorld` or `RapierWorld2D` of a network scene, which implement `IPhysicsWorld` and `IPhysicsWorld2D` and add a few members of their own:
+`RapierPhysics.Scenes` returns the `RapierScenes` that holds the worlds, or null before the `NetworkManager` has run its `Awake`. `WorldOf(scene)` and `WorldOf2D(scene)` take a `NetworkScene` and return the `RapierWorld` or `RapierWorld2D` of that instance, or of the default world for `default`. Get the instance of a Unity scene with `TryGetNetworkScene`, described in [server events and queries](../objects/scenes.md#server-events-and-queries). The worlds implement `IPhysicsWorld` and `IPhysicsWorld2D` and add a few members of their own:
 
 | Member | Description |
 |---|---|
@@ -59,7 +59,7 @@ When a network scene loads, `RapierPhysics` reads its scene file and adds the sc
 | `AddEffector`, `SetEffector`, `RemoveEffector` (2D) | [Effectors](effectors.md#effectors-from-code) |
 | `ulong StateHash` | A hash of the bodies of the world, for comparing two runs |
 
-A `RapierCollider` names one collider of a world. `RapierCollider.OfBody(handle, index)` is the collider at `index` in the body's description, and `RapierCollider.Static(index)` is a static collider, numbered first by the scene file and then by the static groups in the order they were added (`StaticGroup.FirstIndex`). `IsStatic` tells the two apart.
+A `RapierCollider` names one collider of a world. `RapierCollider.OfBody(handle, index)` is the collider at `index` in the body's description, and `RapierCollider.Static(index)` is a static collider, numbered by the scene files and static groups of the world in the order they were added (`StaticGroup.FirstIndex`). An instance's world starts with its scene file; the default world takes the file of each open scene outside network scenes as that scene opens. `IsStatic` tells the two apart.
 
 The overloads of `BodyDescriptions.TryDescribe` and `TryDescribe2D` that take a list return the source collider of each description, so the position of a Unity collider in that list is its index in the body:
 

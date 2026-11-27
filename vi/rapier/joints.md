@@ -71,7 +71,7 @@ var hinge = NetworkJoints.Create(JointKind.Revolute, new Vector3(-0.5f, 0f, 0f),
 JointHandle joint = rapier.Scenes.CreateJoint(networkObject, door, default, hinge);
 ```
 
-`rapier` là component `RapierPhysics` của `NetworkManager`. Body thứ hai là thế giới, nên `hingePoint` là bản lề theo toạ độ thế giới. Cả hai khung xoay trục X của joint thành trục đứng, nên cửa quay quanh trục đó. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` và overload `NetworkBody2D` với `JointDesc2D` kiểm tra `a` là body của `owner` và gắn joint vào body đó, nên joint mất đi cùng object. Đổi hoặc gỡ joint sau đó qua `rapier.Scenes.WorldOf(sceneId)`. Console server gọi cùng hàm với `StandaloneEntity` của nó và các giá trị `PhysicsBody`.
+`rapier` là component `RapierPhysics` của `NetworkManager`. Body thứ hai là thế giới, nên `hingePoint` là bản lề theo toạ độ thế giới. Cả hai khung xoay trục X của joint thành trục đứng, nên cửa quay quanh trục đó. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` và overload `NetworkBody2D` với `JointDesc2D` kiểm tra `a` là body của `owner` và gắn joint vào body đó, nên joint mất đi cùng object. Đổi hoặc gỡ joint sau đó qua `rapier.Scenes.WorldOf(scene)`, với `scene` là `NetworkScene` của scene chứa object, như mô tả ở [đọc world](bodies.md#reading-the-worlds). Console server gọi cùng hàm với `StandaloneEntity` của nó và các giá trị `PhysicsBody`.
 
 ## Joint khi replay <a href="#joints-in-a-replay" id="joints-in-a-replay"></a>
 

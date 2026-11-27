@@ -200,9 +200,9 @@ Vòng lặp ở trên ngủ giữa các frame để tiến trình không quay v�
 
 ## Spawn <a href="#spawning" id="spawning"></a>
 
-`ServerManager.Spawn(entity, ownerId)` spawn một `StandaloneEntity` giống cách nó spawn một `NetworkObject` trong Unity. Hãy đặt `Position`, `Rotation`, `Scale`, `Scene`, `SceneId`, `DespawnWithOwner` và `Visibility` trước lời gọi, vì message spawn mang chúng. `Despawn` và `ChangeOwner` hoạt động như trong Unity. Server từ chối entity không phải `StandaloneEntity`, và prefab id chưa đăng ký với `StandalonePrefabs`.
+`ServerManager.Spawn(entity, ownerId)` spawn một `StandaloneEntity` giống cách nó spawn một `NetworkObject` trong Unity. Hãy đặt `Position`, `Rotation`, `Scale`, `Scene`, `DespawnWithOwner` và `Visibility` trước lời gọi, vì message spawn mang chúng. `Despawn` và `ChangeOwner` hoạt động như trong Unity. Server từ chối entity không phải `StandaloneEntity`, và prefab id chưa đăng ký với `StandalonePrefabs`.
 
-`Scene` đặt entity vào một bản network scene, giới hạn observer của nó ở các peer đã load bản đó, và cũng chọn các physics world của scene của bản đó. `SceneId` chọn các physics world của entity nằm ngoài network scene, như entity của một boot scene.
+`Scene` đặt entity vào một bản network scene, giới hạn observer của nó ở các peer đã load bản đó, và cũng chọn các physics world của bản đó. Entity để `Scene` là `default`, như entity của một boot scene, dùng các physics world mặc định.
 
 ## Raw message <a href="#raw-messages" id="raw-messages"></a>
 
@@ -234,6 +234,6 @@ behaviours.Register("MyGame.Network.Wheel", site => site.TryGetBody(out ChildBod
 
 `Wheel` sau đó có thể truyền `body` cho `SyncTransform` hoặc tìm body trong `Bodies2D`. Hai overload dùng lẫn được cho các tên type khác nhau.
 
-Network scene mà server load qua `ServerManager.Scenes` đọc file của nó khi load. Scene mà client mở trước khi kết nối, như scene game của hướng dẫn, không được load qua mạng. Hãy truyền scene id của nó vào `bootScenes` khi nó có scene object hoặc geometry physics: backend đọc file của nó trong `Create`, spawn scene object của nó khi server khởi động, và load geometry của nó vào các physics world. Client khớp những object đó với scene mà họ đã mở sẵn, như với server Unity. Entity của boot scene đặt `SceneId` bằng id của scene đó để dùng chung physics world của nó, và server vẫn gửi chúng như object nằm ngoài mọi network scene.
+Network scene mà server load qua `ServerManager.Scenes` đọc file của nó khi load. Scene mà client mở trước khi kết nối, như scene game của hướng dẫn, không được load qua mạng. Hãy truyền scene id của nó vào `bootScenes` khi nó có scene object hoặc geometry physics: backend đọc file của nó trong `Create`, spawn scene object của nó khi server khởi động, và load geometry của nó vào các physics world. Client khớp những object đó với scene mà họ đã mở sẵn, như với server Unity. Geometry của mọi boot scene vào các physics world mặc định, nơi entity của các boot scene dùng chung, và server gửi những entity đó như object nằm ngoài mọi network scene.
 
 Trang [physics](physics.md) thêm một physics backend, còn [tham chiếu](reference.md) liệt kê các type console và backend contract.

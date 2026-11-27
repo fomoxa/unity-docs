@@ -48,7 +48,7 @@ Khi một network scene load, `RapierPhysics` đọc scene file của nó và th
 
 ## Đọc world <a href="#reading-the-worlds" id="reading-the-worlds"></a>
 
-`RapierPhysics.Scenes` trả về `RapierScenes` giữ các world, hoặc null trước khi `NetworkManager` chạy `Awake`. `WorldOf(sceneId)` và `WorldOf2D(sceneId)` trả về `RapierWorld` hoặc `RapierWorld2D` của một network scene; chúng hiện thực `IPhysicsWorld` và `IPhysicsWorld2D` và thêm vài member riêng:
+`RapierPhysics.Scenes` trả về `RapierScenes` giữ các world, hoặc null trước khi `NetworkManager` chạy `Awake`. `WorldOf(scene)` và `WorldOf2D(scene)` nhận một `NetworkScene` và trả về `RapierWorld` hoặc `RapierWorld2D` của bản đó, hoặc của world mặc định với `default`. Lấy bản của một scene Unity bằng `TryGetNetworkScene`, mô tả ở [event và truy vấn trên server](../objects/scenes.md#server-events-and-queries). Các world hiện thực `IPhysicsWorld` và `IPhysicsWorld2D` và thêm vài member riêng:
 
 | Member | Mô tả |
 |---|---|
@@ -59,7 +59,7 @@ Khi một network scene load, `RapierPhysics` đọc scene file của nó và th
 | `AddEffector`, `SetEffector`, `RemoveEffector` (2D) | [Effector](effectors.md#effectors-from-code) |
 | `ulong StateHash` | Hash của các body trong world, để so hai lần chạy |
 
-`RapierCollider` chỉ tới một collider của world. `RapierCollider.OfBody(handle, index)` là collider ở vị trí `index` trong mô tả của body, còn `RapierCollider.Static(index)` là một collider tĩnh, đánh số trước theo scene file rồi theo các nhóm tĩnh theo thứ tự được thêm (`StaticGroup.FirstIndex`). `IsStatic` phân biệt hai loại.
+`RapierCollider` chỉ tới một collider của world. `RapierCollider.OfBody(handle, index)` là collider ở vị trí `index` trong mô tả của body, còn `RapierCollider.Static(index)` là một collider tĩnh, đánh số theo các scene file và nhóm tĩnh của world, theo thứ tự được thêm (`StaticGroup.FirstIndex`). World của một bản bắt đầu bằng scene file của nó; world mặc định nhận file của mỗi scene đang mở nằm ngoài network scene khi scene đó mở ra. `IsStatic` phân biệt hai loại.
 
 Các overload của `BodyDescriptions.TryDescribe` và `TryDescribe2D` nhận một danh sách sẽ trả về collider nguồn của từng mô tả, nên vị trí của một collider Unity trong danh sách đó là chỉ số của nó trong body:
 

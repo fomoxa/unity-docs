@@ -200,9 +200,9 @@ The loop above sleeps between frames so that the process does not spin. Each fra
 
 ## Spawning
 
-`ServerManager.Spawn(entity, ownerId)` spawns a `StandaloneEntity` the same way it spawns a `NetworkObject` in Unity. Set `Position`, `Rotation`, `Scale`, `Scene`, `SceneId`, `DespawnWithOwner` and `Visibility` before the call, because the spawn message carries them. `Despawn` and `ChangeOwner` work as in Unity. The server rejects an entity that is not a `StandaloneEntity`, and a prefab id that is not registered with `StandalonePrefabs`.
+`ServerManager.Spawn(entity, ownerId)` spawns a `StandaloneEntity` the same way it spawns a `NetworkObject` in Unity. Set `Position`, `Rotation`, `Scale`, `Scene`, `DespawnWithOwner` and `Visibility` before the call, because the spawn message carries them. `Despawn` and `ChangeOwner` work as in Unity. The server rejects an entity that is not a `StandaloneEntity`, and a prefab id that is not registered with `StandalonePrefabs`.
 
-`Scene` places the entity in a network scene instance, which limits its observers to the peers that loaded that instance, and also selects the physics worlds of that instance's scene. `SceneId` selects the physics worlds of an entity outside network scenes, such as an entity of a boot scene.
+`Scene` places the entity in a network scene instance, which limits its observers to the peers that loaded that instance, and also selects the physics worlds of that instance. An entity with `Scene` left at `default`, such as an entity of a boot scene, uses the default physics worlds.
 
 ## Raw messages
 
@@ -234,6 +234,6 @@ behaviours.Register("MyGame.Network.Wheel", site => site.TryGetBody(out ChildBod
 
 `Wheel` can then pass `body` to `SyncTransform` or find the body in `Bodies2D`. The two overloads can be mixed for different type names.
 
-A network scene that the server loads with `ServerManager.Scenes` reads its file when it loads. The scene that clients open before they connect, such as the game scene of the tutorial, is not loaded through the network. Pass its scene id in `bootScenes` when it has scene objects or physics geometry: the backend reads its file in `Create`, spawns its scene objects when the server starts, and loads its geometry into the physics worlds. Clients match those objects against the scene they already have open, as with a Unity server. Entities of a boot scene set `SceneId` to that scene's id so that they share its physics worlds, and the server still sends them as objects outside any network scene.
+A network scene that the server loads with `ServerManager.Scenes` reads its file when it loads. The scene that clients open before they connect, such as the game scene of the tutorial, is not loaded through the network. Pass its scene id in `bootScenes` when it has scene objects or physics geometry: the backend reads its file in `Create`, spawns its scene objects when the server starts, and loads its geometry into the physics worlds. Clients match those objects against the scene they already have open, as with a Unity server. The geometry of every boot scene goes into the default physics worlds, which the entities of boot scenes share, and the server sends those entities as objects outside any network scene.
 
 The [physics](physics.md) page adds a physics backend, and the [reference](reference.md) lists the console types and the backend contract.

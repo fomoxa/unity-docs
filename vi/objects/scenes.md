@@ -49,7 +49,9 @@ NetworkScene blue = manager.ServerManager.Scenes.Load(FomoxaScenes.ArenaId, blue
 
 Client load mỗi bản với chế độ server đã chọn. Raycast hay truy vấn overlap chỉ thấy collider của một world, nên hãy truy vấn qua world của bản, ví dụ `unityScene.GetPhysicsScene().Raycast(...)`, chứ không qua `Physics.Raycast` tĩnh, vốn chỉ thấy world mặc định.
 
-Unity không bao giờ tự step world của scene load với `LocalPhysicsMode`. Khi backend Rigidbody không mô phỏng physics (Simulate Physics tắt, mặc định), mỗi `NetworkManager` step world của các bản `Own` nó đã load, theo chế độ mô phỏng của Unity: sau bước của chính Unity ở mỗi fixed update với `Time.fixedDeltaTime` khi `Physics.simulationMode` (hoặc `Physics2D.simulationMode`) là `FixedUpdate`, mỗi frame một lần với `Time.deltaTime` khi là `Update`, và không step khi là `Script`, vì game ở chế độ đó tự step physics. Khi bật Simulate Physics, package step mọi world mỗi tick một lần, kể cả bản `Own`.
+Unity không bao giờ tự step world của scene load với `LocalPhysicsMode`. Mỗi `NetworkManager` step các world Unity của các bản `Own` nó đã load, trừ khi backend là `RigidbodyPhysics` đang bật Simulate Physics. Với `RapierPhysics` manager cũng step chúng, vì các world đó vẫn giữ physics Unity nằm ngoài network object. Các bước theo chế độ mô phỏng của Unity: sau bước của chính Unity ở mỗi fixed update với `Time.fixedDeltaTime` khi `Physics.simulationMode` (hoặc `Physics2D.simulationMode`) là `FixedUpdate`, mỗi frame một lần với `Time.deltaTime` khi là `Update`, và không step khi là `Script`, vì game ở chế độ đó tự step physics. Khi bật Simulate Physics, package step mọi world mỗi tick một lần, kể cả bản `Own`.
+
+Với [backend Rapier](../rapier/setup.md#export-the-scene-files), network object được mô phỏng trong world Rapier, và mỗi bản có world riêng, dù load với chế độ nào. Khi đó chế độ chỉ quyết định world Unity nào nhận physics Unity của bản.
 
 Observer rule và [nhóm](observers.md#groups) quyết định peer nào thấy một object. Chúng không tách physics: object của hai phòng chung một world vẫn va chạm với nhau.
 

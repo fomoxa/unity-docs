@@ -71,7 +71,7 @@ var hinge = NetworkJoints.Create(JointKind.Revolute, new Vector3(-0.5f, 0f, 0f),
 JointHandle joint = rapier.Scenes.CreateJoint(networkObject, door, default, hinge);
 ```
 
-`rapier` is the `RapierPhysics` component of the `NetworkManager`. The second body is the world, so `hingePoint` is the hinge in world coordinates. Both frames turn the X axis of the joint onto the vertical axis, which makes the door swing around it. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` and the `NetworkBody2D` overload with a `JointDesc2D` check that `a` is a body of `owner` and attach the joint to it, so the joint goes away with the object. Change or remove it later through `rapier.Scenes.WorldOf(sceneId)`. A console server makes the same call with its `StandaloneEntity` and `PhysicsBody` values.
+`rapier` is the `RapierPhysics` component of the `NetworkManager`. The second body is the world, so `hingePoint` is the hinge in world coordinates. Both frames turn the X axis of the joint onto the vertical axis, which makes the door swing around it. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` and the `NetworkBody2D` overload with a `JointDesc2D` check that `a` is a body of `owner` and attach the joint to it, so the joint goes away with the object. Change or remove it later through `rapier.Scenes.WorldOf(scene)`, where `scene` is the `NetworkScene` of the object's scene, as described in [reading the worlds](bodies.md#reading-the-worlds). A console server makes the same call with its `StandaloneEntity` and `PhysicsBody` values.
 
 ## Joints in a replay
 
