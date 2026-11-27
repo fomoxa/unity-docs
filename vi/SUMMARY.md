@@ -87,6 +87,7 @@
 ## Triển khai
 
 * [Dedicated server](deploy/dedicated-server.md)
+* [Nhiều phòng trên một server](deploy/multiple-rooms.md)
 * [Đưa server lên môi trường thật](deploy/deployment.md)
 * [Backend của game](deploy/backend.md)
 * [Cụm server](deploy/cluster.md)

@@ -87,6 +87,7 @@
 ## Deploy
 
 * [Dedicated server](deploy/dedicated-server.md)
+* [Multiple rooms on one server](deploy/multiple-rooms.md)
 * [Deployment](deploy/deployment.md)
 * [Game backend](deploy/backend.md)
 * [Cluster](deploy/cluster.md)
