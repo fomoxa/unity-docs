@@ -52,6 +52,8 @@ Override các callback sau để phản ứng với vòng đời network của o
 | `OnStopClient()` | Trên client, trước khi object biến mất |
 | `OnOwnerChangedServer(ulong previousOwnerId)` | Trên server, sau khi owner thay đổi |
 | `OnOwnerChangedClient(ulong previousOwnerId)` | Trên mọi client đang observe, sau khi owner thay đổi |
+| `OnSceneChangedServer(NetworkScene previous, NetworkScene current)` | Trên server, sau khi object [chuyển](scenes.md#move-an-object-to-another-instance) sang bản khác |
+| `OnSceneChangedClient(NetworkScene previous, NetworkScene current)` | Trên mọi client observe object ở cả hai bản, sau khi lệnh chuyển tới |
 | `OnHostVisibility(bool visible)` | Trên host, khi client của nó thôi hoặc bắt đầu observe object; xem [host mode](../connections/host-mode.md) |
 | `OnReconciled(uint tick)` | Trên client của owner, sau một lần sửa từ state của server tại `tick`; xem [reconciliation](../prediction/reconciliation.md) |
 

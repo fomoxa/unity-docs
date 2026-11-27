@@ -47,6 +47,8 @@ Khi một entity spawn, backend console hỏi nó về body và thêm body đó 
 
 Sau khi spawn, `StandaloneEntity.Body` và `Body2D` trả về body, còn `Position` và `Rotation` đọc và ghi nó, nên transform sync và code game thấy tư thế đã mô phỏng. Despawn gỡ body.
 
+`ServerManager.MoveToScene(entity, scene)` gỡ các body rồi hỏi lại entity để tạo chúng trong các world của bản mới, nên `TryGetBody`, `TryGetBody2D` và các method child body chạy lại. Body mới nhận vị trí, góc xoay, vận tốc, vận tốc góc và loại body của body cũ. Joint và effector mà code game thêm qua `RapierScenes` mất đi cùng body cũ.
+
 ```csharp
 public override bool TryGetBody2D(out BodyDesc2D body)
 {

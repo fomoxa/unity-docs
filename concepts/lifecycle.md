@@ -69,6 +69,7 @@ sequenceDiagram
     SM->>Obj: OnStartServer
     Note over Obj: ... ticks ...
     SM->>Obj: OnOwnerChangedServer(previousOwnerId), when the owner changes
+    SM->>Obj: OnSceneChangedServer(previous, current), when MoveToScene moves it
     Code->>SM: Despawn(instance), or the owner leaves, or the server stops
     SM->>Obj: OnStopServer
     Note over SM: queues the despawn message,<br/>destroys a prefab instance or deactivates a scene object
@@ -90,6 +91,7 @@ sequenceDiagram
     CM->>Obj: OnStartClient (IsOwner is valid here)
     Note over Obj: ... state changes, RPCs, transforms ...
     CM->>Obj: OnOwnerChangedClient(previousOwnerId)
+    CM->>Obj: OnSceneChangedClient(previous, current)
     CM->>Obj: despawn, loss of observation, or the client stops: OnStopClient
     Note over CM: destroys the instance or returns it to its factory,<br/>or deactivates a scene object
 ```

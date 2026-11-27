@@ -64,7 +64,7 @@ if (manager.ServerManager.Scenes.TryGetScene(arenaInstance, out Scene arena))
 }
 ```
 
-Each client then puts its copy of the object into its own copy of that instance.
+Each client then puts its copy of the object into its own copy of that instance. After the spawn, move the object to another instance with [`MoveToScene`](scenes.md#move-an-object-to-another-instance), which tells the clients as well.
 
 ## Factories and pooling
 

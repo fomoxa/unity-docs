@@ -15,6 +15,8 @@ Both are small structs, so get a fresh one when you need it instead of storing i
 
 `IsValid` is true when two conditions hold. The object has a `Rigidbody` (for `Body`) or a `Rigidbody2D` (for `Body2D`) on the same GameObject as its `NetworkObject`, and the object is spawned on this side. Reading or writing an invalid body throws.
 
+A `NetworkBody` value taken before the object [moved to another instance](../objects/scenes.md#move-an-object-to-another-instance) is invalid afterwards, because the move builds the bodies again in the new instance's world. Read `Body` again after the move.
+
 `Body` and `Body2D` are the body on the GameObject of the `NetworkObject`. An object with more bodies lists all of them in `NetworkObject.Bodies` and `Bodies2D`, as described under [several bodies](overview.md#several-bodies).
 
 ## NetworkBody (3D)

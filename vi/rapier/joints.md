@@ -73,6 +73,8 @@ JointHandle joint = rapier.Scenes.CreateJoint(networkObject, door, default, hing
 
 `rapier` là component `RapierPhysics` của `NetworkManager`. Body thứ hai là thế giới, nên `hingePoint` là bản lề theo toạ độ thế giới. Cả hai khung xoay trục X của joint thành trục đứng, nên cửa quay quanh trục đó. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` và overload `NetworkBody2D` với `JointDesc2D` kiểm tra `a` là body của `owner` và gắn joint vào body đó, nên joint mất đi cùng object. Đổi hoặc gỡ joint sau đó qua `rapier.Scenes.WorldOf(scene)`, với `scene` là `NetworkScene` của scene chứa object, như mô tả ở [đọc world](bodies.md#reading-the-worlds). Console server gọi cùng hàm với `StandaloneEntity` của nó và các giá trị `PhysicsBody`.
 
+Khi object [chuyển sang bản khác](../objects/scenes.md#move-an-object-to-another-instance), `RapierPhysics` dựng lại body và các component joint của nó trong các world của bản mới. Joint tạo bằng `CreateJoint` bị gỡ cùng body cũ, nên hãy tạo lại nó trong `OnSceneChangedServer` hoặc `OnSceneChangedClient`.
+
 ## Joint khi replay <a href="#joints-in-a-replay" id="joints-in-a-replay"></a>
 
 Snapshot giữ mọi joint cùng mô tả và trạng thái của bộ giải. Khi client nạp một tick cũ:

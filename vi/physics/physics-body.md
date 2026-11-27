@@ -15,6 +15,8 @@ Cả hai là struct nhỏ, nên hãy lấy mới mỗi khi cần thay vì giữ 
 
 `IsValid` là true khi hai điều kiện cùng đúng. Object có `Rigidbody` (với `Body`) hoặc `Rigidbody2D` (với `Body2D`) trên cùng GameObject với `NetworkObject`, và object đã spawn ở phía này. Đọc hoặc ghi một body không hợp lệ sẽ ném exception.
 
+Một giá trị `NetworkBody` lấy trước khi object [chuyển sang bản khác](../objects/scenes.md#move-an-object-to-another-instance) sẽ không hợp lệ sau đó, vì lần chuyển dựng lại body trong world của bản mới. Hãy đọc lại `Body` sau lần chuyển.
+
 `Body` và `Body2D` là body trên GameObject của `NetworkObject`. Object có nhiều body liệt kê tất cả trong `NetworkObject.Bodies` và `Bodies2D`, như mục [nhiều body](overview.md#several-bodies) mô tả.
 
 ## NetworkBody (3D) <a href="#networkbody-3d" id="networkbody-3d"></a>

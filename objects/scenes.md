@@ -75,6 +75,66 @@ When the server finishes loading an instance, it spawns the scene objects in it,
 
 An object the server spawns into an instance, by moving it into that instance's `Scene` before `Spawn`, only reaches peers that have loaded the instance, as shown in [spawning](spawning.md#spawning-into-a-network-scene). A peer starts observing such an object only after its client reports that it has finished loading the instance.
 
+## Move an object to another instance
+
+`ServerManager.MoveToScene(networkObject, scene)` moves a spawned object into another instance, or out of network scenes when `scene` is `default`. A lobby that sends its players into a match room once the room has loaded on the server looks like this:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using Fomoxa.Networking;
+using Fomoxa.Unity;
+
+public sealed class MatchStart
+{
+    private readonly NetworkManager manager;
+
+    public MatchStart(NetworkManager manager)
+    {
+        this.manager = manager;
+    }
+
+    public NetworkScene Begin(uint arenaId, IReadOnlyList<ulong> peers, IReadOnlyList<NetworkObject> players)
+    {
+        NetworkScene match = manager.ServerManager.Scenes.Load(arenaId, peers, ScenePhysics.Own);
+        Action<NetworkScene> moveIn = null;
+        moveIn = loaded =>
+        {
+            if (loaded != match)
+            {
+                return;
+            }
+
+            manager.ServerManager.Scenes.OnLoaded -= moveIn;
+            foreach (NetworkObject player in players)
+            {
+                manager.ServerManager.MoveToScene(player, match);
+            }
+        };
+        manager.ServerManager.Scenes.OnLoaded += moveIn;
+        return match;
+    }
+}
+```
+
+Do not move a spawned object with `SceneManager.MoveGameObjectToScene` yourself. The server would not record the change, and clients would keep their copy in the old instance.
+
+On the server, `MoveToScene` moves the GameObject into the Unity scene of the instance, or into the active scene for `default`, and then moves its bodies into the physics world of that instance. The bodies keep their position, rotation, velocity, angular velocity and whether they are kinematic. The server then decides again which peers observe the object, in the same way as for a spawn into that instance:
+
+- A peer that observed the object and also observes it in the new instance gets one scene move message and moves its copy.
+- A peer that observed the object and does not observe it in the new instance gets a despawn.
+- A peer that observes the object only in the new instance gets a spawn. A peer whose client is still loading the instance gets it once that load is reported.
+
+After the move, the server calls `OnSceneChangedServer(previous, current)` on the object's behaviours. A client that moved its copy calls `OnSceneChangedClient(previous, current)`; a client that got a despawn or a spawn calls the stop or start callbacks instead. On a host, the server callback runs first and the client callback runs once the scene move message arrives.
+
+An owner that [predicts](../prediction/overview.md) the object stops predicting it when the move arrives, as it does when it loses ownership, and ignores reconcile states that the server sent before the move. It predicts again from the first state the server sends after the move.
+
+`MoveToScene` returns `false` when this server did not spawn the object, and `true` without sending anything when the object is already in that instance. It throws `ArgumentException` for a scene object, which stays in the instance it belongs to, and for an instance that does not exist. It throws `InvalidOperationException` when the server is still loading the instance, and for `default` when the active scene is itself a network scene instance.
+
+The move builds the bodies, and the joints and effectors that come from components, again in the new world. Joints and effectors created from code, for example with `RapierScenes.CreateJoint`, are removed with the old bodies, so create them again in `OnSceneChangedServer`. A `NetworkBody` read before the move refers to a removed body; read `networkObject.Body` again.
+
+A client that receives a move it cannot apply, for an object it does not have, for a scene object or into an instance it has not loaded, stops with `ObjectMismatch` and raises `OnObjectMismatch` with the kind `UnknownObject` or `InvalidSpawn`.
+
 ## Server events and queries
 
 | Member | Meaning |

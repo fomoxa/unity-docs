@@ -51,7 +51,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 |---|---|---|
 | `IMessageCodec<T>`, `MessageDecodeException` | Interface, exception | [Messaging API](messaging.md) |
 | `MessageDispatcher`, `PayloadHandler`, `ObjectPayloadHandler`, `HandlerRegistrationException`, `MessageChannels` | Class, delegate | [Messaging API](messaging.md) |
-| `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle`, `CollectionChanges`, `CollectionContent`, `CollectionContents`, `CollectionResync`, `PeerTransfer`, `TransferTicket` | System model của package | [Messaging API](messaging.md#system-models) |
+| `AnimatorState`, `InputFrames`, `LocalPeer`, `MessageBundle`, `BundleEntry`, `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `ObjectSceneMove`, `PeerLeave`, `ReconcileState`, `ReliableAck`, `SceneLoad`, `SceneLoaded`, `SceneUnload`, `StateDelta`, `StateResync`, `TickPing`, `TickPong`, `TransformUpdate`, `TransformSettle`, `CollectionChanges`, `CollectionContent`, `CollectionContents`, `CollectionResync`, `PeerTransfer`, `TransferTicket` | System model của package | [Messaging API](messaging.md#system-models) |
 | `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | System model một field, mang phần tử collection kiểu nguyên thuỷ | [Messaging API](messaging.md#system-models) |
 | `SceneFile`, `SceneFileObject`, `SceneFilePose`, `SceneFileBody`, `SceneFileBody2D`, `SceneFileCollider`, `SceneFileCollider2D`, `SceneFileMaterial` | System model của scene file | [Tích hợp Editor](../advanced/editor-integration.md#scene-files) |
 | `BundleFormat`, `BundleReader`, `BundleWriter`, `ObjectHeader`, `SeqHeader`, `OutgoingEntry`, `OutgoingKind`, `OutgoingQueue`, `QueuedMessage`, `EnqueueResult`, `MessageSender`, `ReliableChannel`, `ReliableVerdict`, `SessionProtocol`, `ZeroRuns` | Building block | |
@@ -70,7 +70,7 @@ Trang này liệt kê các public type của package theo namespace. Type đánh
 
 | Type | Loại | Trang |
 |---|---|---|
-| `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObserverAddedArgs`, `ServerRpcRejectedArgs`, `SpawnResult` | Enum, tham số event | [Lỗi](errors.md), [Callback](callbacks.md) |
+| `ObjectMismatchKind`, `ObjectMismatchArgs`, `ObjectOwnerChangedArgs`, `ObjectSceneMovedArgs`, `ObserverAddedArgs`, `ServerRpcRejectedArgs`, `SpawnResult` | Enum, tham số event | [Lỗi](errors.md), [Callback](callbacks.md) |
 | `IServerEntityBackend`, `IClientEntityBackend`, `IServerSceneHost`, `ISceneHost`, `SceneFileFormat`, `SceneFileGeometry` | Backend contract | [Tham chiếu backend console](../console-server/reference.md) |
 | `ServerObjects`, `ClientObjects`, `ServerScenes`, `ObjectTable`, `ObjectRow`, `SpawnedObject`, `SpawnData`, `SpawnSource`, `IObjectSpawner`, `ObjectProtocol`, `StateProtocol`, `CollectionProtocol`, `TransformProtocol`, `SceneProtocol`, `SpawnTransform` | Building block | |
 

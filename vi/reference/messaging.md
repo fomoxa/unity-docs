@@ -108,7 +108,7 @@ Các model của chính package nằm trong `Fomoxa.Networking.Messaging`. Chún
 | `PeerTransfer` | Server mà client được chuyển tới, vé của nó, và vé kết nối cho [UDP mã hóa](../connections/transports/encrypted-udp.md#server-transfers) | Reliable ordered |
 | `TransferTicket` | Nội dung của một vé từ `TransferTickets` | Không gửi riêng |
 | `ConnectToken`, `ConnectTokenSecret`, `ConnectionGrant` | Token từ `ConnectTokens`, phần kín của nó, và vé kết nối mang token cùng các khoá phiên | Không gửi riêng |
-| `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange` | Vòng đời object | Reliable ordered |
+| `ObjectSpawn`, `ObjectSceneSpawn`, `ObjectDespawn`, `ObjectOwnerChange`, `ObjectSceneMove` | Vòng đời object | Reliable ordered |
 | `StateDelta`, `StateResync` | Delta của state, và yêu cầu state đầy đủ từ client | Reliable ordered |
 | `CollectionChanges` | Các thao tác gọi trên một collection trong một tick | Reliable ordered |
 | `CollectionContent`, `CollectionResync` | Toàn bộ nội dung của một collection, và yêu cầu nội dung đó từ client | Reliable ordered |

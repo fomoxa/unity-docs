@@ -44,6 +44,7 @@ foreach (ulong peerId in new List<ulong>(manager.ServerManager.StartedPeers))
 | `void Spawn(INetworkEntity networkObject, ulong ownerId = 0)` | Spawn một instance. Ném `ArgumentNullException`, `InvalidOperationException` khi server chưa khởi động, `ArgumentException` với asset prefab, object đã spawn, prefab id chưa đăng ký, scene object không hợp lệ hoặc owner không phải peer đã khởi động. |
 | `bool Despawn(INetworkEntity networkObject)` | Despawn và hủy một instance, hoặc tắt một scene object. False khi server này không spawn object đó. |
 | `bool ChangeOwner(INetworkEntity networkObject, ulong ownerId)` | Đổi owner; 0 cho server. False khi server này không spawn object đó hoặc owner không phải peer đã khởi động. |
+| `bool MoveToScene(INetworkEntity networkObject, NetworkScene scene)` | [Chuyển](../objects/scenes.md#move-an-object-to-another-instance) object sang bản khác, hoặc ra khỏi network scene với `default`. False khi server này không spawn object đó; true mà không gửi message khi object đã ở đó. Ném `ArgumentNullException`, `ArgumentException` cho scene object hoặc bản không tồn tại, `InvalidOperationException` khi bản còn đang load hoặc với `default` khi active scene là một bản. |
 | `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Các object đã spawn theo object id |
 
 ## Observer <a href="#observers" id="observers"></a>

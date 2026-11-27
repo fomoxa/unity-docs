@@ -58,6 +58,8 @@ Dù giá trị là gì, owner luôn observe object của nó, và network scene 
 | `OnStopClient()` | `public virtual` | Trước khi object biến mất khỏi client |
 | `OnOwnerChangedServer(ulong previousOwnerId)` | `public virtual` | Trên server sau khi đổi owner |
 | `OnOwnerChangedClient(ulong previousOwnerId)` | `public virtual` | Trên các client đang observe sau khi đổi owner |
+| `OnSceneChangedServer(NetworkScene previous, NetworkScene current)` | `public virtual` | Trên server sau khi chuyển sang bản khác |
+| `OnSceneChangedClient(NetworkScene previous, NetworkScene current)` | `public virtual` | Trên các client observe object ở cả hai bản, sau khi lệnh chuyển tới |
 | `OnHostVisibility(bool visible)` | `protected virtual` | Trên host khi client của nó thôi hoặc bắt đầu observe object |
 | `OnGatherInput()` | `protected virtual` | Trên client của owner mỗi tick một lần, trước khi các field `[NetworkInput]` được chép |
 | `OnApplyInput(InputContext context)` | `protected virtual` | Sau khi input của một tick đã được ghi vào các field `[NetworkInput]` |

@@ -75,6 +75,66 @@ Khi server load xong một bản, nó spawn các scene object trong đó, và kh
 
 Object mà server spawn vào một bản, bằng cách chuyển nó vào `Scene` của bản đó trước khi gọi `Spawn`, chỉ tới các peer đã load bản đó, như trong [spawn](spawning.md#spawning-into-a-network-scene). Một peer chỉ bắt đầu observe object như vậy sau khi client của nó báo đã load xong bản.
 
+## Chuyển object sang bản khác <a href="#move-an-object-to-another-instance" id="move-an-object-to-another-instance"></a>
+
+`ServerManager.MoveToScene(networkObject, scene)` chuyển một object đã spawn sang bản khác, hoặc ra khỏi network scene khi `scene` là `default`. Ví dụ một lobby đưa người chơi vào phòng đấu khi phòng đã load xong trên server:
+
+```csharp
+using System;
+using System.Collections.Generic;
+using Fomoxa.Networking;
+using Fomoxa.Unity;
+
+public sealed class MatchStart
+{
+    private readonly NetworkManager manager;
+
+    public MatchStart(NetworkManager manager)
+    {
+        this.manager = manager;
+    }
+
+    public NetworkScene Begin(uint arenaId, IReadOnlyList<ulong> peers, IReadOnlyList<NetworkObject> players)
+    {
+        NetworkScene match = manager.ServerManager.Scenes.Load(arenaId, peers, ScenePhysics.Own);
+        Action<NetworkScene> moveIn = null;
+        moveIn = loaded =>
+        {
+            if (loaded != match)
+            {
+                return;
+            }
+
+            manager.ServerManager.Scenes.OnLoaded -= moveIn;
+            foreach (NetworkObject player in players)
+            {
+                manager.ServerManager.MoveToScene(player, match);
+            }
+        };
+        manager.ServerManager.Scenes.OnLoaded += moveIn;
+        return match;
+    }
+}
+```
+
+Đừng tự chuyển object đã spawn bằng `SceneManager.MoveGameObjectToScene`. Server sẽ không ghi nhận thay đổi, và client vẫn giữ bản copy của chúng trong bản cũ.
+
+Trên server, `MoveToScene` chuyển GameObject vào Unity scene của bản, hoặc vào active scene khi là `default`, rồi chuyển các body của nó vào physics world của bản đó. Body giữ nguyên vị trí, góc xoay, vận tốc, vận tốc góc và việc nó có kinematic hay không. Sau đó server quyết định lại peer nào observe object, giống như khi spawn vào bản đó:
+
+- Peer đã observe object và vẫn observe nó ở bản mới nhận một message chuyển scene và chuyển bản copy của nó.
+- Peer đã observe object nhưng không observe nó ở bản mới nhận một despawn.
+- Peer chỉ observe object ở bản mới nhận một spawn. Peer có client còn đang load bản sẽ nhận spawn khi lần load đó được báo xong.
+
+Sau khi chuyển, server gọi `OnSceneChangedServer(previous, current)` trên các behaviour của object. Client đã chuyển bản copy gọi `OnSceneChangedClient(previous, current)`; client nhận despawn hoặc spawn thì gọi callback stop hoặc start. Trên host, callback của server chạy trước, callback của client chạy khi message chuyển scene tới.
+
+Owner đang [dự đoán](../prediction/overview.md) object sẽ ngừng dự đoán khi lệnh chuyển tới, như khi mất quyền owner, và bỏ qua các reconcile state server gửi trước lần chuyển. Nó dự đoán lại từ state đầu tiên server gửi sau lần chuyển.
+
+`MoveToScene` trả `false` khi server này không spawn object đó, và trả `true` mà không gửi gì khi object đã ở bản đó. Nó ném `ArgumentException` cho scene object, vốn ở yên trong bản của nó, và cho bản không tồn tại. Nó ném `InvalidOperationException` khi server còn đang load bản, và khi chuyển về `default` lúc active scene chính là một bản network scene.
+
+Lần chuyển dựng lại các body, cùng joint và effector đến từ component, trong world mới. Joint và effector tạo từ code, ví dụ bằng `RapierScenes.CreateJoint`, bị gỡ cùng body cũ, nên hãy tạo lại chúng trong `OnSceneChangedServer`. Một `NetworkBody` đọc trước lần chuyển trỏ tới body đã bị gỡ; hãy đọc lại `networkObject.Body`.
+
+Client nhận một lệnh chuyển mà nó không áp dụng được, cho object nó không có, cho scene object hoặc vào bản nó chưa load, sẽ dừng với `ObjectMismatch` và raise `OnObjectMismatch` với kind `UnknownObject` hoặc `InvalidSpawn`.
+
 ## Event và truy vấn trên server <a href="#server-events-and-queries" id="server-events-and-queries"></a>
 
 | Member | Ý nghĩa |

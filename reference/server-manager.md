@@ -44,6 +44,7 @@ foreach (ulong peerId in new List<ulong>(manager.ServerManager.StartedPeers))
 | `void Spawn(INetworkEntity networkObject, ulong ownerId = 0)` | Spawns an instance. Throws `ArgumentNullException`, `InvalidOperationException` when the server is not started, `ArgumentException` for a prefab asset, an object already spawned, an unregistered prefab id, an invalid scene object or an owner that is not a started peer. |
 | `bool Despawn(INetworkEntity networkObject)` | Despawns and destroys an instance, or deactivates a scene object. False when not spawned by this server. |
 | `bool ChangeOwner(INetworkEntity networkObject, ulong ownerId)` | Changes the owner; 0 for the server. False when not spawned by this server or the owner is not a started peer. |
+| `bool MoveToScene(INetworkEntity networkObject, NetworkScene scene)` | [Moves](../objects/scenes.md#move-an-object-to-another-instance) the object into another instance, or out of network scenes for `default`. False when not spawned by this server; true without a message when it is already there. Throws `ArgumentNullException`, `ArgumentException` for a scene object or an instance that does not exist, `InvalidOperationException` while the instance is loading or for `default` when the active scene is an instance. |
 | `IReadOnlyDictionary<uint, INetworkEntity> Spawned` | Spawned objects by object id |
 
 ## Observers

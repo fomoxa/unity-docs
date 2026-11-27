@@ -52,6 +52,8 @@ Override these callbacks to react to the object's network lifecycle:
 | `OnStopClient()` | On a client, before the object disappears |
 | `OnOwnerChangedServer(ulong previousOwnerId)` | On the server, after the owner changed |
 | `OnOwnerChangedClient(ulong previousOwnerId)` | On every observing client, after the owner changed |
+| `OnSceneChangedServer(NetworkScene previous, NetworkScene current)` | On the server, after the object [moved](scenes.md#move-an-object-to-another-instance) to another instance |
+| `OnSceneChangedClient(NetworkScene previous, NetworkScene current)` | On every client that observes the object in both instances, after the move arrived |
 | `OnHostVisibility(bool visible)` | On a host, when its client stops or starts observing the object; see [host mode](../connections/host-mode.md) |
 | `OnReconciled(uint tick)` | On the owner's client, after a correction from the server's state at `tick`; see [reconciliation](../prediction/reconciliation.md) |
 

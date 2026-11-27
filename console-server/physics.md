@@ -47,6 +47,8 @@ When an entity spawns, the console backend asks it for its body and adds that bo
 
 After the spawn, `StandaloneEntity.Body` and `Body2D` return the body, and `Position` and `Rotation` read and write it, so the transform sync and game code see the simulated pose. Despawning removes the body.
 
+`ServerManager.MoveToScene(entity, scene)` removes the bodies and asks the entity for them again in the worlds of the new instance, so `TryGetBody`, `TryGetBody2D` and the child body methods run again. The new bodies get the position, rotation, velocity, angular velocity and body kind of the old ones. Joints and effectors that game code added through `RapierScenes` go away with the old bodies.
+
 ```csharp
 public override bool TryGetBody2D(out BodyDesc2D body)
 {

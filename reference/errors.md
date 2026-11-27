@@ -65,7 +65,7 @@ A newer server may send a value this list does not have. The client keeps the va
 | `UnknownScene` | A network scene could not be loaded |
 | `DuplicateObject` | A spawn for an object id the client already has |
 | `UnknownObject` | A message for an object id the client does not have, where one is required |
-| `InvalidSpawn` | A spawn the client cannot apply, such as a state that does not decode or a scene the client has not loaded |
+| `InvalidSpawn` | A spawn or scene move the client cannot apply, such as a state that does not decode, a scene the client has not loaded or a move of a scene object |
 | `InvalidMessage` | An object or scene message that does not decode |
 
 ## SendResult

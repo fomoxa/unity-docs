@@ -69,6 +69,7 @@ sequenceDiagram
     SM->>Obj: OnStartServer
     Note over Obj: ... các tick ...
     SM->>Obj: OnOwnerChangedServer(previousOwnerId), khi owner thay đổi
+    SM->>Obj: OnSceneChangedServer(previous, current), khi MoveToScene chuyển nó
     Code->>SM: Despawn(instance), hoặc owner rời đi, hoặc server dừng
     SM->>Obj: OnStopServer
     Note over SM: đưa message despawn vào hàng đợi,<br/>hủy instance của prefab hoặc tắt scene object
@@ -90,6 +91,7 @@ sequenceDiagram
     CM->>Obj: OnStartClient (IsOwner đã đúng ở đây)
     Note over Obj: ... state thay đổi, RPC, transform ...
     CM->>Obj: OnOwnerChangedClient(previousOwnerId)
+    CM->>Obj: OnSceneChangedClient(previous, current)
     CM->>Obj: despawn, mất quyền observe, hoặc client dừng: OnStopClient
     Note over CM: hủy instance hoặc trả nó về factory,<br/>hoặc tắt scene object
 ```

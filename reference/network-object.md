@@ -58,6 +58,8 @@ Whatever the value, the owner always observes its objects, and network scenes re
 | `OnStopClient()` | `public virtual` | Before the object disappears from a client |
 | `OnOwnerChangedServer(ulong previousOwnerId)` | `public virtual` | On the server after an owner change |
 | `OnOwnerChangedClient(ulong previousOwnerId)` | `public virtual` | On observing clients after an owner change |
+| `OnSceneChangedServer(NetworkScene previous, NetworkScene current)` | `public virtual` | On the server after a move to another instance |
+| `OnSceneChangedClient(NetworkScene previous, NetworkScene current)` | `public virtual` | On clients that observe the object in both instances, after the move arrived |
 | `OnHostVisibility(bool visible)` | `protected virtual` | On a host when its client stops or starts observing the object |
 | `OnGatherInput()` | `protected virtual` | On the owner's client once per tick, before the `[NetworkInput]` fields are copied |
 | `OnApplyInput(InputContext context)` | `protected virtual` | After the input of a tick was written into the `[NetworkInput]` fields |

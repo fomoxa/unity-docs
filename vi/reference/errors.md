@@ -65,7 +65,7 @@ Server bản mới hơn có thể gửi một giá trị không có trong danh s
 | `UnknownScene` | Một network scene không load được |
 | `DuplicateObject` | Message spawn cho một object id mà client đã có |
 | `UnknownObject` | Message cho một object id mà client không có, trong trường hợp bắt buộc phải có |
-| `InvalidSpawn` | Message spawn mà client không áp dụng được, như state không decode được hoặc scene client chưa load |
+| `InvalidSpawn` | Message spawn hoặc chuyển scene mà client không áp dụng được, như state không decode được, scene client chưa load hoặc lệnh chuyển một scene object |
 | `InvalidMessage` | Object message hoặc scene message không decode được |
 
 ## SendResult <a href="#sendresult" id="sendresult"></a>

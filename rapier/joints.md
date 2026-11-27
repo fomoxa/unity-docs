@@ -73,6 +73,8 @@ JointHandle joint = rapier.Scenes.CreateJoint(networkObject, door, default, hing
 
 `rapier` is the `RapierPhysics` component of the `NetworkManager`. The second body is the world, so `hingePoint` is the hinge in world coordinates. Both frames turn the X axis of the joint onto the vertical axis, which makes the door swing around it. `RapierScenes.CreateJoint(INetworkEntity owner, NetworkBody a, NetworkBody b, in JointDesc desc)` and the `NetworkBody2D` overload with a `JointDesc2D` check that `a` is a body of `owner` and attach the joint to it, so the joint goes away with the object. Change or remove it later through `rapier.Scenes.WorldOf(scene)`, where `scene` is the `NetworkScene` of the object's scene, as described in [reading the worlds](bodies.md#reading-the-worlds). A console server makes the same call with its `StandaloneEntity` and `PhysicsBody` values.
 
+When the object [moves to another instance](../objects/scenes.md#move-an-object-to-another-instance), `RapierPhysics` builds its bodies and its joint components again in the worlds of the new instance. A joint created with `CreateJoint` is removed with the old bodies, so create it again in `OnSceneChangedServer` or `OnSceneChangedClient`.
+
 ## Joints in a replay
 
 A snapshot holds every joint with its description and solver state. When a client loads an earlier tick:

@@ -64,7 +64,7 @@ if (manager.ServerManager.Scenes.TryGetScene(arenaInstance, out Scene arena))
 }
 ```
 
-Mỗi client sau đó đặt object của nó vào bản scene đó ở phía mình.
+Mỗi client sau đó đặt object của nó vào bản scene đó ở phía mình. Sau khi spawn, hãy chuyển object sang bản khác bằng [`MoveToScene`](scenes.md#move-an-object-to-another-instance); lời gọi này báo cho cả client.
 
 ## Factory và pooling <a href="#factories-and-pooling" id="factories-and-pooling"></a>
 

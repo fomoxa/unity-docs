@@ -68,6 +68,8 @@ Với `OnInputRejected` và `OnServerRpcRejected`, server đếm hay phạt đư
 | `OnStartClient` | Client | Sau khi state ban đầu được áp dụng |
 | `OnOwnerChangedServer(previousOwnerId)` | Server | Sau khi owner thay đổi |
 | `OnOwnerChangedClient(previousOwnerId)` | Client đang observe | Sau khi thông báo đổi owner tới |
+| `OnSceneChangedServer(previous, current)` | Server | Sau khi `MoveToScene` chuyển object sang bản khác |
+| `OnSceneChangedClient(previous, current)` | Client observe object ở cả hai bản | Sau khi lệnh chuyển scene tới; trên host, sau `OnSceneChangedServer` |
 | `OnHostVisibility(visible)` | Host | Khi client của host thôi hoặc bắt đầu observe; exception được log |
 | `OnReconciled(tick)` | Client của owner | Sau một lần sửa |
 | `OnStopClient` | Client | Trước khi object biến mất; trên host, trước `OnStopServer`. Khi client dừng, trước khi `OnClientConnectionState` báo `Stopped` |

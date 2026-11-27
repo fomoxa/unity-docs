@@ -68,6 +68,8 @@ By default, Log Send Dropped and Log Receive Dropped log the first two events. `
 | `OnStartClient` | Client | After the initial state is applied |
 | `OnOwnerChangedServer(previousOwnerId)` | Server | After the owner changed |
 | `OnOwnerChangedClient(previousOwnerId)` | Observing clients | After the owner change arrived |
+| `OnSceneChangedServer(previous, current)` | Server | After `MoveToScene` moved the object to another instance |
+| `OnSceneChangedClient(previous, current)` | Clients that observe the object in both instances | After the scene move arrived; on a host, after `OnSceneChangedServer` |
 | `OnHostVisibility(visible)` | Host | When the host's client stops or starts observing; exceptions are logged |
 | `OnReconciled(tick)` | Owner's client | After a correction |
 | `OnStopClient` | Client | Before the object disappears; on a host, before `OnStopServer`. When the client stops, before `OnClientConnectionState` reports `Stopped` |
