@@ -73,9 +73,25 @@ private void AddToRapier(RapierPhysics rapier)
         AddBodies(rapier, block.gameObject);
     }
 
-    World = rapier.Scenes.WorldOf2D(NetworkManager.Scenes.IdOf(gameObject.scene.path));
+    World = rapier.Scenes.WorldOf2D(InstanceOf(gameObject.scene));
 }
 ```
+
+`InstanceOf` tìm bản của scene chứa level:
+
+```csharp
+private NetworkScene InstanceOf(Scene scene)
+{
+    if (NetworkManager.ServerManager.Scenes.TryGetNetworkScene(scene, out NetworkScene instance))
+    {
+        return instance;
+    }
+
+    return NetworkManager.ClientManager.Scenes.TryGetNetworkScene(scene, out instance) ? instance : default;
+}
+```
+
+Unity mở `Play` lúc khởi động và server không bao giờ load nó như một network scene, nên cả hai phía đều không có bản cho nó. Khi đó `InstanceOf` trả `default`, world mà Rapier giữ cho các scene nằm ngoài network scene. Level nằm trong một scene mà server load qua `ServerManager.Scenes` thì nhận world của bản đó.
 
 Path follower được thêm một `Rigidbody2D` kinematic để collider của nó được tính là body thay vì geometry tĩnh. `AddStatics` mô tả các collider tĩnh của một block bằng `BodyDescriptions.StaticColliders2D` và `DescribeStatic2D`, bỏ qua collider của collectable, rồi thêm chúng bằng `rapier.AddStatic2D(gameObject.scene, colliders)`; nó ghi lại collider nguồn của từng chỉ số bắt đầu từ `StaticGroup.FirstIndex`. `AddBodies` mô tả từng `Rigidbody2D` không dynamic của block bằng `BodyDescriptions.TryDescribe2D` và thêm nó bằng `rapier.AddBody2D`, khóa theo handle của body.
 

@@ -72,9 +72,9 @@ var networkLog = new NetworkLog(exception => log(exception.ToString()), warning 
 Runtime = StandaloneRuntime.Create(registry, settings, new UdpTransportFactory(), prefabs, behaviours, new SceneFileDirectory(scenes), clock, networkLog, physics, new[] { FomoxaScenes.PlayId });
 ```
 
-Here `physics` is a `RapierScenes` with gravity (0, -9.81, 0), the same as the clients' `RapierPhysics`. When a peer reaches `Started`, `ServerGame` spawns a `PlayerEntity` in the `Play` scene at the catalogue's spawn point. `TimeManager.OnPreTick` moves the level's hazards to the prediction tick, as `NetworkLevel.MoveFollowers` does in Unity.
+Here `physics` is a `RapierScenes` with gravity (0, -9.81, 0), the same as the clients' `RapierPhysics`. When a peer reaches `Started`, `ServerGame` spawns a `PlayerEntity` at the catalogue's spawn point. Its `Scene` stays `default`: a boot scene has no `NetworkScene`, so the player and the level share the default world. `TimeManager.OnPreTick` moves the level's hazards to the prediction tick, as `NetworkLevel.MoveFollowers` does in Unity.
 
-`LevelBehaviour.OnStartServer` picks the seed, logs `[RedRunner] level seed <seed>` and builds the level with `BuiltLevel.Build`, through an `ILevelPhysics` that adds the colliders and bodies to `RapierScenes` under the `Play` scene id.
+`LevelBehaviour.OnStartServer` picks the seed, logs `[RedRunner] level seed <seed>` and builds the level with `BuiltLevel.Build`, through an `ILevelPhysics` that adds the colliders and bodies to the default world of `RapierScenes`, `WorldOf2D(default)`.
 
 ### The player
 
@@ -94,8 +94,8 @@ Here `physics` is a `RapierScenes` with gravity (0, -9.81, 0), the same as the c
 You need the .NET 8 SDK on Windows x64 or Linux x64. Clone the three repositories next to each other, the two packages at the tags that Red Runner's `Packages/manifest.json` installs, so that the server and the clients run the same package code:
 
 ```
-git clone --branch 0.5.0 https://github.com/fomoxa/com.fomoxa.networking.git
-git clone --branch 0.3.0 https://github.com/fomoxa/networking-rapier.git
+git clone --branch 0.6.0 https://github.com/fomoxa/com.fomoxa.networking.git
+git clone --branch 0.4.0 https://github.com/fomoxa/networking-rapier.git
 git clone https://github.com/fomoxa/RedRunner.git
 ```
 

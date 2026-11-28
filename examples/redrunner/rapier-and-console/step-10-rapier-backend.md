@@ -73,9 +73,25 @@ private void AddToRapier(RapierPhysics rapier)
         AddBodies(rapier, block.gameObject);
     }
 
-    World = rapier.Scenes.WorldOf2D(NetworkManager.Scenes.IdOf(gameObject.scene.path));
+    World = rapier.Scenes.WorldOf2D(InstanceOf(gameObject.scene));
 }
 ```
+
+`InstanceOf` finds the scene instance that holds the level:
+
+```csharp
+private NetworkScene InstanceOf(Scene scene)
+{
+    if (NetworkManager.ServerManager.Scenes.TryGetNetworkScene(scene, out NetworkScene instance))
+    {
+        return instance;
+    }
+
+    return NetworkManager.ClientManager.Scenes.TryGetNetworkScene(scene, out instance) ? instance : default;
+}
+```
+
+Unity opens `Play` at startup and the server never loads it as a network scene, so neither side has an instance for it. `InstanceOf` then returns `default`, the world that Rapier keeps for scenes outside network scenes. A level in a scene that the server loads through `ServerManager.Scenes` gets the world of that instance instead.
 
 A path follower gets a kinematic `Rigidbody2D` so that its colliders count as a body instead of static geometry. `AddStatics` describes the static colliders of a block with `BodyDescriptions.StaticColliders2D` and `DescribeStatic2D`, skips those of collectables, and adds them with `rapier.AddStatic2D(gameObject.scene, colliders)`; it records the source collider of each index from `StaticGroup.FirstIndex` on. `AddBodies` describes each non-dynamic `Rigidbody2D` of the block with `BodyDescriptions.TryDescribe2D` and adds it with `rapier.AddBody2D`, keyed by the body's handle.
 

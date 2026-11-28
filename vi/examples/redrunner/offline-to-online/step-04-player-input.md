@@ -123,7 +123,7 @@ m_Rigidbody2D.AddForce ( new Vector2 ( Mathf.Sign ( transform.localScale.x ) * m
 public sealed partial class NetworkPlayer : NetworkBehaviour
 ```
 
-Nửa phần input của class, viết cho `com.fomoxa.networking` 0.5.0:
+Nửa phần input của class, viết cho `com.fomoxa.networking` 0.6.0:
 
 ```csharp
 [NetworkInput]
