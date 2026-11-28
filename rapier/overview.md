@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking.rapier` 0.2.0 |
-| Requires | `com.fomoxa.networking` 0.3.0 |
+| Package | `com.fomoxa.networking.rapier` 0.4.0 |
+| Requires | `com.fomoxa.networking` 0.6.0 |
 | Unity | 6000.5 or later |
 | Platforms | Windows x64 and arm64, Linux x64 and arm64, macOS, Android `arm64-v8a` and `armeabi-v7a`, iOS, Web; see [setup](setup.md#platforms) |
 | Rapier | `rapier3d` and `rapier2d` 0.36.0, built with `enhanced-determinism` |

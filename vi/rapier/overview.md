@@ -4,8 +4,8 @@
 
 | | |
 |---|---|
-| Package | `com.fomoxa.networking.rapier` 0.2.0 |
-| Yêu cầu | `com.fomoxa.networking` 0.3.0 |
+| Package | `com.fomoxa.networking.rapier` 0.4.0 |
+| Yêu cầu | `com.fomoxa.networking` 0.6.0 |
 | Unity | 6000.5 trở lên |
 | Nền tảng | Windows x64 và arm64, Linux x64 và arm64, macOS, Android `arm64-v8a` và `armeabi-v7a`, iOS, Web; xem [cài đặt](setup.md#platforms) |
 | Rapier | `rapier3d` và `rapier2d` 0.36.0, build với `enhanced-determinism` |

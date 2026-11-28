@@ -1,5 +1,59 @@
 # Ghi chú phát hành
 
+## 0.6.0 <a href="#060" id="060"></a>
+
+Bản phát hành này gồm các phần sau, phát hành cùng nhau:
+
+| Phần | Phiên bản | Cài đặt |
+|---|---|---|
+| `com.fomoxa.networking` | 0.6.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.6.0` |
+| `com.fomoxa.rpc` | 0.1.9; cần `com.fomoxa.networking` 0.6.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.9` |
+| `com.fomoxa.networking.rapier` | 0.4.0; cần `com.fomoxa.networking` 0.6.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.4.0` |
+| `com.fomoxa.networking.steam` | 0.1.4; cần `com.fomoxa.networking` 0.6.0 và Steamworks.NET 2025.165.0 trở lên | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.4` |
+
+`Fomoxa.Backend.Templates` 0.1.1, directory và gateway ở tag `0.2.0` không có phiên bản mới.
+
+### Nâng cấp từ 0.5.0 <a href="#upgrading-from-050" id="upgrading-from-050"></a>
+
+Nâng `com.fomoxa.rpc` lên 0.1.9, `com.fomoxa.networking.rapier` lên 0.4.0 và `com.fomoxa.networking.steam` lên 0.1.4 cùng lúc với package. Với package 0.6.0, `com.fomoxa.rpc` 0.1.8 báo lỗi khi sinh code, Rapier 0.3.0 không biên dịch, còn Steam 0.1.3 ném lỗi phiên bản khi `NetworkManager` tạo transport.
+
+Ba message của chính package đã đổi: `SceneLoad` gọi tên các bản của scene, còn `ObjectSpawn` và `ObjectSceneSpawn` mang bản mà object nằm trong. Message mới `ObjectSceneMove` chuyển object giữa các bản, còn transform của object đang di chuyển giờ đi trong message mới `TransformFrame`, thay cho `TransformUpdate`. Các trường của `SceneLoad` không còn khớp với 0.5.0, nên bản build 0.5.0 và bản build 0.6.0 từ chối nhau với `HandshakeFailure.SchemaConflict`. Hãy nâng server và mọi bản build client cùng lúc. Lần sinh code đầu tiên sau khi cập nhật ghi lại code sinh của các message này và xóa các tệp của `TransformUpdate`; hãy commit nó và build console server từ đó.
+
+Server giờ giữ được nhiều bản của một scene asset, và mọi lời gọi scene trừ lời gọi load đều gọi tên một bản, tức một `NetworkScene`, xem [bản](objects/scenes.md#instances). Scene id vẫn gọi tên asset, và các lời gọi load vẫn nhận nó. Thay các lời gọi scene như sau:
+
+| 0.5.0 | 0.6.0 |
+|---|---|
+| `ServerManager.Scenes.LoadGlobal(sceneIds)`, không trả gì | Cùng lời gọi đó, giờ trả `NetworkScene` của từng bản |
+| `UnloadGlobal(sceneIds)` | `UnloadGlobal(scenes)`, với các bản mà `LoadGlobal` đã trả |
+| `LoadForPeers(sceneId, peerIds)`, thêm peer vào scene đã load | `Load(sceneId, peerIds)`, lần nào cũng tạo một bản mới và trả về nó. `AddPeers(scene, peerIds)` cho thêm peer vào một bản đã có |
+| `UnloadForPeers(sceneId, peerIds)` | `RemovePeers(scene, peerIds)` |
+| `Unload(sceneId)` | `Unload(scene)` |
+| `Global`, `Contains`, `IsGlobal`, `HasLoaded`, `PeersOf`, `OnLoaded` và `OnLoadFailed` theo scene id | Cùng các member đó theo `NetworkScene`. `SceneIdOf(scene)` trả scene id của một bản, còn `InstancesOf(sceneId)` trả các bản của một asset |
+| `ServerManager.Scenes.TryGetScene(sceneId, out Scene scene)` | `TryGetScene(networkScene, out Scene scene)`, trên `ServerManager.Scenes` và trên `ClientManager.Scenes` mới |
+| `ISceneLoader.Load(loaded, failed)` | `Load(SceneLoadRequest request, Action<float> progress, Action<Scene> loaded, Action<Exception> failed)`. Load với `request.Physics` và truyền cho `loaded` đúng `Scene` của lần load này, xem [loader tùy chỉnh](objects/scenes.md#custom-loaders) |
+| `ObjectMismatchArgs.SceneId` | `ObjectMismatchArgs.Scene` |
+| Console server: `StandaloneEntity.SceneId` | `StandaloneEntity.Scene` |
+
+Mọi bản đều load với `ScenePhysics.Shared` trừ khi bạn truyền `ScenePhysics.Own`, và một scene asset chỉ có được một bản `Shared` tại một thời điểm, nên bản `Shared` thứ hai của cùng asset ném `ArgumentException`. Hãy load các phòng của một map với `Own`, xem [physics của một bản](objects/scenes.md#physics-of-an-instance).
+
+Code tự hiện thực các hợp đồng của package cũng đổi. Một scene host nhận `NetworkScene`, `ScenePhysics` của nó và một callback tiến độ trong `TryLoad`, và nhận `NetworkScene` trong `Unload`. `IServerEntityBackend.SceneIdOf` thành `SceneOf`, trả `NetworkScene`, còn `IServerEntityBackend` và `IClientEntityBackend` có thêm `MoveToScene`. Một backend physics hiện thực `IPhysicsScenes` với tham số `NetworkScene` (`LoadScene(scene, file)`, `UnloadScene(scene)`, `AddStatic`, `AddBody`) và member trừu tượng mới `NetworkPhysics.MoveBodies`. Với Rapier, `RapierScenes.WorldOf` và `WorldOf2D` nhận `NetworkScene`; `TryGetNetworkScene(gameObject.scene, out NetworkScene scene)` trên `ServerManager.Scenes` hoặc `ClientManager.Scenes` tìm nó từ một Unity scene.
+
+### Bổ sung <a href="#added" id="added"></a>
+
+- Nhiều bản của một scene asset cùng lúc, ví dụ mỗi trận một bản, mỗi bản chỉ tới các peer đã load nó. Xem [network scene](objects/scenes.md#instances).
+- `ScenePhysics.Own` cho một bản physics world 3D và 2D riêng, nên các phòng của một map không va chạm nhau. Backend Rapier cho mỗi bản world Rapier riêng. Xem [physics của một bản](objects/scenes.md#physics-of-an-instance).
+- `ServerManager.MoveToScene` chuyển một object đã spawn sang bản khác, và các behaviour của nó nhận `OnSceneChangedServer`, `OnSceneChangedClient`. Xem [chuyển object sang bản khác](objects/scenes.md#move-an-object-to-another-instance).
+- `ClientManager.Scenes` với event load và `OnLoadProgress`, `TryGetNetworkScene` ở cả hai phía, và các event server `OnUnloaded`, `OnPeerLoaded`. Xem [event và truy vấn trên server](objects/scenes.md#server-events-and-queries).
+- [Nhiều phòng trên một server](deploy/multiple-rooms.md) dựng một sảnh và các phòng trên một server headless, và chỉ cách đo một phòng tốn bao nhiêu.
+
+### Băng thông <a href="#bandwidth" id="bandwidth"></a>
+
+- `NetworkTransform` gửi các bản cập nhật của một tick tới một client trong một message và làm tròn chúng: vị trí và tỉ lệ tới 0,01 đơn vị, góc xoay trong khoảng 0,2 độ. Trục vượt ±327,67 được gửi bằng `float` chính xác, và message settle vẫn mang giá trị chính xác. Một bản cập nhật có vị trí và góc xoay tốn 17 byte thay cho 51 khi vị trí nằm trong tầm đó. Xem [cách hoạt động](synchronization/transform.md#how-it-works).
+
+### Sửa lỗi <a href="#fixed" id="fixed"></a>
+
+- Package khai báo `com.unity.modules.imgui` trong danh sách phụ thuộc. `NetworkStatsDisplay` dùng IMGUI, và project không có module đó thì không biên dịch được package.
+
 ## 0.5.0 <a href="#050" id="050"></a>
 
 Bản phát hành này gồm các phần sau, phát hành cùng nhau:

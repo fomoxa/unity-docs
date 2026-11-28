@@ -6,7 +6,7 @@ The transport is in its own package, `com.fomoxa.networking.steam`, and calls St
 
 ## Requirements
 
-- `com.fomoxa.networking` 0.5.0. The package is built for that one version and checks it, as described in [Versions](#versions).
+- `com.fomoxa.networking` 0.6.0. The package is built for that one version and checks it, as described in [Versions](#versions).
 - Steamworks.NET 2025.165.0 or later, installed as a Unity package.
 - A Windows, Linux or macOS standalone build target. On WebGL, Android, iOS and other targets, the component is not compiled.
 - The Steam client running and signed in on every computer, with each player on their own Steam account.
@@ -24,7 +24,7 @@ https://github.com/rlabrecque/Steamworks.NET.git?path=/com.rlabrecque.steamworks
 3. Add this package the same way:
 
 ```
-https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.3
+https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.4
 ```
 
 `SteamNetworkTransport` lives in the `Fomoxa.Unity.Steam` assembly. Unity compiles that assembly only when Steamworks.NET is installed and the build target is Windows, Linux or macOS. Without Steamworks.NET, the project still compiles, and the component is missing from the **Add Component** menu.
@@ -215,7 +215,7 @@ Both usually mean that the game stopped running for a while, most often because 
 The package is built for one version of `com.fomoxa.networking`, which `SteamPackage.CoreVersion` holds. When the `NetworkManager` creates the transport in `Awake` and the project has another version, the transport throws `InvalidOperationException`:
 
 ```text
-com.fomoxa.networking.steam needs com.fomoxa.networking 0.5.0; the project has 0.5.1
+com.fomoxa.networking.steam needs com.fomoxa.networking 0.6.0; the project has 0.6.1
 ```
 
 Install the version of this package that the [release notes](../../release-notes.md) list for your version of `com.fomoxa.networking`.

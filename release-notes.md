@@ -1,5 +1,59 @@
 # Release notes
 
+## 0.6.0
+
+This release ships these parts together:
+
+| Part | Version | Install |
+|---|---|---|
+| `com.fomoxa.networking` | 0.6.0 | `https://github.com/fomoxa/com.fomoxa.networking.git#0.6.0` |
+| `com.fomoxa.rpc` | 0.1.9; needs `com.fomoxa.networking` 0.6.0 | `https://github.com/fomoxa/com.fomoxa.rpc.git#0.1.9` |
+| `com.fomoxa.networking.rapier` | 0.4.0; needs `com.fomoxa.networking` 0.6.0 | `https://github.com/fomoxa/networking-rapier.git?path=com.fomoxa.networking.rapier#0.4.0` |
+| `com.fomoxa.networking.steam` | 0.1.4; needs `com.fomoxa.networking` 0.6.0 and Steamworks.NET 2025.165.0 or later | `https://github.com/fomoxa/com.fomoxa.networking.steam.git#0.1.4` |
+
+`Fomoxa.Backend.Templates` 0.1.1 and the directory and gateway at tag `0.2.0` have no new version.
+
+### Upgrading from 0.5.0
+
+Update `com.fomoxa.rpc` to 0.1.9, `com.fomoxa.networking.rapier` to 0.4.0 and `com.fomoxa.networking.steam` to 0.1.4 together with the package. With the 0.6.0 package, `com.fomoxa.rpc` 0.1.8 reports an error when it generates code, Rapier 0.3.0 does not compile, and Steam 0.1.3 throws a version error when the `NetworkManager` creates the transport.
+
+Three of the package's own messages changed: `SceneLoad` names scene instances, and `ObjectSpawn` and `ObjectSceneSpawn` carry the instance an object is in. A new message, `ObjectSceneMove`, moves an object between instances, and transforms of moving objects now travel in a new message, `TransformFrame`, which replaces `TransformUpdate`. The fields of `SceneLoad` no longer match those of 0.5.0, so a 0.5.0 build and a 0.6.0 build refuse each other with `HandshakeFailure.SchemaConflict`. Update the server and every client build at the same time. The first code generation after the update rewrites the generated code of these messages and removes the files of `TransformUpdate`; commit it and build your console servers from it.
+
+The server can now hold several instances of one scene asset, and every scene call except loading names an instance, a `NetworkScene`, see [instances](objects/scenes.md#instances). Scene ids still name the asset, and the load calls still take them. Replace the scene calls as follows:
+
+| 0.5.0 | 0.6.0 |
+|---|---|
+| `ServerManager.Scenes.LoadGlobal(sceneIds)`, which returned nothing | The same call, which returns the `NetworkScene` of each instance |
+| `UnloadGlobal(sceneIds)` | `UnloadGlobal(scenes)`, with the instances that `LoadGlobal` returned |
+| `LoadForPeers(sceneId, peerIds)`, which added peers to a scene that was already loaded | `Load(sceneId, peerIds)`, which creates a new instance every time and returns it. `AddPeers(scene, peerIds)` gives an existing instance to more peers |
+| `UnloadForPeers(sceneId, peerIds)` | `RemovePeers(scene, peerIds)` |
+| `Unload(sceneId)` | `Unload(scene)` |
+| `Global`, `Contains`, `IsGlobal`, `HasLoaded`, `PeersOf`, `OnLoaded` and `OnLoadFailed` with scene ids | The same members with `NetworkScene`. `SceneIdOf(scene)` returns the scene id of an instance, and `InstancesOf(sceneId)` the instances of an asset |
+| `ServerManager.Scenes.TryGetScene(sceneId, out Scene scene)` | `TryGetScene(networkScene, out Scene scene)`, on `ServerManager.Scenes` and on the new `ClientManager.Scenes` |
+| `ISceneLoader.Load(loaded, failed)` | `Load(SceneLoadRequest request, Action<float> progress, Action<Scene> loaded, Action<Exception> failed)`. Load with `request.Physics` and pass `loaded` the `Scene` of this load, see [custom loaders](objects/scenes.md#custom-loaders) |
+| `ObjectMismatchArgs.SceneId` | `ObjectMismatchArgs.Scene` |
+| Console server: `StandaloneEntity.SceneId` | `StandaloneEntity.Scene` |
+
+Every instance is loaded with `ScenePhysics.Shared` unless you pass `ScenePhysics.Own`, and a scene asset can have only one `Shared` instance at a time, so a second `Shared` instance of the same asset throws `ArgumentException`. Load rooms of one map with `Own`, see [physics of an instance](objects/scenes.md#physics-of-an-instance).
+
+Code that implements the package's contracts itself changes as well. A scene host takes the `NetworkScene`, its `ScenePhysics` and a progress callback in `TryLoad`, and the `NetworkScene` in `Unload`. `IServerEntityBackend.SceneIdOf` became `SceneOf`, which returns a `NetworkScene`, and `IServerEntityBackend` and `IClientEntityBackend` have a new `MoveToScene`. A physics backend implements `IPhysicsScenes` with `NetworkScene` arguments (`LoadScene(scene, file)`, `UnloadScene(scene)`, `AddStatic`, `AddBody`) and the new abstract `NetworkPhysics.MoveBodies`. With Rapier, `RapierScenes.WorldOf` and `WorldOf2D` take a `NetworkScene`; `TryGetNetworkScene(gameObject.scene, out NetworkScene scene)` on `ServerManager.Scenes` or `ClientManager.Scenes` finds it from a Unity scene.
+
+### Added
+
+- Several instances of one scene asset at the same time, for example one per match, each reaching only the peers that loaded it. See [network scenes](objects/scenes.md#instances).
+- `ScenePhysics.Own` gives an instance its own 3D and 2D physics worlds, so rooms of one map do not collide. The Rapier backend gives every instance its own Rapier worlds. See [physics of an instance](objects/scenes.md#physics-of-an-instance).
+- `ServerManager.MoveToScene` moves a spawned object to another instance, and its behaviours get `OnSceneChangedServer` and `OnSceneChangedClient`. See [moving an object to another instance](objects/scenes.md#move-an-object-to-another-instance).
+- `ClientManager.Scenes` with load events and `OnLoadProgress`, `TryGetNetworkScene` on both sides, and the server events `OnUnloaded` and `OnPeerLoaded`. See [server events and queries](objects/scenes.md#server-events-and-queries).
+- [Multiple rooms on one server](deploy/multiple-rooms.md) builds a lobby and rooms on one headless server and shows how to measure what a room costs.
+
+### Bandwidth
+
+- A `NetworkTransform` sends the updates of one tick to a client in one message and rounds them: position and scale to 0.01 units, rotation to within about 0.2 degrees. An axis beyond ±327.67 is sent as an exact `float`, and the settle message keeps exact values. An update with position and rotation takes 17 bytes instead of 51 when the position is within that range. See [how it works](synchronization/transform.md#how-it-works).
+
+### Fixed
+
+- The package lists `com.unity.modules.imgui` among its dependencies. `NetworkStatsDisplay` uses IMGUI, and a project without that module could not compile the package.
+
 ## 0.5.0
 
 This release ships these parts together:
