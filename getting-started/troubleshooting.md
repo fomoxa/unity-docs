@@ -15,6 +15,7 @@ Generation errors and warnings appear in the Console with the prefix `[Fomoxa]`.
 | `fomoxac generate exited with ...` | `fomoxac` rejected a model or a path. The rest of the message is `fomoxac`'s own output. A missing models folder is a common cause; create the folder. |
 | `... was not written by com.fomoxa.networking; remove it ...` | A file the package manages, such as `fomoxa.toml` or a file in `FomoxaSystemModels`, was written by someone else. Remove it and generate again. |
 | `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | Logged as a warning. A model field uses a type the package has no codec for. Write its codec by hand or register the type, as described in [custom codecs](../advanced/custom-codecs.md). |
+| `error CS0234: The type or namespace name 'TransformUpdate' does not exist in the namespace 'Fomoxa.Networking.Messaging'` after an update to 0.6.0 | The generated code of 0.5.0 is still in the project. In the Editor, the generation that runs after the failed compilation replaces it. Unity in batch mode exits on the compiler error before it generates anything; [upgrading from 0.5.0](../release-notes.md#upgrading-from-050) gives the two batch mode runs that replace it. |
 | A warning that lists changes such as `+ new message` | Not a problem. After a generation the package lists every change to the schema and marks whether each change is compatible. |
 
 ## NetworkManager throws when the scene starts

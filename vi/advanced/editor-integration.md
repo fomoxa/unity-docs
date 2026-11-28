@@ -38,7 +38,7 @@ Namespace được sinh mang tên thư mục cuối của Generated Folder.
 
 ## Sinh code <a href="#code-generation" id="code-generation"></a>
 
-Việc sinh code chạy sau mỗi lần biên dịch script, khi Editor load, và từ menu, nhưng không bao giờ chạy khi Play Mode đang khởi động hoặc đang chạy. Nó đi qua các bước sau:
+Việc sinh code chạy sau mỗi lần biên dịch script, khi Editor load, và từ menu, nhưng không bao giờ chạy khi Play Mode đang khởi động hoặc đang chạy. Nó cũng chạy sau một lần biên dịch hỏng, nên Editor thay được code sinh mà một lần nâng package làm hỏng. Unity ở batch mode thoát khi có lỗi biên dịch trước khi việc sinh chạy, trừ khi được khởi động với `-ignorecompilererrors`; [nâng cấp từ 0.5.0](../release-notes.md#upgrading-from-050) có lệnh cho trường hợp đó. Việc sinh đi qua các bước sau:
 
 1. Copy các system model của package vào `FomoxaSystemModels/` ở gốc project.
 2. Ghi một model cho mỗi RPC vào `<Generated Folder>/RpcModels/`, và state model, input model, reconcile model của mọi behaviour có field `[NetworkState]`, `[NetworkInput]` hoặc `[NetworkReconcile]` vào `<Generated Folder>/StateModels/`, và một model cho mỗi method `[ServerMessage]`, `[ClientMessage]`, `[ServerAuthenticationMessage]`, `[ClientAuthenticationMessage]` vào `<Generated Folder>/MessageModels/`.

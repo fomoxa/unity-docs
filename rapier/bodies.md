@@ -65,6 +65,7 @@ The overloads of `BodyDescriptions.TryDescribe` and `TryDescribe2D` that take a 
 
 ```csharp
 using System.Collections.Generic;
+using Fomoxa.Networking;
 using Fomoxa.Networking.Rapier;
 using Fomoxa.Unity;
 using Fomoxa.Unity.Rapier;
@@ -77,7 +78,7 @@ public sealed class FootSensor : NetworkBehaviour
     private readonly List<Collider2D> sources = new List<Collider2D>();
     private readonly List<RapierCollider> touching = new List<RapierCollider>();
 
-    public bool Grounded(RapierPhysics rapier, uint sceneId)
+    public bool Grounded(RapierPhysics rapier, NetworkScene instance)
     {
         NetworkBody2D body = NetworkObject.Body2D;
         if (!body.IsValid || !BodyDescriptions.TryDescribe2D(gameObject, out _, sources))
@@ -86,12 +87,12 @@ public sealed class FootSensor : NetworkBehaviour
         }
 
         touching.Clear();
-        rapier.Scenes.WorldOf2D(sceneId).Touching(RapierCollider.OfBody(body.Handle, sources.IndexOf(foot)), touching);
+        rapier.Scenes.WorldOf2D(instance).Touching(RapierCollider.OfBody(body.Handle, sources.IndexOf(foot)), touching);
         return touching.Count > 0;
     }
 }
 ```
 
-`sceneId` is the id of the object's network scene, which `NetworkManager.Scenes.IdOf(gameObject.scene.path)` returns. Contact sets read this way are part of the simulation, so they are the same on the server and the predicting client, and the same again in a replay. The [Red Runner example](../examples/redrunner/rapier-and-console/step-10-rapier-backend.md) decides grounding and deaths this way.
+`instance` is the scene instance that holds the object. Get it with `TryGetNetworkScene(gameObject.scene, out NetworkScene instance)` on `ServerManager.Scenes` on the server and on `ClientManager.Scenes` on a client, and use `default` when neither has one, which is the case for a scene that Unity opens at startup. Contact sets read this way are part of the simulation, so they are the same on the server and the predicting client, and the same again in a replay. The [Red Runner example](../examples/redrunner/rapier-and-console/step-10-rapier-backend.md) decides grounding and deaths this way.
 
 [Contact events](contacts.md) describes the event components, and the [physics API reference](../reference/physics.md) lists the description types.

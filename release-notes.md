@@ -19,6 +19,15 @@ Update `com.fomoxa.rpc` to 0.1.9, `com.fomoxa.networking.rapier` to 0.4.0 and `c
 
 Three of the package's own messages changed: `SceneLoad` names scene instances, and `ObjectSpawn` and `ObjectSceneSpawn` carry the instance an object is in. A new message, `ObjectSceneMove`, moves an object between instances, and transforms of moving objects now travel in a new message, `TransformFrame`, which replaces `TransformUpdate`. The fields of `SceneLoad` no longer match those of 0.5.0, so a 0.5.0 build and a 0.6.0 build refuse each other with `HandshakeFailure.SchemaConflict`. Update the server and every client build at the same time. The first code generation after the update rewrites the generated code of these messages and removes the files of `TransformUpdate`; commit it and build your console servers from it.
 
+Unity in batch mode stops before that generation, because the generated code of 0.5.0 no longer compiles and batch mode exits on compiler errors. If your project is only ever built in batch mode, open it in the Editor once, or run the generation twice:
+
+```
+Unity -batchmode -nographics -ignorecompilererrors -quit -projectPath <project> -executeMethod Fomoxa.Unity.Editor.FomoxaHook.GenerateFromMenu
+Unity -batchmode -nographics -quit -projectPath <project> -executeMethod Fomoxa.Unity.Editor.FomoxaHook.GenerateFromMenu
+```
+
+The first run exits with code 0 although the compilation failed. Your scripts did not compile, so it cannot see your behaviours: it reports the models that come from your scripts as `BREAKING: message removed` and deletes their generated code. The second run compiles cleanly, writes those models back and reports them as `COMPATIBLE: new message`. Commit the result of the second run. The second run creates the generated files of those models again, so their `.meta` files have new GUIDs. Generated code contains no components, so no scene or prefab refers to those GUIDs.
+
 The server can now hold several instances of one scene asset, and every scene call except loading names an instance, a `NetworkScene`, see [instances](objects/scenes.md#instances). Scene ids still name the asset, and the load calls still take them. Replace the scene calls as follows:
 
 | 0.5.0 | 0.6.0 |

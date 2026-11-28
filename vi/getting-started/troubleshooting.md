@@ -15,6 +15,7 @@ Lỗi và cảnh báo khi sinh code xuất hiện trong Console với tiền t�
 | `fomoxac generate exited with ...` | `fomoxac` từ chối một model hoặc một đường dẫn. Phần còn lại của thông báo là output của chính `fomoxac`. Nguyên nhân hay gặp là thiếu thư mục model; hãy tạo thư mục đó. |
 | `... was not written by com.fomoxa.networking; remove it ...` | Một file do package quản lý, như `fomoxa.toml` hoặc một file trong `FomoxaSystemModels`, lại do người khác ghi. Xóa file đó và sinh lại. |
 | `the field type ... is neither a model nor a Unity type com.fomoxa.networking knows` | Được log dưới dạng cảnh báo. Một field của model dùng type mà package không có codec. Hãy tự viết codec hoặc đăng ký type đó, như mô tả trong [codec tùy chỉnh](../advanced/custom-codecs.md). |
+| `error CS0234: The type or namespace name 'TransformUpdate' does not exist in the namespace 'Fomoxa.Networking.Messaging'` sau khi nâng lên 0.6.0 | Code sinh của 0.5.0 vẫn còn trong project. Trong Editor, lần sinh chạy sau lần biên dịch hỏng sẽ thay nó. Unity ở batch mode thoát vì lỗi biên dịch trước khi sinh gì; [nâng cấp từ 0.5.0](../release-notes.md#upgrading-from-050) có hai lần chạy batch mode để thay nó. |
 | Một cảnh báo liệt kê các thay đổi như `+ new message` | Không phải lỗi. Sau mỗi lần sinh code, package liệt kê mọi thay đổi của schema và ghi rõ từng thay đổi có tương thích hay không. |
 
 ## NetworkManager ném exception khi scene khởi động <a href="#networkmanager-throws-when-the-scene-starts" id="networkmanager-throws-when-the-scene-starts"></a>

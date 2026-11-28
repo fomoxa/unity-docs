@@ -38,7 +38,7 @@ The generated namespace is named after the last folder of Generated Folder.
 
 ## Code generation
 
-Generation runs after every script compilation, when the Editor loads, and from the menu, but never while Play Mode is starting or running. It goes through these steps:
+Generation runs after every script compilation, when the Editor loads, and from the menu, but never while Play Mode is starting or running. It also runs after a compilation that failed, so the Editor replaces generated code that a package update broke. Unity in batch mode exits on compiler errors before generation runs, unless it was started with `-ignorecompilererrors`; [upgrading from 0.5.0](../release-notes.md#upgrading-from-050) gives the commands for that case. Generation goes through these steps:
 
 1. Copy the package's system models into `FomoxaSystemModels/` at the project root.
 2. Write a model for every RPC into `<Generated Folder>/RpcModels/`, and the state, input and reconcile models of every behaviour with `[NetworkState]`, `[NetworkInput]` or `[NetworkReconcile]` fields into `<Generated Folder>/StateModels/`, and a model for every `[ServerMessage]`, `[ClientMessage]`, `[ServerAuthenticationMessage]` and `[ClientAuthenticationMessage]` method into `<Generated Folder>/MessageModels/`.

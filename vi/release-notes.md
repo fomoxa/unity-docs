@@ -19,6 +19,15 @@ Nâng `com.fomoxa.rpc` lên 0.1.9, `com.fomoxa.networking.rapier` lên 0.4.0 và
 
 Ba message của chính package đã đổi: `SceneLoad` gọi tên các bản của scene, còn `ObjectSpawn` và `ObjectSceneSpawn` mang bản mà object nằm trong. Message mới `ObjectSceneMove` chuyển object giữa các bản, còn transform của object đang di chuyển giờ đi trong message mới `TransformFrame`, thay cho `TransformUpdate`. Các trường của `SceneLoad` không còn khớp với 0.5.0, nên bản build 0.5.0 và bản build 0.6.0 từ chối nhau với `HandshakeFailure.SchemaConflict`. Hãy nâng server và mọi bản build client cùng lúc. Lần sinh code đầu tiên sau khi cập nhật ghi lại code sinh của các message này và xóa các tệp của `TransformUpdate`; hãy commit nó và build console server từ đó.
 
+Unity ở batch mode dừng trước lần sinh đó, vì code sinh của 0.5.0 không còn biên dịch được và batch mode thoát khi có lỗi biên dịch. Nếu project của bạn chỉ được build bằng batch mode, hãy mở nó trong Editor một lần, hoặc chạy lệnh sinh hai lần:
+
+```
+Unity -batchmode -nographics -ignorecompilererrors -quit -projectPath <project> -executeMethod Fomoxa.Unity.Editor.FomoxaHook.GenerateFromMenu
+Unity -batchmode -nographics -quit -projectPath <project> -executeMethod Fomoxa.Unity.Editor.FomoxaHook.GenerateFromMenu
+```
+
+Lần chạy đầu thoát với mã 0 dù biên dịch hỏng. Script của bạn chưa biên dịch nên nó không thấy các behaviour: nó báo các model sinh từ script của bạn là `BREAKING: message removed` và xóa code sinh của chúng. Lần chạy thứ hai biên dịch sạch, ghi lại các model đó và báo chúng là `COMPATIBLE: new message`. Hãy commit kết quả của lần chạy thứ hai. Lần chạy thứ hai tạo lại các tệp sinh của những model đó, nên tệp `.meta` của chúng có GUID mới. Code sinh không chứa component nào, nên không scene hay prefab nào tham chiếu tới các GUID đó.
+
 Server giờ giữ được nhiều bản của một scene asset, và mọi lời gọi scene trừ lời gọi load đều gọi tên một bản, tức một `NetworkScene`, xem [bản](objects/scenes.md#instances). Scene id vẫn gọi tên asset, và các lời gọi load vẫn nhận nó. Thay các lời gọi scene như sau:
 
 | 0.5.0 | 0.6.0 |

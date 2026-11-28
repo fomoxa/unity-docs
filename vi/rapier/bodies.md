@@ -65,6 +65,7 @@ Các overload của `BodyDescriptions.TryDescribe` và `TryDescribe2D` nhận m�
 
 ```csharp
 using System.Collections.Generic;
+using Fomoxa.Networking;
 using Fomoxa.Networking.Rapier;
 using Fomoxa.Unity;
 using Fomoxa.Unity.Rapier;
@@ -77,7 +78,7 @@ public sealed class FootSensor : NetworkBehaviour
     private readonly List<Collider2D> sources = new List<Collider2D>();
     private readonly List<RapierCollider> touching = new List<RapierCollider>();
 
-    public bool Grounded(RapierPhysics rapier, uint sceneId)
+    public bool Grounded(RapierPhysics rapier, NetworkScene instance)
     {
         NetworkBody2D body = NetworkObject.Body2D;
         if (!body.IsValid || !BodyDescriptions.TryDescribe2D(gameObject, out _, sources))
@@ -86,12 +87,12 @@ public sealed class FootSensor : NetworkBehaviour
         }
 
         touching.Clear();
-        rapier.Scenes.WorldOf2D(sceneId).Touching(RapierCollider.OfBody(body.Handle, sources.IndexOf(foot)), touching);
+        rapier.Scenes.WorldOf2D(instance).Touching(RapierCollider.OfBody(body.Handle, sources.IndexOf(foot)), touching);
         return touching.Count > 0;
     }
 }
 ```
 
-`sceneId` là id của network scene chứa object, do `NetworkManager.Scenes.IdOf(gameObject.scene.path)` trả về. Tập contact đọc theo cách này là một phần của mô phỏng, nên chúng giống nhau trên server và trên client dự đoán, và giống nhau lần nữa khi replay. [Ví dụ Red Runner](../examples/redrunner/rapier-and-console/step-10-rapier-backend.md) quyết định chạm đất và cái chết theo cách này.
+`instance` là bản của scene chứa object. Lấy nó bằng `TryGetNetworkScene(gameObject.scene, out NetworkScene instance)` trên `ServerManager.Scenes` ở server và trên `ClientManager.Scenes` ở client, và dùng `default` khi cả hai đều không có, như với scene mà Unity mở lúc khởi động. Tập contact đọc theo cách này là một phần của mô phỏng, nên chúng giống nhau trên server và trên client dự đoán, và giống nhau lần nữa khi replay. [Ví dụ Red Runner](../examples/redrunner/rapier-and-console/step-10-rapier-backend.md) quyết định chạm đất và cái chết theo cách này.
 
 [Contact event](contacts.md) mô tả các component event, còn [tham chiếu physics API](../reference/physics.md) liệt kê các type mô tả.
