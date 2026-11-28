@@ -24,6 +24,8 @@ While the object moves, the server sends an update for each tick in which a sync
 
 An update contains only the parts that changed, and the client never applies a part it has not received yet.
 
+The server puts the updates of one tick for one client into a single unreliable message and splits it only when it would not fit in one packet. Updates are rounded: position and scale to 0.01 units, rotation to within about 0.2 degrees. A position or scale axis whose local value is beyond ±327.67 is sent as an exact `float` instead. The settle still carries exact values, so rounding never changes where an object comes to rest.
+
 ## Server behavior
 
 The server only reads the transform, so you can move it any way you like, whether from code, from physics or from an animation.

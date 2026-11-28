@@ -24,6 +24,8 @@ Khi object di chuyển, server gửi một bản cập nhật cho mỗi tick mà
 
 Bản cập nhật chỉ chứa những phần đã thay đổi, và client không bao giờ áp dụng một phần nó chưa nhận được.
 
+Server gom các bản cập nhật của một tick cho một client vào một message unreliable và chỉ chia ra khi nó không vừa một gói. Bản cập nhật được làm tròn: vị trí và tỉ lệ tới 0,01 đơn vị, góc xoay trong khoảng 0,2 độ. Trục nào của vị trí hoặc tỉ lệ có giá trị local vượt ±327,67 thì được gửi nguyên dạng `float`. Settle vẫn mang giá trị chính xác, nên việc làm tròn không làm đổi chỗ object dừng lại.
+
 ## Hành vi trên server <a href="#server-behavior" id="server-behavior"></a>
 
 Server chỉ đọc transform, nên bạn có thể di chuyển nó bằng bất cứ cách nào, từ code, từ physics hay từ animation.

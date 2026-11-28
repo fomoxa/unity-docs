@@ -114,7 +114,7 @@ The package's own models live in `Fomoxa.Networking.Messaging`. They are generat
 | `CollectionContent`, `CollectionResync` | The full content of one collection, and a client's request for it | Reliable ordered |
 | `CollectionContents` | The collections of one behaviour inside a spawn message | Not sent on its own |
 | `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | A primitive collection element | Not sent on its own |
-| `TransformUpdate` | Transform while moving | Unreliable |
+| `TransformFrame` | Rounded transforms of every object that moved in one tick | Unreliable |
 | `TransformSettle` | Final transform | Reliable ordered |
 | `AnimatorState` | `NetworkAnimator` state | Reliable ordered |
 | `SceneLoad`, `SceneUnload`, `SceneLoaded` | Network scenes | Reliable ordered |

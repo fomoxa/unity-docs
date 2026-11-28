@@ -114,7 +114,7 @@ Các model của chính package nằm trong `Fomoxa.Networking.Messaging`. Chún
 | `CollectionContent`, `CollectionResync` | Toàn bộ nội dung của một collection, và yêu cầu nội dung đó từ client | Reliable ordered |
 | `CollectionContents` | Các collection của một behaviour bên trong message spawn | Không gửi riêng |
 | `BoolValue`, `I8Value`, `U8Value`, `I16Value`, `U16Value`, `I32Value`, `U32Value`, `I64Value`, `U64Value`, `F32Value`, `F64Value`, `StringValue` | Một phần tử collection kiểu nguyên thuỷ | Không gửi riêng |
-| `TransformUpdate` | Transform khi đang di chuyển | Unreliable |
+| `TransformFrame` | Transform đã làm tròn của mọi object di chuyển trong một tick | Unreliable |
 | `TransformSettle` | Transform cuối cùng | Reliable ordered |
 | `AnimatorState` | State của `NetworkAnimator` | Reliable ordered |
 | `SceneLoad`, `SceneUnload`, `SceneLoaded` | Network scene | Reliable ordered |
